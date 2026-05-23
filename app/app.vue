@@ -18,8 +18,13 @@
                 <video autoplay loop muted playsinline preload="metadata">
                   <source src="/clips/day-1-opening.mp4" type="video/mp4">
                 </video>
-                <span class="source-caption">drop video</span>
               </article>
+              <div class="machine-strip" aria-hidden="true">
+                <span>drop file</span>
+                <span>auto directive</span>
+                <span>1 credit</span>
+                <strong>Zap</strong>
+              </div>
 
               <div class="beam" />
               <div class="zap-meter" aria-hidden="true">

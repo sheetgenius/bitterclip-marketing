@@ -102,7 +102,6 @@ body {
   filter: saturate(1.08) contrast(1.06);
 }
 
-.source-caption,
 .burst span {
   position: absolute;
   z-index: 4;
@@ -116,10 +115,56 @@ body {
   backdrop-filter: blur(10px);
 }
 
-.source-caption {
-  left: 0.75rem;
-  bottom: 0.7rem;
-  padding: 0.28rem 0.58rem;
+.machine-strip {
+  position: absolute;
+  top: 66%;
+  left: 50%;
+  z-index: 11;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) auto auto;
+  gap: 0.34rem;
+  align-items: center;
+  width: min(72%, 29rem);
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 84%);
+  padding: 0.34rem;
+  color: rgb(255 255 255 / 74%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0;
+  box-shadow:
+    0 0.9rem 1.6rem rgb(0 0 0 / 24%),
+    inset 0 0 1.2rem rgb(255 255 255 / 4%);
+  transform: translateX(-50%);
+  animation: machine-strip-charge 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  backdrop-filter: blur(12px);
+}
+
+.machine-strip span,
+.machine-strip strong {
+  display: inline-flex;
+  min-height: 1.45rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 0.48rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.machine-strip span {
+  border: 1px solid rgb(255 255 255 / 10%);
+  background: rgb(255 255 255 / 6%);
+}
+
+.machine-strip strong {
+  border: 1px solid rgb(252 211 77 / 58%);
+  background: #fcd34d;
+  color: #09090b;
+  box-shadow: 0 0 1rem rgb(252 211 77 / 28%);
+  font-weight: 850;
 }
 
 .beam {
@@ -579,6 +624,29 @@ body {
   }
 }
 
+@keyframes machine-strip-charge {
+  0%,
+  19%,
+  52%,
+  100% {
+    border-color: rgb(255 255 255 / 14%);
+    box-shadow:
+      0 0.9rem 1.6rem rgb(0 0 0 / 24%),
+      inset 0 0 1.2rem rgb(255 255 255 / 4%);
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  24%,
+  42% {
+    border-color: rgb(252 211 77 / 50%);
+    box-shadow:
+      0 0.9rem 1.6rem rgb(0 0 0 / 24%),
+      0 0 1.25rem rgb(252 211 77 / 34%),
+      inset 0 0 1.2rem rgb(252 211 77 / 10%);
+    transform: translateX(-50%) translateY(-0.06rem) scale(1.01);
+  }
+}
+
 @keyframes beam-strike {
   0%,
   17%,
@@ -871,6 +939,25 @@ body {
     width: 96%;
   }
 
+  .machine-strip {
+    top: 68%;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 0.24rem;
+    width: min(66%, 16rem);
+    padding: 0.26rem;
+    font-size: 0.5rem;
+  }
+
+  .machine-strip span:nth-child(2) {
+    display: none;
+  }
+
+  .machine-strip span,
+  .machine-strip strong {
+    min-height: 1.26rem;
+    padding: 0 0.34rem;
+  }
+
   .burst {
     top: 44%;
     width: min(32%, 7.4rem);
@@ -1003,6 +1090,7 @@ body {
   .source-card,
   .source-card::before,
   .source-card::after,
+  .machine-strip,
   .beam,
   .zap-orb,
   .lightning,
