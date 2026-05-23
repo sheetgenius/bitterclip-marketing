@@ -318,6 +318,27 @@ body {
   backdrop-filter: blur(12px);
 }
 
+.zap-again::before,
+.zap-again::after {
+  position: absolute;
+  inset: -0.35rem;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  opacity: 0;
+}
+
+.zap-again::before {
+  border: 1px solid rgb(252 211 77 / 52%);
+  animation: zap-ready-ring 2.7s ease-out 6.9s infinite;
+}
+
+.zap-again::after {
+  background: radial-gradient(circle at 50% 50%, rgb(252 211 77 / 28%), transparent 58%);
+  filter: blur(10px);
+  animation: zap-ready-glow 2.7s ease-in-out 6.9s infinite;
+}
+
 .zap-again span,
 .zap-again em {
   color: rgb(255 255 255 / 62%);
@@ -330,6 +351,7 @@ body {
   color: #fcd34d;
   font-size: 0.78rem;
   white-space: nowrap;
+  animation: zap-label-pulse 2.7s ease-in-out 6.9s infinite;
 }
 
 @keyframes source-charge {
@@ -540,6 +562,49 @@ body {
   }
 }
 
+@keyframes zap-ready-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  16% {
+    opacity: 0.78;
+  }
+
+  76%,
+  100% {
+    opacity: 0;
+    transform: scale(1.34);
+  }
+}
+
+@keyframes zap-ready-glow {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.96);
+  }
+
+  48% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes zap-label-pulse {
+  0%,
+  100% {
+    color: #fcd34d;
+    text-shadow: none;
+  }
+
+  48% {
+    color: #ffffff;
+    text-shadow: 0 0 0.75rem rgb(252 211 77 / 70%);
+  }
+}
+
 @media (max-width: 640px) {
   .zap-stage {
     aspect-ratio: 0.82 / 1;
@@ -657,6 +722,12 @@ body {
     animation: none;
     opacity: 1;
     transform: translate(-50%, 0) scale(1);
+  }
+
+  .zap-again::before,
+  .zap-again::after,
+  .zap-again strong {
+    animation: none;
   }
 
   .burst-left {
