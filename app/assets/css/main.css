@@ -140,6 +140,51 @@ body {
   animation: beam-strike 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+.zap-meter {
+  position: absolute;
+  z-index: 12;
+  top: 15%;
+  left: calc(50% + min(22vw, 12rem));
+  display: grid;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.meter-step {
+  display: inline-flex;
+  width: 2.2rem;
+  height: 2.2rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 78%);
+  color: rgb(255 255 255 / 42%);
+  font-size: 0.68rem;
+  font-weight: 750;
+  box-shadow: 0 0.7rem 1.6rem rgb(0 0 0 / 28%);
+  opacity: 0;
+  transform: translateY(0.45rem) scale(0.78);
+  animation-duration: 6.6s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1.35, 0.25, 1);
+  backdrop-filter: blur(10px);
+}
+
+.meter-step-1 {
+  animation-name: meter-step-one;
+}
+
+.meter-step-2 {
+  animation-name: meter-step-two;
+}
+
+.meter-step-3 {
+  animation-name: meter-step-three;
+}
+
 .zap-orb {
   position: absolute;
   z-index: 5;
@@ -486,6 +531,60 @@ body {
   }
 }
 
+@keyframes meter-step-one {
+  0%,
+  22% {
+    opacity: 0;
+    transform: translateY(0.45rem) scale(0.78);
+  }
+
+  30%,
+  100% {
+    border-color: rgb(252 211 77 / 70%);
+    color: #fcd34d;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow:
+      0 0.7rem 1.6rem rgb(0 0 0 / 28%),
+      0 0 1.15rem rgb(252 211 77 / 46%);
+  }
+}
+
+@keyframes meter-step-two {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translateY(0.45rem) scale(0.78);
+  }
+
+  45%,
+  100% {
+    border-color: rgb(103 232 249 / 70%);
+    color: #67e8f9;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    box-shadow:
+      0 0.7rem 1.6rem rgb(0 0 0 / 28%),
+      0 0 1.15rem rgb(103 232 249 / 42%);
+  }
+}
+
+@keyframes meter-step-three {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translateY(0.45rem) scale(0.78);
+  }
+
+  68%,
+  100% {
+    border-color: rgb(255 255 255 / 34%);
+    color: rgb(255 255 255 / 58%);
+    opacity: 0.82;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes burst-left {
   0%,
   25% {
@@ -625,6 +724,18 @@ body {
     width: 70%;
   }
 
+  .zap-meter {
+    top: 13%;
+    left: calc(50% + 8.1rem);
+    gap: 0.32rem;
+  }
+
+  .meter-step {
+    width: 1.78rem;
+    height: 1.78rem;
+    font-size: 0.56rem;
+  }
+
   .reactions-left {
     transform: translate(-7.8rem, 4rem) rotate(-8deg);
   }
@@ -709,6 +820,7 @@ body {
   .beam,
   .zap-orb,
   .lightning,
+  .meter-step,
   .burst {
     animation: none;
   }
@@ -728,6 +840,11 @@ body {
   .zap-again::after,
   .zap-again strong {
     animation: none;
+  }
+
+  .meter-step {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   .burst-left {

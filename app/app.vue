@@ -22,6 +22,11 @@
               </article>
 
               <div class="beam" />
+              <div class="zap-meter" aria-hidden="true">
+                <span class="meter-step meter-step-1">01</span>
+                <span class="meter-step meter-step-2">02</span>
+                <span class="meter-step meter-step-3">03</span>
+              </div>
               <div class="zap-orb" />
               <svg
                 class="lightning"
