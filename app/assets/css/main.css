@@ -275,6 +275,68 @@ body {
   animation-name: burst-right;
 }
 
+.burst-next {
+  position: absolute;
+  z-index: 6;
+  top: 55%;
+  left: 50%;
+  width: min(20%, 6.2rem);
+  aspect-ratio: 9 / 16;
+  border: 1px dashed rgb(255 255 255 / 26%);
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 8%), transparent 32%),
+    rgb(9 9 11 / 42%);
+  box-shadow:
+    inset 0 0 1.4rem rgb(255 255 255 / 5%),
+    0 1rem 2rem rgb(0 0 0 / 30%);
+  opacity: 0;
+  transform: translate(-50%, -5%) scale(0.72) rotate(3deg);
+  animation: burst-next 6.6s cubic-bezier(0.16, 1.25, 0.24, 1) both;
+  backdrop-filter: blur(8px);
+}
+
+.burst-next::before,
+.burst-next::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.burst-next::before {
+  inset: 0.8rem;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 0.55rem;
+}
+
+.burst-next::after {
+  top: 50%;
+  left: 50%;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 1px solid rgb(252 211 77 / 50%);
+  border-radius: 999px;
+  box-shadow: 0 0 1.1rem rgb(252 211 77 / 24%);
+  transform: translate(-50%, -50%);
+}
+
+.burst-next span {
+  position: absolute;
+  right: 50%;
+  bottom: 0.44rem;
+  z-index: 2;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 68%);
+  padding: 0.2rem 0.4rem;
+  color: rgb(255 255 255 / 54%);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0;
+  transform: translateX(50%);
+  white-space: nowrap;
+}
+
 .reactions {
   position: absolute;
   z-index: 9;
@@ -336,6 +398,63 @@ body {
   left: 1.6rem;
   color: #67e8f9;
   animation-delay: 3.06s;
+}
+
+.reaction-mini {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0 0.36rem;
+  color: rgb(255 255 255 / 86%);
+  font-size: 0.58rem;
+  box-shadow:
+    0 0.55rem 1.1rem rgb(0 0 0 / 32%),
+    0 0 0.85rem rgb(103 232 249 / 18%);
+  animation-name: reaction-float-pop;
+}
+
+.reaction-mini-a {
+  color: #fcd34d;
+  animation-delay: 3.32s;
+}
+
+.reaction-mini-b {
+  color: #67e8f9;
+  animation-delay: 3.62s;
+}
+
+.reaction-mini-c {
+  animation-delay: 3.92s;
+}
+
+.reactions-left .reaction-mini-a {
+  top: -3.2rem;
+  left: 1.9rem;
+}
+
+.reactions-left .reaction-mini-b {
+  top: -0.85rem;
+  left: 3.35rem;
+}
+
+.reactions-left .reaction-mini-c {
+  top: 3.25rem;
+  left: -1.9rem;
+}
+
+.reactions-right .reaction-mini-a {
+  top: -3.25rem;
+  left: 1.75rem;
+}
+
+.reactions-right .reaction-mini-b {
+  top: -0.8rem;
+  left: 3.05rem;
+}
+
+.reactions-right .reaction-mini-c {
+  top: 3.05rem;
+  left: -1.35rem;
+  color: #fcd34d;
 }
 
 .zap-again {
@@ -623,6 +742,25 @@ body {
   }
 }
 
+@keyframes burst-next {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translate(-50%, -5%) scale(0.72) rotate(3deg);
+  }
+
+  68% {
+    opacity: 0.72;
+    transform: translate(-50%, 5%) scale(1.02) rotate(3deg);
+  }
+
+  78%,
+  100% {
+    opacity: 0.48;
+    transform: translate(-50%, 2%) scale(0.94) rotate(3deg);
+  }
+}
+
 @keyframes reaction-pop {
   0%,
   44% {
@@ -639,6 +777,25 @@ body {
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes reaction-float-pop {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(0.7rem) scale(0.55) rotate(-8deg);
+  }
+
+  58% {
+    opacity: 0.94;
+    transform: translateY(-0.45rem) scale(1.12) rotate(5deg);
+  }
+
+  72%,
+  100% {
+    opacity: 0.82;
+    transform: translateY(-0.16rem) scale(1) rotate(0deg);
   }
 }
 
@@ -759,6 +916,30 @@ body {
     left: 1rem;
   }
 
+  .reaction-mini {
+    min-width: 1.35rem;
+    min-height: 1.35rem;
+    font-size: 0.52rem;
+  }
+
+  .reactions-left .reaction-mini-a,
+  .reactions-right .reaction-mini-a {
+    top: -2.8rem;
+    left: 2.2rem;
+  }
+
+  .reactions-left .reaction-mini-b,
+  .reactions-right .reaction-mini-b {
+    top: -0.85rem;
+    left: 3.05rem;
+  }
+
+  .reactions-left .reaction-mini-c,
+  .reactions-right .reaction-mini-c {
+    top: 2.85rem;
+    left: -0.9rem;
+  }
+
   .zap-again {
     top: 78%;
     gap: 0.4rem;
@@ -772,6 +953,11 @@ body {
 
   .zap-again strong {
     font-size: 0.68rem;
+  }
+
+  .burst-next {
+    top: 56%;
+    width: min(22%, 5.2rem);
   }
 
   @keyframes burst-left {
@@ -821,6 +1007,7 @@ body {
   .zap-orb,
   .lightning,
   .meter-step,
+  .burst-next,
   .burst {
     animation: none;
   }
@@ -855,5 +1042,10 @@ body {
   .burst-right {
     opacity: 1;
     transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+
+  .burst-next {
+    opacity: 0.48;
+    transform: translate(-50%, 2%) scale(0.94) rotate(3deg);
   }
 }

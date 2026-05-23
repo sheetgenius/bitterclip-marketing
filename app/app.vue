@@ -53,16 +53,25 @@
                 </video>
                 <span>clip 02</span>
               </article>
+              <article class="burst-next" aria-hidden="true">
+                <span>clip 03</span>
+              </article>
 
               <div class="reactions reactions-left" aria-hidden="true">
                 <span class="reaction reaction-heart">&#9829;</span>
                 <span class="reaction reaction-like">like</span>
                 <span class="reaction reaction-count">+18</span>
+                <span class="reaction reaction-mini reaction-mini-a">&#9829;</span>
+                <span class="reaction reaction-mini reaction-mini-b">+1</span>
+                <span class="reaction reaction-mini reaction-mini-c">like</span>
               </div>
               <div class="reactions reactions-right" aria-hidden="true">
                 <span class="reaction reaction-heart">&#9829;</span>
                 <span class="reaction reaction-like">save</span>
                 <span class="reaction reaction-count">+31</span>
+                <span class="reaction reaction-mini reaction-mini-a">&#9829;</span>
+                <span class="reaction reaction-mini reaction-mini-b">+1</span>
+                <span class="reaction reaction-mini reaction-mini-c">&#9829;</span>
               </div>
 
               <div class="zap-again" aria-hidden="true">
