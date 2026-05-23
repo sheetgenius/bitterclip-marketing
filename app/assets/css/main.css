@@ -19,3 +19,264 @@ body {
   background: #fcd34d;
   color: #111111;
 }
+
+.clip-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+
+.clip-card {
+  position: absolute;
+  width: min(86%, 29rem);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 0.75rem;
+  background: #111827;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 40%);
+  isolation: isolate;
+}
+
+.clip-card-1 {
+  top: 8%;
+  left: 3%;
+  transform: rotate(-8deg);
+}
+
+.clip-card-2 {
+  top: 33%;
+  right: 0;
+  transform: rotate(6deg);
+}
+
+.clip-card-3 {
+  bottom: 8%;
+  left: 7%;
+  transform: rotate(-3deg);
+}
+
+.clip-slice {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  animation-duration: 5.8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.42, 0, 0.2, 1);
+  animation-delay: var(--cut-delay);
+  will-change: transform;
+}
+
+.clip-slice video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.08) contrast(1.06);
+}
+
+.clip-slice-left {
+  clip-path: polygon(0 0, 54% 0, 45% 100%, 0 100%);
+  animation-name: clip-left;
+}
+
+.clip-slice-right {
+  clip-path: polygon(54% 0, 100% 0, 100% 100%, 45% 100%);
+  animation-name: clip-right;
+}
+
+.clip-card::after {
+  position: absolute;
+  inset: -20% 48%;
+  width: 3px;
+  content: "";
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(252 211 77 / 0%),
+    rgb(252 211 77 / 95%),
+    rgb(252 211 77 / 0%),
+    transparent
+  );
+  transform: rotate(12deg);
+  opacity: 0;
+  animation: cut-flash 5.8s cubic-bezier(0.42, 0, 0.2, 1) infinite;
+  animation-delay: var(--cut-delay);
+}
+
+.clip-caption {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.7rem;
+  z-index: 2;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 74%);
+  padding: 0.28rem 0.58rem;
+  color: rgb(255 255 255 / 88%);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0;
+  backdrop-filter: blur(10px);
+}
+
+.cut-path {
+  position: absolute;
+  top: 7%;
+  left: 51%;
+  width: 3px;
+  height: 86%;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    180deg,
+    rgb(252 211 77 / 0%),
+    rgb(252 211 77 / 0%) 0.75rem,
+    rgb(252 211 77 / 80%) 0.75rem,
+    rgb(252 211 77 / 80%) 1.1rem
+  );
+  box-shadow: 0 0 2.5rem rgb(252 211 77 / 55%);
+  opacity: 0.75;
+  transform: rotate(13deg);
+}
+
+.scissor {
+  position: absolute;
+  z-index: 5;
+  top: 1%;
+  right: -13%;
+  width: min(72%, 25rem);
+  overflow: visible;
+  filter: drop-shadow(0 1.5rem 1.4rem rgb(0 0 0 / 42%));
+  transform-origin: 52% 50%;
+  animation: scissor-sweep 5.8s cubic-bezier(0.42, 0, 0.2, 1) infinite;
+}
+
+.scissor-blade-top,
+.scissor-blade-bottom {
+  transform-box: fill-box;
+  transform-origin: 182px 126px;
+  animation-duration: 5.8s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.scissor-blade-top {
+  animation-name: scissor-top;
+}
+
+.scissor-blade-bottom {
+  animation-name: scissor-bottom;
+}
+
+@keyframes clip-left {
+  0%,
+  26%,
+  78%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  42%,
+  58% {
+    transform: translate(-1.1rem, 0.65rem) rotate(-1.2deg);
+  }
+}
+
+@keyframes clip-right {
+  0%,
+  26%,
+  78%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  42%,
+  58% {
+    transform: translate(1.1rem, -0.65rem) rotate(1.2deg);
+  }
+}
+
+@keyframes cut-flash {
+  0%,
+  24%,
+  70%,
+  100% {
+    opacity: 0;
+  }
+
+  32%,
+  48% {
+    opacity: 1;
+  }
+}
+
+@keyframes scissor-sweep {
+  0%,
+  14% {
+    opacity: 1;
+    transform: translate(2%, -4%) rotate(-25deg);
+  }
+
+  24% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-93%, 84%) rotate(-25deg);
+  }
+
+  66%,
+  100% {
+    opacity: 0;
+    transform: translate(-112%, 104%) rotate(-25deg);
+  }
+}
+
+@keyframes scissor-top {
+  0%,
+  24%,
+  66%,
+  100% {
+    transform: rotate(-10deg);
+  }
+
+  36%,
+  46% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes scissor-bottom {
+  0%,
+  24%,
+  66%,
+  100% {
+    transform: rotate(10deg);
+  }
+
+  36%,
+  46% {
+    transform: rotate(-5deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .clip-card {
+    width: 92%;
+  }
+
+  .scissor {
+    right: -20%;
+    width: 82%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clip-slice,
+  .clip-card::after,
+  .scissor,
+  .scissor-blade-top,
+  .scissor-blade-bottom {
+    animation: none;
+  }
+}

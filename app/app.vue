@@ -27,23 +27,81 @@
           </div>
         </div>
 
-        <div class="hidden lg:block" aria-hidden="true">
-          <div class="grid aspect-[9/12] w-full max-w-sm grid-rows-[1fr_1fr_1fr] gap-3 justify-self-end">
-            <div class="rounded-lg border border-white/12 bg-white/8 p-4 shadow-2xl shadow-black/25 backdrop-blur">
-              <div class="h-3 w-28 rounded-full bg-amber-300/80" />
-              <div class="mt-8 h-20 rounded bg-zinc-900/80" />
-              <div class="mt-4 h-3 w-3/4 rounded-full bg-white/30" />
-            </div>
-            <div class="rounded-lg border border-white/12 bg-white/10 p-4 shadow-2xl shadow-black/25 backdrop-blur">
-              <div class="h-3 w-20 rounded-full bg-teal-300/80" />
-              <div class="mt-8 h-20 rounded bg-zinc-900/80" />
-              <div class="mt-4 h-3 w-2/3 rounded-full bg-white/30" />
-            </div>
-            <div class="rounded-lg border border-white/12 bg-white/8 p-4 shadow-2xl shadow-black/25 backdrop-blur">
-              <div class="h-3 w-24 rounded-full bg-white/70" />
-              <div class="mt-8 h-20 rounded bg-zinc-900/80" />
-              <div class="mt-4 h-3 w-5/6 rounded-full bg-white/30" />
-            </div>
+        <div class="relative mx-auto w-full max-w-[34rem]" aria-label="Video clips being cut into short clips">
+          <div class="clip-stage">
+            <article
+              class="clip-card clip-card-1"
+              style="--cut-delay: 0ms"
+            >
+              <div class="clip-slice clip-slice-left">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-opening.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="clip-slice clip-slice-right">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-opening.mp4" type="video/mp4">
+                </video>
+              </div>
+              <span class="clip-caption">Day 1 / opening hook</span>
+            </article>
+
+            <article
+              class="clip-card clip-card-2"
+              style="--cut-delay: 140ms"
+            >
+              <div class="clip-slice clip-slice-left">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-models.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="clip-slice clip-slice-right">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-models.mp4" type="video/mp4">
+                </video>
+              </div>
+              <span class="clip-caption">Model whisperer</span>
+            </article>
+
+            <article
+              class="clip-card clip-card-3"
+              style="--cut-delay: 280ms"
+            >
+              <div class="clip-slice clip-slice-left">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-loop.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="clip-slice clip-slice-right">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-loop.mp4" type="video/mp4">
+                </video>
+              </div>
+              <span class="clip-caption">Loop architecture</span>
+            </article>
+
+            <div class="cut-path" />
+
+            <svg
+              class="scissor"
+              viewBox="0 0 420 250"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <g class="scissor-blade-top">
+                <path d="M182 105L404 20L212 128L182 105Z" fill="#f8fafc" />
+                <path d="M198 111L382 35L214 119" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
+              </g>
+              <g class="scissor-blade-bottom">
+                <path d="M182 145L404 230L212 122L182 145Z" fill="#e2e8f0" />
+                <path d="M198 139L382 215L214 131" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" />
+              </g>
+              <path d="M148 126L218 126" stroke="#f8fafc" stroke-width="18" stroke-linecap="round" />
+              <circle cx="134" cy="88" r="43" stroke="#fcd34d" stroke-width="18" />
+              <circle cx="134" cy="164" r="43" stroke="#fcd34d" stroke-width="18" />
+              <circle cx="181" cy="126" r="16" fill="#fcd34d" />
+            </svg>
           </div>
         </div>
       </div>
