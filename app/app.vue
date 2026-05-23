@@ -48,12 +48,12 @@
                 aria-hidden="true"
               >
                 <g class="scissor-lower">
-                  <path class="scissor-blade" d="M198 120L524 140L220 132Z" />
-                  <path class="scissor-edge" d="M224 130L498 137" />
+                  <path class="scissor-blade" d="M198 120L532 150L220 137Z" />
+                  <path class="scissor-edge" d="M226 133L506 145" />
                 </g>
                 <g class="scissor-upper">
-                  <path class="scissor-blade" d="M198 110L524 90L220 98Z" />
-                  <path class="scissor-edge" d="M224 100L498 93" />
+                  <path class="scissor-blade" d="M198 110L532 82L220 93Z" />
+                  <path class="scissor-edge" d="M226 97L506 87" />
                 </g>
                 <circle class="scissor-pivot" cx="198" cy="115" r="18" />
                 <path class="scissor-grip" d="M181 114C145 88 108 54 72 62C34 70 28 123 62 142C97 162 139 135 181 114Z" />

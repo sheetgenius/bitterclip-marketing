@@ -73,7 +73,7 @@ body {
 
 .source-slice {
   position: absolute;
-  z-index: 6;
+  z-index: 7;
   top: 28%;
   left: 50%;
   width: min(88%, 30rem);
@@ -84,6 +84,31 @@ body {
   transform-origin: 50% 70%;
   animation: source-slice-slip 6.6s cubic-bezier(0.16, 1.18, 0.24, 1) both;
   pointer-events: none;
+}
+
+.source-slice::before,
+.source-slice::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  content: "";
+  pointer-events: none;
+}
+
+.source-slice::before {
+  top: 80%;
+  height: 0.16rem;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 78%) 18%, #fcd34d 54%, rgb(103 232 249 / 52%) 82%, transparent);
+  box-shadow:
+    0 0 0.55rem rgb(252 211 77 / 54%),
+    0 0 0.9rem rgb(103 232 249 / 24%);
+}
+
+.source-slice::after {
+  top: 84%;
+  height: 18%;
+  background: linear-gradient(180deg, rgb(9 9 11 / 0%), rgb(9 9 11 / 36%));
 }
 
 .source-card::before,
@@ -277,10 +302,10 @@ body {
 .cut-line {
   position: absolute;
   z-index: 8;
-  top: 65%;
+  top: 66.5%;
   left: 50%;
   width: min(78%, 27.5rem);
-  height: 0.18rem;
+  height: 0.22rem;
   border-radius: 999px;
   background: linear-gradient(90deg, transparent, rgb(252 211 77 / 92%) 18%, #ffffff 52%, rgb(103 232 249 / 74%) 82%, transparent);
   box-shadow:
@@ -332,13 +357,13 @@ body {
 .scissors {
   position: absolute;
   z-index: 8;
-  top: 65%;
+  top: 66.5%;
   left: 50%;
-  width: min(94%, 34rem);
+  width: min(108%, 39rem);
   overflow: visible;
   filter:
-    drop-shadow(0 1.4rem 1.7rem rgb(0 0 0 / 38%))
-    drop-shadow(0 0 0.8rem rgb(252 211 77 / 22%));
+    drop-shadow(0 1.4rem 1.7rem rgb(0 0 0 / 44%))
+    drop-shadow(0 0 1rem rgb(252 211 77 / 28%));
   opacity: 0;
   transform: translate(-63%, -50%) rotate(-7deg) scale(0.94);
   animation: scissor-pass 6.6s cubic-bezier(0.18, 1.06, 0.24, 1) both;
@@ -360,9 +385,9 @@ body {
 }
 
 .scissor-blade {
-  fill: rgb(226 232 240 / 92%);
-  stroke: rgb(255 255 255 / 64%);
-  stroke-width: 3;
+  fill: rgb(226 232 240 / 96%);
+  stroke: rgb(255 255 255 / 78%);
+  stroke-width: 4;
 }
 
 .scissor-edge {
@@ -380,13 +405,13 @@ body {
 .scissor-grip {
   fill: rgb(9 9 11 / 78%);
   stroke: rgb(252 211 77 / 72%);
-  stroke-width: 8;
+  stroke-width: 10;
 }
 
 .extract-path {
   position: absolute;
   z-index: 6;
-  top: 65%;
+  top: 66.5%;
   left: 50%;
   width: min(23%, 9rem);
   height: 0.18rem;
@@ -650,13 +675,13 @@ body {
 
   37% {
     opacity: 0.96;
-    transform: translateX(calc(-50% + 0.28rem)) translateY(0.2rem) rotate(-2.8deg) scale(1.01);
+    transform: translateX(calc(-50% + 0.38rem)) translateY(0.32rem) rotate(-3deg) scale(1.01);
   }
 
   52%,
   100% {
-    opacity: 0.84;
-    transform: translateX(calc(-50% + 0.56rem)) translateY(0.56rem) rotate(-3.4deg) scale(1);
+    opacity: 0.92;
+    transform: translateX(calc(-50% + 0.95rem)) translateY(0.9rem) rotate(-4.2deg) scale(1);
   }
 }
 
@@ -877,7 +902,7 @@ body {
 
   62%,
   100% {
-    opacity: 0.5;
+    opacity: 0.68;
     transform: translateX(-50%) rotate(-2deg) scaleX(0.94);
   }
 }
@@ -936,14 +961,14 @@ body {
   }
 
   58% {
-    opacity: 0.82;
-    transform: translate(-42%, -51%) rotate(-1deg) scale(0.98);
+    opacity: 0.9;
+    transform: translate(-40%, -51%) rotate(-1deg) scale(0.99);
   }
 
   76%,
   100% {
-    opacity: 0.34;
-    transform: translate(-38%, -51%) rotate(0deg) scale(0.96);
+    opacity: 0.52;
+    transform: translate(-36%, -51%) rotate(0deg) scale(0.97);
   }
 }
 
@@ -1180,17 +1205,17 @@ body {
   }
 
   .cut-line {
-    top: 65%;
+    top: 66.5%;
     width: min(86%, 18rem);
   }
 
   .scissors {
-    top: 65%;
-    width: 128%;
+    top: 66.5%;
+    width: 142%;
   }
 
   .extract-path {
-    top: 65%;
+    top: 66.5%;
     width: min(23%, 5.8rem);
   }
 
@@ -1337,12 +1362,12 @@ body {
   }
 
   .source-slice {
-    opacity: 0.84;
-    transform: translateX(calc(-50% + 0.56rem)) translateY(0.56rem) rotate(-3.4deg) scale(1);
+    opacity: 0.92;
+    transform: translateX(calc(-50% + 0.95rem)) translateY(0.9rem) rotate(-4.2deg) scale(1);
   }
 
   .cut-line {
-    opacity: 0.5;
+    opacity: 0.68;
     transform: translateX(-50%) rotate(-2deg) scaleX(0.94);
   }
 
@@ -1356,8 +1381,8 @@ body {
   }
 
   .scissors {
-    opacity: 0.34;
-    transform: translate(-38%, -51%) rotate(0deg) scale(0.96);
+    opacity: 0.52;
+    transform: translate(-36%, -51%) rotate(0deg) scale(0.97);
   }
 
   .scissor-upper {
