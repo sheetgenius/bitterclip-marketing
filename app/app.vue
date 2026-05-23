@@ -19,11 +19,16 @@
                   <source src="/clips/day-1-opening.mp4" type="video/mp4">
                 </video>
               </article>
+              <article class="source-slice" aria-hidden="true">
+                <video autoplay loop muted playsinline preload="metadata">
+                  <source src="/clips/day-1-opening.mp4" type="video/mp4">
+                </video>
+              </article>
               <div class="machine-strip" aria-hidden="true">
                 <span>drop file</span>
                 <span>auto directive</span>
                 <span>1 credit</span>
-                <strong>Zap</strong>
+                <strong>Clip</strong>
               </div>
               <div class="charge-rail" aria-hidden="true">
                 <span class="charge-fill" />
@@ -32,7 +37,28 @@
                 <span class="charge-tick charge-tick-3" />
               </div>
 
-              <div class="beam" />
+              <div class="cut-line" aria-hidden="true">
+                <span />
+              </div>
+              <svg
+                class="scissors"
+                viewBox="0 0 560 230"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <g class="scissor-lower">
+                  <path class="scissor-blade" d="M198 120L524 140L220 132Z" />
+                  <path class="scissor-edge" d="M224 130L498 137" />
+                </g>
+                <g class="scissor-upper">
+                  <path class="scissor-blade" d="M198 110L524 90L220 98Z" />
+                  <path class="scissor-edge" d="M224 100L498 93" />
+                </g>
+                <circle class="scissor-pivot" cx="198" cy="115" r="18" />
+                <path class="scissor-grip" d="M181 114C145 88 108 54 72 62C34 70 28 123 62 142C97 162 139 135 181 114Z" />
+                <path class="scissor-grip" d="M181 116C145 142 108 176 72 168C34 160 28 107 62 88C97 68 139 95 181 116Z" />
+              </svg>
               <div class="extract-path extract-path-left" aria-hidden="true">
                 <span />
                 <span />
@@ -43,19 +69,6 @@
                 <span />
                 <span />
               </div>
-              <div class="zap-orb" />
-              <svg
-                class="lightning"
-                viewBox="0 0 520 520"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path class="bolt-main" d="M454 38L298 210H388L206 482L244 278H154L454 38Z" />
-                <path class="bolt-branch bolt-branch-1" d="M304 220L162 166L224 248" />
-                <path class="bolt-branch bolt-branch-2" d="M285 274L456 315L344 340" />
-                <path class="bolt-branch bolt-branch-3" d="M247 314L105 397L218 374" />
-              </svg>
 
               <article class="burst burst-left">
                 <video autoplay loop muted playsinline preload="metadata">
@@ -75,7 +88,7 @@
 
               <div class="zap-again" aria-hidden="true">
                 <span>1 credit</span>
-                <strong>Zap again</strong>
+                <strong>Clip again</strong>
                 <em>clip 03</em>
               </div>
             </div>
@@ -85,10 +98,10 @@
         <div class="flex min-h-0 flex-[0_0_37%] flex-col items-center justify-center pb-5 pt-1 text-center">
           <p class="font-mono text-sm text-amber-300">Video in. Clips out.</p>
           <h1 class="mt-4 max-w-5xl text-4xl font-semibold leading-[1.02] tracking-normal text-white sm:text-5xl lg:text-6xl">
-            Drop a video. Hit Zap. Clips jump out.
+            Drop a video. Clip once. Shorts jump out.
           </h1>
           <p class="mt-4 max-w-3xl text-base leading-7 text-zinc-300 sm:text-lg">
-            Add an optional directive, pay a little, and zap once for one clip. Zap again when you want more.
+            Add an optional directive, pay a little, and clip once for one short. Clip again when you want more.
           </p>
           <div class="mt-5">
             <a

@@ -50,6 +50,7 @@ body {
 }
 
 .source-card,
+.source-slice,
 .burst {
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 18%);
@@ -70,6 +71,21 @@ body {
   animation: source-charge 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+.source-slice {
+  position: absolute;
+  z-index: 6;
+  top: 28%;
+  left: 50%;
+  width: min(88%, 30rem);
+  aspect-ratio: 16 / 9;
+  opacity: 0;
+  clip-path: polygon(0 86%, 100% 79%, 100% 100%, 0 100%);
+  transform: translateX(-50%) rotate(-2deg);
+  transform-origin: 50% 70%;
+  animation: source-slice-slip 6.6s cubic-bezier(0.16, 1.18, 0.24, 1) both;
+  pointer-events: none;
+}
+
 .source-card::before,
 .source-card::after {
   position: absolute;
@@ -80,9 +96,8 @@ body {
 }
 
 .source-card::before {
-  background:
-    linear-gradient(90deg, transparent, rgb(252 211 77 / 70%), transparent),
-    radial-gradient(circle at 50% 50%, rgb(34 211 238 / 34%), transparent 48%);
+  background: linear-gradient(102deg, transparent 28%, rgb(255 255 255 / 68%) 47%, rgb(252 211 77 / 68%) 50%, transparent 68%);
+  clip-path: polygon(0 83%, 100% 76%, 100% 96%, 0 100%);
   mix-blend-mode: screen;
   opacity: 0;
   animation: source-flash 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -95,6 +110,7 @@ body {
 }
 
 .source-card video,
+.source-slice video,
 .burst video {
   width: 100%;
   height: 100%;
@@ -258,28 +274,119 @@ body {
   animation-name: charge-tick-three;
 }
 
-.beam {
+.cut-line {
   position: absolute;
-  z-index: 3;
-  top: -7%;
+  z-index: 8;
+  top: 65%;
   left: 50%;
-  width: 0.7rem;
-  height: 60%;
+  width: min(78%, 27.5rem);
+  height: 0.18rem;
   border-radius: 999px;
-  background: linear-gradient(180deg, transparent, #fcd34d 24%, #22d3ee 64%, transparent);
+  background: linear-gradient(90deg, transparent, rgb(252 211 77 / 92%) 18%, #ffffff 52%, rgb(103 232 249 / 74%) 82%, transparent);
   box-shadow:
-    0 0 1.4rem rgb(252 211 77 / 80%),
-    0 0 3rem rgb(34 211 238 / 70%);
+    0 0 0.7rem rgb(252 211 77 / 70%),
+    0 0 1.4rem rgb(34 211 238 / 35%);
   opacity: 0;
-  transform: translateX(-50%) scaleY(0.2);
-  transform-origin: 50% 100%;
-  animation: beam-strike 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transform: translateX(-50%) rotate(-2deg) scaleX(0.35);
+  animation: cut-line 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  pointer-events: none;
+}
+
+.cut-line::before,
+.cut-line::after {
+  position: absolute;
+  left: 50%;
+  width: 94%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 28%), transparent);
+  content: "";
+  opacity: 0;
+  transform: translateX(-50%);
+  animation: cut-shadow 6.6s ease-out both;
+}
+
+.cut-line::before {
+  top: -0.44rem;
+}
+
+.cut-line::after {
+  bottom: -0.5rem;
+}
+
+.cut-line span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0.75rem rgb(252 211 77 / 90%),
+    0 0 1.3rem rgb(34 211 238 / 54%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: cut-spark 6.6s cubic-bezier(0.18, 1.28, 0.22, 1) both;
+}
+
+.scissors {
+  position: absolute;
+  z-index: 8;
+  top: 65%;
+  left: 50%;
+  width: min(94%, 34rem);
+  overflow: visible;
+  filter:
+    drop-shadow(0 1.4rem 1.7rem rgb(0 0 0 / 38%))
+    drop-shadow(0 0 0.8rem rgb(252 211 77 / 22%));
+  opacity: 0;
+  transform: translate(-63%, -50%) rotate(-7deg) scale(0.94);
+  animation: scissor-pass 6.6s cubic-bezier(0.18, 1.06, 0.24, 1) both;
+  pointer-events: none;
+}
+
+.scissor-upper,
+.scissor-lower {
+  transform-box: view-box;
+  transform-origin: 198px 115px;
+}
+
+.scissor-upper {
+  animation: scissor-upper 6.6s cubic-bezier(0.18, 1.18, 0.22, 1) both;
+}
+
+.scissor-lower {
+  animation: scissor-lower 6.6s cubic-bezier(0.18, 1.18, 0.22, 1) both;
+}
+
+.scissor-blade {
+  fill: rgb(226 232 240 / 92%);
+  stroke: rgb(255 255 255 / 64%);
+  stroke-width: 3;
+}
+
+.scissor-edge {
+  stroke: rgb(9 9 11 / 54%);
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.scissor-pivot {
+  fill: #fcd34d;
+  stroke: #ffffff;
+  stroke-width: 5;
+}
+
+.scissor-grip {
+  fill: rgb(9 9 11 / 78%);
+  stroke: rgb(252 211 77 / 72%);
+  stroke-width: 8;
 }
 
 .extract-path {
   position: absolute;
   z-index: 6;
-  top: 57%;
+  top: 65%;
   left: 50%;
   width: min(23%, 9rem);
   height: 0.18rem;
@@ -340,59 +447,9 @@ body {
   transform: translate(25%, -50%) rotate(10deg);
 }
 
-.zap-orb {
-  position: absolute;
-  z-index: 5;
-  top: 41%;
-  left: 50%;
-  width: 7.5rem;
-  height: 7.5rem;
-  border: 1px solid rgb(252 211 77 / 72%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgb(252 211 77 / 38%), rgb(34 211 238 / 16%) 42%, transparent 68%);
-  box-shadow:
-    0 0 1.5rem rgb(252 211 77 / 64%),
-    0 0 4rem rgb(34 211 238 / 48%);
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.28);
-  animation: zap-orb 6.6s cubic-bezier(0.18, 1.28, 0.22, 1) both;
-}
-
-.lightning {
-  position: absolute;
-  z-index: 6;
-  top: 4%;
-  left: 50%;
-  width: min(62%, 22rem);
-  overflow: visible;
-  filter:
-    drop-shadow(0 0 0.7rem rgb(252 211 77 / 86%))
-    drop-shadow(0 0 2rem rgb(34 211 238 / 70%));
-  opacity: 0;
-  transform: translateX(-50%) scale(0.82);
-  animation: lightning-pop 6.6s steps(1, end) both;
-}
-
-.bolt-main,
-.bolt-branch {
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-.bolt-main {
-  fill: rgb(252 211 77 / 92%);
-  stroke: #ffffff;
-  stroke-width: 7;
-}
-
-.bolt-branch {
-  stroke: #67e8f9;
-  stroke-width: 8;
-}
-
 .burst {
   position: absolute;
-  z-index: 7;
+  z-index: 9;
   top: 31%;
   left: 50%;
   width: min(27%, 8.4rem);
@@ -576,6 +633,30 @@ body {
 
   40% {
     transform: translateX(-50%) rotate(-2deg) scale(1.01);
+  }
+}
+
+@keyframes source-slice-slip {
+  0%,
+  22% {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-2deg) scale(1);
+  }
+
+  28% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(-2deg) scale(1.01);
+  }
+
+  37% {
+    opacity: 0.96;
+    transform: translateX(calc(-50% + 0.28rem)) translateY(0.2rem) rotate(-2.8deg) scale(1.01);
+  }
+
+  52%,
+  100% {
+    opacity: 0.84;
+    transform: translateX(calc(-50% + 0.56rem)) translateY(0.56rem) rotate(-3.4deg) scale(1);
   }
 }
 
@@ -781,29 +862,116 @@ body {
   }
 }
 
-@keyframes beam-strike {
+@keyframes cut-line {
   0%,
-  17%,
+  20% {
+    opacity: 0;
+    transform: translateX(-50%) rotate(-2deg) scaleX(0.28);
+  }
+
+  27%,
+  44% {
+    opacity: 1;
+    transform: translateX(-50%) rotate(-2deg) scaleX(1);
+  }
+
   62%,
   100% {
+    opacity: 0.5;
+    transform: translateX(-50%) rotate(-2deg) scaleX(0.94);
+  }
+}
+
+@keyframes cut-shadow {
+  0%,
+  24% {
     opacity: 0;
-    transform: translateX(-50%) scaleY(0.2);
   }
 
-  22%,
-  43% {
+  34%,
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes cut-spark {
+  0%,
+  22% {
+    opacity: 0;
+    transform: translate(-300%, -50%) scale(0.32);
+  }
+
+  30% {
     opacity: 1;
-    transform: translateX(-50%) scaleY(1);
+    transform: translate(-90%, -50%) scale(1.1);
   }
 
-  32% {
-    opacity: 0.62;
-    transform: translateX(-50%) scaleY(0.92);
-  }
-
-  36% {
+  39% {
     opacity: 1;
-    transform: translateX(-50%) scaleY(1.08);
+    transform: translate(120%, -50%) scale(1);
+  }
+
+  52%,
+  100% {
+    opacity: 0;
+    transform: translate(260%, -50%) scale(0.58);
+  }
+}
+
+@keyframes scissor-pass {
+  0%,
+  17% {
+    opacity: 0;
+    transform: translate(-70%, -51%) rotate(-7deg) scale(0.92);
+  }
+
+  26% {
+    opacity: 1;
+    transform: translate(-56%, -51%) rotate(-5deg) scale(1);
+  }
+
+  40% {
+    opacity: 1;
+    transform: translate(-49%, -51%) rotate(-2deg) scale(1.03);
+  }
+
+  58% {
+    opacity: 0.82;
+    transform: translate(-42%, -51%) rotate(-1deg) scale(0.98);
+  }
+
+  76%,
+  100% {
+    opacity: 0.34;
+    transform: translate(-38%, -51%) rotate(0deg) scale(0.96);
+  }
+}
+
+@keyframes scissor-upper {
+  0%,
+  20%,
+  56%,
+  100% {
+    transform: rotate(-8deg);
+  }
+
+  31%,
+  40% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes scissor-lower {
+  0%,
+  20%,
+  56%,
+  100% {
+    transform: rotate(8deg);
+  }
+
+  31%,
+  40% {
+    transform: rotate(0deg);
   }
 }
 
@@ -844,51 +1012,6 @@ body {
   100% {
     opacity: 0.58;
     transform: translate(-50%, -50%) scale(0.72);
-  }
-}
-
-@keyframes zap-orb {
-  0%,
-  19%,
-  58%,
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.28);
-  }
-
-  24% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(0.78);
-  }
-
-  31%,
-  39% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.18);
-  }
-
-  48% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1.65);
-  }
-}
-
-@keyframes lightning-pop {
-  0%,
-  20%,
-  29%,
-  33%,
-  42%,
-  100% {
-    opacity: 0;
-  }
-
-  22%,
-  26%,
-  31%,
-  36%,
-  40% {
-    opacity: 1;
   }
 }
 
@@ -1016,7 +1139,8 @@ body {
     aspect-ratio: 0.82 / 1;
   }
 
-  .source-card {
+  .source-card,
+  .source-slice {
     top: 25%;
     width: 96%;
   }
@@ -1055,13 +1179,18 @@ body {
     width: min(32%, 7.4rem);
   }
 
-  .lightning {
-    top: 8%;
-    width: 70%;
+  .cut-line {
+    top: 65%;
+    width: min(86%, 18rem);
+  }
+
+  .scissors {
+    top: 65%;
+    width: 128%;
   }
 
   .extract-path {
-    top: 58%;
+    top: 65%;
     width: min(23%, 5.8rem);
   }
 
@@ -1137,6 +1266,7 @@ body {
   .source-card,
   .source-card::before,
   .source-card::after,
+  .source-slice,
   .machine-strip,
   .machine-strip strong,
   .machine-strip strong::before,
@@ -1144,11 +1274,15 @@ body {
   .charge-rail,
   .charge-fill,
   .charge-tick,
-  .beam,
+  .cut-line,
+  .cut-line::before,
+  .cut-line::after,
+  .cut-line span,
+  .scissors,
+  .scissor-upper,
+  .scissor-lower,
   .extract-path,
   .extract-path span,
-  .zap-orb,
-  .lightning,
   .burst-next,
   .burst {
     animation: none;
@@ -1200,6 +1334,38 @@ body {
     background: rgb(255 255 255 / 28%);
     opacity: 0.48;
     transform: translate(-50%, -50%) scaleY(0.82);
+  }
+
+  .source-slice {
+    opacity: 0.84;
+    transform: translateX(calc(-50% + 0.56rem)) translateY(0.56rem) rotate(-3.4deg) scale(1);
+  }
+
+  .cut-line {
+    opacity: 0.5;
+    transform: translateX(-50%) rotate(-2deg) scaleX(0.94);
+  }
+
+  .cut-line::before,
+  .cut-line::after {
+    opacity: 0.6;
+  }
+
+  .cut-line span {
+    opacity: 0;
+  }
+
+  .scissors {
+    opacity: 0.34;
+    transform: translate(-38%, -51%) rotate(0deg) scale(0.96);
+  }
+
+  .scissor-upper {
+    transform: rotate(-8deg);
+  }
+
+  .scissor-lower {
+    transform: rotate(8deg);
   }
 
   .burst-left {
