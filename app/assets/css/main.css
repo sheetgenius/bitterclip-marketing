@@ -228,35 +228,34 @@ body {
   animation: charge-fill 6.6s cubic-bezier(0.18, 1.08, 0.2, 1) both;
 }
 
-.charge-pip {
+.charge-tick {
   position: absolute;
   top: 50%;
-  width: 0.86rem;
-  height: 0.86rem;
-  border: 1px solid rgb(255 255 255 / 18%);
+  width: 0.1rem;
+  height: 0.78rem;
   border-radius: 999px;
-  background: rgb(9 9 11 / 86%);
-  box-shadow: 0 0 0.8rem rgb(0 0 0 / 28%);
+  background: rgb(255 255 255 / 20%);
+  box-shadow: 0 0 0.45rem rgb(0 0 0 / 26%);
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.65);
+  transform: translate(-50%, -50%) scaleY(0.55);
   animation-duration: 6.6s;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.16, 1.32, 0.24, 1);
 }
 
-.charge-pip-1 {
+.charge-tick-1 {
   left: 32%;
-  animation-name: charge-pip-one;
+  animation-name: charge-tick-one;
 }
 
-.charge-pip-2 {
+.charge-tick-2 {
   left: 64%;
-  animation-name: charge-pip-two;
+  animation-name: charge-tick-two;
 }
 
-.charge-pip-3 {
+.charge-tick-3 {
   left: 96%;
-  animation-name: charge-pip-three;
+  animation-name: charge-tick-three;
 }
 
 .beam {
@@ -784,57 +783,54 @@ body {
   }
 }
 
-@keyframes charge-pip-one {
+@keyframes charge-tick-one {
   0%,
   27% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.65);
+    transform: translate(-50%, -50%) scaleY(0.55);
   }
 
   32%,
   100% {
-    border-color: rgb(252 211 77 / 70%);
     background: #fcd34d;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scaleY(1);
     box-shadow:
-      0 0 0.8rem rgb(252 211 77 / 72%),
-      0 0 1.4rem rgb(252 211 77 / 36%);
+      0 0 0.45rem rgb(252 211 77 / 66%),
+      0 0 0.9rem rgb(252 211 77 / 30%);
   }
 }
 
-@keyframes charge-pip-two {
+@keyframes charge-tick-two {
   0%,
   39% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.65);
+    transform: translate(-50%, -50%) scaleY(0.55);
   }
 
   45%,
   100% {
-    border-color: rgb(103 232 249 / 70%);
     background: #67e8f9;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scaleY(1);
     box-shadow:
-      0 0 0.8rem rgb(103 232 249 / 70%),
-      0 0 1.4rem rgb(103 232 249 / 34%);
+      0 0 0.45rem rgb(103 232 249 / 64%),
+      0 0 0.9rem rgb(103 232 249 / 28%);
   }
 }
 
-@keyframes charge-pip-three {
+@keyframes charge-tick-three {
   0%,
   58% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.65);
+    transform: translate(-50%, -50%) scaleY(0.55);
   }
 
   68%,
   100% {
-    border-color: rgb(255 255 255 / 34%);
-    background: rgb(9 9 11 / 86%);
-    opacity: 0.78;
-    transform: translate(-50%, -50%) scale(0.92);
+    background: rgb(255 255 255 / 28%);
+    opacity: 0.48;
+    transform: translate(-50%, -50%) scaleY(0.82);
   }
 }
 
@@ -1165,9 +1161,8 @@ body {
     height: 0.42rem;
   }
 
-  .charge-pip {
-    width: 0.7rem;
-    height: 0.7rem;
+  .charge-tick {
+    height: 0.64rem;
   }
 
   .burst {
@@ -1305,7 +1300,7 @@ body {
   .machine-strip strong::after,
   .charge-rail,
   .charge-fill,
-  .charge-pip,
+  .charge-tick,
   .beam,
   .extract-path,
   .extract-path span,
@@ -1348,25 +1343,22 @@ body {
     transform: scaleX(0.78);
   }
 
-  .charge-pip-1 {
-    border-color: rgb(252 211 77 / 70%);
+  .charge-tick-1 {
     background: #fcd34d;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scaleY(1);
   }
 
-  .charge-pip-2 {
-    border-color: rgb(103 232 249 / 70%);
+  .charge-tick-2 {
     background: #67e8f9;
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scaleY(1);
   }
 
-  .charge-pip-3 {
-    border-color: rgb(255 255 255 / 34%);
-    background: rgb(9 9 11 / 86%);
-    opacity: 0.78;
-    transform: translate(-50%, -50%) scale(0.92);
+  .charge-tick-3 {
+    background: rgb(255 255 255 / 28%);
+    opacity: 0.48;
+    transform: translate(-50%, -50%) scaleY(0.82);
   }
 
   .burst-left {

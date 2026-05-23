@@ -27,9 +27,9 @@
               </div>
               <div class="charge-rail" aria-hidden="true">
                 <span class="charge-fill" />
-                <span class="charge-pip charge-pip-1" />
-                <span class="charge-pip charge-pip-2" />
-                <span class="charge-pip charge-pip-3" />
+                <span class="charge-tick charge-tick-1" />
+                <span class="charge-tick charge-tick-2" />
+                <span class="charge-tick charge-tick-3" />
               </div>
 
               <div class="beam" />
