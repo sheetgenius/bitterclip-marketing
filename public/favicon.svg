@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BitterClip">
+  <rect width="64" height="64" rx="12" fill="#111111"/>
+  <path d="M18 16h28v32H18z" fill="none" stroke="#fcd34d" stroke-width="4"/>
+  <path d="M27 25l13 7-13 7V25z" fill="#fcd34d"/>
+</svg>
