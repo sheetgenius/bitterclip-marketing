@@ -25,6 +25,12 @@
                 <span>1 credit</span>
                 <strong>Zap</strong>
               </div>
+              <div class="charge-rail" aria-hidden="true">
+                <span class="charge-fill" />
+                <span class="charge-pip charge-pip-1" />
+                <span class="charge-pip charge-pip-2" />
+                <span class="charge-pip charge-pip-3" />
+              </div>
 
               <div class="beam" />
               <div class="extract-path extract-path-left" aria-hidden="true">

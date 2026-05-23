@@ -167,6 +167,70 @@ body {
   font-weight: 850;
 }
 
+.charge-rail {
+  position: absolute;
+  top: 72%;
+  left: 50%;
+  z-index: 10;
+  width: min(44%, 18rem);
+  height: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 72%);
+  box-shadow:
+    0 0.7rem 1.4rem rgb(0 0 0 / 24%),
+    inset 0 0 0.75rem rgb(255 255 255 / 5%);
+  opacity: 0;
+  overflow: visible;
+  transform: translateX(-50%);
+  animation: charge-rail-pop 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  pointer-events: none;
+}
+
+.charge-fill {
+  position: absolute;
+  inset: 0.11rem;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #fcd34d, #67e8f9 58%, rgb(255 255 255 / 36%));
+  box-shadow:
+    0 0 0.9rem rgb(252 211 77 / 44%),
+    0 0 1.25rem rgb(103 232 249 / 34%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  animation: charge-fill 6.6s cubic-bezier(0.18, 1.08, 0.2, 1) both;
+}
+
+.charge-pip {
+  position: absolute;
+  top: 50%;
+  width: 0.86rem;
+  height: 0.86rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 86%);
+  box-shadow: 0 0 0.8rem rgb(0 0 0 / 28%);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.65);
+  animation-duration: 6.6s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1.32, 0.24, 1);
+}
+
+.charge-pip-1 {
+  left: 32%;
+  animation-name: charge-pip-one;
+}
+
+.charge-pip-2 {
+  left: 64%;
+  animation-name: charge-pip-two;
+}
+
+.charge-pip-3 {
+  left: 96%;
+  animation-name: charge-pip-three;
+}
+
 .beam {
   position: absolute;
   z-index: 3;
@@ -711,6 +775,94 @@ body {
   }
 }
 
+@keyframes charge-rail-pop {
+  0%,
+  20% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0.3rem) scaleX(0.72);
+  }
+
+  28%,
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scaleX(1);
+  }
+}
+
+@keyframes charge-fill {
+  0%,
+  22% {
+    transform: scaleX(0);
+  }
+
+  32% {
+    transform: scaleX(0.35);
+  }
+
+  44% {
+    transform: scaleX(0.66);
+  }
+
+  68%,
+  100% {
+    transform: scaleX(0.78);
+  }
+}
+
+@keyframes charge-pip-one {
+  0%,
+  27% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  32%,
+  100% {
+    border-color: rgb(252 211 77 / 70%);
+    background: #fcd34d;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      0 0 0.8rem rgb(252 211 77 / 72%),
+      0 0 1.4rem rgb(252 211 77 / 36%);
+  }
+}
+
+@keyframes charge-pip-two {
+  0%,
+  39% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  45%,
+  100% {
+    border-color: rgb(103 232 249 / 70%);
+    background: #67e8f9;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      0 0 0.8rem rgb(103 232 249 / 70%),
+      0 0 1.4rem rgb(103 232 249 / 34%);
+  }
+}
+
+@keyframes charge-pip-three {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+
+  68%,
+  100% {
+    border-color: rgb(255 255 255 / 34%);
+    background: rgb(9 9 11 / 86%);
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(0.92);
+  }
+}
+
 @keyframes beam-strike {
   0%,
   17%,
@@ -1062,6 +1214,17 @@ body {
     padding: 0 0.34rem;
   }
 
+  .charge-rail {
+    top: 73.5%;
+    width: min(42%, 9.5rem);
+    height: 0.42rem;
+  }
+
+  .charge-pip {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
   .burst {
     top: 44%;
     width: min(32%, 7.4rem);
@@ -1208,6 +1371,9 @@ body {
   .source-card::before,
   .source-card::after,
   .machine-strip,
+  .charge-rail,
+  .charge-fill,
+  .charge-pip,
   .beam,
   .extract-path,
   .extract-path span,
@@ -1239,6 +1405,36 @@ body {
   .meter-step {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+
+  .charge-rail {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scaleX(1);
+  }
+
+  .charge-fill {
+    transform: scaleX(0.78);
+  }
+
+  .charge-pip-1 {
+    border-color: rgb(252 211 77 / 70%);
+    background: #fcd34d;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .charge-pip-2 {
+    border-color: rgb(103 232 249 / 70%);
+    background: #67e8f9;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .charge-pip-3 {
+    border-color: rgb(255 255 255 / 34%);
+    background: rgb(9 9 11 / 86%);
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(0.92);
   }
 
   .burst-left {
