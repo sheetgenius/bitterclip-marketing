@@ -27,6 +27,16 @@
               </div>
 
               <div class="beam" />
+              <div class="extract-path extract-path-left" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+              <div class="extract-path extract-path-right" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
               <div class="zap-meter" aria-hidden="true">
                 <span class="meter-step meter-step-1">01</span>
                 <span class="meter-step meter-step-2">02</span>

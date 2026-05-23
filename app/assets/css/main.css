@@ -185,6 +185,70 @@ body {
   animation: beam-strike 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
+.extract-path {
+  position: absolute;
+  z-index: 6;
+  top: 57%;
+  left: 50%;
+  width: min(23%, 9rem);
+  height: 0.18rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgb(34 211 238 / 60%), rgb(252 211 77 / 86%), transparent);
+  box-shadow:
+    0 0 0.55rem rgb(34 211 238 / 36%),
+    0 0 1.15rem rgb(252 211 77 / 30%);
+  opacity: 0;
+  transform-origin: 0 50%;
+  animation: extract-path-settle 6.6s ease-out both;
+  pointer-events: none;
+}
+
+.extract-path::before {
+  position: absolute;
+  inset: -0.42rem 0;
+  border-top: 1px dashed rgb(103 232 249 / 28%);
+  border-bottom: 1px dashed rgb(252 211 77 / 18%);
+  content: "";
+  opacity: 0.78;
+}
+
+.extract-path span {
+  position: absolute;
+  top: 50%;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: #fcd34d;
+  box-shadow:
+    0 0 0.65rem rgb(252 211 77 / 84%),
+    0 0 1.1rem rgb(34 211 238 / 58%);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: extract-spark 6.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.extract-path span:nth-child(1) {
+  left: 22%;
+}
+
+.extract-path span:nth-child(2) {
+  left: 52%;
+  animation-delay: 0.08s;
+}
+
+.extract-path span:nth-child(3) {
+  left: 82%;
+  animation-delay: 0.16s;
+}
+
+.extract-path-left {
+  transform: translate(-125%, -50%) rotate(-10deg);
+}
+
+.extract-path-right {
+  transform: translate(25%, -50%) rotate(10deg);
+}
+
 .zap-meter {
   position: absolute;
   z-index: 12;
@@ -673,6 +737,46 @@ body {
   }
 }
 
+@keyframes extract-path-settle {
+  0%,
+  25% {
+    opacity: 0;
+    filter: blur(0.5rem);
+  }
+
+  34%,
+  46% {
+    opacity: 0.95;
+    filter: blur(0);
+  }
+
+  60%,
+  100% {
+    opacity: 0.42;
+    filter: blur(0);
+  }
+}
+
+@keyframes extract-spark {
+  0%,
+  28% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.35);
+  }
+
+  36%,
+  48% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  62%,
+  100% {
+    opacity: 0.58;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+}
+
 @keyframes zap-orb {
   0%,
   19%,
@@ -968,6 +1072,19 @@ body {
     width: 70%;
   }
 
+  .extract-path {
+    top: 58%;
+    width: min(23%, 5.8rem);
+  }
+
+  .extract-path-left {
+    transform: translate(-120%, -50%) rotate(-8deg);
+  }
+
+  .extract-path-right {
+    transform: translate(28%, -50%) rotate(10deg);
+  }
+
   .zap-meter {
     top: 13%;
     left: calc(50% + 8.1rem);
@@ -1092,6 +1209,8 @@ body {
   .source-card::after,
   .machine-strip,
   .beam,
+  .extract-path,
+  .extract-path span,
   .zap-orb,
   .lightning,
   .meter-step,
@@ -1130,6 +1249,14 @@ body {
   .burst-right {
     opacity: 1;
     transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+
+  .extract-path {
+    opacity: 0.42;
+  }
+
+  .extract-path span {
+    opacity: 0.58;
   }
 
   .burst-next {
