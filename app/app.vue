@@ -57,15 +57,6 @@
                 <path class="bolt-branch bolt-branch-3" d="M247 314L105 397L218 374" />
               </svg>
 
-              <div class="launch-impact launch-impact-left" aria-hidden="true">
-                <span />
-                <span />
-              </div>
-              <div class="launch-impact launch-impact-right" aria-hidden="true">
-                <span />
-                <span />
-              </div>
-
               <article class="burst burst-left">
                 <video autoplay loop muted playsinline preload="metadata">
                   <source src="/clips/day-1-models.mp4" type="video/mp4">
