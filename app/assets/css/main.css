@@ -341,51 +341,6 @@ body {
   transform: translate(25%, -50%) rotate(10deg);
 }
 
-.zap-meter {
-  position: absolute;
-  z-index: 12;
-  top: 15%;
-  left: calc(50% + min(22vw, 12rem));
-  display: grid;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  letter-spacing: 0;
-  pointer-events: none;
-}
-
-.meter-step {
-  display: inline-flex;
-  width: 2.2rem;
-  height: 2.2rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgb(255 255 255 / 18%);
-  border-radius: 999px;
-  background: rgb(9 9 11 / 78%);
-  color: rgb(255 255 255 / 42%);
-  font-size: 0.68rem;
-  font-weight: 750;
-  box-shadow: 0 0.7rem 1.6rem rgb(0 0 0 / 28%);
-  opacity: 0;
-  transform: translateY(0.45rem) scale(0.78);
-  animation-duration: 6.6s;
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.16, 1.35, 0.25, 1);
-  backdrop-filter: blur(10px);
-}
-
-.meter-step-1 {
-  animation-name: meter-step-one;
-}
-
-.meter-step-2 {
-  animation-name: meter-step-two;
-}
-
-.meter-step-3 {
-  animation-name: meter-step-three;
-}
-
 .zap-orb {
   position: absolute;
   z-index: 5;
@@ -589,126 +544,6 @@ body {
   letter-spacing: 0;
   transform: translateX(50%);
   white-space: nowrap;
-}
-
-.reactions {
-  position: absolute;
-  z-index: 9;
-  top: 31%;
-  left: 50%;
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-}
-
-.reactions-left {
-  transform: translate(-13.7rem, 2.2rem) rotate(-10deg);
-}
-
-.reactions-right {
-  transform: translate(10.4rem, 3rem) rotate(9deg);
-}
-
-.reaction {
-  position: absolute;
-  display: inline-flex;
-  min-width: 2.2rem;
-  min-height: 2.2rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgb(255 255 255 / 22%);
-  border-radius: 999px;
-  background: rgb(9 9 11 / 82%);
-  color: white;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0;
-  opacity: 0;
-  box-shadow:
-    0 0.8rem 1.6rem rgb(0 0 0 / 32%),
-    0 0 1rem rgb(252 211 77 / 24%);
-  backdrop-filter: blur(10px);
-  animation: reaction-pop 6.6s cubic-bezier(0.16, 1.4, 0.24, 1) both;
-}
-
-.reaction-heart {
-  top: -2.5rem;
-  left: -1rem;
-  color: #fcd34d;
-  font-size: 1rem;
-  animation-delay: 2.55s;
-}
-
-.reaction-like {
-  top: 0.1rem;
-  left: -3.8rem;
-  padding: 0 0.55rem;
-  animation-delay: 2.82s;
-}
-
-.reaction-count {
-  top: 1.95rem;
-  left: 1.6rem;
-  color: #67e8f9;
-  animation-delay: 3.06s;
-}
-
-.reaction-mini {
-  min-width: 1.5rem;
-  min-height: 1.5rem;
-  padding: 0 0.36rem;
-  color: rgb(255 255 255 / 86%);
-  font-size: 0.58rem;
-  box-shadow:
-    0 0.55rem 1.1rem rgb(0 0 0 / 32%),
-    0 0 0.85rem rgb(103 232 249 / 18%);
-  animation-name: reaction-float-pop;
-}
-
-.reaction-mini-a {
-  color: #fcd34d;
-  animation-delay: 3.32s;
-}
-
-.reaction-mini-b {
-  color: #67e8f9;
-  animation-delay: 3.62s;
-}
-
-.reaction-mini-c {
-  animation-delay: 3.92s;
-}
-
-.reactions-left .reaction-mini-a {
-  top: -3.2rem;
-  left: 1.9rem;
-}
-
-.reactions-left .reaction-mini-b {
-  top: -0.85rem;
-  left: 3.35rem;
-}
-
-.reactions-left .reaction-mini-c {
-  top: 3.25rem;
-  left: -1.9rem;
-}
-
-.reactions-right .reaction-mini-a {
-  top: -3.25rem;
-  left: 1.75rem;
-}
-
-.reactions-right .reaction-mini-b {
-  top: -0.8rem;
-  left: 3.05rem;
-}
-
-.reactions-right .reaction-mini-c {
-  top: 3.05rem;
-  left: -1.35rem;
-  color: #fcd34d;
 }
 
 .zap-again {
@@ -1114,60 +949,6 @@ body {
   }
 }
 
-@keyframes meter-step-one {
-  0%,
-  22% {
-    opacity: 0;
-    transform: translateY(0.45rem) scale(0.78);
-  }
-
-  30%,
-  100% {
-    border-color: rgb(252 211 77 / 70%);
-    color: #fcd34d;
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    box-shadow:
-      0 0.7rem 1.6rem rgb(0 0 0 / 28%),
-      0 0 1.15rem rgb(252 211 77 / 46%);
-  }
-}
-
-@keyframes meter-step-two {
-  0%,
-  34% {
-    opacity: 0;
-    transform: translateY(0.45rem) scale(0.78);
-  }
-
-  45%,
-  100% {
-    border-color: rgb(103 232 249 / 70%);
-    color: #67e8f9;
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    box-shadow:
-      0 0.7rem 1.6rem rgb(0 0 0 / 28%),
-      0 0 1.15rem rgb(103 232 249 / 42%);
-  }
-}
-
-@keyframes meter-step-three {
-  0%,
-  58% {
-    opacity: 0;
-    transform: translateY(0.45rem) scale(0.78);
-  }
-
-  68%,
-  100% {
-    border-color: rgb(255 255 255 / 34%);
-    color: rgb(255 255 255 / 58%);
-    opacity: 0.82;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @keyframes burst-left {
   0%,
   25% {
@@ -1284,44 +1065,6 @@ body {
   100% {
     opacity: 0.48;
     transform: translate(-50%, 2%) scale(0.94) rotate(3deg);
-  }
-}
-
-@keyframes reaction-pop {
-  0%,
-  44% {
-    opacity: 0;
-    transform: translateY(0.8rem) scale(0.5);
-  }
-
-  52% {
-    opacity: 1;
-    transform: translateY(-0.42rem) scale(1.16);
-  }
-
-  62%,
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes reaction-float-pop {
-  0%,
-  48% {
-    opacity: 0;
-    transform: translateY(0.7rem) scale(0.55) rotate(-8deg);
-  }
-
-  58% {
-    opacity: 0.94;
-    transform: translateY(-0.45rem) scale(1.12) rotate(5deg);
-  }
-
-  72%,
-  100% {
-    opacity: 0.82;
-    transform: translateY(-0.16rem) scale(1) rotate(0deg);
   }
 }
 
@@ -1455,65 +1198,6 @@ body {
     transform: translate(28%, -50%) rotate(10deg);
   }
 
-  .zap-meter {
-    top: 13%;
-    left: calc(50% + 8.1rem);
-    gap: 0.32rem;
-  }
-
-  .meter-step {
-    width: 1.78rem;
-    height: 1.78rem;
-    font-size: 0.56rem;
-  }
-
-  .reactions-left {
-    transform: translate(-7.8rem, 4rem) rotate(-8deg);
-  }
-
-  .reactions-right {
-    transform: translate(6.2rem, 4rem) rotate(8deg);
-  }
-
-  .reaction-heart {
-    top: -2.1rem;
-    left: 0.1rem;
-  }
-
-  .reaction-like {
-    top: 0;
-    left: -1rem;
-  }
-
-  .reaction-count {
-    top: 1.7rem;
-    left: 1rem;
-  }
-
-  .reaction-mini {
-    min-width: 1.35rem;
-    min-height: 1.35rem;
-    font-size: 0.52rem;
-  }
-
-  .reactions-left .reaction-mini-a,
-  .reactions-right .reaction-mini-a {
-    top: -2.8rem;
-    left: 2.2rem;
-  }
-
-  .reactions-left .reaction-mini-b,
-  .reactions-right .reaction-mini-b {
-    top: -0.85rem;
-    left: 3.05rem;
-  }
-
-  .reactions-left .reaction-mini-c,
-  .reactions-right .reaction-mini-c {
-    top: 2.85rem;
-    left: -0.9rem;
-  }
-
   .zap-again {
     top: 78%;
     gap: 0.4rem;
@@ -1627,17 +1311,11 @@ body {
   .extract-path span,
   .zap-orb,
   .lightning,
-  .meter-step,
   .burst-next,
   .launch-impact,
   .launch-impact span,
   .burst {
     animation: none;
-  }
-
-  .reaction {
-    animation: none;
-    opacity: 1;
   }
 
   .zap-again {
@@ -1650,11 +1328,6 @@ body {
   .zap-again::after,
   .zap-again strong {
     animation: none;
-  }
-
-  .meter-step {
-    opacity: 1;
-    transform: translateY(0) scale(1);
   }
 
   .machine-strip strong {
