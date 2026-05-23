@@ -293,6 +293,45 @@ body {
   animation-delay: 3.06s;
 }
 
+.zap-again {
+  position: absolute;
+  z-index: 10;
+  top: 78%;
+  left: 50%;
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  gap: 0.55rem;
+  align-items: center;
+  border: 1px solid rgb(252 211 77 / 48%);
+  border-radius: 999px;
+  background: rgb(9 9 11 / 84%);
+  padding: 0.48rem 0.65rem;
+  color: white;
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  box-shadow:
+    0 1rem 2rem rgb(0 0 0 / 34%),
+    0 0 1.8rem rgb(252 211 77 / 24%);
+  opacity: 0;
+  transform: translate(-50%, 0.6rem) scale(0.86);
+  animation: zap-again-pop 6.6s cubic-bezier(0.16, 1.4, 0.24, 1) both;
+  backdrop-filter: blur(12px);
+}
+
+.zap-again span,
+.zap-again em {
+  color: rgb(255 255 255 / 62%);
+  font-size: 0.68rem;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.zap-again strong {
+  color: #fcd34d;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
 @keyframes source-charge {
   0%,
   18%,
@@ -482,6 +521,25 @@ body {
   }
 }
 
+@keyframes zap-again-pop {
+  0%,
+  58% {
+    opacity: 0;
+    transform: translate(-50%, 0.6rem) scale(0.86);
+  }
+
+  66% {
+    opacity: 1;
+    transform: translate(-50%, -0.18rem) scale(1.05);
+  }
+
+  76%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
 @media (max-width: 640px) {
   .zap-stage {
     aspect-ratio: 0.82 / 1;
@@ -523,6 +581,21 @@ body {
   .reaction-count {
     top: 1.7rem;
     left: 1rem;
+  }
+
+  .zap-again {
+    top: 78%;
+    gap: 0.4rem;
+    padding: 0.42rem 0.5rem;
+  }
+
+  .zap-again span,
+  .zap-again em {
+    font-size: 0.58rem;
+  }
+
+  .zap-again strong {
+    font-size: 0.68rem;
   }
 
   @keyframes burst-left {
@@ -578,6 +651,12 @@ body {
   .reaction {
     animation: none;
     opacity: 1;
+  }
+
+  .zap-again {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 
   .burst-left {

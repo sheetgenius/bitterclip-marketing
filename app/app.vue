@@ -59,6 +59,12 @@
                 <span class="reaction reaction-like">save</span>
                 <span class="reaction reaction-count">+31</span>
               </div>
+
+              <div class="zap-again" aria-hidden="true">
+                <span>1 credit</span>
+                <strong>Zap again</strong>
+                <em>clip 03</em>
+              </div>
             </div>
           </div>
         </div>
