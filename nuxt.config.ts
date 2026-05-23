@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 const siteUrl = 'https://bitterclip.com/'
 const description =
-  'BitterClip is a coming-soon clip foundry for founder and operator video loops.'
+  'BitterClip is a coming-soon clip vending machine: drop a video, hit Zap, and get clips out.'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -20,7 +20,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'BitterClip - Founder clips, with receipts',
+      title: 'BitterClip - Drop a video. Hit Zap. Clips jump out.',
       htmlAttrs: {
         lang: 'en',
       },
@@ -29,12 +29,12 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#111111' },
         { name: 'description', content: description },
-        { property: 'og:title', content: 'BitterClip - Founder clips, with receipts' },
+        { property: 'og:title', content: 'BitterClip - Drop a video. Hit Zap. Clips jump out.' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: siteUrl },
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: 'BitterClip - Founder clips, with receipts' },
+        { name: 'twitter:title', content: 'BitterClip - Drop a video. Hit Zap. Clips jump out.' },
         { name: 'twitter:description', content: description },
       ],
       link: [
