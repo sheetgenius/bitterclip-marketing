@@ -436,6 +436,59 @@ body {
   stroke-width: 8;
 }
 
+.launch-impact {
+  position: absolute;
+  z-index: 6;
+  top: 31%;
+  left: 50%;
+  width: min(29%, 9.1rem);
+  aspect-ratio: 9 / 16;
+  border-radius: 1rem;
+  opacity: 0;
+  transform: translate(-50%, 4%) scale(0.34) rotate(0deg);
+  transform-origin: 50% 72%;
+  animation-duration: 6.6s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1.3, 0.28, 1);
+  pointer-events: none;
+}
+
+.launch-impact::before {
+  position: absolute;
+  inset: 18% -22%;
+  border-radius: 999px;
+  background: radial-gradient(ellipse, rgb(252 211 77 / 34%), rgb(34 211 238 / 20%) 38%, transparent 72%);
+  filter: blur(0.55rem);
+  content: "";
+}
+
+.launch-impact span {
+  position: absolute;
+  inset: -0.65rem;
+  border: 1px solid rgb(252 211 77 / 48%);
+  border-radius: inherit;
+  box-shadow:
+    0 0 0.9rem rgb(252 211 77 / 28%),
+    inset 0 0 1rem rgb(103 232 249 / 14%);
+  opacity: 0;
+  transform: scale(0.72);
+  animation: launch-ring 6.6s ease-out both;
+}
+
+.launch-impact span:nth-child(2) {
+  inset: -1.2rem;
+  border-color: rgb(103 232 249 / 38%);
+  animation-delay: 0.08s;
+}
+
+.launch-impact-left {
+  animation-name: launch-impact-left;
+}
+
+.launch-impact-right {
+  animation-name: launch-impact-right;
+}
+
 .burst {
   position: absolute;
   z-index: 7;
@@ -1134,6 +1187,25 @@ body {
   }
 }
 
+@keyframes launch-impact-left {
+  0%,
+  25% {
+    opacity: 0;
+    transform: translate(-50%, 4%) scale(0.34) rotate(0deg);
+  }
+
+  31% {
+    opacity: 1;
+    transform: translate(-194%, -37%) scale(1.2) rotate(-14deg);
+  }
+
+  44%,
+  100% {
+    opacity: 0.24;
+    transform: translate(-178%, -22%) scale(1) rotate(-10deg);
+  }
+}
+
 @keyframes burst-right {
   0%,
   34% {
@@ -1150,6 +1222,49 @@ body {
   100% {
     opacity: 1;
     transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+}
+
+@keyframes launch-impact-right {
+  0%,
+  34% {
+    opacity: 0;
+    transform: translate(-50%, 4%) scale(0.34) rotate(0deg);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate(94%, -17%) scale(1.18) rotate(13deg);
+  }
+
+  56%,
+  100% {
+    opacity: 0.22;
+    transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+}
+
+@keyframes launch-ring {
+  0%,
+  28% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  36% {
+    opacity: 0.88;
+    transform: scale(1.02);
+  }
+
+  55% {
+    opacity: 0.2;
+    transform: scale(1.34);
+  }
+
+  76%,
+  100% {
+    opacity: 0.06;
+    transform: scale(1.18);
   }
 }
 
@@ -1317,6 +1432,11 @@ body {
     width: min(32%, 7.4rem);
   }
 
+  .launch-impact {
+    top: 44%;
+    width: min(34%, 7.9rem);
+  }
+
   .lightning {
     top: 8%;
     width: 70%;
@@ -1433,6 +1553,25 @@ body {
     }
   }
 
+  @keyframes launch-impact-left {
+    0%,
+    25% {
+      opacity: 0;
+      transform: translate(-50%, 4%) scale(0.34) rotate(0deg);
+    }
+
+    32% {
+      opacity: 1;
+      transform: translate(-156%, -9%) scale(1.14) rotate(-12deg);
+    }
+
+    44%,
+    100% {
+      opacity: 0.22;
+      transform: translate(-142%, 2%) scale(1) rotate(-8deg);
+    }
+  }
+
   @keyframes burst-right {
     0%,
     34% {
@@ -1448,6 +1587,25 @@ body {
     52%,
     100% {
       opacity: 1;
+      transform: translate(48%, 15%) scale(1) rotate(8deg);
+    }
+  }
+
+  @keyframes launch-impact-right {
+    0%,
+    34% {
+      opacity: 0;
+      transform: translate(-50%, 4%) scale(0.34) rotate(0deg);
+    }
+
+    43% {
+      opacity: 1;
+      transform: translate(58%, 4%) scale(1.14) rotate(12deg);
+    }
+
+    56%,
+    100% {
+      opacity: 0.2;
       transform: translate(48%, 15%) scale(1) rotate(8deg);
     }
   }
@@ -1471,6 +1629,8 @@ body {
   .lightning,
   .meter-step,
   .burst-next,
+  .launch-impact,
+  .launch-impact span,
   .burst {
     animation: none;
   }
@@ -1541,9 +1701,24 @@ body {
     transform: translate(-178%, -22%) scale(1) rotate(-10deg);
   }
 
+  .launch-impact-left {
+    opacity: 0.24;
+    transform: translate(-178%, -22%) scale(1) rotate(-10deg);
+  }
+
   .burst-right {
     opacity: 1;
     transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+
+  .launch-impact-right {
+    opacity: 0.22;
+    transform: translate(82%, -5%) scale(1) rotate(9deg);
+  }
+
+  .launch-impact span {
+    opacity: 0.06;
+    transform: scale(1.18);
   }
 
   .extract-path {
