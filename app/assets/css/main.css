@@ -160,11 +160,39 @@ body {
 }
 
 .machine-strip strong {
+  position: relative;
+  isolation: isolate;
   border: 1px solid rgb(252 211 77 / 58%);
   background: #fcd34d;
   color: #09090b;
   box-shadow: 0 0 1rem rgb(252 211 77 / 28%);
   font-weight: 850;
+  animation: zap-button-press 6.6s cubic-bezier(0.16, 1.24, 0.22, 1) both;
+}
+
+.machine-strip strong::before,
+.machine-strip strong::after {
+  position: absolute;
+  inset: -0.28rem;
+  z-index: -1;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.machine-strip strong::before {
+  border: 1px solid rgb(252 211 77 / 62%);
+  opacity: 0;
+  animation: zap-button-ring 6.6s ease-out both;
+}
+
+.machine-strip strong::after {
+  background:
+    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 70%), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgb(252 211 77 / 56%), transparent 64%);
+  filter: blur(0.35rem);
+  opacity: 0;
+  animation: zap-button-flash 6.6s ease-out both;
 }
 
 .charge-rail {
@@ -775,6 +803,65 @@ body {
   }
 }
 
+@keyframes zap-button-press {
+  0%,
+  20%,
+  47%,
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 1rem rgb(252 211 77 / 28%);
+  }
+
+  24% {
+    transform: translateY(0.08rem) scale(0.92);
+    box-shadow: 0 0 0.55rem rgb(252 211 77 / 24%);
+  }
+
+  28%,
+  38% {
+    transform: translateY(-0.04rem) scale(1.08);
+    box-shadow:
+      0 0 1.25rem rgb(252 211 77 / 68%),
+      0 0 2rem rgb(103 232 249 / 34%);
+  }
+}
+
+@keyframes zap-button-ring {
+  0%,
+  21%,
+  45%,
+  100% {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+
+  25% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+
+  39% {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+@keyframes zap-button-flash {
+  0%,
+  22%,
+  48%,
+  100% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+
+  27%,
+  34% {
+    opacity: 0.76;
+    transform: scale(1.26);
+  }
+}
+
 @keyframes charge-rail-pop {
   0%,
   20% {
@@ -1371,6 +1458,9 @@ body {
   .source-card::before,
   .source-card::after,
   .machine-strip,
+  .machine-strip strong,
+  .machine-strip strong::before,
+  .machine-strip strong::after,
   .charge-rail,
   .charge-fill,
   .charge-pip,
@@ -1405,6 +1495,15 @@ body {
   .meter-step {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+
+  .machine-strip strong {
+    transform: translateY(0) scale(1);
+  }
+
+  .machine-strip strong::before,
+  .machine-strip strong::after {
+    opacity: 0;
   }
 
   .charge-rail {
