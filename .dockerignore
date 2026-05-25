@@ -1,0 +1,9 @@
+.git
+.nuxt
+.output
+.source
+dist
+mike_and_john
+node_modules
+test-results
+.DS_Store

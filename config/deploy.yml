@@ -1,0 +1,41 @@
+service: bitterclip-marketing
+image: ruemic/bitterclip.com
+
+servers:
+  web:
+    hosts:
+      - <%= ENV.fetch("DEPLOY_REMOTE_HOST", "127.0.0.1") %>
+    options:
+      memory: 256m
+
+proxy:
+  ssl: true
+  host: bitterclip.com
+  app_port: 80
+  response_timeout: 30
+  healthcheck:
+    path: /up
+    interval: 3
+    timeout: 5
+
+registry:
+  server: '<%= ENV.fetch("KAMAL_REGISTRY_SERVER", "127.0.0.1:5000") %>'
+  username: factory
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+  dockerfile: Dockerfile
+  context: .
+  local: true
+  cache:
+    type: registry
+    image: bitterclip-marketing-build-cache
+
+ssh:
+  user: <%= ENV.fetch("DEPLOY_REMOTE_USER", "deploy") %>
+  port: <%= ENV.fetch("DEPLOY_REMOTE_PORT", "22") %>
+  keys:
+    - <%= ENV.fetch("BITTERGRID_DEPLOY_SSH_KEY", File.expand_path("~/.ssh/id_ed25519")) %>
+
