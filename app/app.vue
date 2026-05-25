@@ -1,103 +1,72 @@
 <template>
-  <main class="min-h-screen bg-zinc-950 text-white">
-    <section class="relative min-h-screen overflow-hidden px-6 py-6 sm:px-10">
+  <main class="min-h-screen bg-zinc-950 text-zinc-50">
+    <section class="relative isolate overflow-hidden px-5 pb-14 pt-6 sm:px-8 lg:px-12">
+      <div class="absolute inset-0 -z-30 bg-[radial-gradient(circle_at_50%_12%,rgba(255,151,139,0.16),transparent_34%),linear-gradient(180deg,#070707_0%,#090b0a_58%,#0f1210_100%)]" />
+      <video
+        class="absolute inset-0 -z-20 h-full w-full object-cover opacity-45 saturate-110"
+        autoplay
+        loop
+        muted
+        playsinline
+        poster="/clips/day-1-opening-poster.jpg"
+        preload="metadata"
+      >
+        <source src="/clips/day-1-opening.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-zinc-950/30 via-zinc-950/58 to-zinc-950" />
+
       <header class="mx-auto flex w-full max-w-6xl items-center justify-between">
         <a class="font-mono text-sm font-semibold tracking-normal text-zinc-100" href="/">
           BitterClip
         </a>
-        <span class="font-mono text-xs text-zinc-400">bitterclip.com</span>
+        <a class="font-mono text-xs text-zinc-400 transition hover:text-zinc-100" href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access">
+          early access
+        </a>
       </header>
 
-      <div class="mx-auto flex h-[calc(100vh-3.25rem)] w-full max-w-6xl flex-col">
-        <div class="flex min-h-0 flex-[0_0_63%] items-center justify-center py-2 sm:py-4" aria-label="Video clips being extracted from source recordings">
-          <div class="relative mx-auto w-full max-w-[41rem]">
-            <div class="stage-floor" />
-            <div class="stage-haze" />
-            <div class="zap-stage">
-              <article class="source-card">
-                <video autoplay loop muted playsinline preload="metadata">
-                  <source src="/clips/day-1-opening.mp4" type="video/mp4">
-                </video>
-              </article>
-              <div class="machine-strip" aria-hidden="true">
-                <span>drop file</span>
-                <span>auto directive</span>
-                <span>1 credit</span>
-                <strong>Zap</strong>
-              </div>
-              <div class="charge-rail" aria-hidden="true">
-                <span class="charge-fill" />
-                <span class="charge-tick charge-tick-1" />
-                <span class="charge-tick charge-tick-2" />
-                <span class="charge-tick charge-tick-3" />
-              </div>
-
-              <div class="beam" />
-              <div class="extract-path extract-path-left" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div class="extract-path extract-path-right" aria-hidden="true">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div class="zap-orb" />
-              <svg
-                class="lightning"
-                viewBox="0 0 520 520"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path class="bolt-main" d="M454 38L298 210H388L206 482L244 278H154L454 38Z" />
-                <path class="bolt-branch bolt-branch-1" d="M304 220L162 166L224 248" />
-                <path class="bolt-branch bolt-branch-2" d="M285 274L456 315L344 340" />
-                <path class="bolt-branch bolt-branch-3" d="M247 314L105 397L218 374" />
-              </svg>
-
-              <article class="burst burst-left">
-                <video autoplay loop muted playsinline preload="metadata">
-                  <source src="/clips/day-1-models.mp4" type="video/mp4">
-                </video>
-                <span>clip 01</span>
-              </article>
-              <article class="burst burst-right">
-                <video autoplay loop muted playsinline preload="metadata">
-                  <source src="/clips/day-1-loop.mp4" type="video/mp4">
-                </video>
-                <span>clip 02</span>
-              </article>
-              <article class="burst-next" aria-hidden="true">
-                <span>clip 03</span>
-              </article>
-
-              <div class="zap-again" aria-hidden="true">
-                <span>1 credit</span>
-                <strong>Zap again</strong>
-                <em>clip 03</em>
-              </div>
-            </div>
-          </div>
+      <div class="mx-auto flex min-h-[82vh] w-full max-w-6xl flex-col justify-end pb-8 pt-20">
+        <p class="font-mono text-sm text-[#ff9a8f]">Collaborative clip workbench</p>
+        <h1 class="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl">
+          BitterClip
+        </h1>
+        <p class="mt-6 max-w-3xl text-xl leading-8 text-zinc-200 sm:text-2xl">
+          Turn recordings and agent-found moments into clips you can verify, tune, package, and publish.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            class="inline-flex min-h-12 items-center justify-center rounded-md bg-[#ff9a8f] px-5 font-semibold text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#ff9a8f] focus:ring-offset-2 focus:ring-offset-zinc-950"
+            href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access"
+          >
+            Request early access
+          </a>
+          <a
+            class="inline-flex min-h-12 items-center justify-center rounded-md border border-zinc-700 px-5 font-semibold text-zinc-100 transition hover:border-zinc-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:ring-offset-2 focus:ring-offset-zinc-950"
+            href="#workflow"
+          >
+            See workflow
+          </a>
         </div>
+      </div>
+    </section>
 
-        <div class="flex min-h-0 flex-[0_0_37%] flex-col items-center justify-center pb-5 pt-1 text-center">
-          <p class="font-mono text-sm text-amber-300">Video in. Clips out.</p>
-          <h1 class="mt-4 max-w-5xl text-4xl font-semibold leading-[1.02] tracking-normal text-white sm:text-5xl lg:text-6xl">
-            Drop a video. Hit Zap. Clips jump out.
-          </h1>
-          <p class="mt-4 max-w-3xl text-base leading-7 text-zinc-300 sm:text-lg">
-            Add an optional directive, pay a little, and zap once for one clip. Zap again when you want more.
+    <section id="workflow" class="border-t border-zinc-800 bg-[#0b0d0c] px-5 py-14 sm:px-8 lg:px-12">
+      <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p class="font-mono text-sm text-[#ff9a8f]">How it works</p>
+          <h2 class="mt-4 max-w-xl text-3xl font-semibold leading-tight tracking-normal text-white sm:text-4xl">
+            Use your cockpit for context. Use BitterClip for the media work.
+          </h2>
+        </div>
+        <div class="grid gap-6 text-lg leading-8 text-zinc-300">
+          <p>
+            Ask Claude, ChatGPT, Codex, or a human editor to find the strongest moments. BitterClip turns that work into a durable review surface.
           </p>
-          <div class="mt-5">
-            <a
-              class="inline-flex min-h-12 items-center justify-center rounded-md bg-amber-300 px-5 font-mono text-sm font-semibold tracking-normal text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-amber-200 focus:ring-offset-2 focus:ring-offset-zinc-950"
-              href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access"
-            >
-              Coming soon
-            </a>
-          </div>
+          <p>
+            Or start standalone: upload a recording, get candidate moments, tune the boundaries, and create a package.
+          </p>
+          <p class="text-zinc-100">
+            The promise is simple: recording in, reviewable clips out.
+          </p>
         </div>
       </div>
     </section>
