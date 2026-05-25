@@ -2,7 +2,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 const siteUrl = 'https://bitterclip.com/'
 const description =
-  'BitterClip is a coming-soon clip vending machine: drop a video, hit Zap, and get clips out.'
+  'BitterClip turns recordings and agent-found moments into clips you can verify, tune, package, and publish.'
+const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -20,7 +21,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'BitterClip - Drop a video. Hit Zap. Clips jump out.',
+      title: 'BitterClip - Collaborative clip workbench',
       htmlAttrs: {
         lang: 'en',
       },
@@ -29,17 +30,29 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#111111' },
         { name: 'description', content: description },
-        { property: 'og:title', content: 'BitterClip - Drop a video. Hit Zap. Clips jump out.' },
+        { property: 'og:title', content: 'BitterClip - Collaborative clip workbench' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: siteUrl },
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: 'BitterClip - Drop a video. Hit Zap. Clips jump out.' },
+        { name: 'twitter:title', content: 'BitterClip - Collaborative clip workbench' },
         { name: 'twitter:description', content: description },
       ],
       link: [
         { rel: 'canonical', href: siteUrl },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
+      script: [
+        {
+          src: `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`,
+          async: true,
+        },
+        {
+          innerHTML: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaMeasurementId}');`,
+        },
       ],
     },
   },
