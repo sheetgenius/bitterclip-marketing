@@ -24,14 +24,11 @@
         </a>
       </header>
 
-      <div class="mx-auto flex min-h-[82vh] w-full max-w-6xl flex-col justify-end pb-8 pt-20">
+      <div class="mx-auto flex min-h-[68vh] w-full max-w-6xl flex-col justify-end pb-8 pt-20">
         <p class="font-mono text-sm text-[#ff9a8f]">Collaborative clip workbench</p>
-        <h1 class="mt-5 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-normal text-white sm:text-6xl lg:text-7xl">
-          BitterClip
-        </h1>
-        <p class="mt-6 max-w-3xl text-xl leading-8 text-zinc-200 sm:text-2xl">
+        <h1 class="mt-5 max-w-4xl text-4xl font-semibold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
           Turn recordings and agent-found moments into clips you can verify, tune, package, and publish.
-        </p>
+        </h1>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
             class="inline-flex min-h-12 items-center justify-center rounded-md bg-[#ff9a8f] px-5 font-semibold text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#ff9a8f] focus:ring-offset-2 focus:ring-offset-zinc-950"
@@ -50,23 +47,36 @@
     </section>
 
     <section id="workflow" class="border-t border-zinc-800 bg-[#0b0d0c] px-5 py-14 sm:px-8 lg:px-12">
-      <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p class="font-mono text-sm text-[#ff9a8f]">How it works</p>
-          <h2 class="mt-4 max-w-xl text-3xl font-semibold leading-tight tracking-normal text-white sm:text-4xl">
-            Use your cockpit for context. Use BitterClip for the media work.
-          </h2>
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p class="font-mono text-sm text-[#ff9a8f]">How it works</p>
+            <h2 class="mt-4 max-w-xl text-3xl font-semibold leading-tight tracking-normal text-white sm:text-4xl">
+              Use your cockpit for context. Use BitterClip for the media work.
+            </h2>
+          </div>
+          <div class="grid gap-6 text-lg leading-8 text-zinc-300">
+            <p>
+              Ask Claude, ChatGPT, Codex, or a human editor to find the strongest moments. BitterClip turns that work into a durable review surface.
+            </p>
+            <p>
+              Or start standalone: upload a recording, get candidate moments, tune the boundaries, and create a package.
+            </p>
+            <p class="text-zinc-100">
+              The promise is simple: recording in, reviewable clips out.
+            </p>
+          </div>
         </div>
-        <div class="grid gap-6 text-lg leading-8 text-zinc-300">
-          <p>
-            Ask Claude, ChatGPT, Codex, or a human editor to find the strongest moments. BitterClip turns that work into a durable review surface.
+        <div class="mt-12 flex flex-col items-start gap-4 border-t border-zinc-800 pt-10 sm:flex-row sm:items-center sm:justify-between">
+          <p class="max-w-xl text-base text-zinc-400">
+            Early access is opening to a small group of teams. We&rsquo;ll work directly with you to shape the workbench.
           </p>
-          <p>
-            Or start standalone: upload a recording, get candidate moments, tune the boundaries, and create a package.
-          </p>
-          <p class="text-zinc-100">
-            The promise is simple: recording in, reviewable clips out.
-          </p>
+          <a
+            class="inline-flex min-h-12 items-center justify-center rounded-md bg-[#ff9a8f] px-5 font-semibold text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#ff9a8f] focus:ring-offset-2 focus:ring-offset-zinc-950"
+            href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access"
+          >
+            Request early access
+          </a>
         </div>
       </div>
     </section>
