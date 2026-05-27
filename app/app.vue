@@ -19,7 +19,7 @@
         <a class="font-mono text-sm font-semibold tracking-normal text-zinc-100" href="/">
           BitterClip
         </a>
-        <a class="font-mono text-xs text-zinc-400 transition hover:text-zinc-100" href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access">
+        <a class="font-mono text-xs text-zinc-400 transition hover:text-zinc-100" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">
           early access
         </a>
       </header>
@@ -32,7 +32,7 @@
         <div class="mt-8 flex flex-wrap gap-3">
           <a
             class="inline-flex min-h-12 items-center justify-center rounded-md bg-[#ff9a8f] px-5 font-semibold text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#ff9a8f] focus:ring-offset-2 focus:ring-offset-zinc-950"
-            href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access"
+            href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access"
           >
             Request early access
           </a>
@@ -73,7 +73,7 @@
           </p>
           <a
             class="inline-flex min-h-12 items-center justify-center rounded-md bg-[#ff9a8f] px-5 font-semibold text-zinc-950 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#ff9a8f] focus:ring-offset-2 focus:ring-offset-zinc-950"
-            href="mailto:founders@bitterclip.com?subject=BitterClip%20early%20access"
+            href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access"
           >
             Request early access
           </a>
