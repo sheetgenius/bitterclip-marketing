@@ -1,11 +1,9 @@
-# BitterClip Marketing
+# BitterClip
 
-Public marketing site for [BitterClip](https://bitterclip.com/), a
-speaker-aware clipping workbench for long recordings.
-
-BitterClip turns podcasts, interviews, founder calls, demos, and recurring
-shows into source-linked clips that AI assistants can find, humans can verify,
-and teams can export ready to post.
+[BitterClip](https://bitterclip.com/) is a speaker-aware, agent-operable media
+workspace for long recordings. It turns podcasts, interviews, founder calls,
+demos, and recurring shows into source-linked clips that AI assistants can find,
+humans can verify, and teams can export ready to post.
 
 ## Bitter Context
 
@@ -24,10 +22,10 @@ recorded media: long recordings become structured source material, transcripts
 become an agent-operable workspace, and clips stay connected to speakers,
 timestamps, source context, export settings, and prior decisions.
 
-This repository is the public web and SEO surface for BitterClip. It is not the
-private product application or media-processing backend. It exists to describe
-the BitterClip product clearly, link the public documentation, and give humans
-and crawlers a stable semantic entry point into the BitterClip part of Bitter.
+This repository contains the public BitterClip website. It is not the private
+product application or media-processing backend. Its README, page copy,
+metadata, and links should preserve a clear public explanation of BitterClip's
+role in the Bitter constellation.
 
 ## Links
 

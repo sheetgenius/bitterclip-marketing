@@ -2,7 +2,7 @@
   "name": "bitterclip-marketing",
   "type": "module",
   "private": true,
-  "description": "Public marketing site for BitterClip's speaker-aware clipping workbench.",
+  "description": "BitterClip is a speaker-aware, agent-operable media workspace for turning long recordings into source-linked clips.",
   "packageManager": "bun@1.3.13",
   "scripts": {
     "build": "nuxt build",
