@@ -78,9 +78,9 @@ onBeforeUnmount(() => {
         </p>
         <a
           :href="signupUrl"
-          class="inline-flex items-center justify-center gap-2 bg-[#ff9a8f] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-white transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9a8f] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          class="inline-flex items-center justify-center gap-2 bg-amber-400 text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-amber-300 transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
-          Start signup
+          Start with one recording
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
           </svg>
@@ -90,8 +90,8 @@ onBeforeUnmount(() => {
 
     <!-- LIVE: the real editor, embedded as just another host -->
     <section class="mb-20">
-      <p class="font-mono text-[11px] uppercase tracking-widest text-[#ff9a8f] mb-3 flex items-center gap-2 font-bold">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#ff9a8f] animate-pulse"></span> Live · running below
+      <p class="font-mono text-[11px] uppercase tracking-widest text-amber-400 mb-3 flex items-center gap-2 font-bold">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Live · running below
       </p>
       <h3 class="font-display text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight">
         This is the editor ChatGPT and Claude open.
@@ -108,22 +108,22 @@ onBeforeUnmount(() => {
       <div class="glass-panel-accented glass-reflection rounded-2xl overflow-hidden corner-ticks relative min-h-[300px]">
         <div class="flex items-center justify-between px-4 py-2.5 bg-zinc-950 font-mono text-[10px] text-zinc-500 border-b border-zinc-900/60 relative z-10">
           <span class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#ff9a8f] animate-pulse"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
             Live editor · demo mode
           </span>
-          <span class="text-[#ff9a8f] font-mono text-[9px] font-bold tracking-wider uppercase">try it</span>
+          <span class="text-amber-400 font-mono text-[9px] font-bold tracking-wider uppercase">try it</span>
         </div>
 
         <!-- Mobile Activation Gate -->
         <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
-          <p class="font-mono text-[8px] text-[#ff9a8f] uppercase tracking-widest mb-3">Live editor</p>
+          <p class="font-mono text-[8px] text-amber-400 uppercase tracking-widest mb-3">Live editor</p>
           <h4 class="font-display text-base font-bold text-white mb-2">Same editor. Same chat surface.</h4>
           <p class="text-zinc-500 text-xs max-w-sm mb-6 leading-relaxed">
             This is the editor ChatGPT and Claude open for review. Drag across the words to cut a clip. Tap to load it.
           </p>
           <button 
             @click="activateDemo"
-            class="px-5 py-2.5 font-mono text-xs font-bold bg-[#ff9a8f] text-zinc-950 rounded-xl shadow-lg shadow-[#ff9a8f]/10 hover:bg-white hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9a8f] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            class="px-5 py-2.5 font-mono text-xs font-bold bg-amber-400 text-zinc-950 rounded-xl shadow-lg shadow-amber-400/10 hover:bg-amber-300 hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             Load the editor
           </button>
@@ -134,8 +134,8 @@ onBeforeUnmount(() => {
           <div class="flex flex-col items-center gap-4 text-center p-6">
             <!-- Glowing Spinner -->
             <div class="relative w-8 h-8">
-              <div class="absolute inset-0 rounded-full border-2 border-[#ff9a8f]/20"></div>
-              <div class="absolute inset-0 rounded-full border-2 border-t-[#ff9a8f] animate-spin"></div>
+              <div class="absolute inset-0 rounded-full border-2 border-amber-400/20"></div>
+              <div class="absolute inset-0 rounded-full border-2 border-t-amber-400 animate-spin"></div>
             </div>
             <span class="font-mono text-[9px] text-zinc-500 uppercase tracking-widest">Loading the editor…</span>
           </div>
@@ -251,43 +251,43 @@ onBeforeUnmount(() => {
           <tbody class="divide-y divide-zinc-900 text-zinc-400">
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[01]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">recordings_list</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">recordings_list</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Retrieve ingested recordings list for selection.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{}</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[02]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">clips_suggest</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">clips_suggest</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Reads the transcript and proposes moments worth clipping for a given goal.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, goal }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[03]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">clips_render_candidate_editor</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">clips_render_candidate_editor</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Mounts the interactive <code>ui://bitterclip/candidate-editor-v4</code> widget in the chat.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, candidates }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[04]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">clips_create</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">clips_create</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Commits a chosen moment as a durable clip. Timing is derived from the audio — never invented by the model.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, start/end (derived from the words picked), title }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[05]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">clips_export</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">clips_export</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Triggers background render queue to export captioned MP4 media asset.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ clip_id }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[06]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">clips_compose</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">clips_compose</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Stitch spans from one or more recordings into a single clip, then render.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ segments[] }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[07]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#ff9a8f]">account_get_credit_balance</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-amber-400">account_get_credit_balance</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Check plan credit counts and subscription limits.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{}</td>
             </tr>

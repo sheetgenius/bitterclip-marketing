@@ -4,6 +4,7 @@ dist
 node_modules
 test-results
 .DS_Store
+.antigravitycli/
 *.log
 *.source
 .source/

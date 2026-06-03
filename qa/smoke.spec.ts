@@ -1,15 +1,16 @@
 import { expect, test } from '@playwright/test'
 
-test('renders the collaborative clip workbench hero', async ({ page }) => {
+test('renders the speaker-aware clipping hero', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip' })).toBeVisible()
-  await expect(page.getByText('Opens inside ChatGPT and Claude')).toBeVisible()
-  await expect(page.getByRole('heading', { name: /Ask for the moment/ })).toBeVisible()
-  await expect(page.getByText('Tell ChatGPT or Claude what you want clipped.')).toBeVisible()
+  await expect(page.getByText('Speaker-aware clipping for ChatGPT and Claude')).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Cut clips where/ })).toBeVisible()
+  await expect(page.getByText('BitterClip turns podcasts, interviews, founder calls')).toBeVisible()
   await expect(page.getByText('$99/month').first()).toBeVisible()
-  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start signup' }).first()).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'This is the editor that opens in the chat.' })).toBeVisible()
+  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'This is the editor your AI opens.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Not another pile of AI suggestions.' })).toBeVisible()
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {
@@ -26,7 +27,7 @@ test('renders the MCP specification page and handles tab switches', async ({ pag
   await page.goto('/mcp')
 
   await expect(page.getByRole('heading', { level: 2, name: 'How ChatGPT and Claude open the editor.' })).toBeVisible()
-  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start signup' }).first()).toBeVisible()
+  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
   
   // Verify tabs are available
   await expect(page.getByRole('button', { name: 'Endpoint & methods' })).toBeVisible()
