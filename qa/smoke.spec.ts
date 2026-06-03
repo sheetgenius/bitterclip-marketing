@@ -4,13 +4,13 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip' })).toBeVisible()
-  await expect(page.getByText('Speaker-aware clipping for ChatGPT and Claude')).toBeVisible()
+  await expect(page.getByText('Agent-operable media studio')).toBeVisible()
   await expect(page.getByRole('heading', { name: /Cut clips where/ })).toBeVisible()
   await expect(page.getByText('BitterClip turns podcasts, interviews, founder calls')).toBeVisible()
   await expect(page.getByText('$99/month').first()).toBeVisible()
   await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'This is the editor your AI opens.' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Not another pile of AI suggestions.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'This is the editor your agent opens.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Not another pile of generic suggestions.' })).toBeVisible()
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {
