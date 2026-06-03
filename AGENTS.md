@@ -2,7 +2,11 @@
 
 ## Scope
 
-This repo owns the public placeholder marketing site for `bitterclip.com`.
+This repo owns the public marketing site for `bitterclip.com`.
+
+The repo is intentionally public. Treat README copy, page copy, metadata,
+robots, and sitemap content as product/SEO assets. Do not commit secrets,
+private media, private runbooks, provider payloads, or generated build output.
 
 ## Commands
 

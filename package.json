@@ -2,7 +2,7 @@
   "name": "bitterclip-marketing",
   "type": "module",
   "private": true,
-  "description": "Placeholder marketing site for bitterclip.com.",
+  "description": "Public marketing site for BitterClip's speaker-aware clipping workbench.",
   "packageManager": "bun@1.3.13",
   "scripts": {
     "build": "nuxt build",

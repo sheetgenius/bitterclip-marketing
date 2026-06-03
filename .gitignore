@@ -3,9 +3,17 @@
 dist
 node_modules
 test-results
+playwright-report
+coverage
 .DS_Store
 .antigravitycli/
 *.log
 *.source
 .source/
 mike_and_john/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12

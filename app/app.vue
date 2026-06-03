@@ -81,6 +81,8 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <NuxtLink class="hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
           <span class="text-zinc-800">•</span>
           <NuxtLink class="hover:text-zinc-300 transition" to="/docs">How it works</NuxtLink>
+          <span class="text-zinc-800">•</span>
+          <a class="hover:text-zinc-300 transition" href="https://bitter.sh/">BitterSH</a>
         </div>
       </div>
     </footer>

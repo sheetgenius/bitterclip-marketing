@@ -7,3 +7,10 @@ mike_and_john
 node_modules
 test-results
 .DS_Store
+.antigravitycli
+.env
+.env.*
+*.log
+*.pem
+*.key
+*.p12
