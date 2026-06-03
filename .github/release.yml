@@ -1,0 +1,42 @@
+# GitHub generated release notes configuration.
+#
+# This groups future tagged release notes around public semantic change types,
+# not raw implementation categories.
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - internal
+    authors:
+      - "dependabot[bot]"
+      - "github-actions[bot]"
+  categories:
+    - title: Product Context
+      labels:
+        - product-context
+        - positioning
+        - copy
+    - title: Website
+      labels:
+        - website
+        - design
+        - content
+        - seo
+    - title: Deployment
+      labels:
+        - deployment
+        - bittergrid
+        - infrastructure
+    - title: Repository Metadata
+      labels:
+        - documentation
+        - repo-metadata
+        - changelog
+    - title: Public Hygiene
+      labels:
+        - public-hygiene
+        - security
+        - cleanup
+    - title: Other Changes
+      labels:
+        - "*"

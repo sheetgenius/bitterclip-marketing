@@ -82,6 +82,7 @@ This repository owns:
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
+- Public change history: [CHANGELOG.md](CHANGELOG.md)
 - Bitter: [bitter.sh](https://bitter.sh/)
 - BitterGrid: [bittergrid.com](https://bittergrid.com/)
 
@@ -122,6 +123,8 @@ Useful files:
 - `app/pages/mcp.vue` - MCP and AI assistant workflow page
 - `nuxt.config.ts` - site metadata and Nuxt configuration
 - `public/sitemap.xml` - crawlable public routes
+- `CHANGELOG.md` - public semantic change history
+- `.github/release.yml` - GitHub generated release note categories
 - `Dockerfile` - static build and nginx runtime image
 - `config/deploy.yml` - BitterGrid deployment service configuration
 

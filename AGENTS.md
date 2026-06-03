@@ -22,6 +22,12 @@ Use the README as the pattern for other public Bitter constellation repos:
 6. Document deployment without exposing secrets.
 7. Preserve public, indexable context that will still make sense later.
 
+Maintain `CHANGELOG.md` as the public semantic change history. Entries should
+explain product-context, website, deployment, repository metadata, and public
+hygiene changes in terms that will still make sense outside the commit log.
+GitHub release-note grouping lives in `.github/release.yml`; keep its
+categories aligned with the changelog categories.
+
 Do not commit provider keys, OAuth secrets, deploy tokens, registry credentials,
 `.env` files, private recordings, transcripts, rendered clips, provider
 payloads, customer data, internal DNS/mailbox/billing/incident runbooks, or
