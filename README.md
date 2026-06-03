@@ -7,6 +7,28 @@ BitterClip turns podcasts, interviews, founder calls, demos, and recurring
 shows into source-linked clips that AI assistants can find, humans can verify,
 and teams can export ready to post.
 
+## Bitter Context
+
+[Bitter](https://bitter.sh/) is an agent-operable software environment. It gives
+AI agents a persistent workspace where repositories, credentials, hosting,
+email, tests, deploys, logs, checks, and work history are connected so software
+work can continue without losing context.
+
+The Bitter constellation is a set of public sites, products, applications, and
+supporting repositories that share this operating model: agents work against
+real source material, human operators review and steer the work, and deployed
+systems keep their history and verification paths attached.
+
+BitterClip is one product in that constellation. It applies the Bitter model to
+recorded media: long recordings become structured source material, transcripts
+become an agent-operable workspace, and clips stay connected to speakers,
+timestamps, source context, export settings, and prior decisions.
+
+This repository is the public web and SEO surface for BitterClip. It is not the
+private product application or media-processing backend. It exists to describe
+the BitterClip product clearly, link the public documentation, and give humans
+and crawlers a stable semantic entry point into the BitterClip part of Bitter.
+
 ## Links
 
 - Website: [bitterclip.com](https://bitterclip.com/)
