@@ -1,56 +1,111 @@
 # BitterClip
 
-[BitterClip](https://bitterclip.com/) is a speaker-aware, agent-operable media
-workspace for long recordings. It turns podcasts, interviews, founder calls,
-demos, and recurring shows into source-linked clips that AI assistants can find,
-humans can verify, and teams can export ready to post.
+[BitterClip](https://bitterclip.com/) is a speaker-aware media workspace for
+turning long recordings into source-linked clips. It is designed for AI agents
+that can search transcript context and for human operators who need to verify
+the final cut before publishing.
 
-## Bitter Context
+It is built for podcasts, interviews, founder calls, demos, livestreams, expert
+conversations, and recurring shows where the strongest moments are buried inside
+long-form media. BitterClip keeps the recording, transcript, speaker identity,
+clip boundary, export, publishing state, and source history connected.
+
+## Place In Bitter
 
 [Bitter](https://bitter.sh/) is an agent-operable software environment. It gives
-AI agents a persistent workspace where repositories, credentials, hosting,
-email, tests, deploys, logs, checks, and work history are connected so software
-work can continue without losing context.
+AI agents persistent workspaces where repositories, credentials, hosting, email,
+tests, deploys, logs, checks, and work history are connected.
 
-The Bitter constellation is a set of public sites, products, applications, and
-supporting repositories that share this operating model: agents work against
-real source material, human operators review and steer the work, and deployed
-systems keep their history and verification paths attached.
+The Bitter constellation is the set of public sites, products, applications, and
+supporting repositories that share that operating model:
 
-BitterClip is one product in that constellation. It applies the Bitter model to
-recorded media: long recordings become structured source material, transcripts
-become an agent-operable workspace, and clips stay connected to speakers,
-timestamps, source context, export settings, and prior decisions.
+- agents work against real source material
+- humans review, steer, and approve the work
+- deployed systems retain enough context to keep improving
+- outputs stay connected to their source history and verification path
 
-This repository contains the public BitterClip website. It is not the private
-product application or media-processing backend. Its README, page copy,
-metadata, and links should preserve a clear public explanation of BitterClip's
-role in the Bitter constellation.
+BitterClip applies that model to recorded media. A long recording becomes
+structured source material. A transcript becomes an agent-operable workspace.
+A clip remains linked to who said what, where it happened, what came before and
+after, how it was exported, and what has already been clipped.
+
+## Product Model
+
+BitterClip is not a generic AI shorts generator. It is a media workbench built
+around source-linked verification.
+
+The core object chain is:
+
+```text
+Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing
+```
+
+The main workflow is:
+
+1. Upload a recording.
+2. Build a time-aligned transcript.
+3. Identify and confirm speakers.
+4. Use an AI agent to identify candidate Moments.
+5. Open the Moment against the real media and surrounding transcript.
+6. Verify the speaker, context, and boundaries.
+7. Save the approved Moment as a Clip and create Exports.
+8. Use Publishing connections for approved Clips when available.
+9. Preserve source links and project history for future recordings.
+
+This matters because useful clips are rarely just isolated quotes. They depend
+on speaker identity, setup, response, payoff, and the surrounding context that
+keeps the cut honest.
+
+## Repository Role
+
+This repository contains the public BitterClip website at
+[bitterclip.com](https://bitterclip.com/). It is the public semantic entry point
+for BitterClip inside the Bitter constellation.
+
+It is not the private BitterClip product application, Rails workspace,
+media-processing backend, billing system, or customer data store. Those systems
+live outside this public marketing repository.
+
+This repository owns:
+
+- the public BitterClip website
+- public product copy and metadata
+- public documentation pages at `/docs` and `/mcp`
+- crawlable routes in `public/sitemap.xml`
+- the static build and deployment wrapper for `bitterclip.com`
 
 ## Links
 
-- Website: [bitterclip.com](https://bitterclip.com/)
-- Product signup: [app.bitterclip.com/sign_up](https://app.bitterclip.com/sign_up)
-- How it works: [bitterclip.com/docs](https://bitterclip.com/docs)
-- MCP and AI assistant workflow: [bitterclip.com/mcp](https://bitterclip.com/mcp)
-- BitterSH: [bitter.sh](https://bitter.sh/)
+- BitterClip website: [bitterclip.com](https://bitterclip.com/)
+- BitterClip app signup:
+  [app.bitterclip.com/sign_up](https://app.bitterclip.com/sign_up)
+- How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
+- MCP and AI assistant workflow:
+  [bitterclip.com/mcp](https://bitterclip.com/mcp)
+- Bitter: [bitter.sh](https://bitter.sh/)
+- BitterGrid: [bittergrid.com](https://bittergrid.com/)
 
-## Public Repository Posture
+## Deployment
 
-This repository is intentionally public. Treat the code, README, metadata,
-sitemap, and public copy as indexable product assets.
+BitterClip's public website is deployed on
+[BitterGrid](https://bittergrid.com/) as the `bitterclip-marketing` service for
+`bitterclip.com`.
 
-Do not commit:
+Commits pushed to `main` trigger the BitterGrid deployment hook. BitterGrid
+rebuilds and publishes `bitterclip.com` from the `main` branch.
 
-- provider keys, OAuth secrets, deploy tokens, registry credentials, or `.env`
-  files
-- private customer recordings, transcripts, renders, or provider payloads
-- internal DNS, mailbox, billing, or incident runbooks
-- generated output from `.nuxt`, `.output`, `dist`, test reports, or local
-  agent/tooling directories
+The deployment path is:
 
-Deployment credentials must come from environment variables or the deployment
-system, not from committed files.
+1. Nuxt generates a static site with `bun run generate`.
+2. The `Dockerfile` builds that output and copies `.output/public` into an
+   nginx image.
+3. `nginx.conf` serves the static files and exposes `/up` as the health check.
+4. `config/deploy.yml` defines the production service, host name, image, proxy,
+   registry, and health check settings used by BitterGrid.
+
+Deployment credentials, registry credentials, remote host values, and SSH keys
+are supplied by BitterGrid or the deployment environment. They are not stored in
+this repository.
 
 ## Development
 
@@ -60,15 +115,21 @@ bun run generate
 bun run qa:smoke
 ```
 
-The site is a static Nuxt app. Public routes that should remain crawlable are
-listed in `public/sitemap.xml`.
+Useful files:
 
-## Content Guidelines
+- `app/pages/index.vue` - home page
+- `app/pages/docs.vue` - product explanation page
+- `app/pages/mcp.vue` - MCP and AI assistant workflow page
+- `nuxt.config.ts` - site metadata and Nuxt configuration
+- `public/sitemap.xml` - crawlable public routes
+- `Dockerfile` - static build and nginx runtime image
+- `config/deploy.yml` - BitterGrid deployment service configuration
 
-Keep the page concrete and product-faithful:
+## Public Context
 
-- describe BitterClip as a speaker-aware, source-linked clipping workspace
-- make ChatGPT, Claude, MCP, verification, and export workflows easy to
-  understand without protocol jargon
-- prefer real workflow language over generic AI/video-editor hype
-- keep claims aligned with the live product
+This repository is intentionally public. README text, page copy, metadata,
+sitemap entries, and public links should preserve durable context for humans,
+search engines, and AI systems that index public repositories.
+
+Public text in this repository should stay factual, structural, and aligned
+with the live BitterClip product.
