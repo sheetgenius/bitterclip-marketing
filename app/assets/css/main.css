@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
@@ -9,13 +9,274 @@ html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  background-color: #060608;
+  color: #f4f4f5;
 }
 
 ::selection {
-  background: #fcd34d;
-  color: #111111;
+  background: rgba(255, 154, 143, 0.25);
+  color: #ffffff;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1f1f23;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2e2e33;
+}
+
+/* Cinematic Deep Glass Panel */
+.glass-panel {
+  background: rgba(9, 9, 13, 0.65);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.03),
+    0 12px 40px 0 rgba(0, 0, 0, 0.7);
+}
+
+/* Premium Anti-Reflective Highlight Edge (Round 20) */
+.glass-panel-accented {
+  position: relative;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 154, 143, 0.08);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
+    0 20px 50px 0 rgba(0, 0, 0, 0.8);
+  transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-accented:hover {
+  border-color: rgba(255, 154, 143, 0.22);
+  box-shadow: 
+    inset 0 0 24px rgba(255, 154, 143, 0.03),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.08),
+    0 30px 60px 0 rgba(0, 0, 0, 0.95);
+  transform: translateY(-2px);
+}
+
+/* Diagonal Reflection Sheen on Interaction */
+.glass-reflection {
+  position: relative;
+  overflow: hidden;
+}
+.glass-reflection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.01) 30%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.01) 70%,
+    transparent
+  );
+  transform: skewX(-25deg);
+  pointer-events: none;
+  transition: left 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-reflection:hover::before {
+  left: 150%;
+}
+
+/* High-Density Telemetry Coordinate Grid Background */
+.bg-grid-pattern {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+}
+
+.bg-grid-pattern-dense {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 154, 143, 0.006) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 154, 143, 0.006) 1px, transparent 1px);
+}
+
+/* Sub-millisecond Timecode Rulers */
+.telemetry-ruler {
+  position: relative;
+  height: 14px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 100%, 8px 50%;
+  opacity: 0.4;
+}
+
+/* Flow-Scan Horizon Animation representing media indexing */
+@keyframes flow-horizontal {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: 1000px;
+  }
+}
+.animate-flow-horizon {
+  animation: flow-horizontal 25s linear infinite;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 154, 143, 0.01) 0px,
+    rgba(255, 154, 143, 0.01) 1px,
+    transparent 1px,
+    transparent 40px
+  );
+}
+
+/* Glow hover effects */
+.logo-text:hover {
+  text-shadow: 0 0 12px rgba(255, 154, 143, 0.5);
+}
+
+.btn-glow {
+  box-shadow: 0 4px 16px 0 rgba(255, 154, 143, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-glow:hover {
+  box-shadow: 0 8px 24px 0 rgba(255, 154, 143, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Accent borders */
+.active-border-pulse {
+  border-color: rgba(255, 154, 143, 0.5);
+  box-shadow: 0 0 10px rgba(255, 154, 143, 0.15);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+/* Telemetry Corner Indicators */
+.corner-ticks {
+  position: relative;
+}
+.corner-ticks::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid rgba(255, 154, 143, 0.4);
+  border-left: 1.5px solid rgba(255, 154, 143, 0.4);
+  pointer-events: none;
+}
+.corner-ticks::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 1.5px solid rgba(255, 154, 143, 0.4);
+  border-right: 1.5px solid rgba(255, 154, 143, 0.4);
+  pointer-events: none;
+}
+
+/* Smoked Glass Backdrops and Inset Reflections */
+.hero-backdrop-mask {
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(6, 6, 8, 0.25) 10%, #060608 75%),
+    url('/images/operational_glass_backdrop.png');
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.telemetry-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Warm-Peach Inset Shadow & Backdrop for CTA (Round 14) */
+.cta-glass-panel {
+  position: relative;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 154, 143, 0.12);
+  box-shadow: 
+    inset 0 0 40px rgba(255, 154, 143, 0.06),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
+    0 20px 50px 0 rgba(0, 0, 0, 0.8);
+}
+
+.cta-backdrop-mask {
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(6, 6, 8, 0.4) 10%, rgba(6, 6, 8, 0.9) 90%),
+    url('/images/operational_glass_backdrop.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Animated Flowline Telemetry (Round 16) */
+.flow-line-vertical {
+  width: 1px;
+  height: 32px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 154, 143, 0.7) 0px,
+    rgba(255, 154, 143, 0.7) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  background-size: 100% 12px;
+  animation: flow-line-scroll-y 1.2s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes flow-line-scroll-y {
+  from {
+    background-position-y: 0px;
+  }
+  to {
+    background-position-y: 12px;
+  }
 }
