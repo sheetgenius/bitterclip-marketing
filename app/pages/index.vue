@@ -3,6 +3,16 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const signupUrl = 'https://app.bitterclip.com/sign_up'
 
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://bitterclip.com/' },
+    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/index.md', title: 'BitterClip Markdown' },
+  ],
+  meta: [
+    { property: 'og:url', content: 'https://bitterclip.com/' },
+  ],
+})
+
 // --- Live Editor Embed ---
 const embedUrl = ref('https://app.bitterclip.com/embed/clip-demo?bare=1')
 const iframeHeight = ref(540)

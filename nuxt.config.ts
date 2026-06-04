@@ -1,6 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
 
-const siteUrl = 'https://bitterclip.com/'
 const description =
   'BitterClip turns long recordings into speaker-aware, source-linked clips your AI can find, you can verify, and export ready to post.'
 const gaMeasurementId = 'G-JRVVJM49G7'
@@ -33,13 +32,11 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'BitterClip - Speaker-aware clipping for recordings' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: siteUrl },
         { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:title', content: 'BitterClip - Speaker-aware clipping for recordings' },
         { name: 'twitter:description', content: description },
       ],
       link: [
-        { rel: 'canonical', href: siteUrl },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
       ],
       script: [

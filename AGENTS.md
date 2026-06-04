@@ -28,6 +28,11 @@ hygiene changes in terms that will still make sense outside the commit log.
 GitHub release-note grouping lives in `.github/release.yml`; keep its
 categories aligned with the changelog categories.
 
+Every public route should have a Markdown twin in `public/*.md`. When editing
+`app/pages/index.vue`, `app/pages/docs.vue`, or `app/pages/mcp.vue`, update the
+matching Markdown file, `public/llms.txt`, page-head Markdown alternate links,
+`public/sitemap.xml`, and smoke tests together.
+
 Do not commit provider keys, OAuth secrets, deploy tokens, registry credentials,
 `.env` files, private recordings, transcripts, rendered clips, provider
 payloads, customer data, internal DNS/mailbox/billing/incident runbooks, or

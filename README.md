@@ -71,6 +71,7 @@ This repository owns:
 - the public BitterClip website
 - public product copy and metadata
 - public documentation pages at `/docs` and `/mcp`
+- Markdown alternates for every public page route
 - crawlable routes in `public/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
@@ -82,6 +83,11 @@ This repository owns:
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
+- Markdown page mirrors:
+  [index.md](https://bitterclip.com/index.md),
+  [docs.md](https://bitterclip.com/docs.md),
+  [mcp.md](https://bitterclip.com/mcp.md)
+- AI crawler entry point: [bitterclip.com/llms.txt](https://bitterclip.com/llms.txt)
 - Public change history: [CHANGELOG.md](CHANGELOG.md)
 - Bitter: [bitter.sh](https://bitter.sh/)
 - BitterGrid: [bittergrid.com](https://bittergrid.com/)
@@ -121,6 +127,10 @@ Useful files:
 - `app/pages/index.vue` - home page
 - `app/pages/docs.vue` - product explanation page
 - `app/pages/mcp.vue` - MCP and AI assistant workflow page
+- `public/index.md`, `public/docs.md`, `public/mcp.md` - Markdown twins for
+  public pages
+- `public/llms.txt` - AI crawler entry point that links canonical pages and
+  Markdown alternates
 - `nuxt.config.ts` - site metadata and Nuxt configuration
 - `public/sitemap.xml` - crawlable public routes
 - `CHANGELOG.md` - public semantic change history
@@ -136,3 +146,7 @@ search engines, and AI systems that index public repositories.
 
 Public text in this repository should stay factual, structural, and aligned
 with the live BitterClip product.
+
+Every public HTML page should have a corresponding Markdown alternate served
+from `public/*.md`, advertised with a `rel="alternate"` Markdown link in the
+page head, and listed in `public/sitemap.xml`.

@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://bitterclip.com/sitemap.xml
+LLMs: https://bitterclip.com/llms.txt

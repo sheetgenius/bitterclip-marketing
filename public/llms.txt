@@ -1,0 +1,27 @@
+# BitterClip
+
+BitterClip is a speaker-aware media workspace for turning long recordings into
+source-linked clips. It is part of the Bitter constellation of agent-operable
+software systems.
+
+## Canonical Pages
+
+- Home: https://bitterclip.com/
+- How it works: https://bitterclip.com/docs
+- MCP and AI assistant workflow: https://bitterclip.com/mcp
+
+## Markdown Alternates
+
+Every public HTML page should have a Markdown twin for agents, crawlers, and
+public repository indexing.
+
+- Home Markdown: https://bitterclip.com/index.md
+- How it works Markdown: https://bitterclip.com/docs.md
+- MCP Markdown: https://bitterclip.com/mcp.md
+
+## Repository Context
+
+- Public repository: https://github.com/sheetgenius/bitterclip-marketing
+- Changelog: https://github.com/sheetgenius/bitterclip-marketing/blob/main/CHANGELOG.md
+- Bitter: https://bitter.sh/
+- BitterGrid: https://bittergrid.com/

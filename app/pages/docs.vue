@@ -1,5 +1,29 @@
 <script setup lang="ts">
 // /docs — an honest, plain explanation of how a clip gets made. Recording → Moment → Clip.
+useHead({
+  title: 'BitterClip - How a clip gets made',
+  meta: [
+    {
+      name: 'description',
+      content: 'How BitterClip turns recordings into source-linked clips through time-aligned transcripts, Moments, verification, and exports.',
+    },
+    { property: 'og:title', content: 'BitterClip - How a clip gets made' },
+    {
+      property: 'og:description',
+      content: 'How BitterClip turns recordings into source-linked clips through time-aligned transcripts, Moments, verification, and exports.',
+    },
+    { property: 'og:url', content: 'https://bitterclip.com/docs' },
+    { name: 'twitter:title', content: 'BitterClip - How a clip gets made' },
+    {
+      name: 'twitter:description',
+      content: 'How BitterClip turns recordings into source-linked clips through time-aligned transcripts, Moments, verification, and exports.',
+    },
+  ],
+  link: [
+    { rel: 'canonical', href: 'https://bitterclip.com/docs' },
+    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/docs.md', title: 'BitterClip docs Markdown' },
+  ],
+})
 </script>
 
 <template>

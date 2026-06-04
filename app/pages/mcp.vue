@@ -4,6 +4,31 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 const activeTab = ref<'methods' | 'tools' | 'bridge' | 'setup'>('methods')
 const signupUrl = 'https://app.bitterclip.com/sign_up'
 
+useHead({
+  title: 'BitterClip - MCP and AI assistant workflow',
+  meta: [
+    {
+      name: 'description',
+      content: 'How ChatGPT, Claude, and other MCP hosts can open the BitterClip transcript editor, call tools, verify Moments, and export clips.',
+    },
+    { property: 'og:title', content: 'BitterClip - MCP and AI assistant workflow' },
+    {
+      property: 'og:description',
+      content: 'How ChatGPT, Claude, and other MCP hosts can open the BitterClip transcript editor, call tools, verify Moments, and export clips.',
+    },
+    { property: 'og:url', content: 'https://bitterclip.com/mcp' },
+    { name: 'twitter:title', content: 'BitterClip - MCP and AI assistant workflow' },
+    {
+      name: 'twitter:description',
+      content: 'How ChatGPT, Claude, and other MCP hosts can open the BitterClip transcript editor, call tools, verify Moments, and export clips.',
+    },
+  ],
+  link: [
+    { rel: 'canonical', href: 'https://bitterclip.com/mcp' },
+    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/mcp.md', title: 'BitterClip MCP Markdown' },
+  ],
+})
+
 const selectTab = (tab: 'methods' | 'tools' | 'bridge' | 'setup') => {
   activeTab.value = tab
 }

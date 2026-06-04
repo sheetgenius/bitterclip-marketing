@@ -47,6 +47,12 @@ under a dated entry.
   recordings, transcript context, verification, exports, and publishing.
 - Added footer crosslinks to Bitter and the public BitterClip documentation
   surfaces.
+- Added Markdown twins for public pages:
+  `https://bitterclip.com/index.md`, `https://bitterclip.com/docs.md`, and
+  `https://bitterclip.com/mcp.md`.
+- Added `https://bitterclip.com/llms.txt` as an AI crawler entry point linking
+  canonical HTML pages, Markdown alternates, and public repository context.
+- Added page-head Markdown alternate links and per-page canonical URLs.
 
 ### Deployment
 
@@ -68,6 +74,8 @@ under a dated entry.
 - Added `.github/release.yml` so GitHub-generated release notes can group
   future PRs by product context, website changes, deployment, repository
   metadata, and public hygiene.
+- Documented the Markdown mirror convention: every public HTML page should have
+  a corresponding Markdown file, sitemap entry, and head alternate.
 
 ### Public Hygiene
 
