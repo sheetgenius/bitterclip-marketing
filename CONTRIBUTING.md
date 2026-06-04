@@ -9,7 +9,10 @@ Read:
 
 - `README.md` for product and repository context.
 - `AGENTS.md` for maintainer rules.
-- `docs/public-repository-standard.md` for the public Bitter repo pattern.
+
+The shared public marketing repository standard is maintained outside this
+product repo in Factory policy. This file only covers BitterClip-specific
+contribution expectations.
 
 ## Change Checklist
 

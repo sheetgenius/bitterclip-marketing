@@ -92,8 +92,6 @@ This repository owns:
   [llms.txt](https://bitterclip.com/llms.txt),
   [llms-full.txt](https://bitterclip.com/llms-full.txt)
 - Public change history: [CHANGELOG.md](CHANGELOG.md)
-- Public repository standard:
-  [docs/public-repository-standard.md](docs/public-repository-standard.md)
 - Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security and public boundary: [SECURITY.md](SECURITY.md)
 - Bitter: [bitter.sh](https://bitter.sh/)
@@ -145,8 +143,6 @@ Useful files:
 - `CHANGELOG.md` - public semantic change history
 - `CONTRIBUTING.md` - public change checklist for humans and agents
 - `SECURITY.md` - sensitive-reporting and public-boundary policy
-- `docs/public-repository-standard.md` - reference pattern for public Bitter
-  marketing repositories
 - `.github/pull_request_template.md` - GitHub review checklist for public
   context, Markdown mirrors, discovery files, tests, and deployment notes
 - `.github/release.yml` - GitHub generated release note categories
@@ -169,20 +165,3 @@ page head, and listed in `public/sitemap.xml`.
 Markdown alternates should return canonical HTTP `Link` headers pointing back to
 their HTML pages in production. The bundled `llms-full.txt` file should stay
 compact, factual, and aligned with the current public page copy.
-
-## Prototype Pattern
-
-This repository is also maintained as the reference shape for small public
-Bitter constellation sites. The pattern is:
-
-- a README that explains the product, its place in Bitter, the repo boundary,
-  canonical links, deployment, and verification
-- a changelog that records public semantic changes instead of raw commit noise
-- an AGENTS guide, contribution guide, security boundary, release-note config,
-  and pull request checklist
-- canonical HTML pages with Markdown twins, sitemap entries, `llms.txt`, and
-  `llms-full.txt`
-- smoke tests that protect the public route and discovery-file contract
-
-For the reusable checklist, see
-[docs/public-repository-standard.md](docs/public-repository-standard.md).

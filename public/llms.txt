@@ -40,8 +40,6 @@ for agents, crawlers, and public repository indexing.
   changelog, and deployment wrapper.
 - [Changelog](https://github.com/sheetgenius/bitterclip-marketing/blob/main/CHANGELOG.md):
   Semantic public change history for the website and repository context.
-- [Public repository standard](https://github.com/sheetgenius/bitterclip-marketing/blob/main/docs/public-repository-standard.md):
-  Reference pattern for public Bitter constellation marketing repositories.
 - [Contributing](https://github.com/sheetgenius/bitterclip-marketing/blob/main/CONTRIBUTING.md):
   Change checklist for public page, metadata, deployment, and discovery updates.
 - [Security and public boundary](https://github.com/sheetgenius/bitterclip-marketing/blob/main/SECURITY.md):

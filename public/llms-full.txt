@@ -237,17 +237,3 @@ store, or private operational runbook repository.
 Public repository context is intentionally factual and durable so humans,
 search engines, and AI systems can understand what BitterClip is and how it
 connects to the Bitter constellation.
-
-The repository is maintained as a reference shape for public Bitter marketing
-sites. Its public-context pattern includes:
-
-- a README that explains the product, Bitter connection, repo boundary,
-  canonical links, deployment, and verification
-- a public semantic changelog
-- AGENTS, CONTRIBUTING, SECURITY, release-note, and pull request guidance
-- canonical HTML pages with Markdown twins
-- sitemap, robots, `llms.txt`, and `llms-full.txt` discovery surfaces
-- smoke tests for public route and discovery-file contracts
-
-Reference standard:
-https://github.com/sheetgenius/bitterclip-marketing/blob/main/docs/public-repository-standard.md

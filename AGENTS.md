@@ -22,10 +22,10 @@ Use the README as the pattern for other public Bitter constellation repos:
 6. Document deployment without exposing secrets.
 7. Preserve public, indexable context that will still make sense later.
 
-Read `docs/public-repository-standard.md` before making changes intended to set
-or update the shared pattern for other public Bitter marketing repositories.
-Keep `CONTRIBUTING.md`, `SECURITY.md`, `.github/release.yml`, and
-`.github/pull_request_template.md` aligned with that pattern.
+The shared public marketing repository standard lives outside this repo in
+Factory. Do not add generic cross-repo standards docs here. Keep
+`CONTRIBUTING.md`, `SECURITY.md`, `.github/release.yml`, and
+`.github/pull_request_template.md` specific to BitterClip.
 
 Maintain `CHANGELOG.md` as the public semantic change history. Entries should
 explain product-context, website, deployment, repository metadata, and public
