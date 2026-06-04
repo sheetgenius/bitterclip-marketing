@@ -46,7 +46,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
             $99/mo launch
           </a>
           <a
-            class="focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-amber-400 text-zinc-950 hover:bg-amber-300 hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-amber-400/10 btn-glow"
+            class="focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-purple-300 text-zinc-950 hover:bg-purple-200 hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-purple-300/10 btn-glow"
             :href="signupUrl"
           >
             Start with one

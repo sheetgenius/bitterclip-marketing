@@ -28,6 +28,11 @@ Preferred categories:
 Use this section for changes that have been committed but not yet summarized
 under a dated entry.
 
+### Website
+
+- Aligned the top navigation CTA with BitterClip's violet primary action color
+  instead of using the yellow launch accent.
+
 ## 2026-06-04
 
 ### Website
