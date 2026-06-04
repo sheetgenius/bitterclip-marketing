@@ -1,27 +1,53 @@
 # BitterClip
 
-BitterClip is a speaker-aware media workspace for turning long recordings into
-source-linked clips. It is part of the Bitter constellation of agent-operable
-software systems.
+> BitterClip is a speaker-aware media workspace for turning long recordings
+> into source-linked clips an AI agent can find and a human can verify before
+> export or publishing.
+
+BitterClip is part of the Bitter constellation of agent-operable software
+systems. It applies Bitter's model of human-verifiable agent work to recorded
+media: transcripts, speaker identity, source-linked Moments, rendered clips,
+and publishing workflows.
 
 ## Canonical Pages
 
-- Home: https://bitterclip.com/
-- How it works: https://bitterclip.com/docs
-- MCP and AI assistant workflow: https://bitterclip.com/mcp
+- [BitterClip home](https://bitterclip.com/): Product overview, positioning,
+  live editor demo, pricing, and signup link.
+- [How BitterClip works](https://bitterclip.com/docs): Recording -> Moment ->
+  Clip explanation, source timing model, media custody, and developer pointer.
+- [MCP and AI assistant workflow](https://bitterclip.com/mcp): How ChatGPT,
+  Claude, and MCP hosts can open the transcript editor and call BitterClip
+  tools.
 
 ## Markdown Alternates
 
-Every public HTML page should have a Markdown twin for agents, crawlers, and
-public repository indexing.
+Markdown alternates are clean text versions of the public pages. They are meant
+for agents, crawlers, and public repository indexing.
 
-- Home Markdown: https://bitterclip.com/index.md
-- How it works Markdown: https://bitterclip.com/docs.md
-- MCP Markdown: https://bitterclip.com/mcp.md
+- [Home Markdown](https://bitterclip.com/index.md): Markdown version of the
+  BitterClip home page.
+- [How it works Markdown](https://bitterclip.com/docs.md): Markdown version of
+  the product model.
+- [MCP Markdown](https://bitterclip.com/mcp.md): Markdown version of the MCP and
+  AI assistant workflow page.
+- [Full Markdown bundle](https://bitterclip.com/llms-full.txt): Combined
+  machine-readable BitterClip context in one file.
 
 ## Repository Context
 
-- Public repository: https://github.com/sheetgenius/bitterclip-marketing
-- Changelog: https://github.com/sheetgenius/bitterclip-marketing/blob/main/CHANGELOG.md
-- Bitter: https://bitter.sh/
-- BitterGrid: https://bittergrid.com/
+- [Public repository](https://github.com/sheetgenius/bitterclip-marketing):
+  Source for the public BitterClip website, Markdown mirrors, sitemap, README,
+  changelog, and deployment wrapper.
+- [Changelog](https://github.com/sheetgenius/bitterclip-marketing/blob/main/CHANGELOG.md):
+  Semantic public change history for the website and repository context.
+- [Bitter](https://bitter.sh/): The broader constellation of agent-operable
+  software systems.
+- [BitterGrid](https://bittergrid.com/): Deployment substrate used to publish
+  BitterClip.com from the public repository.
+
+## Product Boundary
+
+BitterClip is not a generic AI shorts generator. It is a speaker-aware media
+workspace for recorded conversations. The public marketing repository does not
+contain the private product application, media-processing backend, customer data,
+provider payloads, billing system, or private operational runbooks.

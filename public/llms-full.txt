@@ -1,0 +1,239 @@
+# BitterClip
+
+> BitterClip is a speaker-aware media workspace for turning long recordings into
+> source-linked clips an AI agent can find and a human can verify before export
+> or publishing.
+
+Canonical site: https://bitterclip.com/
+
+Public repository: https://github.com/sheetgenius/bitterclip-marketing
+
+BitterClip is part of the Bitter constellation of agent-operable software
+systems. It applies Bitter's model of human-verifiable agent work to recorded
+media: transcripts, speaker identity, source-linked Moments, rendered clips, and
+publishing workflows.
+
+This file is a compact machine-readable bundle of the public BitterClip site.
+Canonical HTML pages remain the preferred browser/search destinations. Markdown
+page mirrors are provided for agents, crawlers, and public repository indexing.
+
+## Canonical Public URLs
+
+- Home: https://bitterclip.com/
+- Product explanation: https://bitterclip.com/docs
+- MCP and AI assistant workflow: https://bitterclip.com/mcp
+- Markdown home: https://bitterclip.com/index.md
+- Markdown product explanation: https://bitterclip.com/docs.md
+- Markdown MCP page: https://bitterclip.com/mcp.md
+- Agent index: https://bitterclip.com/llms.txt
+- Full Markdown bundle: https://bitterclip.com/llms-full.txt
+- Sitemap: https://bitterclip.com/sitemap.xml
+
+## Product Summary
+
+BitterClip turns podcasts, interviews, founder calls, demos, livestreams, and
+recurring shows into clips that keep source context attached. The product is
+designed for people who know their long recordings contain useful material but
+need a repeatable way to find, verify, render, and publish the right moments.
+
+The core product loop is:
+
+```text
+Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing
+```
+
+The shortest version:
+
+```text
+Recording -> Moment -> Clip
+```
+
+A Recording is the source audio or video. BitterClip transcribes it to
+time-aligned words and speaker turns.
+
+A Moment is a candidate span selected from the transcript. Agents can propose
+moments by choosing words, not by inventing timestamps.
+
+A Clip is the approved, rendered output. BitterClip derives timing from the
+selected transcript words, lets the human verify the cut, and exports a captioned
+MP4 with source context preserved.
+
+## Home Page Content
+
+Hero claim:
+
+```text
+Cut clips where your context lives.
+```
+
+Supporting claim:
+
+```text
+BitterClip turns podcasts, interviews, founder calls, demos, and recurring shows
+into speaker-aware clips your agent can find, you can verify, and export ready
+to post.
+```
+
+Product loop:
+
+1. Recording: upload the source.
+2. Speakers: know who said what.
+3. Moments: ask your agent to find the best parts.
+4. Verify: check source context.
+5. Export: post a finished MP4.
+
+The live product surface is a transcript editor where a human can review the
+source media and transcript together. The user can drag across words, check the
+source, and let the cut follow the audio.
+
+BitterClip focuses on:
+
+- speaker-aware transcript context
+- source-linked moments
+- human verification before export
+- recurring memory for speakers, clips, topics, and prior show context
+- finished MP4 exports
+- YouTube publishing
+- operation from AI chat environments through an agent connector
+
+Launch access is $99/month and includes 100 clip exports a month, the
+speaker-aware transcript workspace, an agent connector, and YouTube publishing.
+
+Signup: https://app.bitterclip.com/sign_up
+
+## Speaker-Aware Clipping
+
+Good clips depend on more than interesting words. They depend on who said them,
+what came before, what came after, and whether the moment stands on its own.
+
+BitterClip works from the shape of a conversation, not a flat transcript blob.
+This lets an agent search for:
+
+- the sharpest exchange
+- the clearest explanation
+- the strongest validation
+- the best setup and payoff
+- the moment where one speaker pushes back on another
+- the clip that introduces a product without needing extra context
+
+Example selected moment:
+
+- Michael: "We kept thinking the product was the picker."
+- John: "But the actual value is trust, right? You know who said it, where it
+  happened, and why the clip works."
+- Michael: "Exactly. The clip only works if the source is still attached."
+
+## Product Explanation
+
+BitterClip turns a recording into clips you can trust through:
+
+```text
+Recording -> Moment -> Clip
+```
+
+The user brings a video or audio file. BitterClip transcribes it to time-aligned
+words. That transcript becomes the canonical timing signal for downstream work.
+
+An AI agent reads transcript context and proposes moments worth clipping by
+selecting words. BitterClip derives the start and end from the first and last
+selected word, adds a little breathing room, and snaps the cut to the audio.
+This avoids guessed timestamps and clips that land mid-syllable.
+
+The user confirms or adjusts the edges. BitterClip renders a captioned MP4 with
+the transcript and an SRT. Every clip stays linked to its recording, speaker,
+exact words, and timestamp so the source chain remains traceable.
+
+Recordings and rendered clips live in the user's BitterClip workspace. Each clip
+carries source context: recording, speaker, selected words, timestamp, and the
+path from source to share.
+
+## MCP And AI Assistant Workflow
+
+BitterClip exposes a remote MCP server and MCP Apps-compatible editor surface.
+An assistant can find a moment, BitterClip can open the transcript editor in the
+conversation, and a human can verify the final cut before export or publishing.
+
+The assistant picks words. BitterClip handles timing, captions, export, and
+final approval without guessed timestamps.
+
+Endpoint:
+
+```text
+POST /mcp
+```
+
+BitterClip speaks JSON-RPC 2.0 over HTTP with CORS, origin checks, and
+bearer-token authentication. Tool calls route to the user's BitterClip
+workspace.
+
+Protocol:
+
+- MCP over JSON-RPC 2.0
+- MCP Apps UI extension
+- stable spec date: 2026-01-26
+
+Supported methods:
+
+- `initialize` - handshake and exchange capabilities
+- `ping` - connection heartbeat verification
+- `tools/list` - expose available editor capabilities
+- `tools/call` - run a tool, such as finding moments or exporting a clip
+- `resources/list` - list ingested audio/video resources
+- `resources/read` - read a recording transcript and clips
+
+Representative tools:
+
+| Tool | Purpose |
+| --- | --- |
+| `recordings_list` | Retrieve ingested recordings for selection. |
+| `clips_suggest` | Read the transcript and propose moments worth clipping for a goal. |
+| `clips_render_candidate_editor` | Mount the interactive candidate editor widget in chat. |
+| `clips_create` | Commit a chosen moment as a durable clip. |
+| `clips_export` | Trigger the render queue to export a captioned MP4. |
+| `clips_compose` | Stitch spans from one or more recordings into a single clip. |
+| `account_get_credit_balance` | Check plan credits and subscription limits. |
+
+## Host Bridge
+
+BitterClip renders rich custom elements inside sandboxed iframes. The widget
+communicates with its host through a standardized `hostActions` API contract.
+
+Every component speaks `hostActions`, not host-specific globals such as
+`window.openai`, raw `postMessage`, or direct `fetch`. This keeps the component
+portable across the web app, ChatGPT, Claude, and demo surfaces.
+
+Canonical event chain:
+
+1. State change: the component updates its own view first.
+2. Event: the component announces what happened.
+3. Tell the model: `hostActions.updateModelContext` keeps the AI in the loop.
+4. Call the tool: `hostActions.callTool` does backend work.
+5. Or say it: `hostActions.sendMessage` starts a new model turn when that is
+   simpler.
+
+## Connecting BitterClip
+
+BitterClip connects as a remote MCP server: a hosted endpoint with sign-in. It
+does not require local setup, config files, or local processes.
+
+Claude users can add BitterClip as a Connector and sign in. ChatGPT users can
+enable the BitterClip app. The same tools and editor appear through the MCP App
+surface.
+
+Launch access is $99/month. Checkout unlocks uploads, renders, publishing, and
+connector use.
+
+## Repository Boundary
+
+The public repository at
+https://github.com/sheetgenius/bitterclip-marketing owns the public BitterClip
+website, product copy, public documentation pages, Markdown mirrors, sitemap,
+README, changelog, and deployment wrapper.
+
+It is not the private BitterClip product application, Rails workspace,
+media-processing backend, billing system, customer data store, provider payload
+store, or private operational runbook repository.
+
+Public repository context is intentionally factual and durable so humans,
+search engines, and AI systems can understand what BitterClip is and how it
+connects to the Bitter constellation.

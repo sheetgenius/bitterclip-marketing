@@ -72,6 +72,7 @@ This repository owns:
 - public product copy and metadata
 - public documentation pages at `/docs` and `/mcp`
 - Markdown alternates for every public page route
+- AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - crawlable routes in `public/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
@@ -87,7 +88,9 @@ This repository owns:
   [index.md](https://bitterclip.com/index.md),
   [docs.md](https://bitterclip.com/docs.md),
   [mcp.md](https://bitterclip.com/mcp.md)
-- AI crawler entry point: [bitterclip.com/llms.txt](https://bitterclip.com/llms.txt)
+- AI crawler entry points:
+  [llms.txt](https://bitterclip.com/llms.txt),
+  [llms-full.txt](https://bitterclip.com/llms-full.txt)
 - Public change history: [CHANGELOG.md](CHANGELOG.md)
 - Bitter: [bitter.sh](https://bitter.sh/)
 - BitterGrid: [bittergrid.com](https://bittergrid.com/)
@@ -131,6 +134,8 @@ Useful files:
   public pages
 - `public/llms.txt` - AI crawler entry point that links canonical pages and
   Markdown alternates
+- `public/llms-full.txt` - compact bundled Markdown context for one-fetch agent
+  ingestion
 - `nuxt.config.ts` - site metadata and Nuxt configuration
 - `public/sitemap.xml` - crawlable public routes
 - `CHANGELOG.md` - public semantic change history
@@ -150,3 +155,7 @@ with the live BitterClip product.
 Every public HTML page should have a corresponding Markdown alternate served
 from `public/*.md`, advertised with a `rel="alternate"` Markdown link in the
 page head, and listed in `public/sitemap.xml`.
+
+Markdown alternates should return canonical HTTP `Link` headers pointing back to
+their HTML pages in production. The bundled `llms-full.txt` file should stay
+compact, factual, and aligned with the current public page copy.

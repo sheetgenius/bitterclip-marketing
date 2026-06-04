@@ -2,6 +2,45 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const signupUrl = 'https://app.bitterclip.com/sign_up'
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Bitter',
+    url: 'https://bitter.sh/',
+    sameAs: [
+      'https://github.com/sheetgenius',
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'BitterClip',
+    url: 'https://bitterclip.com/',
+    description: 'BitterClip is a speaker-aware media workspace for turning long recordings into source-linked clips.',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Bitter',
+      url: 'https://bitter.sh/',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'BitterClip',
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    url: 'https://bitterclip.com/',
+    description: 'A speaker-aware media workspace for finding, verifying, rendering, and publishing clips from long recordings.',
+    offers: {
+      '@type': 'Offer',
+      price: '99',
+      priceCurrency: 'USD',
+      url: signupUrl,
+      availability: 'https://schema.org/InStock',
+    },
+  },
+]
 
 useHead({
   link: [
@@ -10,6 +49,12 @@ useHead({
   ],
   meta: [
     { property: 'og:url', content: 'https://bitterclip.com/' },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify(structuredData),
+    },
   ],
 })
 

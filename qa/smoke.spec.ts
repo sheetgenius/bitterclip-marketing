@@ -4,6 +4,8 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/index.md"]')).toHaveCount(1)
+  const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
+  expect(jsonLd).toContain('SoftwareApplication')
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip' })).toBeVisible()
   await expect(page.getByText('Agent-operable media studio')).toBeVisible()
   await expect(page.getByRole('heading', { name: /Cut clips where/ })).toBeVisible()
@@ -12,6 +14,9 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
   await expect(page.getByRole('heading', { name: 'This is the editor your agent opens.' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Not another pile of generic suggestions.' })).toBeVisible()
+  await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
+  await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
+  await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {
@@ -65,8 +70,15 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/docs.md')
   expect(sitemapText).toContain('https://bitterclip.com/mcp.md')
   expect(sitemapText).toContain('https://bitterclip.com/llms.txt')
+  expect(sitemapText).toContain('https://bitterclip.com/llms-full.txt')
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
   expect(await llms.text()).toContain('Markdown Alternates')
+
+  const llmsFull = await request.get('/llms-full.txt')
+  expect(llmsFull.ok()).toBeTruthy()
+  const llmsFullText = await llmsFull.text()
+  expect(llmsFullText).toContain('Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing')
+  expect(llmsFullText).toContain('Repository Boundary')
 })

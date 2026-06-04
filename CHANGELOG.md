@@ -30,10 +30,26 @@ under a dated entry.
 
 ## 2026-06-04
 
+### Website
+
+- Added visible footer links to the AI-readable discovery files and public
+  GitHub repository.
+- Added JSON-LD structured data for BitterClip as a website and software
+  application connected to the broader Bitter organization.
+- Expanded `https://bitterclip.com/llms.txt` into a curated agent index and
+  added `https://bitterclip.com/llms-full.txt` as a one-fetch Markdown context
+  bundle.
+
 ### Deployment
 
 - Added exact nginx routes for `/docs` and `/mcp` so canonical extensionless
   page URLs resolve directly instead of relying on directory-slash redirects.
+- Added canonical HTTP `Link` headers for Markdown page mirrors so the HTML
+  pages remain the canonical search destinations.
+
+### Repository Metadata
+
+- Documented the `llms-full.txt` convention in the README and AGENTS guide.
 
 ## 2026-06-03
 

@@ -31,7 +31,9 @@ categories aligned with the changelog categories.
 Every public route should have a Markdown twin in `public/*.md`. When editing
 `app/pages/index.vue`, `app/pages/docs.vue`, or `app/pages/mcp.vue`, update the
 matching Markdown file, `public/llms.txt`, page-head Markdown alternate links,
-`public/sitemap.xml`, and smoke tests together.
+`public/llms-full.txt`, `public/sitemap.xml`, and smoke tests together.
+Markdown twins should be served with canonical HTTP `Link` headers pointing back
+to the matching HTML route.
 
 Do not commit provider keys, OAuth secrets, deploy tokens, registry credentials,
 `.env` files, private recordings, transcripts, rendered clips, provider

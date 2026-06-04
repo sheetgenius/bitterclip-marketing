@@ -73,7 +73,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <span class="text-zinc-700">|</span>
           <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
         </div>
-        <div class="flex items-center gap-6 font-mono text-[10px]">
+        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px]">
           <a class="focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none hover:text-zinc-300 transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">Contact</a>
           <span class="text-zinc-800">•</span>
           <a class="hover:text-zinc-300 transition" :href="signupUrl">Start with one recording</a>
@@ -81,6 +81,12 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <NuxtLink class="hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
           <span class="text-zinc-800">•</span>
           <NuxtLink class="hover:text-zinc-300 transition" to="/docs">How it works</NuxtLink>
+          <span class="text-zinc-800">•</span>
+          <a class="hover:text-zinc-300 transition" href="/llms.txt">llms.txt</a>
+          <span class="text-zinc-800">•</span>
+          <a class="hover:text-zinc-300 transition" href="/llms-full.txt">Markdown</a>
+          <span class="text-zinc-800">•</span>
+          <a class="hover:text-zinc-300 transition" href="https://github.com/sheetgenius/bitterclip-marketing">GitHub</a>
           <span class="text-zinc-800">•</span>
           <a class="hover:text-zinc-300 transition" href="https://bitter.sh/">BitterSH</a>
         </div>
