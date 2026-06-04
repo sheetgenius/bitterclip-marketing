@@ -109,14 +109,14 @@ onBeforeUnmount(() => {
 
       <!-- 1. Hero -->
       <div class="text-center max-w-4xl mx-auto mb-14 sm:mb-20">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-purple-300/20 bg-zinc-950/80 text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-6 animate-float corner-ticks shadow-lg shadow-black/40">
-          <span class="w-1.5 h-1.5 rounded-full bg-purple-300 animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#f28f84]/20 bg-zinc-950/80 text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-6 animate-float corner-ticks shadow-lg shadow-black/40">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84] animate-pulse"></span>
           <span>Agent-operable media studio</span>
         </div>
 
         <h2 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-6">
           Cut clips where
-          <span class="bg-gradient-to-r from-purple-200 via-fuchsia-200 to-violet-400 bg-clip-text text-transparent block sm:inline">
+          <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block sm:inline">
             your context lives.
           </span>
         </h2>
@@ -128,7 +128,7 @@ onBeforeUnmount(() => {
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             :href="signupUrl"
-            class="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-300 px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-purple-200 active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             <span>Start with one recording</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
@@ -149,27 +149,27 @@ onBeforeUnmount(() => {
       <section aria-label="Product loop" class="mb-20">
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
-            <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-2">01</p>
+            <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">01</p>
             <h3 class="font-display text-sm font-bold text-white">Recording</h3>
             <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Upload the source.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
-            <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-2">02</p>
+            <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">02</p>
             <h3 class="font-display text-sm font-bold text-white">Speakers</h3>
             <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Know who said what.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
-            <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-2">03</p>
+            <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">03</p>
             <h3 class="font-display text-sm font-bold text-white">Moments</h3>
             <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Ask your agent to find the best parts.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
-            <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-2">04</p>
+            <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">04</p>
             <h3 class="font-display text-sm font-bold text-white">Verify</h3>
             <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Check source context.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4 col-span-2 md:col-span-1">
-            <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-2">05</p>
+            <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">05</p>
             <h3 class="font-display text-sm font-bold text-white">Export</h3>
             <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Post a finished MP4.</p>
           </div>
@@ -178,10 +178,10 @@ onBeforeUnmount(() => {
 
       <!-- 2. The actual editor -->
       <section id="demo" class="mb-24 relative scroll-mt-28">
-        <div class="absolute inset-0 bg-purple-300/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
+        <div class="absolute inset-0 bg-[#f28f84]/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
 
         <div class="text-center max-w-2xl mx-auto mb-8 relative">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Live product surface</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Live product surface</p>
           <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">This is the editor your agent opens.</h2>
           <p class="text-zinc-400 text-sm mt-2 font-sans">Drag across words. Check the source. The cut follows the audio.</p>
         </div>
@@ -191,8 +191,8 @@ onBeforeUnmount(() => {
           <!-- Window header -->
           <div class="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800/80 relative z-10">
             <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-purple-300/70"></span>
-              <span class="w-3 h-3 rounded-full bg-violet-400/60"></span>
+              <span class="w-3 h-3 rounded-full bg-[#f28f84]/70"></span>
+              <span class="w-3 h-3 rounded-full bg-[#d66f5f]/60"></span>
               <span class="w-3 h-3 rounded-full bg-zinc-700"></span>
               <span class="text-xs font-mono text-zinc-500 ml-4 hidden sm:inline">day-1 · founder interview</span>
             </div>
@@ -205,14 +205,14 @@ onBeforeUnmount(() => {
 
           <!-- Mobile Activation Gate -->
           <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
-            <p class="font-mono text-[8px] text-purple-300 uppercase tracking-widest mb-3">Live editor</p>
+            <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">Live editor</p>
             <h4 class="font-display text-lg font-bold text-white mb-2">Same editor. Same chat surface.</h4>
             <p class="text-zinc-500 text-xs max-w-sm mb-6 leading-relaxed">
               This is the editor your agent opens for review. Drag across the words to cut a clip. Tap to load it.
             </p>
             <button
               @click="activateDemo"
-              class="px-5 py-2.5 font-mono text-xs font-bold bg-purple-300 text-zinc-950 rounded-xl shadow-lg shadow-purple-300/10 hover:bg-purple-200 hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-xl shadow-lg shadow-[#f28f84]/10 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Load the editor
             </button>
@@ -222,8 +222,8 @@ onBeforeUnmount(() => {
           <div v-if="demoActivated && isIframeLoading" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
             <div class="flex flex-col items-center gap-4 text-center p-6">
               <div class="relative w-8 h-8">
-                <div class="absolute inset-0 rounded-full border-2 border-purple-300/20"></div>
-                <div class="absolute inset-0 rounded-full border-2 border-t-purple-300 animate-spin"></div>
+                <div class="absolute inset-0 rounded-full border-2 border-[#f28f84]/20"></div>
+                <div class="absolute inset-0 rounded-full border-2 border-t-[#f28f84] animate-spin"></div>
               </div>
               <span class="font-mono text-[9px] text-zinc-500 uppercase tracking-widest">Loading the editor…</span>
             </div>
@@ -249,7 +249,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="text-center mt-6">
-          <a :href="signupUrl" class="inline-flex items-center gap-1.5 font-sans text-sm text-zinc-400 hover:text-purple-300 transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 rounded">
+          <a :href="signupUrl" class="inline-flex items-center gap-1.5 font-sans text-sm text-zinc-400 hover:text-[#f28f84] transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] rounded">
             Upload your own recordings with the Launch plan.
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
           </a>
@@ -260,7 +260,7 @@ onBeforeUnmount(() => {
       <section class="mb-24 border-y border-zinc-900 py-14">
         <div class="grid lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Why it works</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Why it works</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
               BitterClip structures the conversation.
             </h2>
@@ -294,7 +294,7 @@ onBeforeUnmount(() => {
       <section class="mb-24">
         <div class="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Speaker-aware clipping</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Speaker-aware clipping</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
               The best clips depend on knowing who said what.
             </h2>
@@ -307,7 +307,7 @@ onBeforeUnmount(() => {
           <div class="glass-panel-accented glass-reflection rounded-2xl overflow-hidden corner-ticks">
             <div class="px-4 py-3 bg-zinc-950 border-b border-zinc-900 flex items-center justify-between">
               <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Selected moment</span>
-              <span class="font-mono text-[10px] text-purple-300">00:12:04 - 00:12:31</span>
+              <span class="font-mono text-[10px] text-[#f28f84]">00:12:04 - 00:12:31</span>
             </div>
             <div class="p-5 space-y-4">
               <div class="flex gap-3">
@@ -317,10 +317,10 @@ onBeforeUnmount(() => {
                   <p class="text-sm text-zinc-300 leading-relaxed">We kept thinking the product was the picker.</p>
                 </div>
               </div>
-              <div class="flex gap-3 rounded-xl border border-purple-300/20 bg-purple-300/5 p-3">
-                <div class="w-9 h-9 rounded-full bg-zinc-800 border border-purple-300/30 shrink-0"></div>
+              <div class="flex gap-3 rounded-xl border border-[#f28f84]/20 bg-[#f28f84]/5 p-3">
+                <div class="w-9 h-9 rounded-full bg-zinc-800 border border-[#f28f84]/30 shrink-0"></div>
                 <div>
-                  <p class="font-mono text-[10px] text-purple-300 uppercase tracking-widest mb-1">John</p>
+                  <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-1">John</p>
                   <p class="text-sm text-zinc-100 leading-relaxed">But the actual value is trust, right? You know who said it, where it happened, and why the clip works.</p>
                 </div>
               </div>
@@ -339,7 +339,7 @@ onBeforeUnmount(() => {
       <!-- 5. Comparison -->
       <section class="mb-24">
         <div class="max-w-2xl mb-8">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Different by design</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Different by design</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
             Not another pile of generic suggestions.
           </h2>
@@ -358,7 +358,7 @@ onBeforeUnmount(() => {
               <li>Hard to verify context</li>
             </ul>
           </div>
-          <div class="border border-purple-300/20 bg-purple-300/5 rounded-2xl p-6 corner-ticks">
+          <div class="border border-[#f28f84]/20 bg-[#f28f84]/5 rounded-2xl p-6 corner-ticks">
             <h3 class="font-display text-lg font-bold text-white mb-4">BitterClip</h3>
             <ul class="space-y-3 text-sm text-zinc-300">
               <li>Source-linked moments</li>
@@ -374,7 +374,7 @@ onBeforeUnmount(() => {
       <section class="mb-24">
         <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-10">
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Built for real conversations</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Built for real conversations</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6">
               Founder calls, interviews, podcasts, demos, and recurring shows.
             </h2>
@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
           </div>
 
           <div class="glass-panel-accented glass-reflection rounded-2xl p-6 corner-ticks">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-purple-300 mb-3">Agent cockpit</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Agent cockpit</p>
             <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
               Your agent can find the moment. BitterClip helps finish it.
             </h3>
@@ -396,7 +396,7 @@ onBeforeUnmount(() => {
             </p>
             <div class="grid grid-cols-3 gap-2 text-center font-mono text-[10px] uppercase tracking-wider text-zinc-500">
               <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">Agent proposes</span>
-              <span class="rounded-lg border border-purple-300/20 bg-purple-300/10 py-2 text-purple-300">You verify</span>
+              <span class="rounded-lg border border-[#f28f84]/20 bg-[#f28f84]/10 py-2 text-[#f28f84]">You verify</span>
               <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">Export</span>
             </div>
           </div>
@@ -405,7 +405,7 @@ onBeforeUnmount(() => {
 
       <!-- 7. Close -->
       <section id="join" class="relative max-w-4xl mx-auto">
-        <div class="absolute inset-0 bg-gradient-to-r from-purple-300/10 to-transparent rounded-3xl blur-2xl -z-10 pointer-events-none" />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#f28f84]/10 to-transparent rounded-3xl blur-2xl -z-10 pointer-events-none" />
 
         <div class="cta-glass-panel glass-reflection p-7 sm:p-9 rounded-2xl relative overflow-hidden corner-ticks">
           <div class="absolute inset-0 -z-10 cta-backdrop-mask opacity-[0.2] pointer-events-none" />
@@ -428,7 +428,7 @@ onBeforeUnmount(() => {
               </div>
               <a
                 :href="signupUrl"
-                class="bg-purple-300 text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-purple-200 active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
+                class="bg-[#f28f84] text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
               >
                 <span>Start with one recording</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">

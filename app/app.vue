@@ -4,21 +4,21 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#060608] selection:bg-amber-400/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
+  <div class="relative min-h-screen bg-[#060608] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
     
     <!-- Cinematic Data Flow Backdrops -->
     <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.8] pointer-events-none" />
     <div class="absolute inset-0 -z-20 animate-flow-horizon opacity-[0.6] pointer-events-none" />
     
     <!-- Top Decorative Glow Dots -->
-    <div class="absolute top-[-10%] left-[20%] -z-10 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-amber-500/5 via-yellow-300/5 to-rose-500/5 blur-[120px] animate-pulse-slow pointer-events-none" />
-    <div class="absolute top-[20%] right-[-10%] -z-10 w-[500px] h-[500px] rounded-full bg-gradient-to-l from-indigo-500/5 via-violet-500/5 to-amber-400/5 blur-[100px] pointer-events-none" />
+    <div class="absolute top-[-10%] left-[20%] -z-10 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-[#f28f84]/5 via-[#f8b36a]/5 to-[#d66f5f]/5 blur-[120px] animate-pulse-slow pointer-events-none" />
+    <div class="absolute top-[20%] right-[-10%] -z-10 w-[500px] h-[500px] rounded-full bg-gradient-to-l from-[#d66f5f]/5 via-[#f28f84]/5 to-[#f28f84]/5 blur-[100px] pointer-events-none" />
     
     <!-- Global Header -->
     <header class="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
       <nav class="flex items-center justify-between px-6 py-3 rounded-full glass-panel-accented glass-reflection shadow-2xl">
         <h1 class="m-0 p-0 font-display font-bold text-lg tracking-tight">
-          <NuxtLink class="flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none rounded-lg" to="/">
+          <NuxtLink class="flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg" to="/">
             <!-- Telemetry Crop Indicator Logo SVG -->
             <svg class="w-6 h-6 text-[#f28f84] transition-transform duration-300 group-hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M15 3h4a2 2 0 012 2v4M21 15v4a2 2 0 01-2 2h-4M9 21H5a2 2 0 01-2-2v-4" />
@@ -27,26 +27,26 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
             <span class="bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition duration-300 font-mono tracking-tight text-base uppercase">
               BitterClip
             </span>
-            <span class="px-1.5 py-0.5 text-[8px] font-mono font-bold rounded bg-amber-400/10 text-amber-400 border border-amber-400/20">Beta</span>
+            <span class="px-1.5 py-0.5 text-[8px] font-mono font-bold rounded bg-[#f28f84]/10 text-[#f28f84] border border-[#f28f84]/20">Beta</span>
           </NuxtLink>
         </h1>
         
         <div class="hidden md:flex items-center gap-8 font-sans text-xs uppercase tracking-wider text-zinc-400">
-          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/#demo">Demo</NuxtLink>
-          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/mcp">MCP</NuxtLink>
-          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/docs">How it works</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/#demo">Demo</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/mcp">MCP</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/docs">How it works</NuxtLink>
         </div>
         
         <div class="flex items-center gap-4">
           <a 
-            class="hidden sm:inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-zinc-500 hover:text-amber-400 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none rounded-lg transition"
+            class="hidden sm:inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-zinc-500 hover:text-[#f28f84] focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg transition"
             :href="signupUrl"
           >
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             $99/mo launch
           </a>
           <a
-            class="focus-visible:ring-2 focus-visible:ring-purple-300 focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-purple-300 text-zinc-950 hover:bg-purple-200 hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-purple-300/10 btn-glow"
+            class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-[#f28f84]/10 btn-glow"
             :href="signupUrl"
           >
             Start with one
@@ -74,7 +74,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
         </div>
         <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px]">
-          <a class="focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:outline-none hover:text-zinc-300 transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">Contact</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none hover:text-zinc-300 transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">Contact</a>
           <span class="text-zinc-800">•</span>
           <a class="hover:text-zinc-300 transition" :href="signupUrl">Start with one recording</a>
           <span class="text-zinc-800">•</span>

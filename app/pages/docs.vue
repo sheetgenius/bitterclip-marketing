@@ -30,11 +30,11 @@ useHead({
   <div class="mx-auto max-w-3xl px-4 pt-12 pb-24 relative animate-fade-in">
 
     <!-- Top Glowing Gradient Accent -->
-    <div class="absolute top-0 left-1/4 -z-10 w-[400px] h-[400px] rounded-full bg-amber-400/5 blur-[100px] pointer-events-none" />
+    <div class="absolute top-0 left-1/4 -z-10 w-[400px] h-[400px] rounded-full bg-[#f28f84]/5 blur-[100px] pointer-events-none" />
 
     <!-- Title Block -->
     <div class="mb-14 border-b border-zinc-900 pb-10">
-      <p class="font-mono text-xs uppercase tracking-widest text-amber-400 mb-3">How it works</p>
+      <p class="font-mono text-xs uppercase tracking-widest text-[#f28f84] mb-3">How it works</p>
       <h2 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-6">
         How a clip gets made.
       </h2>
@@ -47,7 +47,7 @@ useHead({
     <div class="space-y-6">
       <div class="glass-panel-accented glass-reflection p-6 sm:p-7 rounded-2xl corner-ticks">
         <div class="flex items-center gap-3 mb-3">
-          <span class="font-mono text-xs text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">01</span>
+          <span class="font-mono text-xs text-[#f28f84] bg-[#f28f84]/10 px-2 py-0.5 rounded border border-[#f28f84]/20">01</span>
           <h3 class="font-display text-lg font-bold text-white">Recording</h3>
         </div>
         <p class="text-zinc-400 text-sm leading-relaxed font-sans">
@@ -57,7 +57,7 @@ useHead({
 
       <div class="glass-panel-accented glass-reflection p-6 sm:p-7 rounded-2xl corner-ticks">
         <div class="flex items-center gap-3 mb-3">
-          <span class="font-mono text-xs text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">02</span>
+          <span class="font-mono text-xs text-[#f28f84] bg-[#f28f84]/10 px-2 py-0.5 rounded border border-[#f28f84]/20">02</span>
           <h3 class="font-display text-lg font-bold text-white">Moment</h3>
         </div>
         <p class="text-zinc-400 text-sm leading-relaxed font-sans">
@@ -67,7 +67,7 @@ useHead({
 
       <div class="glass-panel-accented glass-reflection p-6 sm:p-7 rounded-2xl corner-ticks">
         <div class="flex items-center gap-3 mb-3">
-          <span class="font-mono text-xs text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">03</span>
+          <span class="font-mono text-xs text-[#f28f84] bg-[#f28f84]/10 px-2 py-0.5 rounded border border-[#f28f84]/20">03</span>
           <h3 class="font-display text-lg font-bold text-white">Clip</h3>
         </div>
         <p class="text-zinc-400 text-sm leading-relaxed font-sans">
@@ -87,7 +87,7 @@ useHead({
       <div class="p-6 rounded-2xl border border-zinc-900 bg-zinc-950/40">
         <h4 class="font-display font-semibold text-white text-sm mb-2">For developers</h4>
         <p class="text-zinc-400 text-xs leading-relaxed font-sans">
-          BitterClip is a remote MCP server. The tools your AI calls, and the bridge the editor runs on, are documented on the <NuxtLink to="/mcp" class="text-amber-400 hover:underline">MCP page</NuxtLink>.
+          BitterClip is a remote MCP server. The tools your AI calls, and the bridge the editor runs on, are documented on the <NuxtLink to="/mcp" class="text-[#f28f84] hover:underline">MCP page</NuxtLink>.
         </p>
       </div>
     </div>
