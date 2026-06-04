@@ -76,6 +76,8 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
         <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px]">
           <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none hover:text-zinc-300 transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">Contact</a>
           <span class="text-zinc-800">•</span>
+          <NuxtLink class="hover:text-zinc-300 transition" to="/privacy">Privacy</NuxtLink>
+          <span class="text-zinc-800">•</span>
           <a class="hover:text-zinc-300 transition" :href="signupUrl">Start with one recording</a>
           <span class="text-zinc-800">•</span>
           <NuxtLink class="hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>

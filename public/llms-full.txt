@@ -22,9 +22,11 @@ page mirrors are provided for agents, crawlers, and public repository indexing.
 - Home: https://bitterclip.com/
 - Product explanation: https://bitterclip.com/docs
 - MCP and AI assistant workflow: https://bitterclip.com/mcp
+- Privacy policy: https://bitterclip.com/privacy
 - Markdown home: https://bitterclip.com/index.md
 - Markdown product explanation: https://bitterclip.com/docs.md
 - Markdown MCP page: https://bitterclip.com/mcp.md
+- Markdown privacy policy: https://bitterclip.com/privacy.md
 - Agent index: https://bitterclip.com/llms.txt
 - Full Markdown bundle: https://bitterclip.com/llms-full.txt
 - Sitemap: https://bitterclip.com/sitemap.xml
@@ -222,6 +224,26 @@ surface.
 
 Launch access is $99/month. Checkout unlocks uploads, renders, publishing, and
 connector use.
+
+## Privacy Policy
+
+BitterClip's public privacy policy is available at:
+
+```text
+https://bitterclip.com/privacy
+```
+
+Markdown version:
+
+```text
+https://bitterclip.com/privacy.md
+```
+
+The policy covers the public site, hosted app, AI assistant connector surfaces,
+and publishing integrations. It describes account and contact data, workspace
+media and transcripts, clips, exports, connector tokens, publishing receipts,
+billing and plan information, logs, analytics, provider processing, sharing,
+retention, deletion, security, and user choices.
 
 ## Repository Boundary
 

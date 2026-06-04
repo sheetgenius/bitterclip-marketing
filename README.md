@@ -70,7 +70,7 @@ This repository owns:
 
 - the public BitterClip website
 - public product copy and metadata
-- public documentation pages at `/docs` and `/mcp`
+- public documentation pages at `/docs`, `/mcp`, and `/privacy`
 - Markdown alternates for every public page route
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - crawlable routes in `public/sitemap.xml`
@@ -84,10 +84,12 @@ This repository owns:
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
+- Privacy policy: [bitterclip.com/privacy](https://bitterclip.com/privacy)
 - Markdown page mirrors:
   [index.md](https://bitterclip.com/index.md),
   [docs.md](https://bitterclip.com/docs.md),
-  [mcp.md](https://bitterclip.com/mcp.md)
+  [mcp.md](https://bitterclip.com/mcp.md),
+  [privacy.md](https://bitterclip.com/privacy.md)
 - AI crawler entry points:
   [llms.txt](https://bitterclip.com/llms.txt),
   [llms-full.txt](https://bitterclip.com/llms-full.txt)
@@ -132,8 +134,9 @@ Useful files:
 - `app/pages/index.vue` - home page
 - `app/pages/docs.vue` - product explanation page
 - `app/pages/mcp.vue` - MCP and AI assistant workflow page
-- `public/index.md`, `public/docs.md`, `public/mcp.md` - Markdown twins for
-  public pages
+- `app/pages/privacy.vue` - privacy policy page
+- `public/index.md`, `public/docs.md`, `public/mcp.md`, `public/privacy.md` -
+  Markdown twins for public pages
 - `public/llms.txt` - AI crawler entry point that links canonical pages and
   Markdown alternates
 - `public/llms-full.txt` - compact bundled Markdown context for one-fetch agent

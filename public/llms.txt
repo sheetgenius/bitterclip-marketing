@@ -18,6 +18,9 @@ and publishing workflows.
 - [MCP and AI assistant workflow](https://bitterclip.com/mcp): How ChatGPT,
   Claude, and MCP hosts can open the transcript editor and call BitterClip
   tools.
+- [Privacy policy](https://bitterclip.com/privacy): How BitterClip handles
+  account data, media, transcripts, clips, connector access, analytics, and
+  publishing integrations.
 
 ## Markdown Alternates
 
@@ -30,6 +33,8 @@ for agents, crawlers, and public repository indexing.
   the product model.
 - [MCP Markdown](https://bitterclip.com/mcp.md): Markdown version of the MCP and
   AI assistant workflow page.
+- [Privacy Markdown](https://bitterclip.com/privacy.md): Markdown version of the
+  privacy policy.
 - [Full Markdown bundle](https://bitterclip.com/llms-full.txt): Combined
   machine-readable BitterClip context in one file.
 

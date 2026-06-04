@@ -54,11 +54,23 @@ test('renders the MCP specification page and handles tab switches', async ({ pag
   await expect(page.getByText('One contract')).toBeVisible()
 })
 
+test('renders the privacy policy page', async ({ page }) => {
+  await page.goto('/privacy')
+
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/privacy.md"]')).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 2, name: 'Privacy policy.' })).toBeVisible()
+  await expect(page.getByText('Effective date:')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Information We Collect' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'AI, Media, And Provider Processing' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'hello@bitterclip.com' })).toBeVisible()
+})
+
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Cut clips where your context lives.' },
     { path: '/docs.md', text: 'Recording -> Moment -> Clip' },
     { path: '/mcp.md', text: 'How ChatGPT And Claude Open The Editor' },
+    { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
   ]
 
   for (const markdownPage of markdownPages) {
@@ -73,6 +85,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/index.md')
   expect(sitemapText).toContain('https://bitterclip.com/docs.md')
   expect(sitemapText).toContain('https://bitterclip.com/mcp.md')
+  expect(sitemapText).toContain('https://bitterclip.com/privacy')
+  expect(sitemapText).toContain('https://bitterclip.com/privacy.md')
   expect(sitemapText).toContain('https://bitterclip.com/llms.txt')
   expect(sitemapText).toContain('https://bitterclip.com/llms-full.txt')
 

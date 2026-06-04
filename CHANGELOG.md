@@ -32,6 +32,9 @@ under a dated entry.
 
 - Re-established the logo amber/orange as BitterClip's primary brand and CTA
   color instead of mixing violet, amber, and pink action accents.
+- Added `https://bitterclip.com/privacy` and `https://bitterclip.com/privacy.md`
+  so provider app registration and public users have a discoverable privacy
+  policy for the website, app, connector, and publishing integrations.
 
 ## 2026-06-04
 
