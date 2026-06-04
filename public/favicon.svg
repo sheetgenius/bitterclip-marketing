@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BitterClip">
-  <rect width="64" height="64" rx="14" fill="#060608"/>
-  <path d="M13 25V15a2 2 0 0 1 2-2h10M39 13h10a2 2 0 0 1 2 2v10M51 39v10a2 2 0 0 1-2 2H39M25 51H15a2 2 0 0 1-2-2V39" fill="none" stroke="#ff9a8f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="32" cy="32" r="4" fill="#ff9a8f"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="BitterClip">
+  <rect width="512" height="512" rx="80" fill="#060608"/>
+  <rect x="110" y="110" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="110" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="307" y="110" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="368" y="110" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="368" y="307" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="307" y="368" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="368" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="307" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <circle cx="256" cy="256" r="31" fill="#ff9a8f"/>
 </svg>

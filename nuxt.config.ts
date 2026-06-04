@@ -38,6 +38,8 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/icon.png' },
+        { rel: 'apple-touch-icon', href: '/icon.png' },
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms.txt', title: 'BitterClip agent index' },
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms-full.txt', title: 'BitterClip full Markdown context' },
       ],
