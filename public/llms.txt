@@ -21,6 +21,9 @@ and publishing workflows.
 - [Privacy policy](https://bitterclip.com/privacy): How BitterClip handles
   account data, media, transcripts, clips, connector access, analytics, and
   publishing integrations.
+- [Terms of service](https://bitterclip.com/terms): Terms for using
+  BitterClip, including accounts, workspace media, publishing integrations,
+  billing, acceptable use, and service availability.
 
 ## Markdown Alternates
 
@@ -35,6 +38,8 @@ for agents, crawlers, and public repository indexing.
   AI assistant workflow page.
 - [Privacy Markdown](https://bitterclip.com/privacy.md): Markdown version of the
   privacy policy.
+- [Terms Markdown](https://bitterclip.com/terms.md): Markdown version of the
+  terms of service.
 - [Full Markdown bundle](https://bitterclip.com/llms-full.txt): Combined
   machine-readable BitterClip context in one file.
 

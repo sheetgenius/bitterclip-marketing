@@ -65,12 +65,24 @@ test('renders the privacy policy page', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'hello@bitterclip.com' })).toBeVisible()
 })
 
+test('renders the terms of service page', async ({ page }) => {
+  await page.goto('/terms')
+
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/terms.md"]')).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 2, name: 'Terms of service.' })).toBeVisible()
+  await expect(page.getByText('Effective date:')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Using BitterClip' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Publishing Integrations' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'hello@bitterclip.com' })).toBeVisible()
+})
+
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Cut clips where your context lives.' },
     { path: '/docs.md', text: 'Recording -> Moment -> Clip' },
     { path: '/mcp.md', text: 'How ChatGPT And Claude Open The Editor' },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
+    { path: '/terms.md', text: 'You retain your rights in recordings' },
   ]
 
   for (const markdownPage of markdownPages) {
@@ -87,6 +99,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/mcp.md')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
   expect(sitemapText).toContain('https://bitterclip.com/privacy.md')
+  expect(sitemapText).toContain('https://bitterclip.com/terms')
+  expect(sitemapText).toContain('https://bitterclip.com/terms.md')
   expect(sitemapText).toContain('https://bitterclip.com/llms.txt')
   expect(sitemapText).toContain('https://bitterclip.com/llms-full.txt')
 
@@ -100,5 +114,6 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFull.ok()).toBeTruthy()
   const llmsFullText = await llmsFull.text()
   expect(llmsFullText).toContain('Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing')
+  expect(llmsFullText).toContain('Terms Of Service')
   expect(llmsFullText).toContain('Repository Boundary')
 })

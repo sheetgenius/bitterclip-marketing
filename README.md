@@ -71,6 +71,7 @@ This repository owns:
 - the public BitterClip website
 - public product copy and metadata
 - public documentation pages at `/docs`, `/mcp`, and `/privacy`
+- public legal pages at `/privacy` and `/terms`
 - Markdown alternates for every public page route
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - crawlable routes in `public/sitemap.xml`
@@ -85,11 +86,13 @@ This repository owns:
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
 - Privacy policy: [bitterclip.com/privacy](https://bitterclip.com/privacy)
+- Terms of service: [bitterclip.com/terms](https://bitterclip.com/terms)
 - Markdown page mirrors:
   [index.md](https://bitterclip.com/index.md),
   [docs.md](https://bitterclip.com/docs.md),
   [mcp.md](https://bitterclip.com/mcp.md),
-  [privacy.md](https://bitterclip.com/privacy.md)
+  [privacy.md](https://bitterclip.com/privacy.md),
+  [terms.md](https://bitterclip.com/terms.md)
 - AI crawler entry points:
   [llms.txt](https://bitterclip.com/llms.txt),
   [llms-full.txt](https://bitterclip.com/llms-full.txt)
@@ -135,8 +138,9 @@ Useful files:
 - `app/pages/docs.vue` - product explanation page
 - `app/pages/mcp.vue` - MCP and AI assistant workflow page
 - `app/pages/privacy.vue` - privacy policy page
-- `public/index.md`, `public/docs.md`, `public/mcp.md`, `public/privacy.md` -
-  Markdown twins for public pages
+- `app/pages/terms.vue` - terms of service page
+- `public/index.md`, `public/docs.md`, `public/mcp.md`, `public/privacy.md`,
+  `public/terms.md` - Markdown twins for public pages
 - `public/llms.txt` - AI crawler entry point that links canonical pages and
   Markdown alternates
 - `public/llms-full.txt` - compact bundled Markdown context for one-fetch agent

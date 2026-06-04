@@ -35,6 +35,9 @@ under a dated entry.
 - Added `https://bitterclip.com/privacy` and `https://bitterclip.com/privacy.md`
   so provider app registration and public users have a discoverable privacy
   policy for the website, app, connector, and publishing integrations.
+- Added `https://bitterclip.com/terms` and `https://bitterclip.com/terms.md`
+  so provider app registration and public users have discoverable terms for the
+  website, app, connector, billing, and publishing integrations.
 
 ## 2026-06-04
 

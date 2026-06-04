@@ -23,10 +23,12 @@ page mirrors are provided for agents, crawlers, and public repository indexing.
 - Product explanation: https://bitterclip.com/docs
 - MCP and AI assistant workflow: https://bitterclip.com/mcp
 - Privacy policy: https://bitterclip.com/privacy
+- Terms of service: https://bitterclip.com/terms
 - Markdown home: https://bitterclip.com/index.md
 - Markdown product explanation: https://bitterclip.com/docs.md
 - Markdown MCP page: https://bitterclip.com/mcp.md
 - Markdown privacy policy: https://bitterclip.com/privacy.md
+- Markdown terms of service: https://bitterclip.com/terms.md
 - Agent index: https://bitterclip.com/llms.txt
 - Full Markdown bundle: https://bitterclip.com/llms-full.txt
 - Sitemap: https://bitterclip.com/sitemap.xml
@@ -244,6 +246,25 @@ and publishing integrations. It describes account and contact data, workspace
 media and transcripts, clips, exports, connector tokens, publishing receipts,
 billing and plan information, logs, analytics, provider processing, sharing,
 retention, deletion, security, and user choices.
+
+## Terms Of Service
+
+BitterClip's public terms of service are available at:
+
+```text
+https://bitterclip.com/terms
+```
+
+Markdown version:
+
+```text
+https://bitterclip.com/terms.md
+```
+
+The terms cover use of the public site, hosted app, AI assistant connector
+surfaces, and publishing integrations. They describe account responsibility,
+workspace media rights, publishing integrations, billing and plans, acceptable
+use, service changes, availability, disclaimers, liability, and contact.
 
 ## Repository Boundary
 
