@@ -28,6 +28,13 @@ Preferred categories:
 Use this section for changes that have been committed but not yet summarized
 under a dated entry.
 
+## 2026-06-04
+
+### Deployment
+
+- Added exact nginx routes for `/docs` and `/mcp` so canonical extensionless
+  page URLs resolve directly instead of relying on directory-slash redirects.
+
 ## 2026-06-03
 
 ### Product Context
