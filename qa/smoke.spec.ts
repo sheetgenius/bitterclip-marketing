@@ -74,11 +74,14 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
-  expect(await llms.text()).toContain('Markdown Alternates')
+  const llmsText = await llms.text()
+  expect(llmsText).toContain('Markdown Alternates')
+  expect(llmsText).toContain('Public repository standard')
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
   const llmsFullText = await llmsFull.text()
   expect(llmsFullText).toContain('Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing')
   expect(llmsFullText).toContain('Repository Boundary')
+  expect(llmsFullText).toContain('reference shape for public Bitter marketing')
 })

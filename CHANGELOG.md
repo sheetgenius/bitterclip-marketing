@@ -50,6 +50,12 @@ under a dated entry.
 ### Repository Metadata
 
 - Documented the `llms-full.txt` convention in the README and AGENTS guide.
+- Added a reusable public repository standard for Bitter marketing sites,
+  covering README structure, Markdown mirrors, `llms.txt`, sitemap, deployment,
+  metadata, public hygiene, and review expectations.
+- Added `CONTRIBUTING.md`, `SECURITY.md`, and a GitHub pull request template so
+  public-site changes have first-class guidance for context, verification,
+  deployment notes, and sensitive-information boundaries.
 
 ## 2026-06-03
 

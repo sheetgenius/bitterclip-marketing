@@ -5,7 +5,7 @@
 This repo owns the public marketing site for `bitterclip.com`.
 
 The repo is intentionally public. Treat README copy, page copy, metadata,
-robots, and sitemap content as product/SEO assets. Do not commit secrets,
+robots, and sitemap content as product and discoverability assets. Do not commit secrets,
 private media, private runbooks, provider payloads, or generated build output.
 
 The README should keep a clear semantic description of Bitter and explain how
@@ -22,6 +22,11 @@ Use the README as the pattern for other public Bitter constellation repos:
 6. Document deployment without exposing secrets.
 7. Preserve public, indexable context that will still make sense later.
 
+Read `docs/public-repository-standard.md` before making changes intended to set
+or update the shared pattern for other public Bitter marketing repositories.
+Keep `CONTRIBUTING.md`, `SECURITY.md`, `.github/release.yml`, and
+`.github/pull_request_template.md` aligned with that pattern.
+
 Maintain `CHANGELOG.md` as the public semantic change history. Entries should
 explain product-context, website, deployment, repository metadata, and public
 hygiene changes in terms that will still make sense outside the commit log.
@@ -34,6 +39,10 @@ matching Markdown file, `public/llms.txt`, page-head Markdown alternate links,
 `public/llms-full.txt`, `public/sitemap.xml`, and smoke tests together.
 Markdown twins should be served with canonical HTTP `Link` headers pointing back
 to the matching HTML route.
+
+When changing repository context, update the README first, then propagate any
+durable public claims into `public/llms.txt`, `public/llms-full.txt`,
+`CHANGELOG.md`, and the public repository standard when applicable.
 
 Do not commit provider keys, OAuth secrets, deploy tokens, registry credentials,
 `.env` files, private recordings, transcripts, rendered clips, provider
