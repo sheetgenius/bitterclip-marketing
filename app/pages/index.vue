@@ -136,56 +136,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('message', handleMessage)
 })
-
-// --- Output gallery: hover/focus plays one clip at a time (no autoplay) ---
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
-
-const startClip = (target: HTMLVideoElement) => {
-  document.querySelectorAll<HTMLVideoElement>('[data-clip]').forEach((v) => {
-    if (v !== target) {
-      v.pause()
-      v.currentTime = 0
-    }
-  })
-  target.play().catch(() => {})
-}
-
-// Hover/focus auto-plays — but reduced-motion users get NO motion on hover.
-// They can still start a clip explicitly via click or keyboard (Enter/Space).
-const playClip = (e: Event) => {
-  if (prefersReducedMotion()) return
-  startClip(e.currentTarget as HTMLVideoElement)
-}
-
-// Explicit play: click or keyboard activation. Always honored (motion is
-// user-initiated here), and toggles for reduced-motion users.
-const toggleClip = (e: Event) => {
-  const target = e.currentTarget as HTMLVideoElement
-  if (target.paused) {
-    startClip(target)
-  } else {
-    target.pause()
-    target.currentTime = 0
-  }
-}
-
-const keyClip = (e: KeyboardEvent) => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault()
-    toggleClip(e)
-  }
-}
-
-const stopClip = (e: Event) => {
-  // Don't yank a clip a reduced-motion user explicitly started by clicking,
-  // just because focus/hover left. Only stop the hover-driven previews.
-  if (prefersReducedMotion()) return
-  const target = e.currentTarget as HTMLVideoElement
-  target.pause()
-  target.currentTime = 0
-}
 </script>
 
 <template>
@@ -319,422 +269,234 @@ const stopClip = (e: Event) => {
 
       </div>
 
-      <section aria-label="Product loop" class="mb-24">
-        <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-6 text-center">The loop · upload to posted</p>
-        <div class="relative">
-          <!-- connecting rail with a traveling pulse (desktop only) -->
-          <div class="hidden md:block absolute top-[34px] left-[12%] right-[12%] h-px bg-gradient-to-r from-transparent via-[#f28f84]/30 to-transparent pointer-events-none">
-            <span class="loop-pulse" aria-hidden="true"></span>
+      <!-- SECTION 01 — It preps itself (copy LEFT, speaker-ID panel RIGHT) -->
+      <section aria-label="It preps itself" class="mb-24">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+
+          <!-- LEFT: the copy -->
+          <div class="max-w-xl">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — It preps itself</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
+              Upload a recording. It does the boring part.
+            </h2>
+            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
+              Drop in a podcast, interview, or founder call. BitterClip transcribes it and labels every speaker — names and all — automatically. No cleanup. By the time you open it, it's ready to clip.
+            </p>
           </div>
 
-          <ol class="grid grid-cols-2 md:grid-cols-5 gap-3 relative">
-            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
-              <div class="flex items-center justify-between mb-3">
-                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">01</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 7.5 12 3m0 0L7.5 7.5M12 3v13.5" /></svg>
+          <!-- RIGHT: the prep proof — a transcript with speakers identified -->
+          <div class="glass-panel-accented glass-reflection corner-ticks rounded-2xl p-5 sm:p-6">
+            <!-- header row -->
+            <div class="flex items-center justify-between mb-5">
+              <span class="font-mono text-[10px] text-zinc-400 tracking-wide">day-1 · founder interview</span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/10 px-2.5 py-0.5">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+                <span class="font-mono text-[10px] font-bold text-[#f28f84] tracking-wide">Transcribed</span>
+              </span>
+            </div>
+
+            <!-- speaker rows with speaking-time % -->
+            <div class="space-y-3 mb-4">
+              <div class="flex items-center gap-3">
+                <img src="/clips/ep1-michael.jpg" alt="Mike, automatically identified as a speaker" width="32" height="32" loading="lazy" decoding="async" class="object-cover rounded-full w-8 h-8 border border-zinc-700 shrink-0" />
+                <span class="text-sm font-semibold text-white flex-1">Mike</span>
+                <span class="font-mono text-[11px] text-zinc-400">54%</span>
               </div>
-              <p class="font-display text-sm font-bold text-white">Upload</p>
-              <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Add your podcast, interview, or call.</p>
-            </li>
-            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
-              <div class="flex items-center justify-between mb-3">
-                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">02</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+              <div class="flex items-center gap-3">
+                <img src="/clips/ep1-john.jpg" alt="John, automatically identified as a speaker" width="32" height="32" loading="lazy" decoding="async" class="object-cover rounded-full w-8 h-8 border border-zinc-700 shrink-0" />
+                <span class="text-sm font-semibold text-white flex-1">John</span>
+                <span class="font-mono text-[11px] text-zinc-400">46%</span>
               </div>
-              <p class="font-display text-sm font-bold text-white">Who's talking</p>
-              <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Every voice gets a name.</p>
-            </li>
-            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
-              <div class="flex items-center justify-between mb-3">
-                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">03</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" /></svg>
-              </div>
-              <p class="font-display text-sm font-bold text-white">Find the moment</p>
-              <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Ask ChatGPT for the best parts.</p>
-            </li>
-            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
-              <div class="flex items-center justify-between mb-3">
-                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">04</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" /></svg>
-              </div>
-              <p class="font-display text-sm font-bold text-white">Check it</p>
-              <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Trim it and hear it in context.</p>
-            </li>
-            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1 transition-colors hover:border-[#f28f84]/35">
-              <div class="flex items-center justify-between mb-3">
-                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">05</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.126A59.768 59.768 0 0 1 21.485 12 59.77 59.77 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
-              </div>
-              <p class="font-display text-sm font-bold text-white">Post it</p>
-              <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Download it or publish to YouTube.</p>
-            </li>
-          </ol>
+            </div>
+
+            <!-- thin split bar: 54 Mike (peach) / 46 John (emerald) -->
+            <div class="flex h-1.5 rounded-full overflow-hidden mb-6" aria-hidden="true">
+              <span class="bg-[#f28f84]" style="width: 54%"></span>
+              <span class="bg-emerald-400" style="width: 46%"></span>
+            </div>
+
+            <!-- speaker-attributed transcript lines -->
+            <div class="space-y-2.5 mb-5">
+              <p class="text-sm text-zinc-300 leading-relaxed">
+                <span class="font-semibold text-[#f28f84]">Mike:</span> We kept thinking the product was the picker.
+              </p>
+              <p class="text-sm text-zinc-300 leading-relaxed">
+                <span class="font-semibold text-emerald-400">John:</span> But the actual value is trust — you know who said it and why the clip works.
+              </p>
+              <p class="text-sm text-zinc-300 leading-relaxed">
+                <span class="font-semibold text-[#f28f84]">Mike:</span> Exactly. The clip only works if the source is still attached.
+              </p>
+            </div>
+
+            <div class="telemetry-ruler rounded-sm"></div>
+            <p class="font-mono text-[10px] text-zinc-400 tracking-wide mt-3">Transcribed and split by speaker — automatically.</p>
+          </div>
+
         </div>
       </section>
 
-      <!-- 2. The actual editor -->
+      <!-- SECTION 02 — Right in ChatGPT & Claude (editor LEFT, copy RIGHT — the centerpiece) -->
       <section id="demo" class="mb-24 relative scroll-mt-28">
         <div class="absolute inset-0 bg-[#f28f84]/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
 
-        <div class="max-w-2xl mb-8 relative">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">The real editor</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">The same editor opens right inside ChatGPT.</h2>
-          <p class="text-zinc-400 text-sm mt-2 font-sans">Drag across the words to pick your clip. Play it back. Export.</p>
-        </div>
+        <div class="grid lg:grid-cols-[minmax(520px,1fr)_1fr] gap-8 lg:gap-12 items-center">
 
-        <!-- gesture strip -->
-        <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-4">
-          <span class="text-[#f28f84]">drag the words</span>
-          <span class="text-zinc-600">&rarr;</span>
-          <span class="text-[#f28f84]">check the source</span>
-          <span class="text-zinc-600">&rarr;</span>
-          <span class="text-[#f28f84]">export</span>
-        </div>
-
-        <div class="glass-panel-accented glass-reflection rounded-3xl overflow-hidden corner-ticks relative min-h-[400px]">
-
-          <!-- Window header -->
-          <div class="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800/80 relative z-10">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-[#f28f84]/70"></span>
-              <span class="w-3 h-3 rounded-full bg-[#d66f5f]/60"></span>
-              <span class="w-3 h-3 rounded-full bg-zinc-700"></span>
-              <span class="text-xs font-mono text-zinc-400 ml-4 hidden sm:inline">day-1 · founder interview</span>
+          <!-- LEFT: the live editor, at ~half width -->
+          <div class="relative">
+            <!-- gesture strip -->
+            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-4">
+              <span class="text-[#f28f84]">drag the words</span>
+              <span class="text-zinc-600">&rarr;</span>
+              <span class="text-[#f28f84]">check the source</span>
+              <span class="text-zinc-600">&rarr;</span>
+              <span class="text-[#f28f84]">export</span>
             </div>
 
-            <div class="flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span class="font-mono text-[10px] font-bold text-zinc-400 tracking-wide">Live</span>
+            <div class="glass-panel-accented glass-reflection rounded-3xl overflow-hidden corner-ticks relative min-h-[400px]">
+
+              <!-- Window header -->
+              <div class="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800/80 relative z-10">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-[#f28f84]/70"></span>
+                  <span class="w-3 h-3 rounded-full bg-[#d66f5f]/60"></span>
+                  <span class="w-3 h-3 rounded-full bg-zinc-700"></span>
+                  <span class="text-xs font-mono text-zinc-400 ml-4 hidden sm:inline">day-1 · founder interview</span>
+                </div>
+
+                <div class="flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span class="font-mono text-[10px] font-bold text-zinc-400 tracking-wide">Live</span>
+                </div>
+              </div>
+
+              <!-- Mobile Activation Gate -->
+              <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
+                <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
+                <h3 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h3>
+                <p class="text-zinc-400 text-xs max-w-sm mb-6 leading-relaxed">
+                  Drag across the words to cut a clip, then check it against the recording. Tap to load it.
+                </p>
+                <button
+                  @click="activateDemo"
+                  class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-lg shadow-lg shadow-[#f28f84]/10 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                >
+                  Load the editor
+                </button>
+              </div>
+
+              <!-- Skeleton loader -->
+              <div v-if="demoActivated && isIframeLoading" role="status" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
+                <div class="flex flex-col items-center gap-4 text-center p-6">
+                  <div class="relative w-8 h-8" aria-hidden="true">
+                    <div class="absolute inset-0 rounded-full border-2 border-[#f28f84]/20"></div>
+                    <div class="absolute inset-0 rounded-full border-2 border-t-[#f28f84] animate-spin"></div>
+                  </div>
+                  <span class="font-mono text-[9px] text-zinc-400 uppercase tracking-widest">Loading the editor…</span>
+                </div>
+              </div>
+
+              <!-- Reserve the editor's stable height up front so the panel doesn't grow
+                   when the (deferred) iframe mounts. The src is only set after the page
+                   is idle, so the live editor doesn't compete with first paint. -->
+              <div :style="{ minHeight: `${iframeHeight}px` }">
+                <iframe
+                  v-if="demoActivated && embedUrl"
+                  :src="embedUrl"
+                  title="BitterClip — the live transcript editor"
+                  loading="lazy"
+                  @load="onIframeLoad"
+                  @mouseenter="$event.target.contentWindow?.focus()"
+                  class="w-full block transition-[height] duration-200"
+                  :style="{ height: `${iframeHeight}px`, border: 0, background: 'transparent' }"
+                />
+              </div>
+
+              <!-- Status bar -->
+              <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live demo · nothing saved
+              </div>
+
+            </div>
+
+            <div class="mt-7">
+              <a
+                :href="signupUrl"
+                class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              >
+                <span>Clip your own recording</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+              </a>
+              <p class="text-xs text-zinc-400 font-mono mt-3">This demo is read-only. Upload your own to start cutting.</p>
             </div>
           </div>
 
-          <!-- Mobile Activation Gate -->
-          <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
-            <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
-            <h3 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h3>
-            <p class="text-zinc-400 text-xs max-w-sm mb-6 leading-relaxed">
-              Drag across the words to cut a clip, then check it against the recording. Tap to load it.
+          <!-- RIGHT: the copy, vertically centered -->
+          <div class="max-w-xl">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — Right in ChatGPT &amp; Claude</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
+              Other clippers guess. Yours knows the whole conversation.
+            </h2>
+            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
+              Your recording is right there in the chat you already use. Ask for the sharpest exchange or the clearest explanation — and because ChatGPT and Claude have the whole conversation (who said it, what came before and after), the moments they pick land. Drag across the words, check it against the source, export.
             </p>
-            <button
-              @click="activateDemo"
-              class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-lg shadow-lg shadow-[#f28f84]/10 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              Load the editor
-            </button>
-          </div>
 
-          <!-- Skeleton loader -->
-          <div v-if="demoActivated && isIframeLoading" role="status" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
-            <div class="flex flex-col items-center gap-4 text-center p-6">
-              <div class="relative w-8 h-8" aria-hidden="true">
-                <div class="absolute inset-0 rounded-full border-2 border-[#f28f84]/20"></div>
-                <div class="absolute inset-0 rounded-full border-2 border-t-[#f28f84] animate-spin"></div>
-              </div>
-              <span class="font-mono text-[9px] text-zinc-400 uppercase tracking-widest">Loading the editor…</span>
+            <!-- motif row: it suggests → you approve → you post -->
+            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
+              <span class="text-[#f28f84]">it suggests</span>
+              <span class="text-zinc-600">&rarr;</span>
+              <span class="text-[#f28f84]">you approve</span>
+              <span class="text-zinc-600">&rarr;</span>
+              <span class="text-[#f28f84]">you post</span>
             </div>
           </div>
 
-          <!-- Reserve the editor's stable height up front so the panel doesn't grow
-               when the (deferred) iframe mounts. The src is only set after the page
-               is idle, so the live editor doesn't compete with first paint. -->
-          <div :style="{ minHeight: `${iframeHeight}px` }">
-            <iframe
-              v-if="demoActivated && embedUrl"
-              :src="embedUrl"
-              title="BitterClip — the live transcript editor"
-              loading="lazy"
-              @load="onIframeLoad"
-              @mouseenter="$event.target.contentWindow?.focus()"
-              class="w-full block transition-[height] duration-200"
-              :style="{ height: `${iframeHeight}px`, border: 0, background: 'transparent' }"
-            />
-          </div>
-
-          <!-- Status bar -->
-          <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Live demo · nothing saved
-          </div>
-
-        </div>
-
-        <div class="mt-7">
-          <a
-            :href="signupUrl"
-            class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >
-            <span>Clip your own recording</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-          </a>
-          <p class="text-xs text-zinc-400 font-mono mt-3">This demo is read-only. Upload your own to start cutting.</p>
         </div>
       </section>
 
-      <!-- 3. Speaker-aware proof (merged: why-it-works + speaker example + comparison) -->
-      <section aria-label="Speaker-aware proof" class="mb-24">
-        <div class="max-w-2xl mb-8">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Knows who said what</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
-            A good clip needs more than a good quote.
+      <!-- SECTION 03 — The handoff (copy LEFT, gallery + deliver RIGHT) -->
+      <section aria-label="The handoff" class="mb-24">
+        <div class="max-w-2xl mb-10">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">03 — The handoff</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
+            Finished clips — out the door, your way.
           </h2>
-          <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            It matters who said it and where it came from. BitterClip names every voice and keeps every clip pinned to the exact spot in your recording — so "grab John's best bit" just works.
-          </p>
-          <p class="text-zinc-400 text-xs font-mono mt-3">Not a black-box clipper — every pick is something you can open and check.</p>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-5 items-stretch">
-          <!-- LEFT: two real founder frames, labeled automatically -->
-          <div class="glass-panel-accented glass-reflection corner-ticks rounded-2xl p-5 flex flex-col">
-            <div class="grid grid-cols-2 gap-3">
-              <figure class="clip-watermark-mask relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-john.jpg" alt="John, automatically labeled as a speaker in the recording" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
-                <figcaption class="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
-                  <span class="font-mono text-[10px] text-zinc-200 tracking-wide">John</span>
-                </figcaption>
-              </figure>
-              <figure class="clip-watermark-mask relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-michael.jpg" alt="Michael, automatically labeled as a speaker in the recording" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
-                <figcaption class="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
-                  <span class="font-mono text-[10px] text-zinc-200 tracking-wide">Michael</span>
-                </figcaption>
-              </figure>
-            </div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-6">Same recording, two speakers — labeled automatically.</p>
-          </div>
-
-          <!-- RIGHT: the speaker-attributed transcript exchange -->
-          <div class="glass-panel-accented glass-reflection rounded-2xl overflow-hidden corner-ticks flex flex-col">
-            <div class="px-4 py-3 bg-zinc-950 border-b border-zinc-900 flex items-center justify-between">
-              <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Selected moment</span>
-              <span class="font-mono text-[10px] text-[#f28f84]">00:12:04 - 00:12:31</span>
-            </div>
-            <div class="p-5 space-y-4 flex-1">
-              <div class="flex gap-3">
-                <img src="/clips/ep1-michael.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
-                <div>
-                  <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
-                  <p class="text-sm text-zinc-300 leading-relaxed">We kept thinking the product was the picker.</p>
-                </div>
-              </div>
-              <div class="flex gap-3 rounded-xl border-l-4 border-[#f28f84] bg-[#f28f84]/10 p-3 pl-4">
-                <img src="/clips/ep1-john.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-[#f28f84]/30 shrink-0" />
-                <div>
-                  <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-1">John</p>
-                  <p class="text-sm text-zinc-100 leading-relaxed">But the actual value is trust, right? You know who said it, where it happened, and why the clip works.</p>
-                </div>
-              </div>
-              <div class="flex gap-3">
-                <img src="/clips/ep1-michael.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
-                <div>
-                  <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
-                  <p class="text-sm text-zinc-300 leading-relaxed">Exactly. The clip only works if the source is still attached.</p>
-                </div>
-              </div>
-            </div>
-            <div class="px-5 pt-1 pb-5">
-              <div class="telemetry-ruler rounded-sm"></div>
-              <p class="font-mono text-[10px] text-zinc-400 tracking-wide mt-2.5">&#8627; pinned to source</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. Output gallery -->
-      <section aria-label="Output gallery" class="mb-24">
-        <div class="max-w-2xl mb-8">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">What you walk away with</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
-            Finished, captioned clips — not a list of timestamps.
-          </h2>
-          <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Real clips cut from one founder conversation. Hover to play.
+          <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
+            Trim it, export, done. Post it straight to YouTube, X, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — index once, everyone clips.
           </p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
-            <video
-              data-clip
-              src="/clips/day-1-opening.mp4"
-              poster="/clips/day-1-opening-poster.jpg"
-              muted
-              loop
-              playsinline
-              preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              @mouseenter="playClip"
-              @mouseleave="stopClip"
-              @focus="playClip"
-              @blur="stopClip"
-              @click="toggleClip"
-              @keydown="keyClip"
-              tabindex="0"
-              role="button"
-              aria-label="Play clip: Why we started, 27 seconds, cut from the founder conversation"
-            ></video>
-            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
-            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
-              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
-              </span>
-            </div>
-            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
-              Why we started &middot; 0:27
-            </figcaption>
-          </figure>
-
-          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
-            <video
-              data-clip
-              src="/clips/day-1-loop.mp4"
-              poster="/clips/ep1-michael.jpg"
-              muted
-              loop
-              playsinline
-              preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              @mouseenter="playClip"
-              @mouseleave="stopClip"
-              @focus="playClip"
-              @blur="stopClip"
-              @click="toggleClip"
-              @keydown="keyClip"
-              tabindex="0"
-              role="button"
-              aria-label="Play clip: The hard part, 14 seconds, cut from the founder conversation"
-            ></video>
-            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
-            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
-              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
-              </span>
-            </div>
-            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
-              The hard part &middot; 0:14
-            </figcaption>
-          </figure>
-
-          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
-            <video
-              data-clip
-              src="/clips/day-1-models.mp4"
-              poster="/clips/ep1-john.jpg"
-              muted
-              loop
-              playsinline
-              preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              @mouseenter="playClip"
-              @mouseleave="stopClip"
-              @focus="playClip"
-              @blur="stopClip"
-              @click="toggleClip"
-              @keydown="keyClip"
-              tabindex="0"
-              role="button"
-              aria-label="Play clip: The bet, 11 seconds, cut from the founder conversation"
-            ></video>
-            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
-            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
-              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
-              </span>
-            </div>
-            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
-              The bet &middot; 0:11
-            </figcaption>
-          </figure>
-
-          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
-            <video
-              data-clip
-              src="/clips/ep1-loop.mp4"
-              poster="/clips/ep1-john2.jpg"
-              muted
-              loop
-              playsinline
-              preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              @mouseenter="playClip"
-              @mouseleave="stopClip"
-              @focus="playClip"
-              @blur="stopClip"
-              @click="toggleClip"
-              @keydown="keyClip"
-              tabindex="0"
-              role="button"
-              aria-label="Play clip: Episode one, 19 seconds, cut from the founder conversation"
-            ></video>
-            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
-            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
-              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
-                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
-              </span>
-            </div>
-            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
-              Episode one &middot; 0:19
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- 5. Agent cockpit + use cases (merged band) -->
-      <section aria-label="Cockpit and use cases" class="mb-24">
-        <div class="grid lg:grid-cols-2 gap-5 items-stretch">
-          <!-- LEFT: the cockpit panel -->
-          <div class="glass-panel-accented glass-reflection rounded-2xl p-6 corner-ticks flex flex-col">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Works with ChatGPT &amp; Claude</p>
-            <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
-              ChatGPT finds the moment. You finish it.
-            </h3>
-            <p class="text-sm text-zinc-400 leading-relaxed mb-6">
-              Ask ChatGPT for the strongest moment in a recording. BitterClip opens the transcript, the speakers, and a ready clip right there in the chat — so you finish and post without ever leaving the conversation.
-            </p>
-
-            <!-- non-interactive numbered sequence (1 → 2 → 3) -->
-            <ol class="mt-auto space-y-3">
-              <li class="flex items-start gap-3">
-                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">1</span>
-                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-200 font-semibold">ChatGPT suggests</span> the strongest moments from your recording.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/40 bg-[#f28f84]/15 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">2</span>
-                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-[#f28f84] font-semibold">You approve</span> — trim it and hear it in context before anything ships.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">3</span>
-                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-200 font-semibold">You post</span> the finished clip, or publish straight to YouTube.</span>
-              </li>
-            </ol>
+        <!-- The four destinations, featured big -->
+        <div role="list" class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-12 mt-2">
+          <!-- YouTube -->
+          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
+            <svg viewBox="0 0 28 20" class="w-[74px] h-auto" aria-hidden="true">
+              <rect width="28" height="20" rx="6" fill="#FF0000" />
+              <path d="M11.4 5.5v9l7.2-4.5z" fill="#fff" />
+            </svg>
+            <span class="text-sm font-semibold text-zinc-200 tracking-tight">YouTube</span>
           </div>
-
-          <!-- RIGHT: the use cases -->
-          <div class="flex flex-col lg:pt-6">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Built for real conversations</p>
-            <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
-              Founder calls, interviews, podcasts, and recurring shows.
-            </h3>
-            <div class="grid sm:grid-cols-2 gap-3 flex-1">
-              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg>
-                <p class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-100 font-semibold">Turn founder calls</span> into clips that explain what you're building.</p>
-              </div>
-              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><path d="M12 19v4" /></svg>
-                <p class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-100 font-semibold">Pull the best exchanges</span> out of podcasts and interviews.</p>
-              </div>
-              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" opacity="0" /><polyline points="20 6 9 17 4 12" /></svg>
-                <p class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-100 font-semibold">Cut clips for clients fast</span>, without losing control of the edit.</p>
-              </div>
-              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M12 8V4H8" /><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
-                <p class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-100 font-semibold">Build a memory of your show</span> — its people, topics, and past clips.</p>
-              </div>
-            </div>
+          <!-- X -->
+          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
+            <svg viewBox="0 0 24 24" fill="#fff" class="w-[52px] h-[52px]" aria-hidden="true">
+              <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+            </svg>
+            <span class="text-sm font-semibold text-zinc-200 tracking-tight">X</span>
+          </div>
+          <!-- LinkedIn -->
+          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
+            <svg viewBox="0 0 24 24" class="w-[58px] h-[58px]" aria-hidden="true">
+              <rect width="24" height="24" rx="5" fill="#0A66C2" />
+              <path fill="#fff" d="M4.98 4.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 9.2h2.96V20H3.5V9.2Zm4.74 0h2.84v1.48h.05c.4-.72 1.36-1.48 2.79-1.48 2.99 0 3.55 1.92 3.55 4.42V20h-2.96v-4.5c0-1.07-.02-2.45-1.5-2.45-1.5 0-1.73 1.16-1.73 2.37V20H8.24V9.2Z" />
+            </svg>
+            <span class="text-sm font-semibold text-zinc-200 tracking-tight">LinkedIn</span>
+          </div>
+          <!-- Shareable link -->
+          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f28f84" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-[50px] h-[50px]" aria-hidden="true">
+              <path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+            </svg>
+            <span class="text-sm font-semibold text-zinc-200 tracking-tight">Shareable link</span>
           </div>
         </div>
       </section>

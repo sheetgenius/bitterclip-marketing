@@ -83,27 +83,10 @@ body {
   position: relative;
   overflow: hidden;
 }
+/* Sheen sweep removed by request — keep .glass-reflection as a no-op so existing
+   class usages still resolve (relative + overflow only). */
 .glass-reflection::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.01) 30%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0.01) 70%,
-    transparent
-  );
-  transform: skewX(-25deg);
-  pointer-events: none;
-  transition: left 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-reflection:hover::before {
-  left: 150%;
+  content: none;
 }
 
 /* High-Density Telemetry Coordinate Grid Background */
