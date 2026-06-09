@@ -152,10 +152,21 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile) -->
-        <div class="relative mx-auto w-full max-w-[320px] lg:-rotate-3">
-          <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
+        <div class="relative mx-auto w-full max-w-[320px] lg:max-w-none lg:w-[340px]">
+          <!-- handwritten callout pointing at the phone -->
+          <div class="hidden lg:block absolute -top-5 -left-[5.5rem] z-30 w-44 -rotate-[7deg] pointer-events-none select-none">
+            <span class="font-hand text-[28px] leading-[1.05] text-[#ffb4a8] block">this is the actual UI</span>
+            <svg viewBox="0 0 130 90" fill="none" class="w-28 h-20 mt-0.5 ml-12 text-[#ffb4a8]/80">
+              <path d="M10 12 C 50 6, 96 22, 112 66" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M99 58 L113 67 L102 79" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
 
-          <!-- phone: titanium frame -->
+          <!-- the phone, tilted in 3D for depth -->
+          <div class="relative mx-auto w-full max-w-[320px] lg:[transform:perspective(1800px)_rotateY(-9deg)_rotateX(2.5deg)_rotateZ(0.6deg)] transform-gpu">
+            <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
+
+            <!-- phone: titanium frame -->
           <div class="relative rounded-[3rem] p-[3px] bg-gradient-to-br from-zinc-500 via-zinc-700 to-zinc-800 ring-1 ring-white/20 shadow-[0_45px_90px_-25px_rgba(0,0,0,0.85)]">
             <!-- side buttons (titanium) -->
             <span class="absolute -left-[3px] top-[104px] w-[3px] h-8 rounded-l-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
@@ -201,6 +212,7 @@ onBeforeUnmount(() => {
               <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-[36%] h-[5px] rounded-full bg-white/40 z-30"></div>
               </div>
             </div>
+          </div>
           </div>
         </div>
 

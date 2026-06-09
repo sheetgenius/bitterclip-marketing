@@ -4,6 +4,7 @@
   --bitter-accent-clip: #f28f84;
   --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-hand: "Caveat", "Bradley Hand", "Comic Sans MS", cursive;
 }
 
 html {
