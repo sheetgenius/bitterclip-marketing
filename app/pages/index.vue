@@ -138,8 +138,11 @@ onBeforeUnmount(() => {
 })
 
 // --- Output gallery: hover/focus plays one clip at a time (no autoplay) ---
-const playClip = (e: Event) => {
-  const target = e.currentTarget as HTMLVideoElement
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+
+const startClip = (target: HTMLVideoElement) => {
   document.querySelectorAll<HTMLVideoElement>('[data-clip]').forEach((v) => {
     if (v !== target) {
       v.pause()
@@ -149,7 +152,36 @@ const playClip = (e: Event) => {
   target.play().catch(() => {})
 }
 
+// Hover/focus auto-plays — but reduced-motion users get NO motion on hover.
+// They can still start a clip explicitly via click or keyboard (Enter/Space).
+const playClip = (e: Event) => {
+  if (prefersReducedMotion()) return
+  startClip(e.currentTarget as HTMLVideoElement)
+}
+
+// Explicit play: click or keyboard activation. Always honored (motion is
+// user-initiated here), and toggles for reduced-motion users.
+const toggleClip = (e: Event) => {
+  const target = e.currentTarget as HTMLVideoElement
+  if (target.paused) {
+    startClip(target)
+  } else {
+    target.pause()
+    target.currentTime = 0
+  }
+}
+
+const keyClip = (e: KeyboardEvent) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault()
+    toggleClip(e)
+  }
+}
+
 const stopClip = (e: Event) => {
+  // Don't yank a clip a reduced-motion user explicitly started by clicking,
+  // just because focus/hover left. Only stop the hover-driven previews.
+  if (prefersReducedMotion()) return
   const target = e.currentTarget as HTMLVideoElement
   target.pause()
   target.currentTime = 0
@@ -292,33 +324,33 @@ const stopClip = (e: Event) => {
           <!-- faint connecting rail behind the steps (desktop only) -->
           <div class="hidden md:block absolute top-7 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[#f28f84]/35 to-transparent pointer-events-none -z-0"></div>
 
-          <div class="grid grid-cols-2 md:grid-cols-5 gap-3 relative">
-            <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">01</div>
-              <h3 class="font-display text-sm font-bold text-white">Upload</h3>
+          <ol class="grid grid-cols-2 md:grid-cols-5 gap-3 relative">
+            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
+              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">01</div>
+              <p class="font-display text-sm font-bold text-white">Upload</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Add your podcast, interview, or call.</p>
-            </div>
-            <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">02</div>
-              <h3 class="font-display text-sm font-bold text-white">Who's talking</h3>
+            </li>
+            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
+              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">02</div>
+              <p class="font-display text-sm font-bold text-white">Who's talking</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Every voice gets a name.</p>
-            </div>
-            <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">03</div>
-              <h3 class="font-display text-sm font-bold text-white">Find the moment</h3>
+            </li>
+            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
+              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">03</div>
+              <p class="font-display text-sm font-bold text-white">Find the moment</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Ask ChatGPT for the best parts.</p>
-            </div>
-            <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">04</div>
-              <h3 class="font-display text-sm font-bold text-white">Check it</h3>
+            </li>
+            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
+              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">04</div>
+              <p class="font-display text-sm font-bold text-white">Check it</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Trim it and hear it in context.</p>
-            </div>
-            <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">05</div>
-              <h3 class="font-display text-sm font-bold text-white">Post it</h3>
+            </li>
+            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1">
+              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">05</div>
+              <p class="font-display text-sm font-bold text-white">Post it</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Download it or publish to YouTube.</p>
-            </div>
-          </div>
+            </li>
+          </ol>
         </div>
       </section>
 
@@ -349,7 +381,7 @@ const stopClip = (e: Event) => {
               <span class="w-3 h-3 rounded-full bg-[#f28f84]/70"></span>
               <span class="w-3 h-3 rounded-full bg-[#d66f5f]/60"></span>
               <span class="w-3 h-3 rounded-full bg-zinc-700"></span>
-              <span class="text-xs font-mono text-zinc-500 ml-4 hidden sm:inline">day-1 · founder interview</span>
+              <span class="text-xs font-mono text-zinc-400 ml-4 hidden sm:inline">day-1 · founder interview</span>
             </div>
 
             <div class="flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-1">
@@ -361,8 +393,8 @@ const stopClip = (e: Event) => {
           <!-- Mobile Activation Gate -->
           <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
             <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
-            <h4 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h4>
-            <p class="text-zinc-500 text-xs max-w-sm mb-6 leading-relaxed">
+            <h3 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h3>
+            <p class="text-zinc-400 text-xs max-w-sm mb-6 leading-relaxed">
               Drag across the words to cut a clip, then check it against the recording. Tap to load it.
             </p>
             <button
@@ -374,13 +406,13 @@ const stopClip = (e: Event) => {
           </div>
 
           <!-- Skeleton loader -->
-          <div v-if="demoActivated && isIframeLoading" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
+          <div v-if="demoActivated && isIframeLoading" role="status" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
             <div class="flex flex-col items-center gap-4 text-center p-6">
-              <div class="relative w-8 h-8">
+              <div class="relative w-8 h-8" aria-hidden="true">
                 <div class="absolute inset-0 rounded-full border-2 border-[#f28f84]/20"></div>
                 <div class="absolute inset-0 rounded-full border-2 border-t-[#f28f84] animate-spin"></div>
               </div>
-              <span class="font-mono text-[9px] text-zinc-500 uppercase tracking-widest">Loading the editor…</span>
+              <span class="font-mono text-[9px] text-zinc-400 uppercase tracking-widest">Loading the editor…</span>
             </div>
           </div>
 
@@ -437,16 +469,16 @@ const stopClip = (e: Event) => {
           <!-- LEFT: two real founder frames, labeled automatically -->
           <div class="glass-panel-accented glass-reflection corner-ticks rounded-2xl p-5 flex flex-col">
             <div class="grid grid-cols-2 gap-3">
-              <figure class="relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-john.jpg" alt="Founder webcam frame — John" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
-                <figcaption class="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
+              <figure class="clip-watermark-mask relative rounded-xl overflow-hidden border border-zinc-800">
+                <img src="/clips/ep1-john.jpg" alt="John, automatically labeled as a speaker in the recording" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
+                <figcaption class="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
                   <span class="font-mono text-[10px] text-zinc-200 tracking-wide">John</span>
                 </figcaption>
               </figure>
-              <figure class="relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-michael.jpg" alt="Founder webcam frame — Michael" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
-                <figcaption class="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
+              <figure class="clip-watermark-mask relative rounded-xl overflow-hidden border border-zinc-800">
+                <img src="/clips/ep1-michael.jpg" alt="Michael, automatically labeled as a speaker in the recording" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
+                <figcaption class="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
                   <span class="font-mono text-[10px] text-zinc-200 tracking-wide">Michael</span>
                 </figcaption>
@@ -514,20 +546,24 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
+              @click="toggleClip"
+              @keydown="keyClip"
               tabindex="0"
+              role="button"
+              aria-label="Play clip: Why we started, 27 seconds, cut from the founder conversation"
             ></video>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
             <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
               <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
               </span>
             </div>
-            <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
+            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               Why we started &middot; 0:27
             </figcaption>
           </figure>
@@ -541,20 +577,24 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
+              @click="toggleClip"
+              @keydown="keyClip"
               tabindex="0"
+              role="button"
+              aria-label="Play clip: The hard part, 14 seconds, cut from the founder conversation"
             ></video>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
             <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
               <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
               </span>
             </div>
-            <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
+            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               The hard part &middot; 0:14
             </figcaption>
           </figure>
@@ -568,20 +608,24 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
+              @click="toggleClip"
+              @keydown="keyClip"
               tabindex="0"
+              role="button"
+              aria-label="Play clip: The bet, 11 seconds, cut from the founder conversation"
             ></video>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
             <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
               <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
               </span>
             </div>
-            <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
+            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               The bet &middot; 0:11
             </figcaption>
           </figure>
@@ -595,20 +639,24 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
+              @click="toggleClip"
+              @keydown="keyClip"
               tabindex="0"
+              role="button"
+              aria-label="Play clip: Episode one, 19 seconds, cut from the founder conversation"
             ></video>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(6,6,8,0.97)_0,rgba(6,6,8,0.97)_15%,rgba(0,0,0,0.45)_30%,transparent_55%)]"></div>
             <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
               <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
                 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
               </span>
             </div>
-            <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
+            <figcaption class="absolute bottom-2 left-2 z-10 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               Episode one &middot; 0:19
             </figcaption>
           </figure>

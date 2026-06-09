@@ -197,6 +197,23 @@ body {
   animation: pulse-slow 8s ease-in-out infinite;
 }
 
+/* Bottom mask: hides the source recordings' baked-in Zoom name watermark that
+   sits at the very bottom edge of the founder frames / gallery posters, so the
+   status pill (which floats just above it) reads cleanly. A short opaque band
+   only — does not darken the rest of the frame. Sits below the pills (z-index)
+   and is non-interactive. */
+.clip-watermark-mask::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 38px;
+  background: linear-gradient(to top, rgba(6, 6, 8, 0.99) 0%, rgba(6, 6, 8, 0.99) 55%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* Telemetry Corner Indicators */
 .corner-ticks {
   position: relative;
@@ -284,5 +301,76 @@ body {
   }
   to {
     background-position-y: 12px;
+  }
+}
+
+/* =====================================================================
+   Reduced-motion: neutralize all motion while keeping the layout identical.
+   Covers our keyframe animations (float, pulse-slow, flow-horizontal,
+   flow-line-scroll-y), Tailwind's animate-pulse/animate-spin, the diagonal
+   reflection sheen, the glass-panel hover lift, the phone's 3D tilt, the CTA
+   arrow-slide, button scale presses, and the gallery hover-scale + autoplay.
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Kill every animation/transition globally without touching final layout. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Our named looping animations: stop them outright (and hold their resting
+     state) rather than letting one near-instant cycle flicker through. */
+  .animate-float,
+  .animate-pulse-slow,
+  .animate-flow-horizon,
+  .flow-line-vertical {
+    animation: none !important;
+  }
+
+  /* The diagonal reflection sheen slides on hover — keep it parked off-screen. */
+  .glass-reflection:hover::before {
+    left: -150% !important;
+  }
+
+  /* The glass panels lift on hover — keep them flat (border/shadow still change). */
+  .glass-panel-accented:hover {
+    transform: none !important;
+  }
+
+  /* btn-glow lift on hover. */
+  .btn-glow:hover {
+    transform: none !important;
+  }
+
+  /* The phone's lg 3D tilt — flatten it (utility classes are inlined in markup,
+     so target the GPU-transformed element and the perspective wrapper). */
+  .transform-gpu {
+    transform: none !important;
+  }
+
+  /* Tailwind v4 hover/active scale + slide utilities apply the separate `scale:`
+     and `translate:` properties (NOT `transform:`), so zeroing transition-duration
+     alone would still snap them to the moved state. Neutralize the actual motion
+     used in the markup on hover/active/focus. Targets: nav/CTA hover:scale-102 +
+     active:scale-98, the logo group-hover:scale-105, and the gallery
+     group-hover:scale-[1.03]. */
+  .hover\:scale-102:hover,
+  .active\:scale-98:active,
+  .group:hover .group-hover\:scale-105,
+  .group:hover .group-hover\:scale-\[1\.03\] {
+    scale: none !important;
+  }
+
+  /* The CTA arrow slide is Tailwind v4's `translate:` property. */
+  .group:hover .group-hover\:translate-x-0\.5 {
+    translate: none !important;
   }
 }

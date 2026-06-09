@@ -16,7 +16,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
     
     <!-- Global Header -->
     <header class="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
-      <nav class="flex items-center justify-between px-6 py-3 rounded-full glass-panel-accented glass-reflection">
+      <nav aria-label="Primary" class="flex items-center justify-between px-6 py-3 rounded-full glass-panel-accented glass-reflection">
         <div class="m-0 p-0 font-display font-bold text-lg tracking-tight">
           <NuxtLink class="flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg" to="/">
             <!-- Telemetry Crop Indicator Logo SVG -->
@@ -54,7 +54,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
     </div>
 
     <!-- Sleek Footer -->
-    <footer class="border-t border-zinc-900 bg-zinc-950/60 backdrop-blur-md py-12 text-center text-xs text-zinc-500 relative z-10 w-full mt-24">
+    <footer class="border-t border-zinc-900 bg-zinc-950/60 backdrop-blur-md py-12 text-center text-xs text-zinc-400 relative z-10 w-full mt-24">
       <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-2.5">
           <!-- Small Telemetry Crop Indicator SVG -->
@@ -64,28 +64,28 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           </svg>
           <span class="font-mono tracking-wider text-zinc-400 uppercase text-xs">BitterClip</span>
           <span class="text-zinc-700">|</span>
-          <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
+          <span class="font-sans whitespace-nowrap">© 2026 BitterClip Inc. All rights reserved.</span>
         </div>
         <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[10px]">
           <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none hover:text-zinc-300 transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">Contact</a>
           <span class="text-zinc-800">•</span>
-          <NuxtLink class="hover:text-zinc-300 transition" to="/privacy">Privacy</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/privacy">Privacy</NuxtLink>
           <span class="text-zinc-800">•</span>
-          <NuxtLink class="hover:text-zinc-300 transition" to="/terms">Terms</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/terms">Terms</NuxtLink>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" :href="signupUrl">Clip your first recording</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" :href="signupUrl">Clip your first recording</a>
           <span class="text-zinc-800">•</span>
-          <NuxtLink class="hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
           <span class="text-zinc-800">•</span>
-          <NuxtLink class="hover:text-zinc-300 transition" to="/docs">How it works</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/docs">How it works</NuxtLink>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" href="/llms.txt">llms.txt</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="/llms.txt">llms.txt</a>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" href="/llms-full.txt">Markdown</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="/llms-full.txt">Markdown</a>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" href="https://github.com/sheetgenius/bitterclip-marketing">GitHub</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://github.com/sheetgenius/bitterclip-marketing">GitHub</a>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" href="https://bitter.sh/">BitterSH</a>
+          <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://bitter.sh/">BitterSH</a>
         </div>
       </div>
     </footer>
