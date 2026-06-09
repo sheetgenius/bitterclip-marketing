@@ -466,37 +466,81 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <!-- The four destinations, featured big -->
-        <div role="list" class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-12 mt-2">
-          <!-- YouTube -->
-          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
-            <svg viewBox="0 0 28 20" class="w-[74px] h-auto" aria-hidden="true">
-              <rect width="28" height="20" rx="6" fill="#FF0000" />
-              <path d="M11.4 5.5v9l7.2-4.5z" fill="#fff" />
-            </svg>
-            <span class="text-sm font-semibold text-zinc-200 tracking-tight">YouTube</span>
+        <!-- Fan-out: one finished clip on the left arcs to four destinations on the right -->
+        <div class="handoff-fan mt-2">
+          <!-- SOURCE: a single finished-clip card -->
+          <div class="handoff-source">
+            <div class="relative w-[160px] sm:w-[176px] glass-panel-accented corner-ticks rounded-xl overflow-hidden">
+              <div class="relative aspect-video">
+                <img
+                  src="/clips/day-1-opening-poster.jpg"
+                  alt="A finished clip ready to share"
+                  width="176"
+                  height="99"
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none"></div>
+                <!-- play glyph + duration -->
+                <div class="absolute bottom-2 left-2 flex items-center gap-1.5">
+                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-[#f28f84] shrink-0">
+                    <svg viewBox="0 0 24 24" fill="#1a1a1a" class="w-2.5 h-2.5 translate-x-px" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </span>
+                  <span class="font-mono text-[10px] font-semibold text-white/90 tracking-wide">0:27</span>
+                </div>
+              </div>
+              <p class="px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest text-[#f28f84]">Your clip</p>
+            </div>
           </div>
-          <!-- X -->
-          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
-            <svg viewBox="0 0 24 24" fill="#fff" class="w-[52px] h-[52px]" aria-hidden="true">
-              <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-            </svg>
-            <span class="text-sm font-semibold text-zinc-200 tracking-tight">X</span>
-          </div>
-          <!-- LinkedIn -->
-          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
-            <svg viewBox="0 0 24 24" class="w-[58px] h-[58px]" aria-hidden="true">
-              <rect width="24" height="24" rx="5" fill="#0A66C2" />
-              <path fill="#fff" d="M4.98 4.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 9.2h2.96V20H3.5V9.2Zm4.74 0h2.84v1.48h.05c.4-.72 1.36-1.48 2.79-1.48 2.99 0 3.55 1.92 3.55 4.42V20h-2.96v-4.5c0-1.07-.02-2.45-1.5-2.45-1.5 0-1.73 1.16-1.73 2.37V20H8.24V9.2Z" />
-            </svg>
-            <span class="text-sm font-semibold text-zinc-200 tracking-tight">LinkedIn</span>
-          </div>
-          <!-- Shareable link -->
-          <div role="listitem" class="group flex flex-col items-center justify-center gap-4">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#f28f84" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-[50px] h-[50px]" aria-hidden="true">
-              <path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-            </svg>
-            <span class="text-sm font-semibold text-zinc-200 tracking-tight">Shareable link</span>
+
+          <!-- FAN: curved brand-colored lines from the clip to each destination -->
+          <svg
+            class="handoff-lines"
+            viewBox="0 0 520 360"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d="M8 180 C 200 180 332 20 512 20" class="handoff-line" style="--line-color:#ff0000" />
+            <path d="M8 180 C 200 180 332 123 512 123" class="handoff-line" style="--line-color:#e7e7e7" />
+            <path d="M8 180 C 200 180 332 230 512 230" class="handoff-line" style="--line-color:#0a66c2" />
+            <path d="M8 180 C 200 180 332 338 512 338" class="handoff-line" style="--line-color:#f28f84" />
+          </svg>
+
+          <!-- DESTINATIONS: four full-color logos stacked, evenly spaced -->
+          <div role="list" class="handoff-destinations">
+            <!-- YouTube -->
+            <div role="listitem" class="handoff-dest group">
+              <svg viewBox="0 0 28 20" class="w-[56px] h-auto shrink-0" aria-hidden="true">
+                <rect width="28" height="20" rx="6" fill="#FF0000" />
+                <path d="M11.4 5.5v9l7.2-4.5z" fill="#fff" />
+              </svg>
+              <span class="text-sm font-semibold text-zinc-200 tracking-tight">YouTube</span>
+            </div>
+            <!-- X -->
+            <div role="listitem" class="handoff-dest group">
+              <svg viewBox="0 0 24 24" fill="#fff" class="w-[44px] h-[44px] shrink-0" aria-hidden="true">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+              </svg>
+              <span class="text-sm font-semibold text-zinc-200 tracking-tight">X</span>
+            </div>
+            <!-- LinkedIn -->
+            <div role="listitem" class="handoff-dest group">
+              <svg viewBox="0 0 24 24" class="w-[48px] h-[48px] shrink-0" aria-hidden="true">
+                <rect width="24" height="24" rx="5" fill="#0A66C2" />
+                <path fill="#fff" d="M4.98 4.5a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5ZM3.5 9.2h2.96V20H3.5V9.2Zm4.74 0h2.84v1.48h.05c.4-.72 1.36-1.48 2.79-1.48 2.99 0 3.55 1.92 3.55 4.42V20h-2.96v-4.5c0-1.07-.02-2.45-1.5-2.45-1.5 0-1.73 1.16-1.73 2.37V20H8.24V9.2Z" />
+              </svg>
+              <span class="text-sm font-semibold text-zinc-200 tracking-tight">LinkedIn</span>
+            </div>
+            <!-- Shareable link -->
+            <div role="listitem" class="handoff-dest group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f28f84" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-[44px] h-[44px] shrink-0" aria-hidden="true">
+                <path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+              </svg>
+              <span class="text-sm font-semibold text-zinc-200 tracking-tight">Shareable link</span>
+            </div>
           </div>
         </div>
       </section>
@@ -541,3 +585,110 @@ onBeforeUnmount(() => {
     </main>
   </div>
 </template>
+
+<style scoped>
+/* SECTION 03 — fan-out syndication visual.
+   One clip on the left arcs four brand-colored lines to four destinations
+   stacked on the right. The SVG (preserveAspectRatio="none") stretches to the
+   same box as the destinations column, so its path endpoints (y=45/135/225/315
+   of a 360 viewBox) line up with the four logos laid out via space-between. */
+.handoff-fan {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1.1fr) minmax(150px, 0.6fr);
+  grid-template-areas: "source fan destinations";
+  align-items: stretch;
+  column-gap: clamp(0.5rem, 2vw, 1.5rem);
+  min-height: 360px;
+}
+
+.handoff-source {
+  grid-area: source;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+}
+
+.handoff-lines {
+  grid-area: fan;
+  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  overflow: visible;
+}
+
+.handoff-line {
+  fill: none;
+  stroke: var(--line-color, #f28f84);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.6;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--line-color, #f28f84) 45%, transparent));
+  /* Draw-in: lines trace from the clip out to each destination on mount.
+     Disabled automatically by the global prefers-reduced-motion block, which
+     zeroes animation-duration on every element — the dasharray resting state
+     (fully drawn) is the same, so reduced-motion shows static connected lines. */
+  stroke-dasharray: 760;
+  stroke-dashoffset: 760;
+  animation: handoff-draw 1.4s ease-out forwards;
+}
+
+.handoff-line:nth-child(2) { animation-delay: 0.12s; }
+.handoff-line:nth-child(3) { animation-delay: 0.24s; }
+.handoff-line:nth-child(4) { animation-delay: 0.36s; }
+
+.handoff-destinations {
+  grid-area: destinations;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 360px;
+}
+
+.handoff-dest {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  /* Below lg: drop the fan, fall back to a clean 2x2 logo grid with the clip on top. */
+  .handoff-fan {
+    display: block;
+    min-height: 0;
+  }
+
+  .handoff-source {
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .handoff-lines {
+    display: none;
+  }
+
+  .handoff-destinations {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+    min-height: 0;
+  }
+
+  .handoff-dest {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+@keyframes handoff-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+</style>
