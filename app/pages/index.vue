@@ -59,14 +59,22 @@ useHead({
 })
 
 // --- Live Editor Embed ---
-const embedUrl = ref('https://app.bitterclip.com/embed/clip-demo?bare=1')
+// iframeHeight default (540) matches the widget's measured stable height, so the
+// reserved slot doesn't shift when the real height postMessage lands.
+const embedUrl = ref('')
 const iframeHeight = ref(540)
 const isIframeLoading = ref(true)
 const demoActivated = ref(true)
 
 // --- Live recording-card widget: the REAL product component, embedded ---
+// 408 is the widget's measured rendered height; reserving it up front means the
+// postMessage('height') it sends after load matches the slot → zero CLS. (handleMessage
+// only ever grows this box, so transient shorter mid-load reports can't collapse it.)
 const heroIframe = ref<HTMLIFrameElement | null>(null)
-const heroWidgetHeight = ref(560)
+const heroWidgetHeight = ref(408)
+// src is set only after the page is interactive (deferred) so the cross-origin
+// widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
+const heroSrc = ref('')
 
 const onIframeLoad = () => {
   isIframeLoading.value = false
@@ -82,25 +90,47 @@ const handleMessage = (event: MessageEvent) => {
   if (isNaN(height) || height < 200 || height > 1500) return
   // Route by source: the hero recording-card iframe vs the lower editor demo.
   if (heroIframe.value && event.source === heroIframe.value.contentWindow) {
-    heroWidgetHeight.value = height
+    // The hero slot reserves its stable height (408) up front. The widget posts
+    // smaller *intermediate* heights mid-load before settling — honoring those would
+    // collapse and re-expand the slot (CLS). Only ever GROW the reserved box, so a
+    // transient short report can never shrink it.
+    heroWidgetHeight.value = Math.max(heroWidgetHeight.value, height)
   } else {
     iframeHeight.value = height
   }
 }
 
-onMounted(() => {
-  // Build the embed URL: base (overridable via ?embed= for local dev) + the
-  // bare editor + a real demo clip the site hosts, so Export plays + downloads it.
-  const base = (new URLSearchParams(window.location.search).get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
-  const clip = `${window.location.origin}/clips/day-1-opening.mp4`
-  embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
+// Run after the browser is idle (post first-paint), with a timeout fallback.
+const afterIdle = (fn: () => void) => {
+  const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void }).requestIdleCallback
+  if (typeof ric === 'function') {
+    ric(fn, { timeout: 1500 })
+  } else {
+    setTimeout(fn, 1200)
+  }
+}
 
+onMounted(() => {
   // Mobile load gate: on small viewports, deactivate by default to preserve bandwidth
   if (window.innerWidth < 768) {
     demoActivated.value = false
   }
 
   window.addEventListener('message', handleMessage)
+
+  // Defer loading the live cross-origin widgets until the browser is idle, so they
+  // don't block first paint / hurt LCP+TBT. Both slots reserve their measured stable
+  // height up front (skeleton for the hero, min-height for the editor), so swapping
+  // in the real iframe causes no layout shift.
+  afterIdle(() => {
+    // Build the editor embed URL: base (overridable via ?embed= for local dev) +
+    // the bare editor + a real demo clip the site hosts, so Export plays + downloads.
+    const base = (new URLSearchParams(window.location.search).get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
+    const clip = `${window.location.origin}/clips/day-1-opening.mp4`
+    embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
+
+    heroSrc.value = 'https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1'
+  })
 })
 
 onBeforeUnmount(() => {
@@ -214,16 +244,37 @@ const stopClip = (e: Event) => {
                   <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment isn't the loudest — it's the one that says why you started. Here are three from the founding conversation, opened in the editor so you can check each one before you post.</p>
                 </div>
 
-                <!-- The REAL recording-card component, embedded live from the product -->
-                <iframe
-                  ref="heroIframe"
-                  src="https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1"
-                  title="BitterClip — episode one, cut into clips"
-                  loading="lazy"
-                  scrolling="no"
-                  class="w-full block rounded-2xl overflow-hidden bg-transparent"
-                  :style="{ height: heroWidgetHeight + 'px', border: 0 }"
-                ></iframe>
+                <!-- The REAL recording-card component, embedded live from the product.
+                     The slot reserves its measured stable height up front (no CLS),
+                     and the live iframe src is set only after the page is idle. A
+                     seamless skeleton of the same height holds the space until then. -->
+                <div class="relative w-full" :style="{ height: heroWidgetHeight + 'px' }">
+                  <!-- skeleton placeholder: looks like the recording card loading -->
+                  <div
+                    v-if="!heroSrc"
+                    class="absolute inset-0 rounded-2xl bg-zinc-900/40 border border-zinc-800/60 p-3 flex flex-col gap-3 overflow-hidden"
+                    aria-hidden="true"
+                  >
+                    <div class="h-24 rounded-xl bg-zinc-800/50 animate-pulse"></div>
+                    <div class="h-3 w-2/3 rounded bg-zinc-800/50 animate-pulse"></div>
+                    <div class="h-3 w-1/2 rounded bg-zinc-800/40 animate-pulse"></div>
+                    <div class="mt-1 grid grid-cols-3 gap-2">
+                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
+                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
+                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
+                    </div>
+                  </div>
+                  <iframe
+                    v-if="heroSrc"
+                    ref="heroIframe"
+                    :src="heroSrc"
+                    title="BitterClip — episode one, cut into clips"
+                    loading="lazy"
+                    scrolling="no"
+                    class="absolute inset-0 w-full h-full block rounded-2xl overflow-hidden bg-transparent"
+                    :style="{ border: 0 }"
+                  ></iframe>
+                </div>
               </div>
 
               <!-- home indicator -->
@@ -333,16 +384,21 @@ const stopClip = (e: Event) => {
             </div>
           </div>
 
-          <iframe
-            v-if="demoActivated"
-            :src="embedUrl"
-            title="BitterClip — the live transcript editor"
-            loading="lazy"
-            @load="onIframeLoad"
-            @mouseenter="$event.target.contentWindow?.focus()"
-            class="w-full block transition-[height] duration-200"
-            :style="{ height: `${iframeHeight}px`, border: 0, background: 'transparent' }"
-          />
+          <!-- Reserve the editor's stable height up front so the panel doesn't grow
+               when the (deferred) iframe mounts. The src is only set after the page
+               is idle, so the live editor doesn't compete with first paint. -->
+          <div :style="{ minHeight: `${iframeHeight}px` }">
+            <iframe
+              v-if="demoActivated && embedUrl"
+              :src="embedUrl"
+              title="BitterClip — the live transcript editor"
+              loading="lazy"
+              @load="onIframeLoad"
+              @mouseenter="$event.target.contentWindow?.focus()"
+              class="w-full block transition-[height] duration-200"
+              :style="{ height: `${iframeHeight}px`, border: 0, background: 'transparent' }"
+            />
+          </div>
 
           <!-- Status bar -->
           <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80">
@@ -382,14 +438,14 @@ const stopClip = (e: Event) => {
           <div class="glass-panel-accented glass-reflection corner-ticks rounded-2xl p-5 flex flex-col">
             <div class="grid grid-cols-2 gap-3">
               <figure class="relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-john.jpg" alt="Founder webcam frame — John" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
+                <img src="/clips/ep1-john.jpg" alt="Founder webcam frame — John" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
                 <figcaption class="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
                   <span class="font-mono text-[10px] text-zinc-200 tracking-wide">John</span>
                 </figcaption>
               </figure>
               <figure class="relative rounded-xl overflow-hidden border border-zinc-800">
-                <img src="/clips/ep1-michael.jpg" alt="Founder webcam frame — Michael" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
+                <img src="/clips/ep1-michael.jpg" alt="Founder webcam frame — Michael" width="640" height="360" loading="lazy" decoding="async" class="w-full aspect-video object-cover" />
                 <figcaption class="absolute bottom-2 left-2 flex items-center gap-1.5 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2 py-0.5">
                   <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84]"></span>
                   <span class="font-mono text-[10px] text-zinc-200 tracking-wide">Michael</span>
@@ -407,21 +463,21 @@ const stopClip = (e: Event) => {
             </div>
             <div class="p-5 space-y-4 flex-1">
               <div class="flex gap-3">
-                <img src="/clips/ep1-michael.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
+                <img src="/clips/ep1-michael.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
                 <div>
                   <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
                   <p class="text-sm text-zinc-300 leading-relaxed">We kept thinking the product was the picker.</p>
                 </div>
               </div>
               <div class="flex gap-3 rounded-xl border-l-4 border-[#f28f84] bg-[#f28f84]/10 p-3 pl-4">
-                <img src="/clips/ep1-john.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-[#f28f84]/30 shrink-0" />
+                <img src="/clips/ep1-john.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-[#f28f84]/30 shrink-0" />
                 <div>
                   <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-1">John</p>
                   <p class="text-sm text-zinc-100 leading-relaxed">But the actual value is trust, right? You know who said it, where it happened, and why the clip works.</p>
                 </div>
               </div>
               <div class="flex gap-3">
-                <img src="/clips/ep1-michael.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
+                <img src="/clips/ep1-michael.jpg" alt="" width="36" height="36" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
                 <div>
                   <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
                   <p class="text-sm text-zinc-300 leading-relaxed">Exactly. The clip only works if the source is still attached.</p>

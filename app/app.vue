@@ -73,7 +73,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <span class="text-zinc-800">•</span>
           <NuxtLink class="hover:text-zinc-300 transition" to="/terms">Terms</NuxtLink>
           <span class="text-zinc-800">•</span>
-          <a class="hover:text-zinc-300 transition" :href="signupUrl">Start with one recording</a>
+          <a class="hover:text-zinc-300 transition" :href="signupUrl">Clip your first recording</a>
           <span class="text-zinc-800">•</span>
           <NuxtLink class="hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
           <span class="text-zinc-800">•</span>
