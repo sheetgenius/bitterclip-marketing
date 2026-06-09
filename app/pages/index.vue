@@ -245,27 +245,27 @@ const stopClip = (e: Event) => {
             <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
               <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">01</div>
               <h3 class="font-display text-sm font-bold text-white">Upload</h3>
-              <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Add your podcast, interview, or call.</p>
+              <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Add your podcast, interview, or call.</p>
             </div>
             <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
               <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">02</div>
               <h3 class="font-display text-sm font-bold text-white">Who's talking</h3>
-              <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Every voice gets a name.</p>
+              <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Every voice gets a name.</p>
             </div>
             <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
               <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">03</div>
               <h3 class="font-display text-sm font-bold text-white">Find the moment</h3>
-              <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Ask ChatGPT for the best parts.</p>
+              <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Ask ChatGPT for the best parts.</p>
             </div>
             <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
               <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">04</div>
               <h3 class="font-display text-sm font-bold text-white">Check it</h3>
-              <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Trim it and hear it in context.</p>
+              <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Trim it and hear it in context.</p>
             </div>
             <div class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1">
               <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3">05</div>
               <h3 class="font-display text-sm font-bold text-white">Post it</h3>
-              <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Download it or publish to YouTube.</p>
+              <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Download it or publish to YouTube.</p>
             </div>
           </div>
         </div>
@@ -275,18 +275,18 @@ const stopClip = (e: Event) => {
       <section id="demo" class="mb-24 relative scroll-mt-28">
         <div class="absolute inset-0 bg-[#f28f84]/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
 
-        <div class="text-center max-w-2xl mx-auto mb-8 relative">
+        <div class="max-w-2xl mb-8 relative">
           <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">The real editor</p>
           <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">The same editor opens right inside ChatGPT.</h2>
           <p class="text-zinc-400 text-sm mt-2 font-sans">Drag across the words to pick your clip. Play it back. Export.</p>
         </div>
 
         <!-- gesture strip -->
-        <div class="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-4">
+        <div class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-4">
           <span class="text-[#f28f84]">drag the words</span>
-          <span class="text-zinc-700">&rarr;</span>
+          <span class="text-[#f28f84]">&rarr;</span>
           <span class="text-[#f28f84]">check the source</span>
-          <span class="text-zinc-700">&rarr;</span>
+          <span class="text-[#f28f84]">&rarr;</span>
           <span class="text-[#f28f84]">export</span>
         </div>
 
@@ -345,14 +345,14 @@ const stopClip = (e: Event) => {
           />
 
           <!-- Status bar -->
-          <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-500 border-t border-zinc-800/80">
+          <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             Live demo · nothing saved
           </div>
 
         </div>
 
-        <div class="text-center mt-7">
+        <div class="mt-7">
           <a
             :href="signupUrl"
             class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -360,7 +360,7 @@ const stopClip = (e: Event) => {
             <span>Clip your own recording</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
           </a>
-          <p class="text-xs text-zinc-600 font-mono mt-3">This demo is read-only. Upload your own to start cutting.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-3">This demo is read-only. Upload your own to start cutting.</p>
         </div>
       </section>
 
@@ -374,7 +374,7 @@ const stopClip = (e: Event) => {
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
             It matters who said it and where it came from. BitterClip names every voice and keeps every clip pinned to the exact spot in your recording — so "grab John's best bit" just works.
           </p>
-          <p class="text-zinc-500 text-xs font-mono mt-3">Not a black-box clipper — every pick is something you can open and check.</p>
+          <p class="text-zinc-400 text-xs font-mono mt-3">Not a black-box clipper — every pick is something you can open and check.</p>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-5 items-stretch">
@@ -396,24 +396,24 @@ const stopClip = (e: Event) => {
                 </figcaption>
               </figure>
             </div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mt-4">Same recording, two speakers — labeled automatically.</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mt-6">Same recording, two speakers — labeled automatically.</p>
           </div>
 
           <!-- RIGHT: the speaker-attributed transcript exchange -->
           <div class="glass-panel-accented glass-reflection rounded-2xl overflow-hidden corner-ticks flex flex-col">
             <div class="px-4 py-3 bg-zinc-950 border-b border-zinc-900 flex items-center justify-between">
-              <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Selected moment</span>
+              <span class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">Selected moment</span>
               <span class="font-mono text-[10px] text-[#f28f84]">00:12:04 - 00:12:31</span>
             </div>
             <div class="p-5 space-y-4 flex-1">
               <div class="flex gap-3">
                 <img src="/clips/ep1-michael.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
                 <div>
-                  <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Michael</p>
+                  <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
                   <p class="text-sm text-zinc-300 leading-relaxed">We kept thinking the product was the picker.</p>
                 </div>
               </div>
-              <div class="flex gap-3 rounded-xl border border-[#f28f84]/20 bg-[#f28f84]/5 p-3">
+              <div class="flex gap-3 rounded-xl border-l-4 border-[#f28f84] bg-[#f28f84]/10 p-3 pl-4">
                 <img src="/clips/ep1-john.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-[#f28f84]/30 shrink-0" />
                 <div>
                   <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-1">John</p>
@@ -423,14 +423,14 @@ const stopClip = (e: Event) => {
               <div class="flex gap-3">
                 <img src="/clips/ep1-michael.jpg" alt="" loading="lazy" decoding="async" class="w-9 h-9 rounded-full object-cover border border-zinc-700 shrink-0" />
                 <div>
-                  <p class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Michael</p>
+                  <p class="font-mono text-[10px] text-zinc-400 uppercase tracking-widest mb-1">Michael</p>
                   <p class="text-sm text-zinc-300 leading-relaxed">Exactly. The clip only works if the source is still attached.</p>
                 </div>
               </div>
             </div>
             <div class="px-5 pb-4">
               <div class="telemetry-ruler rounded-sm"></div>
-              <p class="font-mono text-[10px] text-zinc-500 tracking-wide mt-2">&#8627; pinned to source</p>
+              <p class="font-mono text-[10px] text-zinc-400 tracking-wide mt-2">&#8627; pinned to source</p>
             </div>
           </div>
         </div>
@@ -448,9 +448,8 @@ const stopClip = (e: Event) => {
           </p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:auto-rows-fr">
-          <!-- FEATURE clip, spans 2x2 -->
-          <figure class="group relative col-span-2 row-span-2 rounded-2xl overflow-hidden glass-panel-accented glass-reflection corner-ticks">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
             <video
               data-clip
               src="/clips/day-1-opening.mp4"
@@ -459,19 +458,25 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover aspect-video md:aspect-auto"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
               tabindex="0"
             ></video>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
+              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
             <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               Why we started &middot; 0:27
             </figcaption>
           </figure>
 
-          <figure class="group relative rounded-2xl overflow-hidden glass-panel-accented glass-reflection corner-ticks">
+          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
             <video
               data-clip
               src="/clips/day-1-loop.mp4"
@@ -480,19 +485,25 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover aspect-video"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
               tabindex="0"
             ></video>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
+              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
             <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               The hard part &middot; 0:14
             </figcaption>
           </figure>
 
-          <figure class="group relative rounded-2xl overflow-hidden glass-panel-accented glass-reflection corner-ticks">
+          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
             <video
               data-clip
               src="/clips/day-1-models.mp4"
@@ -501,19 +512,25 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover aspect-video"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
               tabindex="0"
             ></video>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
+              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
             <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               The bet &middot; 0:11
             </figcaption>
           </figure>
 
-          <figure class="group relative col-span-2 md:col-span-2 rounded-2xl overflow-hidden glass-panel-accented glass-reflection corner-ticks">
+          <figure class="group relative aspect-video rounded-2xl overflow-hidden glass-panel-accented corner-ticks">
             <video
               data-clip
               src="/clips/ep1-loop.mp4"
@@ -522,13 +539,19 @@ const stopClip = (e: Event) => {
               loop
               playsinline
               preload="none"
-              class="w-full h-full object-cover aspect-video"
+              class="w-full h-full object-cover transition duration-500 group-hover:scale-[1.03]"
               @mouseenter="playClip"
               @mouseleave="stopClip"
               @focus="playClip"
               @blur="stopClip"
               tabindex="0"
             ></video>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70"></div>
+            <div class="pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition duration-300 group-hover:opacity-100">
+              <span class="grid place-items-center w-11 h-11 rounded-full bg-[#f28f84] text-zinc-950 shadow-lg shadow-[#f28f84]/25">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 ml-0.5"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
             <figcaption class="absolute bottom-2 left-2 rounded-full bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 px-2.5 py-0.5 font-mono text-[10px] text-zinc-200 tracking-wide">
               Episode one &middot; 0:19
             </figcaption>
@@ -545,14 +568,25 @@ const stopClip = (e: Event) => {
             <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
               ChatGPT finds the moment. You finish it.
             </h3>
-            <p class="text-sm text-zinc-400 leading-relaxed mb-5">
+            <p class="text-sm text-zinc-400 leading-relaxed mb-6">
               Ask ChatGPT for the strongest moment in a recording. BitterClip opens the transcript, the speakers, and a ready clip right there in the chat — so you finish and post without ever leaving the conversation.
             </p>
-            <div class="grid grid-cols-3 gap-2 text-center font-mono text-[10px] uppercase tracking-wider text-zinc-500 mt-auto">
-              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">ChatGPT suggests</span>
-              <span class="rounded-lg border border-[#f28f84]/20 bg-[#f28f84]/10 py-2 text-[#f28f84]">You approve</span>
-              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">You post</span>
-            </div>
+
+            <!-- non-interactive numbered sequence (1 → 2 → 3) -->
+            <ol class="mt-auto space-y-3">
+              <li class="flex items-start gap-3">
+                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">1</span>
+                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-200 font-semibold">ChatGPT suggests</span> the strongest moments from your recording.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/40 bg-[#f28f84]/15 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">2</span>
+                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-[#f28f84] font-semibold">You approve</span> — trim it and hear it in context before anything ships.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="grid place-items-center w-6 h-6 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] shrink-0 mt-px">3</span>
+                <span class="text-sm text-zinc-300 leading-relaxed"><span class="text-zinc-200 font-semibold">You post</span> the finished clip, or publish straight to YouTube.</span>
+              </li>
+            </ol>
           </div>
 
           <!-- RIGHT: the use cases -->
@@ -561,49 +595,61 @@ const stopClip = (e: Event) => {
             <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
               Founder calls, interviews, podcasts, and recurring shows.
             </h3>
-            <div class="grid sm:grid-cols-2 gap-3">
-              <p class="glass-panel-accented rounded-xl p-4 text-sm text-zinc-400 leading-relaxed">Turn founder calls into clips that explain what you're building.</p>
-              <p class="glass-panel-accented rounded-xl p-4 text-sm text-zinc-400 leading-relaxed">Pull the best exchanges out of podcasts and interviews.</p>
-              <p class="glass-panel-accented rounded-xl p-4 text-sm text-zinc-400 leading-relaxed">Cut clips for clients fast, without losing control of the edit.</p>
-              <p class="glass-panel-accented rounded-xl p-4 text-sm text-zinc-400 leading-relaxed">Build a memory of your show — its people, topics, and past clips.</p>
+            <div class="grid sm:grid-cols-2 gap-3 flex-1">
+              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+                <p class="text-sm text-zinc-400 leading-relaxed"><span class="text-zinc-200 font-semibold">Turn founder calls</span> into clips that explain what you're building.</p>
+              </div>
+              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><path d="M12 19v4" /></svg>
+                <p class="text-sm text-zinc-400 leading-relaxed"><span class="text-zinc-200 font-semibold">Pull the best exchanges</span> out of podcasts and interviews.</p>
+              </div>
+              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" opacity="0" /><polyline points="20 6 9 17 4 12" /></svg>
+                <p class="text-sm text-zinc-400 leading-relaxed"><span class="text-zinc-200 font-semibold">Cut clips for clients fast</span>, without losing control of the edit.</p>
+              </div>
+              <div class="glass-panel-accented rounded-xl p-4 hover:border-[#f28f84]/30 transition">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-[#f28f84] mb-3"><path d="M12 8V4H8" /><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
+                <p class="text-sm text-zinc-400 leading-relaxed"><span class="text-zinc-200 font-semibold">Build a memory of your show</span> — its people, topics, and past clips.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- 7. Close -->
-      <section id="join" class="relative max-w-4xl mx-auto">
-        <div class="absolute inset-0 bg-gradient-to-r from-[#f28f84]/10 to-transparent rounded-3xl blur-2xl -z-10 pointer-events-none" />
+      <section id="join" class="relative">
+        <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
-        <div class="cta-glass-panel glass-reflection p-7 sm:p-9 rounded-2xl relative overflow-hidden corner-ticks">
-          <div class="absolute inset-0 -z-10 cta-backdrop-mask opacity-[0.2] pointer-events-none" />
+        <div class="max-w-2xl mx-auto text-center mb-9">
+          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
+            Bring one recording. Leave with clips.
+          </h2>
+          <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Upload a podcast, interview, or founder call. Walk away with finished clips you've checked yourself — cut right inside ChatGPT.
+          </p>
+        </div>
 
-          <div class="max-w-2xl mx-auto text-center mb-7">
-            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-              Bring one recording. Leave with clips.
-            </h2>
-            <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-              Upload a podcast, interview, or founder call. Walk away with finished clips you've checked yourself — cut right inside ChatGPT.
-            </p>
-          </div>
+        <!-- one focused pricing card, peach-tinted top edge instead of a double frame -->
+        <div class="relative max-w-[620px] mx-auto rounded-2xl glass-panel-accented glass-reflection corner-ticks p-7 sm:p-9 overflow-hidden">
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
+          <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
 
-          <div class="max-w-2xl mx-auto">
-            <div class="rounded-2xl bg-zinc-950/80 border border-zinc-800 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-5">
-              <div class="flex-1 text-left">
-                <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Launch plan</p>
-                <p class="font-display text-2xl font-bold text-white">$99/month</p>
-                <p class="text-zinc-500 text-xs mt-2 leading-relaxed">100 clips a month, the in-chat editor, ChatGPT and Claude connectors, and one-click YouTube publishing.</p>
-              </div>
-              <a
-                :href="signupUrl"
-                class="bg-[#f28f84] text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
-              >
-                <span>Clip your first recording</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
-              </a>
+          <div class="relative flex flex-col sm:flex-row sm:items-center gap-6">
+            <div class="flex-1 text-left">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-1">Launch plan</p>
+              <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
+              <p class="text-zinc-400 text-xs mt-3 leading-relaxed">100 clips a month, the in-chat editor, ChatGPT and Claude connectors, and one-click YouTube publishing.</p>
             </div>
+            <a
+              :href="signupUrl"
+              class="bg-[#f28f84] text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
+            >
+              <span>Clip your first recording</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
