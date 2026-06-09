@@ -197,6 +197,25 @@ body {
   animation: pulse-slow 8s ease-in-out infinite;
 }
 
+/* Product-loop rail: a peach pulse that travels upload -> posted (sign of life) */
+@keyframes loop-pulse {
+  0%   { left: 0%;   opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.loop-pulse {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 9999px;
+  background: #f28f84;
+  box-shadow: 0 0 9px 2px rgba(242, 143, 132, 0.55);
+  animation: loop-pulse 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 /* Bottom mask: hides the source recordings' baked-in Zoom name watermark that
    sits at the very bottom edge of the founder frames / gallery posters, so the
    status pill (which floats just above it) reads cleanly. A short opaque band

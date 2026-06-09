@@ -320,33 +320,51 @@ const stopClip = (e: Event) => {
       </div>
 
       <section aria-label="Product loop" class="mb-24">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-6 text-center">The loop · upload to posted</p>
         <div class="relative">
-          <!-- faint connecting rail behind the steps (desktop only) -->
-          <div class="hidden md:block absolute top-7 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-[#f28f84]/35 to-transparent pointer-events-none -z-0"></div>
+          <!-- connecting rail with a traveling pulse (desktop only) -->
+          <div class="hidden md:block absolute top-[34px] left-[12%] right-[12%] h-px bg-gradient-to-r from-transparent via-[#f28f84]/30 to-transparent pointer-events-none">
+            <span class="loop-pulse" aria-hidden="true"></span>
+          </div>
 
           <ol class="grid grid-cols-2 md:grid-cols-5 gap-3 relative">
-            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">01</div>
+            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
+              <div class="flex items-center justify-between mb-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">01</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 7.5 12 3m0 0L7.5 7.5M12 3v13.5" /></svg>
+              </div>
               <p class="font-display text-sm font-bold text-white">Upload</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Add your podcast, interview, or call.</p>
             </li>
-            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">02</div>
+            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
+              <div class="flex items-center justify-between mb-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">02</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+              </div>
               <p class="font-display text-sm font-bold text-white">Who's talking</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Every voice gets a name.</p>
             </li>
-            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">03</div>
+            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
+              <div class="flex items-center justify-between mb-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">03</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" /></svg>
+              </div>
               <p class="font-display text-sm font-bold text-white">Find the moment</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Ask ChatGPT for the best parts.</p>
             </li>
-            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">04</div>
+            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 transition-colors hover:border-[#f28f84]/35">
+              <div class="flex items-center justify-between mb-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">04</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" /></svg>
+              </div>
               <p class="font-display text-sm font-bold text-white">Check it</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Trim it and hear it in context.</p>
             </li>
-            <li class="glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1">
-              <div class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84] mb-3" aria-hidden="true">05</div>
+            <li class="group glass-panel-accented glass-reflection corner-ticks rounded-xl p-4 col-span-2 md:col-span-1 transition-colors hover:border-[#f28f84]/35">
+              <div class="flex items-center justify-between mb-3">
+                <span class="grid place-items-center w-7 h-7 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/5 font-mono text-[10px] text-[#f28f84]" aria-hidden="true">05</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="w-[18px] h-[18px] text-[#f28f84]/55 group-hover:text-[#f28f84] transition-colors" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.126A59.768 59.768 0 0 1 21.485 12 59.77 59.77 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
+              </div>
               <p class="font-display text-sm font-bold text-white">Post it</p>
               <p class="text-xs text-zinc-300/90 mt-1.5 leading-relaxed">Download it or publish to YouTube.</p>
             </li>
