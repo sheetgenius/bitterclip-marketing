@@ -4,7 +4,7 @@ Canonical HTML page: https://bitterclip.com/terms
 
 Markdown version: https://bitterclip.com/terms.md
 
-Effective date: June 4, 2026
+Effective date: June 9, 2026
 
 These terms govern access to the BitterClip public website at
 https://bitterclip.com, the hosted app at https://app.bitterclip.com, AI
@@ -59,6 +59,16 @@ store publishing receipts for the connected account.
 
 Published content remains subject to the destination service terms, policies,
 moderation, availability, and account controls.
+
+## YouTube API Services
+
+BitterClip's YouTube publishing features use YouTube API Services. By
+authorizing or using the YouTube integration, you also agree to be bound by the
+YouTube Terms of Service (https://www.youtube.com/t/terms). Google's handling
+of your information is described in the Google Privacy Policy
+(https://www.google.com/policies/privacy), and you can revoke BitterClip's
+access to your Google account at any time from your Google security settings
+(https://myaccount.google.com/permissions).
 
 ## Billing And Plans
 

@@ -30,6 +30,12 @@ under a dated entry.
 
 ### Website
 
+- Added a YouTube API Services disclosure section to the privacy policy and
+  terms of service (HTML pages and Markdown twins), covering the YouTube Terms
+  of Service and Google Privacy Policy references, what YouTube connection data
+  BitterClip stores, and how to revoke access via Google security settings.
+  Required for Google OAuth app verification of the YouTube publishing
+  integration. Effective dates bumped to June 9, 2026.
 - Re-established the logo amber/orange as BitterClip's primary brand and CTA
   color instead of mixing violet, amber, and pink action accents.
 - Added `https://bitterclip.com/privacy` and `https://bitterclip.com/privacy.md`

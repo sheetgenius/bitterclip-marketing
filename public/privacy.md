@@ -4,7 +4,7 @@ Canonical HTML page: https://bitterclip.com/privacy
 
 Markdown version: https://bitterclip.com/privacy.md
 
-Effective date: June 4, 2026
+Effective date: June 9, 2026
 
 This policy explains how BitterClip handles information for the public website
 at https://bitterclip.com, the hosted app at https://app.bitterclip.com, AI
@@ -54,6 +54,27 @@ Connected publishing services, such as YouTube, LinkedIn, or X, receive only
 the content and account authorization needed for actions you approve or trigger.
 
 BitterClip does not sell your recordings, transcripts, clips, or account data.
+
+## YouTube API Services
+
+BitterClip uses YouTube API Services to connect your YouTube channel and to
+upload the videos you approve. By using BitterClip's YouTube features you also
+agree to the YouTube Terms of Service (https://www.youtube.com/t/terms).
+Google's handling of your information is described in the Google Privacy Policy
+(https://www.google.com/policies/privacy).
+
+When you connect a YouTube channel, BitterClip stores OAuth access and refresh
+tokens (encrypted at rest), connected channel metadata such as the channel id
+and title, and publishing receipts for uploads you trigger. BitterClip uses
+this data only to check connection status and perform the publishing actions
+you request, and does not share it with third parties except as described in
+this policy.
+
+You can disconnect a YouTube channel in BitterClip at any time, which stops
+further use of the stored authorization, and you can revoke BitterClip's access
+to your Google account entirely from your Google security settings
+(https://myaccount.google.com/permissions). You can also ask us to delete
+stored tokens and connection data by contacting hello@bitterclip.com.
 
 ## How We Share Information
 

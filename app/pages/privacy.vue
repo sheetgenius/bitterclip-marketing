@@ -98,7 +98,7 @@ const sections = [
       </h2>
       <div class="max-w-3xl space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed font-sans">
         <p>
-          Effective date: <strong class="text-zinc-200">June 4, 2026</strong>
+          Effective date: <strong class="text-zinc-200">June 9, 2026</strong>
         </p>
         <p>
           This policy explains how BitterClip handles information for the public website at
@@ -129,6 +129,34 @@ const sections = [
             <span>{{ item }}</span>
           </li>
         </ul>
+      </section>
+
+      <section class="glass-panel-accented glass-reflection p-6 sm:p-7 rounded-2xl corner-ticks">
+        <h3 class="font-display text-lg font-bold text-white mb-4">YouTube API Services</h3>
+        <div class="space-y-3 text-zinc-400 text-sm leading-relaxed font-sans">
+          <p>
+            BitterClip uses YouTube API Services to connect your YouTube channel and to upload the
+            videos you approve. By using BitterClip's YouTube features you also agree to the
+            <a class="text-[#f28f84] hover:underline" href="https://www.youtube.com/t/terms" rel="noopener" target="_blank">YouTube Terms of Service</a>.
+            Google's handling of your information is described in the
+            <a class="text-[#f28f84] hover:underline" href="https://www.google.com/policies/privacy" rel="noopener" target="_blank">Google Privacy Policy</a>.
+          </p>
+          <p>
+            When you connect a YouTube channel, BitterClip stores OAuth access and refresh tokens
+            (encrypted at rest), connected channel metadata such as the channel id and title, and
+            publishing receipts for uploads you trigger. BitterClip uses this data only to check
+            connection status and perform the publishing actions you request, and does not share it
+            with third parties except as described in this policy.
+          </p>
+          <p>
+            You can disconnect a YouTube channel in BitterClip at any time, which stops further use
+            of the stored authorization, and you can revoke BitterClip's access to your Google
+            account entirely from your
+            <a class="text-[#f28f84] hover:underline" href="https://myaccount.google.com/permissions" rel="noopener" target="_blank">Google security settings</a>.
+            You can also ask us to delete stored tokens and connection data by contacting
+            <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=BitterClip%20YouTube%20data">hello@bitterclip.com</a>.
+          </p>
+        </div>
       </section>
     </div>
 
