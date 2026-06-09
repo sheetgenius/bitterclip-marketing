@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
           </h1>
 
           <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-            Upload a podcast, interview, or founder call, then just ask. ChatGPT finds the moment and opens a real editor right in the chat — trim it, see exactly where it came from, and post a finished clip.
+            Upload a podcast, interview, or founder call and just ask. ChatGPT finds the moment and opens a real editor right in the chat — trim it, hear it in context, and post a finished clip. No new app to learn.
           </p>
 
           <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
               :href="signupUrl"
               class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Start with one recording</span>
+              <span>Clip your first recording</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">For founders, podcasters, and anyone running a recurring show.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Made for founders doing their own marketing — and anyone running a recurring show.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile) -->
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment isn't the flashiest — it's the one that says why you started. Here are three from the founding conversation, opened in the editor so you can check each against the source.</p>
+                  <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment isn't the loudest — it's the one that says why you started. Here are three from the founding conversation, opened in the editor so you can check each one before you post.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product -->
@@ -238,12 +238,12 @@ onBeforeUnmount(() => {
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">04</p>
             <h3 class="font-display text-sm font-bold text-white">Check it</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">See where the clip came from.</p>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Trim it and hear it in context.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4 col-span-2 md:col-span-1">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">05</p>
             <h3 class="font-display text-sm font-bold text-white">Post it</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Download a finished clip.</p>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Download it or publish to YouTube.</p>
           </div>
         </div>
       </section>
@@ -506,7 +506,7 @@ onBeforeUnmount(() => {
                 :href="signupUrl"
                 class="bg-[#f28f84] text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
               >
-                <span>Start with one recording</span>
+                <span>Clip your first recording</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
