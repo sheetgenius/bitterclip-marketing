@@ -236,9 +236,9 @@ const stopClip = (e: Event) => {
           <!-- handwritten callout pointing at the phone -->
           <div class="hidden lg:block absolute -top-5 -left-[5.5rem] z-30 w-44 -rotate-[7deg] pointer-events-none select-none">
             <span class="font-hand text-[28px] leading-[1.05] text-[#ffb4a8] block">this is the actual UI</span>
-            <svg viewBox="0 0 130 90" fill="none" class="w-28 h-20 mt-0.5 ml-12 text-[#ffb4a8]/80">
-              <path d="M10 12 C 50 6, 96 22, 112 66" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
-              <path d="M99 58 L113 67 L102 79" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <svg viewBox="0 0 120 80" fill="none" class="w-32 h-24 mt-1 ml-9 text-[#ffb4a8]/85">
+              <path d="M6 9 C 40 1, 92 17, 104 57" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M107 41 L104 57.5 L91 47" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
 
