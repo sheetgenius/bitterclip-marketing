@@ -64,6 +64,10 @@ const iframeHeight = ref(540)
 const isIframeLoading = ref(true)
 const demoActivated = ref(true)
 
+// --- Live recording-card widget: the REAL product component, embedded ---
+const heroIframe = ref<HTMLIFrameElement | null>(null)
+const heroWidgetHeight = ref(560)
+
 const onIframeLoad = () => {
   isIframeLoading.value = false
 }
@@ -73,11 +77,14 @@ const activateDemo = () => {
 }
 
 const handleMessage = (event: MessageEvent) => {
-  if (event.data && typeof event.data === 'object' && 'height' in event.data) {
-    const height = Number(event.data.height)
-    if (!isNaN(height) && height > 200 && height < 1500) {
-      iframeHeight.value = height
-    }
+  if (!event.data || typeof event.data !== 'object' || !('height' in event.data)) return
+  const height = Number((event.data as { height: unknown }).height)
+  if (isNaN(height) || height < 200 || height > 1500) return
+  // Route by source: the hero recording-card iframe vs the lower editor demo.
+  if (heroIframe.value && event.source === heroIframe.value.contentWindow) {
+    heroWidgetHeight.value = height
+  } else {
+    iframeHeight.value = height
   }
 }
 
@@ -103,75 +110,128 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="relative w-full">
-    <div class="absolute top-0 left-0 right-0 h-[680px] hero-backdrop-mask opacity-[0.25] -z-10 pointer-events-none" />
+    <div class="absolute top-0 left-0 right-0 h-[680px] hero-backdrop-mask opacity-[0.08] -z-10 pointer-events-none" />
 
     <main class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 pb-24 relative">
 
       <!-- 1. Hero -->
-      <div class="text-center max-w-4xl mx-auto mb-14 sm:mb-20">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#f28f84]/20 bg-zinc-950/80 text-[10px] font-mono uppercase tracking-wider text-zinc-400 mb-6 animate-float corner-ticks shadow-lg shadow-black/40">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#f28f84] animate-pulse"></span>
-          <span>Agent-operable media studio</span>
+      <div class="grid lg:grid-cols-[1.25fr_0.75fr] gap-10 lg:gap-12 items-center mb-16 sm:mb-24">
+
+        <!-- Left: the pitch -->
+        <div class="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+          <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.035em] text-white leading-[1.0] mb-6">
+            Cut your clips
+            <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">
+              inside ChatGPT.
+            </span>
+          </h1>
+
+          <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
+            Upload a podcast, interview, or founder call, then just ask. ChatGPT finds the moment and opens a real editor right in the chat — trim it, see exactly where it came from, and post a finished clip.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
+            <a
+              :href="signupUrl"
+              class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              <span>Start with one recording</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+            <a
+              href="#demo"
+              class="inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/40 px-5 py-2.5 font-mono text-xs font-bold text-zinc-300 transition duration-200 hover:border-zinc-600 hover:text-white min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              Try the editor
+            </a>
+          </div>
+
+          <p class="text-xs text-zinc-400 font-mono mt-5">For founders, podcasters, and anyone running a recurring show.</p>
         </div>
 
-        <h2 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.05] mb-6">
-          Cut clips where
-          <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block sm:inline">
-            your context lives.
-          </span>
-        </h2>
+        <!-- Right: the real product, shown inside a phone (ChatGPT on mobile) -->
+        <div class="relative mx-auto w-full max-w-[320px] lg:-rotate-3">
+          <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
 
-        <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-3xl mx-auto leading-relaxed mb-8">
-          BitterClip turns podcasts, interviews, founder calls, demos, and recurring shows into speaker-aware clips your agent can find, you can verify, and export ready to post.
-        </p>
+          <!-- phone: titanium frame -->
+          <div class="relative rounded-[3rem] p-[3px] bg-gradient-to-br from-zinc-500 via-zinc-700 to-zinc-800 ring-1 ring-white/20 shadow-[0_45px_90px_-25px_rgba(0,0,0,0.85)]">
+            <!-- side buttons (titanium) -->
+            <span class="absolute -left-[3px] top-[104px] w-[3px] h-8 rounded-l-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
+            <span class="absolute -left-[3px] top-[152px] w-[3px] h-12 rounded-l-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
+            <span class="absolute -right-[3px] top-[132px] w-[3px] h-16 rounded-r-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a
-            :href="signupUrl"
-            class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >
-            <span>Start with one recording</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
-          </a>
-          <a
-            href="#demo"
-            class="inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/40 px-5 py-2.5 font-mono text-xs font-bold text-zinc-300 transition duration-200 hover:border-zinc-600 hover:text-white min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >
-            Watch demo
-          </a>
+            <!-- black bezel band -->
+            <div class="rounded-[2.8rem] bg-black p-[7px]">
+              <!-- screen -->
+              <div class="relative rounded-[2.45rem] overflow-hidden bg-black">
+                <!-- glass reflection -->
+                <div class="absolute inset-0 z-20 pointer-events-none bg-gradient-to-br from-white/[0.10] via-transparent to-transparent"></div>
+                <!-- dynamic island -->
+                <div class="absolute top-2.5 left-1/2 -translate-x-1/2 w-[34%] h-[26px] bg-black rounded-full z-30 ring-1 ring-white/5"></div>
+
+              <!-- conversation thread -->
+              <div class="pt-11 pb-7 px-3 space-y-3">
+                <!-- user message: light bubble, right (faithful to ChatGPT) -->
+                <div class="flex justify-end">
+                  <div class="max-w-[88%] rounded-3xl bg-[#f4f4f4] px-3.5 py-2">
+                    <p class="text-[13px] text-zinc-900 leading-relaxed text-left">Pull the strongest moments from episode one and cut me clips.</p>
+                  </div>
+                </div>
+
+                <!-- assistant reply: no bubble, just text -->
+                <div class="px-0.5">
+                  <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment isn't the flashiest — it's the one that says why you started. Here are three from the founding conversation, opened in the editor so you can check each against the source.</p>
+                </div>
+
+                <!-- The REAL recording-card component, embedded live from the product -->
+                <iframe
+                  ref="heroIframe"
+                  src="https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1"
+                  title="BitterClip — episode one, cut into clips"
+                  loading="lazy"
+                  scrolling="no"
+                  class="w-full block rounded-2xl overflow-hidden bg-transparent"
+                  :style="{ height: heroWidgetHeight + 'px', border: 0 }"
+                ></iframe>
+              </div>
+
+              <!-- home indicator -->
+              <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-[36%] h-[5px] rounded-full bg-white/40 z-30"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <p class="text-xs text-zinc-600 font-mono mt-5">Built for recurring shows, interviews, founder-led marketing, and expert conversations.</p>
       </div>
 
       <section aria-label="Product loop" class="mb-20">
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">01</p>
-            <h3 class="font-display text-sm font-bold text-white">Recording</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Upload the source.</p>
+            <h3 class="font-display text-sm font-bold text-white">Upload</h3>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Add your podcast, interview, or call.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">02</p>
-            <h3 class="font-display text-sm font-bold text-white">Speakers</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Know who said what.</p>
+            <h3 class="font-display text-sm font-bold text-white">Who's talking</h3>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Every voice gets a name.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">03</p>
-            <h3 class="font-display text-sm font-bold text-white">Moments</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Ask your agent to find the best parts.</p>
+            <h3 class="font-display text-sm font-bold text-white">Find the moment</h3>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Ask ChatGPT for the best parts.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">04</p>
-            <h3 class="font-display text-sm font-bold text-white">Verify</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Check source context.</p>
+            <h3 class="font-display text-sm font-bold text-white">Check it</h3>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">See where the clip came from.</p>
           </div>
           <div class="border border-zinc-900 bg-zinc-950/50 rounded-xl p-4 col-span-2 md:col-span-1">
             <p class="font-mono text-[10px] text-[#f28f84] uppercase tracking-widest mb-2">05</p>
-            <h3 class="font-display text-sm font-bold text-white">Export</h3>
-            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Post a finished MP4.</p>
+            <h3 class="font-display text-sm font-bold text-white">Post it</h3>
+            <p class="text-xs text-zinc-500 mt-1 leading-relaxed">Download a finished clip.</p>
           </div>
         </div>
       </section>
@@ -181,9 +241,9 @@ onBeforeUnmount(() => {
         <div class="absolute inset-0 bg-[#f28f84]/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
 
         <div class="text-center max-w-2xl mx-auto mb-8 relative">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Live product surface</p>
-          <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">This is the editor your agent opens.</h2>
-          <p class="text-zinc-400 text-sm mt-2 font-sans">Drag across words. Check the source. The cut follows the audio.</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">The real editor</p>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">The same editor opens right inside ChatGPT.</h2>
+          <p class="text-zinc-400 text-sm mt-2 font-sans">Drag across the words to pick your clip. Check it against the recording. Export.</p>
         </div>
 
         <div class="glass-panel-accented glass-reflection rounded-3xl overflow-hidden corner-ticks relative min-h-[400px]">
@@ -205,10 +265,10 @@ onBeforeUnmount(() => {
 
           <!-- Mobile Activation Gate -->
           <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
-            <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">Live editor</p>
-            <h4 class="font-display text-lg font-bold text-white mb-2">Same editor. Same chat surface.</h4>
+            <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
+            <h4 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h4>
             <p class="text-zinc-500 text-xs max-w-sm mb-6 leading-relaxed">
-              This is the editor your agent opens for review. Drag across the words to cut a clip. Tap to load it.
+              Drag across the words to cut a clip, then check it against the recording. Tap to load it.
             </p>
             <button
               @click="activateDemo"
@@ -248,11 +308,15 @@ onBeforeUnmount(() => {
 
         </div>
 
-        <div class="text-center mt-6">
-          <a :href="signupUrl" class="inline-flex items-center gap-1.5 font-sans text-sm text-zinc-400 hover:text-[#f28f84] transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] rounded">
-            Upload your own recordings with the Launch plan.
+        <div class="text-center mt-7">
+          <a
+            :href="signupUrl"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >
+            <span>Clip your own recording</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
           </a>
+          <p class="text-xs text-zinc-600 font-mono mt-3">This demo is read-only. Upload your own with the Launch plan.</p>
         </div>
       </section>
 
@@ -262,29 +326,29 @@ onBeforeUnmount(() => {
           <div>
             <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Why it works</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
-              BitterClip structures the conversation.
+              A good clip needs more than a good quote.
             </h2>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-              Good clips depend on more than interesting words. They depend on who said them, what came before, what came after, and whether the moment stands on its own.
+              It matters who said it, what came right before, what came after, and whether it still makes sense on its own. BitterClip keeps all of that attached to every clip.
             </p>
           </div>
 
           <div class="grid sm:grid-cols-2 gap-4">
             <div class="glass-panel-accented glass-reflection rounded-2xl p-5 corner-ticks">
-              <h3 class="font-display text-base font-bold text-white mb-2">Speaker-aware transcript</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">Named speaker turns, identity review, and readable transcript context.</p>
+              <h3 class="font-display text-base font-bold text-white mb-2">Knows who's talking</h3>
+              <p class="text-sm text-zinc-400 leading-relaxed">Every line is labeled with who said it — so "grab John's best bit" just works.</p>
             </div>
             <div class="glass-panel-accented glass-reflection rounded-2xl p-5 corner-ticks">
-              <h3 class="font-display text-base font-bold text-white mb-2">Source-linked moments</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">Every candidate opens against the exact recording range.</p>
+              <h3 class="font-display text-base font-bold text-white mb-2">Always shows the source</h3>
+              <p class="text-sm text-zinc-400 leading-relaxed">Every clip stays linked to the exact spot it came from in your recording.</p>
             </div>
             <div class="glass-panel-accented glass-reflection rounded-2xl p-5 corner-ticks">
-              <h3 class="font-display text-base font-bold text-white mb-2">Human verification</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">Check the span, adjust boundaries, and avoid misleading cuts.</p>
+              <h3 class="font-display text-base font-bold text-white mb-2">You have the final cut</h3>
+              <p class="text-sm text-zinc-400 leading-relaxed">Check the moment and nudge the edges before anything goes out.</p>
             </div>
             <div class="glass-panel-accented glass-reflection rounded-2xl p-5 corner-ticks">
-              <h3 class="font-display text-base font-bold text-white mb-2">Recurring memory</h3>
-              <p class="text-sm text-zinc-400 leading-relaxed">Reuse confirmed speakers, prior clips, and show context over time.</p>
+              <h3 class="font-display text-base font-bold text-white mb-2">Remembers your show</h3>
+              <p class="text-sm text-zinc-400 leading-relaxed">Recognizes your regulars and keeps your past clips and topics around.</p>
             </div>
           </div>
         </div>
@@ -294,14 +358,14 @@ onBeforeUnmount(() => {
       <section class="mb-24">
         <div class="grid lg:grid-cols-2 gap-10 items-center">
           <div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Speaker-aware clipping</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Knows who said what</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
               The best clips depend on knowing who said what.
             </h2>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed mb-5">
-              Ask for the sharpest exchange, the clearest explanation, the strongest validation, or the moment with the best setup and payoff. BitterClip works from the shape of the conversation, not a flat transcript blob.
+              Ask for the sharpest exchange, the clearest explanation, or the best setup and payoff. BitterClip follows the back-and-forth of the conversation — not just a wall of text.
             </p>
-            <p class="text-zinc-500 text-xs font-mono">Your agent suggests. You verify. BitterClip exports.</p>
+            <p class="text-zinc-500 text-xs font-mono">ChatGPT suggests. You approve. You post.</p>
           </div>
 
           <div class="glass-panel-accented glass-reflection rounded-2xl overflow-hidden corner-ticks">
@@ -339,12 +403,12 @@ onBeforeUnmount(() => {
       <!-- 5. Comparison -->
       <section class="mb-24">
         <div class="max-w-2xl mb-8">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Different by design</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">What makes it different</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
-            Not another pile of generic suggestions.
+            Not another black-box clip generator.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            BitterClip is built for operators who care about quality, context, and repeatability.
+            Built for people who post a lot and care how every clip lands.
           </p>
         </div>
 
@@ -352,19 +416,19 @@ onBeforeUnmount(() => {
           <div class="border border-zinc-900 bg-zinc-950/40 rounded-2xl p-6">
             <h3 class="font-display text-lg font-bold text-zinc-300 mb-4">Generic AI clipper</h3>
             <ul class="space-y-3 text-sm text-zinc-500">
-              <li>Opaque suggestions</li>
-              <li>Flat transcript</li>
-              <li>Weak speaker memory</li>
-              <li>Hard to verify context</li>
+              <li>Black-box picks you can't check</li>
+              <li>Just a wall of text</li>
+              <li>Forgets who's who</li>
+              <li>Easy to clip out of context</li>
             </ul>
           </div>
           <div class="border border-[#f28f84]/20 bg-[#f28f84]/5 rounded-2xl p-6 corner-ticks">
             <h3 class="font-display text-lg font-bold text-white mb-4">BitterClip</h3>
             <ul class="space-y-3 text-sm text-zinc-300">
-              <li>Source-linked moments</li>
-              <li>Speaker-aware transcript</li>
-              <li>Confirmed recurring speakers</li>
-              <li>Transcript + media verification</li>
+              <li>Every clip linked to the source</li>
+              <li>Knows who said what</li>
+              <li>Remembers your regulars</li>
+              <li>You check it before you post</li>
             </ul>
           </div>
         </div>
@@ -379,25 +443,25 @@ onBeforeUnmount(() => {
               Founder calls, interviews, podcasts, demos, and recurring shows.
             </h2>
             <div class="grid sm:grid-cols-2 gap-3">
-              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Turn founder-led conversations into clips that explain what you are building.</p>
-              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Find strong exchanges in podcasts and expert interviews.</p>
-              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Give agencies and editors faster discovery with human control.</p>
-              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Build show memory from speakers, topics, and prior clips.</p>
+              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Turn founder calls into clips that explain what you're building.</p>
+              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Pull the best exchanges out of podcasts and interviews.</p>
+              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Clip for clients faster, without losing control of the cut.</p>
+              <p class="rounded-xl border border-zinc-900 bg-zinc-950/50 p-4 text-sm text-zinc-400 leading-relaxed">Build up memory of your show — speakers, topics, and past clips.</p>
             </div>
           </div>
 
           <div class="glass-panel-accented glass-reflection rounded-2xl p-6 corner-ticks">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Agent cockpit</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-3">Works with ChatGPT &amp; Claude</p>
             <h3 class="font-display text-2xl font-bold tracking-tight text-white mb-4">
-              Your agent can find the moment. BitterClip helps finish it.
+              ChatGPT finds the moment. BitterClip helps you finish it.
             </h3>
             <p class="text-sm text-zinc-400 leading-relaxed mb-5">
-              Ask your agent for the strongest moment from a recording. BitterClip exposes the transcript, speakers, and candidate clip, then brings you into a focused workspace to verify and export.
+              Ask ChatGPT for the strongest moment in a recording. BitterClip opens the transcript, the speakers, and a ready clip right there in the chat — so you can check it and post without switching tools.
             </p>
             <div class="grid grid-cols-3 gap-2 text-center font-mono text-[10px] uppercase tracking-wider text-zinc-500">
-              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">Agent proposes</span>
-              <span class="rounded-lg border border-[#f28f84]/20 bg-[#f28f84]/10 py-2 text-[#f28f84]">You verify</span>
-              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">Export</span>
+              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">ChatGPT suggests</span>
+              <span class="rounded-lg border border-[#f28f84]/20 bg-[#f28f84]/10 py-2 text-[#f28f84]">You approve</span>
+              <span class="rounded-lg border border-zinc-800 bg-zinc-950/70 py-2">You post</span>
             </div>
           </div>
         </div>
@@ -415,7 +479,7 @@ onBeforeUnmount(() => {
               Start with one recording.
             </h2>
             <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-              Bring a podcast, interview, founder call, demo, or recurring show. Leave with clips you can verify and post.
+              Bring a podcast, interview, or founder call. Leave with clips you can check and post — made right inside ChatGPT.
             </p>
           </div>
 
@@ -424,7 +488,7 @@ onBeforeUnmount(() => {
               <div class="flex-1 text-left">
                 <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Launch plan</p>
                 <p class="font-display text-2xl font-bold text-white">$99/month</p>
-                <p class="text-zinc-500 text-xs mt-2 leading-relaxed">100 clip exports a month, speaker-aware transcript workspace, agent connector, and YouTube publishing.</p>
+                <p class="text-zinc-500 text-xs mt-2 leading-relaxed">100 clips a month, the speaker-aware editor, a ChatGPT &amp; Claude connector, and one-click YouTube publishing.</p>
               </div>
               <a
                 :href="signupUrl"

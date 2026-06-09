@@ -4,11 +4,11 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#060608] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
+  <div class="relative min-h-screen bg-[#303030] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
     
     <!-- Cinematic Data Flow Backdrops -->
-    <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.8] pointer-events-none" />
-    <div class="absolute inset-0 -z-20 animate-flow-horizon opacity-[0.6] pointer-events-none" />
+    <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.10] pointer-events-none" />
+    <div class="absolute inset-0 -z-20 animate-flow-horizon opacity-[0.12] pointer-events-none" />
     
     <!-- Top Decorative Glow Dots -->
     <div class="absolute top-[-10%] left-[20%] -z-10 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-[#f28f84]/5 via-[#f8b36a]/5 to-[#d66f5f]/5 blur-[120px] animate-pulse-slow pointer-events-none" />
@@ -16,8 +16,8 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
     
     <!-- Global Header -->
     <header class="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
-      <nav class="flex items-center justify-between px-6 py-3 rounded-full glass-panel-accented glass-reflection shadow-2xl">
-        <h1 class="m-0 p-0 font-display font-bold text-lg tracking-tight">
+      <nav class="flex items-center justify-between px-6 py-3 rounded-full glass-panel-accented glass-reflection">
+        <div class="m-0 p-0 font-display font-bold text-lg tracking-tight">
           <NuxtLink class="flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg" to="/">
             <!-- Telemetry Crop Indicator Logo SVG -->
             <svg class="w-6 h-6 text-[#f28f84] transition-transform duration-300 group-hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -29,22 +29,15 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
             </span>
             <span class="px-1.5 py-0.5 text-[8px] font-mono font-bold rounded bg-[#f28f84]/10 text-[#f28f84] border border-[#f28f84]/20">Beta</span>
           </NuxtLink>
-        </h1>
+        </div>
         
-        <div class="hidden md:flex items-center gap-8 font-sans text-xs uppercase tracking-wider text-zinc-400">
+        <div class="hidden md:flex items-center gap-7 font-sans text-sm font-medium tracking-tight text-zinc-300">
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/#demo">Demo</NuxtLink>
-          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/mcp">MCP</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/mcp">In ChatGPT</NuxtLink>
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/docs">How it works</NuxtLink>
         </div>
         
         <div class="flex items-center gap-4">
-          <a 
-            class="hidden sm:inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-zinc-500 hover:text-[#f28f84] focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg transition"
-            :href="signupUrl"
-          >
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            $99/mo launch
-          </a>
           <a
             class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-[#f28f84]/10 btn-glow"
             :href="signupUrl"

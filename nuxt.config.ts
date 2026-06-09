@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
-  'BitterClip turns long recordings into speaker-aware, source-linked clips your AI can find, you can verify, and export ready to post.'
+  'BitterClip turns your podcasts, interviews, and founder calls into clips — and the editor opens right inside ChatGPT. Find the moment, check the source, post a finished clip.'
 const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({
@@ -20,7 +20,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'BitterClip - Speaker-aware clipping for recordings',
+      title: 'BitterClip — Clip your recordings inside ChatGPT',
       htmlAttrs: {
         lang: 'en',
       },
@@ -29,11 +29,11 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#111111' },
         { name: 'description', content: description },
-        { property: 'og:title', content: 'BitterClip - Speaker-aware clipping for recordings' },
+        { property: 'og:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: 'BitterClip - Speaker-aware clipping for recordings' },
+        { name: 'twitter:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
         { name: 'twitter:description', content: description },
       ],
       link: [
