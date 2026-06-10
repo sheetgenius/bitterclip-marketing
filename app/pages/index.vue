@@ -108,13 +108,15 @@ const isIframeLoading = ref(true)
 const demoActivated = ref(true)
 
 // --- Live recording-card widget: the REAL product component, embedded ---
-// The phone screen is FIXED at 448px — the widget's settled viewer height at
-// both our widths (447 desktop / 441 mobile, measured 2026-06-10) — so neither
-// the load (the embed reports its hug height) nor opening the in-frame editor
-// (the embed asks for 640) ever moves the layout. Height messages from this
-// iframe are deliberately ignored; the editor fills the same fixed screen and
-// scrolls inside it, like a real phone.
-const HERO_SCREEN_HEIGHT = 448
+// The phone screen is FIXED so nothing ever moves the layout: not the embed
+// reporting its hug height on load, not opening the in-frame editor (which
+// asks for 640). Height messages from this iframe are deliberately ignored;
+// content taller than the screen scrolls inside it, like a real phone.
+// 488 = the widget's settled viewer height at both our widths (447 desktop /
+// 441 mobile, measured 2026-06-10) plus the ~2 chat-bubble lines the terser
+// assistant reply freed up — total phone height is unchanged from the 4-line
+// bubble days, the screen just got roomier.
+const HERO_SCREEN_HEIGHT = 488
 const heroIframe = ref<HTMLIFrameElement | null>(null)
 // src is set only after the page is interactive (deferred) so the cross-origin
 // widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
@@ -281,7 +283,7 @@ onBeforeUnmount(() => {
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment isn't the loudest — it's the one that says why you started. Here are three from the founding conversation, opened in the editor so you can check each one before you post.</p>
+                  <p class="text-[13px] text-zinc-100 leading-relaxed text-left">The strongest moment says why you started. Three picks — check each before you post.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
