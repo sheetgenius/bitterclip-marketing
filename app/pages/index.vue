@@ -108,11 +108,14 @@ const isIframeLoading = ref(true)
 const demoActivated = ref(true)
 
 // --- Live recording-card widget: the REAL product component, embedded ---
-// 408 is the widget's measured rendered height; reserving it up front means the
-// postMessage('height') it sends after load matches the slot → zero CLS. (handleMessage
-// only ever grows this box, so transient shorter mid-load reports can't collapse it.)
+// The phone screen is FIXED at 448px — the widget's settled viewer height at
+// both our widths (447 desktop / 441 mobile, measured 2026-06-10) — so neither
+// the load (the embed reports its hug height) nor opening the in-frame editor
+// (the embed asks for 640) ever moves the layout. Height messages from this
+// iframe are deliberately ignored; the editor fills the same fixed screen and
+// scrolls inside it, like a real phone.
+const HERO_SCREEN_HEIGHT = 448
 const heroIframe = ref<HTMLIFrameElement | null>(null)
-const heroWidgetHeight = ref(408)
 // src is set only after the page is interactive (deferred) so the cross-origin
 // widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
 const heroSrc = ref('')
@@ -135,16 +138,13 @@ const handleMessage = (event: MessageEvent) => {
   if (!event.data || typeof event.data !== 'object' || !('height' in event.data)) return
   const height = Number((event.data as { height: unknown }).height)
   if (isNaN(height) || height < 200 || height > 1500) return
-  // Route by source: the hero recording-card iframe vs the lower editor demo.
+  // Route by source: the hero phone's screen is FIXED (no layout movement,
+  // ever) so its height reports are dropped on the floor — but they must not
+  // fall through to resize the lower editor demo.
   if (heroIframe.value && event.source === heroIframe.value.contentWindow) {
-    // The hero slot reserves its stable height (408) up front. The widget posts
-    // smaller *intermediate* heights mid-load before settling — honoring those would
-    // collapse and re-expand the slot (CLS). Only ever GROW the reserved box, so a
-    // transient short report can never shrink it.
-    heroWidgetHeight.value = Math.max(heroWidgetHeight.value, height)
-  } else {
-    iframeHeight.value = height
+    return
   }
+  iframeHeight.value = height
 }
 
 // Run after the browser is idle (post first-paint), with a timeout fallback.
@@ -288,7 +288,7 @@ onBeforeUnmount(() => {
                      The slot reserves its measured stable height up front (no CLS),
                      and the live iframe src is set only after the page is idle. A
                      seamless skeleton of the same height holds the space until then. -->
-                <div class="relative w-full" :style="{ height: heroWidgetHeight + 'px' }">
+                <div class="relative w-full" :style="{ height: HERO_SCREEN_HEIGHT + 'px' }">
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
                     v-if="!heroSrc"
