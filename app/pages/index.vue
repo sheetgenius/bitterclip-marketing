@@ -33,9 +33,11 @@ const structuredData = [
     url: 'https://bitterclip.com/',
     description: 'Ask ChatGPT for the best moments in a recording, trim them in a real editor, and post finished clips.',
     offers: {
-      '@type': 'Offer',
-      price: '99',
+      '@type': 'AggregateOffer',
+      lowPrice: '0',
+      highPrice: '99',
       priceCurrency: 'USD',
+      offerCount: 3,
       url: signupUrl,
       availability: 'https://schema.org/InStock',
     },
@@ -269,105 +271,131 @@ onBeforeUnmount(() => {
 
       </div>
 
-      <!-- SECTION 01 — It preps itself (copy LEFT, speaker-ID panel RIGHT) -->
-      <section aria-label="It preps itself" class="mb-24">
-        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <!-- TESTIMONIAL BAND — two featured customers, right beneath the hero.
+           BOTH quotes are tentative drafts pending sign-off (Andrew checks 2026-06-11;
+           Rohan's rewrite needs his OK too). -->
+      <section aria-label="Customer testimonials" class="relative mb-24">
+        <!-- hairline between the two voices — structure without chrome -->
+        <div class="hidden lg:block absolute left-1/2 top-6 bottom-6 w-px bg-white/5" aria-hidden="true"></div>
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-          <!-- LEFT: the copy -->
-          <div class="max-w-xl">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — It preps itself</p>
-            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-              Upload a recording. It does the boring part.
-            </h2>
-            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-              Drop in a podcast, interview, or founder call. BitterClip transcribes it and labels every speaker — names and all — automatically. No cleanup. By the time you open it, it's ready to clip.
-            </p>
-          </div>
-
-          <!-- RIGHT: the prep proof — a transcript with speakers identified -->
-          <div class="glass-panel-accented glass-reflection corner-ticks rounded-2xl p-5 sm:p-6">
-            <!-- header row -->
-            <div class="flex items-center justify-between mb-5">
-              <span class="font-mono text-[10px] text-zinc-400 tracking-wide">day-1 · founder interview</span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-[#f28f84]/30 bg-[#f28f84]/10 px-2.5 py-0.5">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
-                <span class="font-mono text-[10px] font-bold text-[#f28f84] tracking-wide">Transcribed</span>
-              </span>
+          <figure class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-7 sm:gap-9">
+            <div class="shrink-0 flex flex-col items-center gap-4">
+              <img
+                src="/images/andrew_williams_strength_and_positions_coach.jpg"
+                alt="Andrew Williams"
+                width="160"
+                height="160"
+                loading="lazy"
+                decoding="async"
+                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+              />
+              <figcaption class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
+                <span class="block text-zinc-200">Andrew Williams</span>
+                <span class="block mt-0.5 text-zinc-500">Head Coach</span>
+                <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener" class="mt-1.5 inline-flex items-center justify-center gap-1.5 text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">
+                  <img
+                    src="/images/andrew_williams_strength_and_positions.png"
+                    alt=""
+                    width="14"
+                    height="14"
+                    loading="lazy"
+                    decoding="async"
+                    class="w-3.5 h-3.5 rounded-sm object-contain"
+                  />
+                  <span>Strength &amp; Positions</span>
+                </a>
+              </figcaption>
             </div>
+            <!-- muted base, white key phrase: the quote skims itself. The opening
+                 mark hangs in the margin so every line starts flush. -->
+            <blockquote class="font-display text-lg sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
+              &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
+            </blockquote>
+          </figure>
 
-            <!-- speaker rows with speaking-time % -->
-            <div class="space-y-3 mb-4">
-              <div class="flex items-center gap-3">
-                <img src="/clips/ep1-michael.jpg" alt="Mike, automatically identified as a speaker" width="32" height="32" loading="lazy" decoding="async" class="object-cover rounded-full w-8 h-8 border border-zinc-700 shrink-0" />
-                <span class="text-sm font-semibold text-white flex-1">Mike</span>
-                <span class="font-mono text-[11px] text-zinc-400">54%</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <img src="/clips/ep1-john.jpg" alt="John, automatically identified as a speaker" width="32" height="32" loading="lazy" decoding="async" class="object-cover rounded-full w-8 h-8 border border-zinc-700 shrink-0" />
-                <span class="text-sm font-semibold text-white flex-1">John</span>
-                <span class="font-mono text-[11px] text-zinc-400">46%</span>
-              </div>
+          <figure class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-7 sm:gap-9">
+            <div class="shrink-0 flex flex-col items-center gap-4">
+              <img
+                src="/images/rohan_karunakaran.jpg"
+                alt="Rohan Karunakaran"
+                width="160"
+                height="160"
+                loading="lazy"
+                decoding="async"
+                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+              />
+              <figcaption class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
+                <span class="block text-zinc-200">Rohan Karunakaran</span>
+                <span class="block mt-0.5 text-zinc-500">Founder</span>
+                <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener" class="mt-1.5 inline-block text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">Frontier Studio</a>
+              </figcaption>
             </div>
-
-            <!-- thin split bar: 54 Mike (peach) / 46 John (emerald) -->
-            <div class="flex h-1.5 rounded-full overflow-hidden mb-6" aria-hidden="true">
-              <span class="bg-[#f28f84]" style="width: 54%"></span>
-              <span class="bg-emerald-400" style="width: 46%"></span>
-            </div>
-
-            <!-- speaker-attributed transcript lines -->
-            <div class="space-y-2.5 mb-5">
-              <p class="text-sm text-zinc-300 leading-relaxed">
-                <span class="font-semibold text-[#f28f84]">Mike:</span> We kept thinking the product was the picker.
-              </p>
-              <p class="text-sm text-zinc-300 leading-relaxed">
-                <span class="font-semibold text-emerald-400">John:</span> But the actual value is trust — you know who said it and why the clip works.
-              </p>
-              <p class="text-sm text-zinc-300 leading-relaxed">
-                <span class="font-semibold text-[#f28f84]">Mike:</span> Exactly. The clip only works if the source is still attached.
-              </p>
-            </div>
-
-            <div class="telemetry-ruler rounded-sm"></div>
-            <p class="font-mono text-[10px] text-zinc-400 tracking-wide mt-3">Transcribed and split by speaker — automatically.</p>
-          </div>
+            <blockquote class="font-display text-lg sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
+              &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
+            </blockquote>
+          </figure>
 
         </div>
       </section>
 
-      <!-- SECTION 02 — Right in ChatGPT & Claude (editor LEFT, copy RIGHT — the centerpiece) -->
-      <section id="demo" class="mb-24 relative scroll-mt-28">
-        <div class="absolute inset-0 bg-[#f28f84]/5 rounded-3xl blur-3xl -z-10 pointer-events-none" />
+      <!-- SECTION 01 — Right in ChatGPT & Claude (copy LEFT, live editor RIGHT — the centerpiece) -->
+      <section id="demo" aria-label="Right in ChatGPT and Claude" class="mb-24 relative scroll-mt-28">
+        <div class="grid lg:grid-cols-[1fr_minmax(520px,1.1fr)] gap-8 lg:gap-12 items-center">
 
-        <div class="grid lg:grid-cols-[minmax(520px,1fr)_1fr] gap-8 lg:gap-12 items-center">
+          <!-- LEFT: the copy -->
+          <div class="max-w-xl">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — Right in ChatGPT &amp; Claude</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
+              Other clippers guess. Yours knows the whole conversation.
+            </h2>
+            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
+              Drop in a podcast, a founder call, or a training session. BitterClip transcribes it and labels every speaker — names and all — automatically. By the time you open ChatGPT or Claude, the whole conversation is already there: who said it, what came before and after. Ask for the sharpest exchange — the moments it picks land.
+            </p>
 
-          <!-- LEFT: the live editor, at ~half width -->
-          <div class="relative">
-            <!-- gesture strip -->
-            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-4">
-              <span class="text-[#f28f84]">drag the words</span>
+            <!-- motif row: it suggests → you approve → you post -->
+            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
+              <span class="text-[#f28f84]">it suggests</span>
               <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">check the source</span>
+              <span class="text-[#f28f84]">you approve</span>
               <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">export</span>
+              <span class="text-[#f28f84]">you post</span>
+            </div>
+          </div>
+
+          <!-- RIGHT: the live editor, bare. The speaker chips straddle its top edge like
+               presence indicators — the same peach/emerald the embed color-codes speakers with. -->
+          <div class="relative w-full">
+            <!-- speaker-colored atmosphere, one soft glow per speaker -->
+            <div class="absolute -inset-x-10 -inset-y-12 -z-10 pointer-events-none" aria-hidden="true">
+              <div class="absolute left-0 top-0 w-3/4 h-3/4 rounded-full bg-[#f28f84]/[0.06] blur-3xl"></div>
+              <div class="absolute right-0 bottom-0 w-3/4 h-3/4 rounded-full bg-emerald-400/[0.05] blur-3xl"></div>
             </div>
 
-            <div class="glass-panel-accented glass-reflection rounded-3xl overflow-hidden corner-ticks relative min-h-[400px]">
+            <!-- two little speaker bubbles — in-flow on mobile, straddling the embed's top edge from sm: up.
+                 Andrew's chip uses his headshot, while Adrian's chip uses the product's no-photo fallback.
+                 Speaking-share %s are placeholders until the embed points at the coaching recording. -->
+            <div class="flex items-center justify-end gap-2 mb-3 z-30 sm:absolute sm:-top-3.5 sm:right-5 sm:mb-0">
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-[#f28f84]/30 bg-zinc-950/90 backdrop-blur-sm pl-1 pr-2.5 py-1 shadow-lg shadow-black/40">
+                <img
+                  src="/images/andrew_williams_strength_and_positions_coach.jpg"
+                  alt="Andrew"
+                  width="20"
+                  height="20"
+                  class="rounded-full w-5 h-5 ring-1 ring-[#f28f84]/60 object-cover shrink-0"
+                />
+                <span class="text-xs font-semibold text-white">Andrew</span>
+                <span class="font-mono text-[10px] text-[#f28f84]">72%</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-zinc-950/90 backdrop-blur-sm pl-1 pr-2.5 py-1 shadow-lg shadow-black/40">
+                <span class="flex items-center justify-center rounded-full w-5 h-5 ring-1 ring-emerald-400/60 bg-emerald-400/15 font-mono text-[9px] font-bold text-emerald-400 shrink-0" aria-hidden="true">A</span>
+                <span class="text-xs font-semibold text-white">Adrian</span>
+                <span class="font-mono text-[10px] text-emerald-400">28%</span>
+              </span>
+            </div>
 
-              <!-- Window header -->
-              <div class="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800/80 relative z-10">
-                <div class="flex items-center gap-2">
-                  <span class="w-3 h-3 rounded-full bg-[#f28f84]/70"></span>
-                  <span class="w-3 h-3 rounded-full bg-[#d66f5f]/60"></span>
-                  <span class="w-3 h-3 rounded-full bg-zinc-700"></span>
-                  <span class="text-xs font-mono text-zinc-400 ml-4 hidden sm:inline">day-1 · founder interview</span>
-                </div>
-
-                <div class="flex items-center gap-1.5 rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span class="font-mono text-[10px] font-bold text-zinc-400 tracking-wide">Live</span>
-                </div>
-              </div>
+            <!-- the embed, bare — hairline ring and a deep soft shadow, no chrome -->
+            <div class="relative rounded-2xl overflow-hidden ring-1 ring-white/[0.06] shadow-[0_24px_80px_-28px_rgba(0,0,0,0.8)] min-h-[400px]">
 
               <!-- Mobile Activation Gate -->
               <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
@@ -411,88 +439,48 @@ onBeforeUnmount(() => {
                 />
               </div>
 
-              <!-- Status bar -->
-              <div class="px-6 py-3 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 border-t border-zinc-800/80">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Live demo · nothing saved
-              </div>
-
-            </div>
-
-            <div class="mt-7">
-              <a
-                :href="signupUrl"
-                class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              >
-                <span>Clip your own recording</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-              </a>
-              <p class="text-xs text-zinc-400 font-mono mt-3">This demo is read-only. Upload your own to start cutting.</p>
-            </div>
-          </div>
-
-          <!-- RIGHT: the copy, vertically centered -->
-          <div class="max-w-xl">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — Right in ChatGPT &amp; Claude</p>
-            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-              Other clippers guess. Yours knows the whole conversation.
-            </h2>
-            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
-              Your recording is right there in the chat you already use. Ask for the sharpest exchange or the clearest explanation — and because ChatGPT and Claude have the whole conversation (who said it, what came before and after), the moments they pick land. Drag across the words, check it against the source, export.
-            </p>
-
-            <!-- motif row: it suggests → you approve → you post -->
-            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-              <span class="text-[#f28f84]">it suggests</span>
-              <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you approve</span>
-              <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you post</span>
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- SECTION 03 — The handoff (copy LEFT, gallery + deliver RIGHT) -->
+      <!-- SECTION 02 — The handoff (copy on top, clip→destinations fan-out below) -->
       <section aria-label="The handoff" class="mb-24">
         <div class="max-w-2xl mb-10">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">03 — The handoff</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — The handoff</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
             Finished clips — out the door, your way.
           </h2>
           <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-            Trim it, export, done. Post it straight to YouTube, X, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — index once, everyone clips.
+            Trim it, export, done. Post it straight to YouTube, X, Instagram, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — index once, everyone clips.
           </p>
         </div>
 
         <!-- Fan-out: one finished clip on the left arcs to four destinations on the right -->
         <div class="handoff-fan mt-2">
-          <!-- SOURCE: a single finished-clip card -->
+          <!-- SOURCE: the featured customer clip — Andrew coaching Adrian (Lu Xiaojun-style
+               technique work). Andrew's quote lives in the testimonial band beneath the hero. -->
           <div class="handoff-source">
-            <div class="relative w-[160px] sm:w-[176px] glass-panel-accented corner-ticks rounded-xl overflow-hidden">
-              <div class="relative aspect-video">
+            <div class="relative w-[250px] sm:w-[280px]">
+              <div class="relative rounded-xl overflow-hidden ring-1 ring-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
                 <img
-                  src="/clips/day-1-opening-poster.jpg"
-                  alt="A finished clip ready to share"
-                  width="176"
-                  height="99"
+                  src="/clips/coaching-session-poster.jpg"
+                  alt="Andrew Williams coaching his client Adrian through a lift at Strength & Positions"
+                  width="280"
+                  height="158"
                   loading="lazy"
                   decoding="async"
-                  class="absolute inset-0 w-full h-full object-cover"
+                  class="w-full aspect-video object-cover"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none"></div>
-                <!-- play glyph + duration -->
-                <div class="absolute bottom-2 left-2 flex items-center gap-1.5">
-                  <span class="flex items-center justify-center w-5 h-5 rounded-full bg-[#f28f84] shrink-0">
-                    <svg viewBox="0 0 24 24" fill="#1a1a1a" class="w-2.5 h-2.5 translate-x-px" aria-hidden="true">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="flex items-center justify-center w-10 h-10 rounded-full bg-[#f28f84] shadow-[0_0_24px_rgba(242,143,132,0.45)]">
+                    <svg viewBox="0 0 24 24" fill="#1a1a1a" class="w-4 h-4 translate-x-px" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
                   </span>
-                  <span class="font-mono text-[10px] font-semibold text-white/90 tracking-wide">0:27</span>
                 </div>
+                <span class="absolute bottom-2 right-2.5 font-mono text-[10px] font-semibold text-white/90">1:09</span>
               </div>
-              <p class="px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-widest text-[#f28f84]">Your clip</p>
             </div>
           </div>
 
@@ -504,8 +492,9 @@ onBeforeUnmount(() => {
             aria-hidden="true"
           >
             <path d="M8 180 C 200 180 332 20 512 20" class="handoff-line" style="--line-color:#ff0000" />
-            <path d="M8 180 C 200 180 332 123 512 123" class="handoff-line" style="--line-color:#e7e7e7" />
-            <path d="M8 180 C 200 180 332 230 512 230" class="handoff-line" style="--line-color:#0a66c2" />
+            <path d="M8 180 C 200 180 332 99 512 99" class="handoff-line" style="--line-color:#e7e7e7" />
+            <path d="M8 180 C 200 180 332 179 512 179" class="handoff-line" style="--line-color:#d62976" />
+            <path d="M8 180 C 200 180 332 259 512 259" class="handoff-line" style="--line-color:#0a66c2" />
             <path d="M8 180 C 200 180 332 338 512 338" class="handoff-line" style="--line-color:#f28f84" />
           </svg>
 
@@ -525,6 +514,25 @@ onBeforeUnmount(() => {
                 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
               </svg>
               <span class="text-sm font-semibold text-zinc-200 tracking-tight">X</span>
+            </div>
+            <!-- Instagram -->
+            <div role="listitem" class="handoff-dest group">
+              <svg viewBox="0 0 24 24" class="w-[48px] h-[48px] shrink-0" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ig-grad-dest" x1="3" y1="21" x2="21" y2="3" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#feda75" />
+                    <stop offset="0.25" stop-color="#fa7e1e" />
+                    <stop offset="0.5" stop-color="#d62976" />
+                    <stop offset="0.75" stop-color="#962fbf" />
+                    <stop offset="1" stop-color="#4f5bd5" />
+                  </linearGradient>
+                </defs>
+                <rect width="24" height="24" rx="6" fill="url(#ig-grad-dest)" />
+                <rect x="5" y="5" width="14" height="14" rx="4.4" fill="none" stroke="#fff" stroke-width="1.7" />
+                <circle cx="12" cy="12" r="3.4" fill="none" stroke="#fff" stroke-width="1.7" />
+                <circle cx="16.7" cy="7.3" r="1.15" fill="#fff" />
+              </svg>
+              <span class="text-sm font-semibold text-zinc-200 tracking-tight">Instagram</span>
             </div>
             <!-- LinkedIn -->
             <div role="listitem" class="handoff-dest group">
@@ -549,7 +557,7 @@ onBeforeUnmount(() => {
       <section id="join" class="relative">
         <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
-        <div class="max-w-2xl mx-auto text-center mb-9">
+        <div class="max-w-2xl mx-auto text-center mb-8">
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
             Bring one recording. Leave with clips.
           </h2>
@@ -558,28 +566,86 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
-        <!-- one focused pricing card, peach-tinted top edge instead of a double frame -->
-        <div class="relative max-w-[620px] mx-auto rounded-2xl glass-panel-accented glass-reflection corner-ticks p-7 sm:p-9 overflow-hidden">
-          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
-          <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
+        <!-- Customer pull quote — PENDING ANDREW'S SIGN-OFF before this ships -->
+        <figure class="max-w-xl mx-auto text-center mb-10">
+          <blockquote class="text-base sm:text-lg text-zinc-200 italic leading-relaxed">
+            &ldquo;When they told me $99 a month, I said I&rsquo;d pay $900 for this.&rdquo;
+          </blockquote>
+          <figcaption class="mt-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+            Andrew Williams · Head Coach, Strength &amp; Positions
+          </figcaption>
+        </figure>
 
-          <div class="relative flex flex-col sm:flex-row sm:items-center gap-6">
-            <div class="flex-1 text-left">
-              <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Launch plan</p>
-              <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
-              <p class="text-zinc-400 text-xs mt-3 leading-relaxed">100 clips a month, the in-chat editor, ChatGPT and Claude connectors, and one-click YouTube publishing.</p>
-            </div>
+        <!-- the ladder: Free / Clip / Pro. Pro carries the accent; every card's CTA
+             lands on the same signup — the app handles plan choice. -->
+        <div class="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto items-stretch text-left">
+
+          <!-- FREE -->
+          <div class="relative rounded-2xl glass-panel p-6 flex flex-col">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Free</p>
+            <p class="font-display text-3xl font-bold text-white">$0</p>
+            <p class="text-zinc-400 text-xs mt-1.5 mb-5">Try it for real.</p>
+            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>60 minutes of footage a month</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 exports at 1080p (watermarked)</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>4 GB uploads</li>
+            </ul>
             <a
               :href="signupUrl"
-              class="group bg-[#f28f84] text-zinc-950 font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black font-mono text-xs"
+              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >Start free</a>
+          </div>
+
+          <!-- CLIP -->
+          <div class="relative rounded-2xl glass-panel p-6 flex flex-col">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Clip</p>
+            <p class="font-display text-3xl font-bold text-white">$9<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
+            <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $90/year — 2 months free.</p>
+            <p class="text-zinc-400 text-xs mb-5">For clipping every week.</p>
+            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 hours of footage a month</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>150 exports at 1080p, no watermark</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>4 GB uploads</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Top up $5 per +5 hours</li>
+            </ul>
+            <a
+              :href="signupUrl"
+              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >Start clipping</a>
+          </div>
+
+          <!-- PRO — the accented card -->
+          <div class="relative rounded-2xl glass-panel-accented glass-reflection corner-ticks p-6 flex flex-col overflow-hidden">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Pro</p>
+            <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
+            <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $799/year — about 4 months free.</p>
+            <p class="text-zinc-400 text-xs mb-5">When footage is your business.</p>
+            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 hours of footage a month</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 exports, up to 4K</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>20 GB uploads</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority processing</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Analysis workflows, as they ship</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Top up $5 per +5 hours</li>
+            </ul>
+            <a
+              :href="signupUrl"
+              class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Clip your first recording</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5">
+              <span>Go Pro</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
           </div>
+
         </div>
+
+        <p class="text-center font-mono text-[10px] uppercase tracking-widest text-zinc-500 mt-7">
+          30-day refund on everything, including annual · cancel anytime — your files stay downloadable
+        </p>
       </section>
 
     </main>
@@ -587,18 +653,24 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* SECTION 03 — fan-out syndication visual.
-   One clip on the left arcs four brand-colored lines to four destinations
+/* SECTION 02 — fan-out syndication visual.
+   One clip on the left arcs five brand-colored lines to five destinations
    stacked on the right. The SVG (preserveAspectRatio="none") stretches to the
-   same box as the destinations column, so its path endpoints (y=45/135/225/315
-   of a 360 viewBox) line up with the four logos laid out via space-between. */
+   same box as the destinations column, so its path endpoints (y=20/99/179/259/338
+   of a 360 viewBox) line up with the five logos laid out via space-between. */
 .handoff-fan {
   display: grid;
-  grid-template-columns: minmax(150px, 0.7fr) minmax(0, 1.1fr) minmax(150px, 0.6fr);
+  /* source + destinations hug their content so the fan lines visually run
+     from the clip's edge to the logos, with no dead gap on either side.
+     The whole composition is capped and centered — at full-bleed width the
+     lines stretched across ~1000px of empty canvas and the section died. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas: "source fan destinations";
   align-items: stretch;
-  column-gap: clamp(0.5rem, 2vw, 1.5rem);
-  min-height: 360px;
+  column-gap: clamp(0.75rem, 2.5vw, 2rem);
+  min-height: 340px;
+  max-width: 56rem;
+  margin-inline: auto;
 }
 
 .handoff-source {
@@ -614,7 +686,7 @@ onBeforeUnmount(() => {
   align-self: stretch;
   width: 100%;
   height: 100%;
-  min-height: 360px;
+  min-height: 340px;
   overflow: visible;
 }
 
@@ -623,7 +695,7 @@ onBeforeUnmount(() => {
   stroke: var(--line-color, #f28f84);
   stroke-width: 1.5;
   stroke-linecap: round;
-  opacity: 0.6;
+  opacity: 0.75;
   vector-effect: non-scaling-stroke;
   filter: drop-shadow(0 0 5px color-mix(in srgb, var(--line-color, #f28f84) 45%, transparent));
   /* Draw-in: lines trace from the clip out to each destination on mount.
@@ -638,6 +710,7 @@ onBeforeUnmount(() => {
 .handoff-line:nth-child(2) { animation-delay: 0.12s; }
 .handoff-line:nth-child(3) { animation-delay: 0.24s; }
 .handoff-line:nth-child(4) { animation-delay: 0.36s; }
+.handoff-line:nth-child(5) { animation-delay: 0.48s; }
 
 .handoff-destinations {
   grid-area: destinations;
@@ -645,7 +718,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   justify-content: space-between;
   min-width: 0;
-  min-height: 360px;
+  min-height: 340px;
 }
 
 .handoff-dest {

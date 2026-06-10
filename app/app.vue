@@ -77,6 +77,8 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <span class="text-zinc-800">•</span>
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/mcp">MCP</NuxtLink>
           <span class="text-zinc-800">•</span>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/data-deletion">Data deletion</NuxtLink>
+          <span class="text-zinc-800">•</span>
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" to="/docs">How it works</NuxtLink>
           <span class="text-zinc-800">•</span>
           <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="/llms.txt">llms.txt</a>
