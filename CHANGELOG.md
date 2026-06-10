@@ -30,6 +30,16 @@ under a dated entry.
 
 ### Website
 
+- The hero phone now runs the FULL composition surface: tapping the widget's
+  "Open in editor" opens the real composition editor in-frame — live video
+  playback, scrubbing, the full word-level transcript (lazy-loaded, gzipped),
+  drag-to-select, clip creation, and an export that reveals a pre-rendered
+  demo MP4 (`?clip=` contract). Powered by the app-side embed-host upgrade
+  (bitterclip `827d6cc6`): display-mode grants, a public allowlisted score
+  endpoint, and demo-ID write stubs. One component, same constraints, across
+  marketing, ChatGPT, Claude, and mobile. The phone frame widened to
+  iPhone-Pro-Max proportions (368px, 392px at desktop) to give the surface
+  room.
 - Conversion-focused rework of the landing page (with an external CRO critique
   pass via Codex): the Clip plan now carries the accent panel, "Recommended"
   chip, and the only filled CTA (Pro demoted to a plain panel — the $99 price

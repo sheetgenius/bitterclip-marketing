@@ -176,7 +176,13 @@ onMounted(() => {
     const clip = `${window.location.origin}/clips/day-1-opening.mp4`
     embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
 
-    heroSrc.value = 'https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1'
+    // The hero embed is the FULL surface: tapping "Open in editor" opens the
+    // real composition editor in-frame (the embed host grants display-mode and
+    // lazy-loads the transcript). ?clip= gives its stubbed export a real
+    // pre-rendered MP4 to reveal — same contract as the clip-demo above.
+    // (Only https origins pass the embed's allowlist, so on plain-http local
+    // dev the export reveal is simply absent — everything else still works.)
+    heroSrc.value = `https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&clip=${encodeURIComponent(clip)}`
     handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
   })
 })
@@ -229,19 +235,23 @@ onBeforeUnmount(() => {
           <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Made for founders, podcasters, and coaches doing their own marketing.</p>
         </div>
 
-        <!-- Right: the real product, shown inside a phone (ChatGPT on mobile) -->
-        <div class="relative mx-auto w-full max-w-[320px] lg:max-w-none lg:w-[340px]">
-          <!-- handwritten callout pointing at the phone -->
-          <div class="hidden lg:block absolute -top-5 -left-[5.5rem] z-30 w-44 -rotate-[7deg] pointer-events-none select-none">
-            <span class="font-hand text-[28px] leading-[1.05] text-[#ffb4a8] block">this is the actual UI</span>
-            <svg viewBox="0 0 120 80" fill="none" class="w-32 h-24 mt-1 ml-9 text-[#ffb4a8]/85">
-              <path d="M6 9 C 40 1, 92 17, 104 57" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M107 41 L104 57.5 L91 47" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
+        <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
+             Max-sized frame (~iPhone Pro Max) so the live widget gets room. -->
+        <div class="relative mx-auto w-full max-w-[368px] lg:max-w-none lg:w-[392px]">
+          <!-- handwritten callout. Text sits clear to the LEFT of the phone (no
+               overlap); the arrow sweeps DOWN to the live MCP widget below — not
+               the top of the conversation. -->
+          <div class="hidden lg:block absolute -top-8 -left-[22.5rem] z-30 w-[340px] text-right -rotate-[5deg] pointer-events-none select-none">
+            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8] block whitespace-nowrap">this is the actual UI</span>
+            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8]/80 block whitespace-nowrap">inside ChatGPT &amp; Claude</span>
           </div>
+          <svg viewBox="0 0 130 210" fill="none" class="hidden lg:block absolute top-[2.8rem] -left-[6rem] w-[130px] h-[210px] z-30 text-[#ffb4a8]/85 pointer-events-none">
+            <path d="M44 2 C 24 76, 30 152, 114 197" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M103 181 L114 197 L95 197" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
 
           <!-- the phone, tilted in 3D for depth -->
-          <div class="relative mx-auto w-full max-w-[320px] lg:[transform:perspective(1800px)_rotateY(-9deg)_rotateX(2.5deg)_rotateZ(0.6deg)] transform-gpu">
+          <div class="relative mx-auto w-full max-w-[368px] lg:[transform:perspective(1800px)_rotateY(-9deg)_rotateX(2.5deg)_rotateZ(0.6deg)] transform-gpu">
             <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
 
             <!-- phone: titanium frame -->
