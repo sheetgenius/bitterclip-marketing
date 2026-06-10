@@ -138,5 +138,5 @@ ChatGPT:
 Enable the BitterClip app. The same tools and editor appear through the MCP App
 surface.
 
-Launch access is $99/month. Checkout unlocks uploads, renders, publishing, and
-connector use.
+Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Your plan
+unlocks uploads, renders, publishing, and connector use.

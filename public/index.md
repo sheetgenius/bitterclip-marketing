@@ -75,6 +75,7 @@ Use cases include:
 
 - turning founder-led conversations into clips that explain what is being built
 - finding strong exchanges in podcasts and expert interviews
+- turning coaching and personal-training sessions into cue clips for athletes
 - giving agencies and editors faster discovery with human control
 - building show memory from speakers, topics, and prior clips
 
@@ -86,9 +87,38 @@ Ask your agent for the strongest moment from a recording. BitterClip exposes the
 transcript, speakers, and candidate clip, then brings the human operator into a
 focused workspace to verify and export.
 
-## Launch Plan
+## Common Questions
 
-Launch access is $99/month and includes 100 clip exports a month, the
-speaker-aware transcript workspace, an agent connector, and YouTube publishing.
+- What happens after signup: create the free account, connect BitterClip in
+  ChatGPT or Claude, upload a recording, and ask for the strongest moment —
+  the editor opens with it.
+- ChatGPT or Claude: both work. Enable the BitterClip app in ChatGPT, or add
+  it as a Connector in Claude. No local setup.
+- The AI never posts without you: every clip is checked in the editor before
+  export, and publishing requires explicit approval.
+- Uploads: podcasts, interviews, calls, training sessions — audio or video,
+  files up to 4 GB (20 GB on Pro).
+- No new editor to learn: drag across the transcript words and the cut
+  follows the audio.
+- Canceling: files stay downloadable on every plan; 30-day refund, annual
+  included.
+
+## Pricing
+
+Three plans, one uniform price list:
+
+- Free — $0. 60 minutes of footage a month, 10 clip exports at 1080p
+  (watermarked), file uploads up to 4 GB. Resets every month — not a trial.
+- Clip (recommended) — $9/month, or $90/year (2 months free). 10 hours of
+  footage a month, 150 clip exports at 1080p with no watermark, file uploads
+  up to 4 GB, and you can add 5 more hours for $5 anytime. For a weekly show
+  or regular interviews.
+- Pro — $99/month, or $799/year (about 4 months free). 40 hours of footage a
+  month, 1,000 clip exports at up to 4K, file uploads up to 20 GB, priority
+  processing, add 5 more hours for $5 anytime, and analysis workflows
+  included as they ship. For people whose footage is their business.
+
+Every plan: 30-day refund (including annual), cancel anytime, and your files
+stay downloadable — canceling never strands your work.
 
 Signup: https://app.bitterclip.com/sign_up

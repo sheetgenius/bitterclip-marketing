@@ -30,6 +30,59 @@ under a dated entry.
 
 ### Website
 
+- Conversion-focused rework of the landing page (with an external CRO critique
+  pass via Codex): the Clip plan now carries the accent panel, "Recommended"
+  chip, and the only filled CTA (Pro demoted to a plain panel — the $99 price
+  anchors on its own); plan features reworded for cold visitors ("clip
+  exports", "Upload files up to 4 GB", "Add 5 more hours for $5, anytime");
+  risk reversal moved to the point of decision ("30-day refund, annual
+  included · cancel anytime" under each paid CTA, "Resets every month — not a
+  trial" under Free); on mobile the recommended plan stacks first. Added a
+  six-question FAQ section before pricing (after-signup flow, ChatGPT/Claude,
+  human approval, upload limits, editor learning curve, cancellation custody)
+  emitted as FAQPage JSON-LD; a mid-page signup CTA after the live editor
+  demo; a "Pricing" nav link (section anchor renamed `#join` → `#pricing`);
+  nav CTA reworded "Start with one" → "Start free". De-jargoned copy ("index
+  once" → "upload once"; "it suggests" → "ChatGPT suggests"); hero qualifier
+  now leads with "Free to start — 60 minutes of footage a month". Markdown
+  twins and `llms-full.txt` updated to match. Testimonial quotes signed off
+  by Andrew and Rohan on 2026-06-10.
+- Removed Andrew Williams' tentative closing quote ("When they told me $99 a month, I said I’d pay $900 for this") from the footer section.
+- Added Andrew Williams' coaching headshot to the testimonial beneath the hero and his centerpiece speaker chip, and added the Strength & Positions business logo to the testimonial's business link.
+- Added Rohan Karunakaran's optimized profile picture and testimonial quote to the second testimonial slot below the hero, linking to Frontier Studio.
+- Resized the testimonial avatars to a prominent 192px x 192px (w-48 h-48) for a high-spotlight design, and made the layouts responsive (centered stack on mobile, horizontal row on desktop).
+- Redesigned the testimonial band: attribution (name, role, business link) sits centered beneath each 160px portrait (soft coral glow instead of the hard ring); quotes set in muted zinc with the key phrase in white so they skim themselves, with a hanging opening quotation mark, balanced line wrapping.
+- Made the handoff fan-out's clip card playable: it projects the new BitterClip clip-embed primitive (`app.bitterclip.com/embed/clip/:id`, a poster-first iframe-able player — publishing embeds is a Pro-plan feature) serving the real coaching clip, deferred-loaded over the static poster so first paint is unchanged. One click plays inline.
+
+- Consolidated the below-hero narrative from three numbered beats to two: the
+  "it preps itself" and "right in ChatGPT & Claude" sections merged into one
+  centerpiece section — copy on the left, and on the right the live transcript
+  editor (the real embedded component) with two small speaker bubbles (avatar,
+  name, share of conversation) floating above it. The separate static
+  transcript panel and standalone editor block are gone, and the handoff
+  renumbers from 03 to 02. No product claims changed; the same claims are
+  stated once instead of twice.
+- Featured a customer coaching-session clip across the page (Andrew Williams
+  of Strength & Positions coaching his client Adrian): a two-slot testimonial
+  band beneath the hero leads with Andrew's quote (second slot reserved), the
+  centerpiece speaker bubbles read Andrew/Adrian with initial avatars, the
+  handoff fan-out's source is the clip's thumbnail card, and a pricing pull
+  quote sits above the plan ladder. The clip and its 29-second-mark poster
+  are hosted in `public/clips/`. Broadened the centerpiece's example inputs
+  to include training sessions (HTML page and Markdown twin).
+- Replaced the handoff fan-out's photographic clip poster with flat vector art
+  matching the destination logos: an archetypal black media-clip glyph with a
+  centered play button and scrub bar. The poster image asset remains in
+  `public/clips/` but is no longer referenced by the page.
+- Replaced the single $99/month launch-access card with the three-tier pricing
+  ladder: Free ($0, 60 min footage/month, 10 watermarked 1080p exports, 4 GB
+  uploads), Clip ($9/month or $90/year, 10 hrs footage, 150 exports, no
+  watermark, $5 per +5 hr top-ups), and Pro ($99/month or $799/year, 40 hrs
+  footage, 1,000 exports up to 4K, 20 GB uploads, priority processing,
+  analysis workflows as they ship). Updated the index and MCP Markdown twins,
+  `llms-full.txt`, structured-data offers (now an AggregateOffer, $0–$99), and
+  smoke tests to match. Every plan: 30-day refund, cancel anytime, files stay
+  downloadable.
 - Added a YouTube API Services disclosure section to the privacy policy and
   terms of service (HTML pages and Markdown twins), covering the YouTube Terms
   of Service and Google Privacy Policy references, what YouTube connection data

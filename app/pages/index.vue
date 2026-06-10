@@ -2,6 +2,36 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const signupUrl = 'https://app.bitterclip.com/sign_up'
+
+// FAQ: objection handling right before the pricing ask. Answers must stay
+// grounded in shipped behavior (mcp.md, pricing ladder) — no invented features.
+const faqItems = [
+  {
+    q: 'What happens after I sign up?',
+    a: 'Create the free account, connect BitterClip in ChatGPT or Claude, and upload a recording. Ask for the strongest moment and the editor opens with it — check it, trim it, export.',
+  },
+  {
+    q: 'Do I need ChatGPT, or does Claude work too?',
+    a: 'Both. Enable the BitterClip app in ChatGPT, or add it as a Connector in Claude, and sign in. There’s no local setup and nothing to install.',
+  },
+  {
+    q: 'Can the AI post something without me?',
+    a: 'No. You see every clip in the editor before it’s exported, and nothing publishes without your explicit approval.',
+  },
+  {
+    q: 'What can I upload?',
+    a: 'Podcasts, interviews, calls, training sessions — audio or video, in files up to 4 GB (20 GB on Pro).',
+  },
+  {
+    q: 'Do I have to learn a new editor?',
+    a: 'The editor opens right in the chat. Drag across the words in the transcript and the cut follows the audio — if you can highlight text, you can cut a clip.',
+  },
+  {
+    q: 'What happens if I cancel?',
+    a: 'Your files stay downloadable on every plan, and everything has a 30-day refund — annual included.',
+  },
+]
+
 const structuredData = [
   {
     '@context': 'https://schema.org',
@@ -42,6 +72,15 @@ const structuredData = [
       availability: 'https://schema.org/InStock',
     },
   },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
 ]
 
 useHead({
@@ -77,6 +116,12 @@ const heroWidgetHeight = ref(408)
 // src is set only after the page is interactive (deferred) so the cross-origin
 // widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
 const heroSrc = ref('')
+
+// The handoff fan-out's clip card is a live instance of the clip-embed
+// primitive (app.bitterclip.com/embed/clip/:id — poster + play, ~5KB page).
+// Deferred like the other widgets; the static poster underneath is the
+// placeholder until the iframe paints its own (near-identical) rest state.
+const handoffClipSrc = ref('')
 
 const onIframeLoad = () => {
   isIframeLoading.value = false
@@ -132,6 +177,7 @@ onMounted(() => {
     embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
 
     heroSrc.value = 'https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1'
+    handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
   })
 })
 
@@ -180,7 +226,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Made for founders doing their own marketing — and anyone running a recurring show.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Made for founders, podcasters, and coaches doing their own marketing.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile) -->
@@ -272,11 +318,8 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- TESTIMONIAL BAND — two featured customers, right beneath the hero.
-           BOTH quotes are tentative drafts pending sign-off (Andrew checks 2026-06-11;
-           Rohan's rewrite needs his OK too). -->
-      <section aria-label="Customer testimonials" class="relative mb-24">
-        <!-- hairline between the two voices — structure without chrome -->
-        <div class="hidden lg:block absolute left-1/2 top-6 bottom-6 w-px bg-white/5" aria-hidden="true"></div>
+           Both quotes signed off by Andrew and Rohan (2026-06-10). -->
+      <section aria-label="Customer testimonials" class="mb-24">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
           <figure class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-7 sm:gap-9">
@@ -355,11 +398,26 @@ onBeforeUnmount(() => {
 
             <!-- motif row: it suggests → you approve → you post -->
             <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-              <span class="text-[#f28f84]">it suggests</span>
+              <span class="text-[#f28f84]">ChatGPT suggests</span>
               <span class="text-zinc-600">&rarr;</span>
               <span class="text-[#f28f84]">you approve</span>
               <span class="text-zinc-600">&rarr;</span>
               <span class="text-[#f28f84]">you post</span>
+            </div>
+
+            <!-- mid-page CTA: the editor alongside is the peak-interest moment —
+                 give it an action so momentum doesn't die between hero and pricing. -->
+            <div class="mt-8 flex items-center gap-4">
+              <a
+                :href="signupUrl"
+                class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              >
+                <span>Try it with your recording</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </a>
+              <span class="text-[11px] text-zinc-500">Free — 60 minutes a month</span>
             </div>
           </div>
 
@@ -453,14 +511,18 @@ onBeforeUnmount(() => {
             Finished clips — out the door, your way.
           </h2>
           <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-            Trim it, export, done. Post it straight to YouTube, X, Instagram, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — index once, everyone clips.
+            Trim it, export, done. Post it straight to YouTube, X, Instagram, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — upload once, everyone clips.
           </p>
         </div>
 
         <!-- Fan-out: one finished clip on the left arcs to four destinations on the right -->
         <div class="handoff-fan mt-2">
           <!-- SOURCE: the featured customer clip — Andrew coaching Adrian (Lu Xiaojun-style
-               technique work). Andrew's quote lives in the testimonial band beneath the hero. -->
+               technique work) — served LIVE by the clip-embed primitive
+               (/embed/clip/:id), the same surface a Pro customer projects onto
+               their own site. The static poster card paints first and stays as
+               the placeholder; the deferred iframe lays its near-identical rest
+               state over it, and one click plays. -->
           <div class="handoff-source">
             <div class="relative w-[250px] sm:w-[280px]">
               <div class="relative rounded-xl overflow-hidden ring-1 ring-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
@@ -480,6 +542,16 @@ onBeforeUnmount(() => {
                   </span>
                 </div>
                 <span class="absolute bottom-2 right-2.5 font-mono text-[10px] font-semibold text-white/90">1:09</span>
+                <iframe
+                  v-if="handoffClipSrc"
+                  :src="handoffClipSrc"
+                  class="absolute inset-0 w-full h-full"
+                  style="border:0"
+                  title="Watch: Andrew Williams coaching Adrian at Strength & Positions"
+                  loading="lazy"
+                  allow="fullscreen"
+                  allowfullscreen
+                ></iframe>
               </div>
             </div>
           </div>
@@ -553,8 +625,27 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
+      <!-- SECTION 03 — FAQ: catch bottom-funnel objections before the pricing ask.
+           Every answer is grounded in documented product facts (mcp.md / pricing
+           ladder) — no invented capabilities. Also emitted as FAQPage JSON-LD. -->
+      <section id="faq" aria-label="Common questions" class="mb-24 scroll-mt-28">
+        <div class="max-w-2xl mb-10">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">03 — Before you ask</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            The questions everyone asks first.
+          </h2>
+        </div>
+
+        <dl class="grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
+          <div v-for="item in faqItems" :key="item.q">
+            <dt class="text-sm font-semibold text-white mb-1.5">{{ item.q }}</dt>
+            <dd class="text-sm text-zinc-400 leading-relaxed">{{ item.a }}</dd>
+          </div>
+        </dl>
+      </section>
+
       <!-- 7. Close -->
-      <section id="join" class="relative">
+      <section id="pricing" class="relative scroll-mt-28">
         <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
         <div class="max-w-2xl mx-auto text-center mb-8">
@@ -562,89 +653,93 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with clips.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Upload a podcast, interview, or founder call. Walk away with finished clips you've checked yourself — cut right inside ChatGPT.
+            Upload a podcast, interview, or founder call — finished clips you've checked yourself, cut right inside ChatGPT. Start free; upgrade when an hour a month stops being enough.
           </p>
         </div>
 
-        <!-- Customer pull quote — PENDING ANDREW'S SIGN-OFF before this ships -->
-        <figure class="max-w-xl mx-auto text-center mb-10">
-          <blockquote class="text-base sm:text-lg text-zinc-200 italic leading-relaxed">
-            &ldquo;When they told me $99 a month, I said I&rsquo;d pay $900 for this.&rdquo;
-          </blockquote>
-          <figcaption class="mt-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
-            Andrew Williams · Head Coach, Strength &amp; Positions
-          </figcaption>
-        </figure>
 
-        <!-- the ladder: Free / Clip / Pro. Pro carries the accent; every card's CTA
-             lands on the same signup — the app handles plan choice. -->
+        <!-- the ladder: Free / Clip / Pro. Clip carries the accent + the only filled
+             CTA (it's the plan we steer to; $99 Pro anchors the price). Every card's
+             CTA lands on the same signup — the app handles plan choice. -->
         <div class="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto items-stretch text-left">
 
-          <!-- FREE -->
-          <div class="relative rounded-2xl glass-panel p-6 flex flex-col">
+          <!-- FREE (second in the stack on mobile — Clip leads there) -->
+          <div class="relative rounded-2xl glass-panel p-6 flex flex-col max-md:order-2">
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Free</p>
             <p class="font-display text-3xl font-bold text-white">$0</p>
             <p class="text-zinc-400 text-xs mt-1.5 mb-5">Try it for real.</p>
             <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>60 minutes of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 exports at 1080p (watermarked)</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>4 GB uploads</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 clip exports at 1080p (watermarked)</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
             </ul>
             <a
               :href="signupUrl"
               class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >Start free</a>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Resets every month — not a trial</p>
           </div>
 
-          <!-- CLIP -->
-          <div class="relative rounded-2xl glass-panel p-6 flex flex-col">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Clip</p>
+          <!-- CLIP — the recommended plan carries the accent and the only filled CTA.
+               On mobile it jumps to the top of the stack so it's the first card a
+               phone visitor sees. -->
+          <div class="relative rounded-2xl glass-panel-accented glass-reflection corner-ticks p-6 flex flex-col overflow-hidden max-md:order-1">
+            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
+            <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
+            <p class="absolute top-6 right-6 font-mono text-[10px] uppercase tracking-widest text-[#f28f84] border border-[#f28f84]/40 rounded-full px-2.5 py-1">Recommended</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Clip</p>
             <p class="font-display text-3xl font-bold text-white">$9<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
             <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $90/year — 2 months free.</p>
-            <p class="text-zinc-400 text-xs mb-5">For clipping every week.</p>
+            <p class="text-zinc-400 text-xs mb-5">For a weekly show or regular interviews.</p>
             <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 hours of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>150 exports at 1080p, no watermark</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>4 GB uploads</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Top up $5 per +5 hours</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>No watermark — 150 clip exports at 1080p</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Add 5 more hours for $5, anytime</li>
             </ul>
             <a
               :href="signupUrl"
-              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >Start clipping</a>
+              class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              <span>Start clipping</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund, annual included · cancel anytime</p>
           </div>
 
-          <!-- PRO — the accented card -->
-          <div class="relative rounded-2xl glass-panel-accented glass-reflection corner-ticks p-6 flex flex-col overflow-hidden">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
-            <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Pro</p>
+          <!-- PRO — plain panel: the $99 price anchors on its own; the accent lives
+               on Clip, the plan we steer to. -->
+          <div class="relative rounded-2xl glass-panel p-6 flex flex-col max-md:order-3">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Pro</p>
             <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
             <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $799/year — about 4 months free.</p>
             <p class="text-zinc-400 text-xs mb-5">When footage is your business.</p>
             <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 hours of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 exports, up to 4K</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>20 GB uploads</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 clip exports, up to 4K</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 20 GB</li>
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority processing</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Analysis workflows, as they ship</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Top up $5 per +5 hours</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Add 5 more hours for $5, anytime</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Analysis workflows included, as they ship</li>
             </ul>
             <a
               :href="signupUrl"
-              class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <span>Go Pro</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund, annual included · cancel anytime</p>
           </div>
 
         </div>
 
-        <p class="text-center font-mono text-[10px] uppercase tracking-widest text-zinc-500 mt-7">
-          30-day refund on everything, including annual · cancel anytime — your files stay downloadable
+        <p class="text-center text-xs text-zinc-400 mt-7">
+          Your files stay downloadable on every plan — canceling never strands your work.
         </p>
       </section>
 

@@ -35,6 +35,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/#demo">Demo</NuxtLink>
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/mcp">In ChatGPT</NuxtLink>
           <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/docs">How it works</NuxtLink>
+          <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition duration-200" to="/#pricing">Pricing</NuxtLink>
         </div>
         
         <div class="flex items-center gap-4">
@@ -42,7 +43,7 @@ const signupUrl = 'https://app.bitterclip.com/sign_up'
             class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 shadow-md shadow-[#f28f84]/10 btn-glow"
             :href="signupUrl"
           >
-            Start with one
+            Start free
           </a>
         </div>
       </nav>

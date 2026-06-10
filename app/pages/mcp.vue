@@ -425,7 +425,7 @@ export const HOST_ACTION_METHODS = [
       </div>
 
       <p class="text-zinc-500 text-sm font-sans mt-3">
-        Launch access is $99/month. Create an account, then checkout unlocks uploads, renders, publishing, and connector use.
+        Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Create an account, then your plan unlocks uploads, renders, publishing, and connector use.
       </p>
     </div>
 

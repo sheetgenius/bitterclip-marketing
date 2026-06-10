@@ -100,8 +100,15 @@ BitterClip focuses on:
 - YouTube publishing
 - operation from AI chat environments through an agent connector
 
-Launch access is $99/month and includes 100 clip exports a month, the
-speaker-aware transcript workspace, an agent connector, and YouTube publishing.
+Pricing has three plans: Free at $0 (60 minutes of footage a month, 10
+watermarked 1080p clip exports, file uploads up to 4 GB — resets monthly,
+not a trial), Clip — the recommended plan — at $9/month or $90/year (10
+hours of footage a month, 150 clip exports at 1080p with no watermark, file
+uploads up to 4 GB, add 5 more hours for $5 anytime), and Pro at $99/month
+or $799/year (40 hours of footage a month, 1,000 clip exports at up to 4K,
+file uploads up to 20 GB, priority processing, add-on hours, and analysis
+workflows included as they ship). Every plan has a 30-day refund (annual
+included), cancel-anytime, and downloadable file custody.
 
 Signup: https://app.bitterclip.com/sign_up
 
@@ -224,8 +231,8 @@ Claude users can add BitterClip as a Connector and sign in. ChatGPT users can
 enable the BitterClip app. The same tools and editor appear through the MCP App
 surface.
 
-Launch access is $99/month. Checkout unlocks uploads, renders, publishing, and
-connector use.
+Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Your plan
+unlocks uploads, renders, publishing, and connector use.
 
 ## Privacy Policy
 
