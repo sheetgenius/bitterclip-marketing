@@ -203,6 +203,8 @@ const HERO_SCREEN_HEIGHT = 508
 const heroTheme = ref<HeroTheme>(readHeroThemeFromLocation())
 const heroIframe = ref<HTMLIFrameElement | null>(null)
 const editorIframe = ref<HTMLIFrameElement | null>(null)
+const heroPhoneSlot = ref<HTMLElement | null>(null)
+let heroLoadObserver: IntersectionObserver | null = null
 
 const syncHeroThemeFromLocation = (): HeroTheme => {
   const resolvedTheme = readHeroThemeFromLocation()
@@ -213,6 +215,26 @@ const syncHeroThemeFromLocation = (): HeroTheme => {
 // src is set only after the page is interactive (deferred) so the cross-origin
 // widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
 const heroSrc = ref('')
+
+const loadHeroSrc = (url: string) => {
+  if (!heroSrc.value) heroSrc.value = url
+}
+
+const scheduleHeroSrc = (url: string) => {
+  if (window.innerWidth >= 768 || !('IntersectionObserver' in window) || !heroPhoneSlot.value) {
+    loadHeroSrc(url)
+    return
+  }
+  heroLoadObserver?.disconnect()
+  heroLoadObserver = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.55)) {
+      loadHeroSrc(url)
+      heroLoadObserver?.disconnect()
+      heroLoadObserver = null
+    }
+  }, { threshold: [0.55] })
+  heroLoadObserver.observe(heroPhoneSlot.value)
+}
 
 // The handoff fan-out's clip card is a live instance of the clip-embed
 // primitive (app.bitterclip.com/embed/clip/:id — poster + play, ~5KB page).
@@ -338,13 +360,15 @@ onMounted(() => {
     // pre-rendered MP4 to reveal — same contract as the clip-demo above.
     // (Only https origins pass the embed's allowlist, so on plain-http local
     // dev the export reveal is simply absent — everything else still works.)
-    heroSrc.value = `https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`
+    scheduleHeroSrc(`https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
     handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
   })
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('message', handleMessage)
+  heroLoadObserver?.disconnect()
+  heroLoadObserver = null
 })
 </script>
 
@@ -468,7 +492,7 @@ onBeforeUnmount(() => {
                      The slot reserves its measured stable height up front (no CLS),
                      and the live iframe src is set only after the page is idle. A
                      seamless skeleton of the same height holds the space until then. -->
-                <div class="relative w-full" :style="{ height: HERO_SCREEN_HEIGHT + 'px' }">
+                <div ref="heroPhoneSlot" class="relative w-full" :style="{ height: HERO_SCREEN_HEIGHT + 'px' }">
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
                     v-if="!heroSrc"

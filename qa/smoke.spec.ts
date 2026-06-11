@@ -74,6 +74,18 @@ test('previews the light hero phone and forwards the theme to the embed', async 
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=light/)
 })
 
+test('defers the mobile hero recording iframe until the phone is in view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 700 })
+  await page.goto('/')
+  await page.waitForTimeout(1500)
+
+  const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
+  await expect(hero).toHaveCount(0)
+
+  await page.getByTestId('hero-phone-screen').scrollIntoViewIfNeeded()
+  await expect(hero).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
+})
+
 test('renders the developer documentation page and navigation', async ({ page }) => {
   await page.goto('/docs')
 

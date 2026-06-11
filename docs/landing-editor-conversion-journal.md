@@ -254,3 +254,10 @@ P1 watermarked artifact:
   `?clip=` query override retained for testing.
 - Public homepage Markdown and discovery text now state that the demo export is
   branded and app-origin.
+
+P1 mobile loading:
+- Desktop still assigns the live hero recording iframe after idle.
+- Mobile now keeps the phone skeleton reserved and defers assigning the
+  cross-origin hero iframe URL until the phone slot is substantially in view.
+- Smoke coverage verifies the iframe is absent on initial 390px mobile load and
+  appears after scrolling the hero phone into view.
