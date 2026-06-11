@@ -2,6 +2,7 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 
 const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
+const demoClipUrl = 'https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
 type DemoSurface = 'hero' | 'editor'
@@ -324,9 +325,11 @@ onMounted(() => {
     const resolvedHeroTheme = syncHeroThemeFromLocation()
 
     // Build the editor embed URL: base (overridable via ?embed= for local dev) +
-    // the bare editor + a real demo clip the site hosts, so Export plays + downloads.
-    const base = (new URLSearchParams(window.location.search).get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
-    const clip = `${window.location.origin}/clips/day-1-opening.mp4`
+    // the bare editor + an app-origin branded sample clip, so Export plays +
+    // downloads without invoking a live render.
+    const params = new URLSearchParams(window.location.search)
+    const base = (params.get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
+    const clip = params.get('clip') || demoClipUrl
     embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
 
     // The hero embed is the FULL surface: tapping "Open in editor" opens the

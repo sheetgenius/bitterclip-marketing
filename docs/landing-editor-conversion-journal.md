@@ -234,8 +234,6 @@ Fable review follow-up completed:
   hero recording embed and the mid-page editor embed.
 
 Remaining P1/P2 tracks:
-- Pre-render a BitterClip-watermarked demo MP4 and point hero/mid-page demo
-  clips at it.
 - Add a mobile hero tap-to-load gate or screenshot facade to keep the live
   widget off the mobile LCP path.
 - Add a subtle interactivity cue that disappears after first touch.
@@ -243,3 +241,16 @@ Remaining P1/P2 tracks:
   iframe shows the new demo host behavior on `bitterclip.com`.
 - Add server-side/demo-event beaconing if GA client events are not enough for
   funnel attribution.
+
+### 2026-06-11 checkpoint 3 receipt
+
+P1 watermarked artifact:
+- Generated `apps/bitterclip-rails/public/demo/day-1-opening-watermarked.mp4`
+  from the existing public sample clip.
+- The sample is 640x360, 4 seconds, about 60 KB, and visibly branded with
+  `BITTERCLIP DEMO` plus `Sample export · bitterclip.com`.
+- Marketing embeds now default `?clip=` to
+  `https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4`, with a local
+  `?clip=` query override retained for testing.
+- Public homepage Markdown and discovery text now state that the demo export is
+  branded and app-origin.

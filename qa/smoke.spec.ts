@@ -16,6 +16,7 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(navCta).not.toHaveClass(/bg-amber-400/)
   await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=dark/)
+  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
   await expect(page.getByRole('heading', { name: 'Other clippers guess. Yours knows the whole conversation.' })).toBeVisible()
   await expect(page.getByText('72%')).toBeVisible()
   await expect(page.getByText('28%')).toBeVisible()

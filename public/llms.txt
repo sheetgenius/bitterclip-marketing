@@ -12,8 +12,8 @@ and publishing workflows.
 ## Canonical Pages
 
 - [BitterClip home](https://bitterclip.com/): Product overview, positioning,
-  theme-aware live editor demo with safe demo-mode stubs and attributed signup
-  links, pricing, and signup link.
+  theme-aware live editor demo with safe demo-mode stubs, branded sample export,
+  attributed signup links, pricing, and signup link.
 - [How BitterClip works](https://bitterclip.com/docs): Recording -> Moment ->
   Clip explanation, source timing model, media custody, and developer pointer.
 - [MCP and AI assistant workflow](https://bitterclip.com/mcp): How ChatGPT,

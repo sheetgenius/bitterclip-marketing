@@ -37,9 +37,10 @@ The public homepage frames that live surface inside a phone-style chat preview:
 the assistant finds three candidate cuts, opens one in the editor, and invites
 the visitor to tighten the range before posting. The preview runs in demo mode:
 expensive or account-scoped actions use safe stubs, completed demo interactions
-are measured, and signup links carry the visitor's last demo milestone. The
-preview supports dark and light chrome from the same embedded surface so
-BitterClip can verify contrast across assistant hosts.
+are measured, signup links carry the visitor's last demo milestone, and the
+sample export is a BitterClip-branded MP4 served from the app origin. The preview
+supports dark and light chrome from the same embedded surface so BitterClip can
+verify contrast across assistant hosts.
 
 ## Why It Works
 

@@ -94,7 +94,8 @@ The homepage phone preview renders that live surface with theme-aware chat
 chrome, loading state, and embedded recording surface so the same product
 component can be checked in dark and light assistant contexts. The preview runs
 in safe demo mode: expensive or account-scoped actions are stubbed, meaningful
-demo interactions are measured, and signup links carry demo-stage attribution.
+demo interactions are measured, signup links carry demo-stage attribution, and
+the sample export is a BitterClip-branded MP4 served from the app origin.
 
 BitterClip focuses on:
 
