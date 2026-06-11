@@ -61,18 +61,66 @@ Example request:
 }
 ```
 
+## ChatGPT App Directory Submission
+
+The public app should be named BitterClip and submitted from a verified
+BitterClip or Bitter Platform organization.
+
+The app's job is narrow:
+
+- find source-linked clip candidates from a user's recordings
+- open the transcript editor for human review
+- create approved clips
+- export MP4s
+- prepare publishing packages only when the user asks
+
+Public submission fields:
+
+- app name: BitterClip
+- website: https://bitterclip.com
+- privacy policy: https://bitterclip.com/privacy
+- terms of service: https://bitterclip.com/terms
+- support contact: hello@bitterclip.com
+- MCP resource: https://app.bitterclip.com/mcp
+
+Review flow:
+
+- Test the remote MCP server in ChatGPT Developer Mode before submission.
+- Scan the live MCP endpoint in the OpenAI Platform Dashboard after the backend
+  deploy that defines the final tool list.
+- Provide screenshots, test prompts, expected responses, and a demo account
+  with sample recordings in the dashboard.
+
+Submission boundaries:
+
+- Do not publish OAuth secrets, demo credentials, provider payloads, or private
+  review accounts in this repository.
+- Keep billing checkout on BitterClip's own domain; the submitted ChatGPT
+  toolset should not expose checkout or subscription purchase tools.
+- Publishing tools should be labeled as write and open-world actions, and should
+  run only after explicit user approval.
+
 ## Tools
 
-The BitterClip MCP server exposes a small, named set of tools:
+The BitterClip MCP server exposes operations for recordings, transcripts,
+moments, clips, compositions, publishing packages, and account state. This is a
+representative submission-facing list; the OpenAI Platform Dashboard review
+snapshot should come from the live MCP metadata after the backend deploy that
+defines the final toolset.
 
 | Tool | Purpose | Arguments |
 | --- | --- | --- |
 | `recordings_list` | Retrieve ingested recordings for selection. | `{}` |
-| `clips_suggest` | Read the transcript and propose moments worth clipping for a goal. | `{ recording_id, goal }` |
-| `clips_render_candidate_editor` | Mount the interactive `ui://bitterclip/candidate-editor-v4` widget in the chat. | `{ recording_id, candidates }` |
-| `clips_create` | Commit a chosen moment as a durable clip. Timing is derived from audio and selected words. | `{ recording_id, start/end, title }` |
-| `clips_export` | Trigger the render queue to export a captioned MP4. | `{ clip_id }` |
+| `transcript_read` | Read the full diarized, line-numbered transcript so the model can choose useful moments from context. | `{ recording_id }` |
+| `transcript_words_window` | Return word-level timing for selected transcript lines when sub-line trimming is needed. | `{ recording_id, start_line, end_line }` |
+| `open_recording` | Open a recording in the transcript editor with suggested line ranges for review and trimming. | `{ recording_id, selections }` |
+| `moments_create` | Create a saved moment from an explicit time range or transcript unit selection. | `{ recording_id, start/end }` |
+| `clips_create` | Commit a chosen moment as a durable clip. Timing is derived from audio and selected words. | `{ recording_id, start/end, title, idempotency_key }` |
+| `clips_export` | Trigger the render queue to export a captioned MP4. | `{ clip_id, idempotency_key }` |
+| `clips_get_status` | Check whether an export is queued, rendering, ready, or failed. | `{ clip_id, export_id }` |
+| `clips_get_download_url` | Return a short-lived download URL for a completed export. | `{ clip_id, export_id }` |
 | `clips_compose` | Stitch spans from one or more recordings into a single clip, then render. | `{ segments[] }` |
+| `publishing_publish_approval` | Publish a package only after the user has reviewed it and explicitly asks to publish. | `{ approval_id, idempotency_key }` |
 | `account_get_credit_balance` | Check plan credits and subscription limits. | `{}` |
 
 ## Host Bridge
@@ -135,8 +183,10 @@ the conversation.
 
 ChatGPT:
 
-Enable the BitterClip app. The same tools and editor appear through the MCP App
-surface.
+During development, connect the remote MCP server in ChatGPT Developer Mode and
+sign in. After review and publication, users can enable the BitterClip app with
+the same tools and editor.
 
-Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Your plan
-unlocks uploads, renders, publishing, and connector use.
+Account creation, plan management, and checkout stay on BitterClip's own domain.
+The ChatGPT app should focus on source-linked clipping, exports, and explicit
+publishing approvals.

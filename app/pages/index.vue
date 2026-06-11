@@ -1,9 +1,74 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 
-const signupUrl = 'https://app.bitterclip.com/sign_up'
+const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
+type DemoSurface = 'hero' | 'editor'
+type DemoEventName =
+  | 'editor_opened'
+  | 'editor_closed'
+  | 'clip_created'
+  | 'generate_started'
+  | 'generate_completed'
+  | 'export_started'
+  | 'export_revealed'
+  | 'download_clicked'
+  | 'download_failed'
+  | 'publish_status_checked'
+  | 'demo_cta_clicked'
+  | 'external_opened'
+  | 'tool_stubbed'
+
+type WindowWithDemoAnalytics = Window & {
+  gtag?: (...args: unknown[]) => void
+  __bitterclipDemoEvents?: Array<Record<string, unknown>>
+}
+
+const DEMO_EVENT_ALLOWLIST = new Set<DemoEventName>([
+  'editor_opened',
+  'editor_closed',
+  'clip_created',
+  'generate_started',
+  'generate_completed',
+  'export_started',
+  'export_revealed',
+  'download_clicked',
+  'download_failed',
+  'publish_status_checked',
+  'demo_cta_clicked',
+  'external_opened',
+  'tool_stubbed',
+])
+
+const demoStageRank: Record<string, number> = {
+  default: 0,
+  hero_editor_opened: 10,
+  hero_clip_created: 20,
+  hero_generate_started: 24,
+  hero_generate_completed: 28,
+  hero_export_started: 40,
+  hero_export_revealed: 50,
+  hero_download_failed: 54,
+  hero_download_clicked: 60,
+  hero_demo_cta_clicked: 70,
+  editor_clip_created: 30,
+  editor_export_started: 34,
+  editor_export_revealed: 35,
+  editor_download_clicked: 45,
+}
+
+const demoSignupStage = ref('default')
+
+const signupUrl = computed(() => {
+  const url = new URL(signupBaseUrl)
+  url.searchParams.set('utm_source', 'bitterclip.com')
+  url.searchParams.set('utm_medium', 'landing_page')
+  url.searchParams.set('utm_campaign', 'homepage_editor_demo')
+  url.searchParams.set('utm_content', demoSignupStage.value)
+  url.searchParams.set('from', `landing_${demoSignupStage.value}`)
+  return url.toString()
+})
 
 const resolveHeroTheme = (value: string | null): HeroTheme => (
   value === 'light' ? 'light' : DEFAULT_HERO_THEME
@@ -81,7 +146,7 @@ const structuredData = [
       highPrice: '99',
       priceCurrency: 'USD',
       offerCount: 3,
-      url: signupUrl,
+      url: signupBaseUrl,
       availability: 'https://schema.org/InStock',
     },
   },
@@ -136,6 +201,7 @@ const HERO_SCREEN_HEIGHT = 508
 // stable preview path for the light-mode polish without a source edit.
 const heroTheme = ref<HeroTheme>(readHeroThemeFromLocation())
 const heroIframe = ref<HTMLIFrameElement | null>(null)
+const editorIframe = ref<HTMLIFrameElement | null>(null)
 
 const syncHeroThemeFromLocation = (): HeroTheme => {
   const resolvedTheme = readHeroThemeFromLocation()
@@ -161,9 +227,64 @@ const activateDemo = () => {
   demoActivated.value = true
 }
 
+const sourceForMessage = (event: MessageEvent): DemoSurface | null => {
+  if (heroIframe.value && event.source === heroIframe.value.contentWindow) return 'hero'
+  if (editorIframe.value && event.source === editorIframe.value.contentWindow) return 'editor'
+  return null
+}
+
+const setDemoStage = (surface: DemoSurface, name: DemoEventName) => {
+  const next = `${surface}_${name}`
+  if ((demoStageRank[next] || 0) > (demoStageRank[demoSignupStage.value] || 0)) {
+    demoSignupStage.value = next
+  }
+}
+
+const syncDocumentSignupLinks = () => {
+  if (!import.meta.client) return
+  window.dispatchEvent(new CustomEvent('bitterclip:signup-stage', {
+    detail: { stage: demoSignupStage.value, href: signupUrl.value },
+  }))
+  document.querySelectorAll<HTMLAnchorElement>(`a[href="${signupBaseUrl}"], a[href^="${signupBaseUrl}?"]`).forEach((anchor) => {
+    anchor.href = signupUrl.value
+  })
+}
+
+const recordDemoEvent = (surface: DemoSurface, name: DemoEventName, detail: Record<string, unknown>) => {
+  setDemoStage(surface, name)
+  syncDocumentSignupLinks()
+  const win = window as WindowWithDemoAnalytics
+  const eventPayload: Record<string, unknown> = {
+    demo_surface: surface,
+    demo_event: name,
+    demo_signup_stage: demoSignupStage.value,
+  }
+  for (const [key, value] of Object.entries(detail)) {
+    if (['string', 'number', 'boolean'].includes(typeof value)) {
+      eventPayload[`demo_${key}`] = value
+    }
+  }
+  win.__bitterclipDemoEvents = win.__bitterclipDemoEvents || []
+  win.__bitterclipDemoEvents.push({ name, surface, detail, at: Date.now() })
+  if (typeof win.gtag === 'function') {
+    win.gtag('event', `bitterclip_demo_${name}`, eventPayload)
+  }
+}
+
 const handleMessage = (event: MessageEvent) => {
-  if (!event.data || typeof event.data !== 'object' || !('height' in event.data)) return
-  const height = Number((event.data as { height: unknown }).height)
+  if (!event.data || typeof event.data !== 'object') return
+  const data = event.data as { height?: unknown, bitterclip_demo_event?: unknown, detail?: unknown }
+  if (typeof data.bitterclip_demo_event === 'string' && DEMO_EVENT_ALLOWLIST.has(data.bitterclip_demo_event as DemoEventName)) {
+    const surface = sourceForMessage(event)
+    if (!surface) return
+    const detail = data.detail && typeof data.detail === 'object' && !Array.isArray(data.detail)
+      ? data.detail as Record<string, unknown>
+      : {}
+    recordDemoEvent(surface, data.bitterclip_demo_event as DemoEventName, detail)
+    return
+  }
+  if (!('height' in data)) return
+  const height = Number(data.height)
   if (isNaN(height) || height < 200 || height > 1500) return
   // Route by source: the hero phone's screen is FIXED (no layout movement,
   // ever) so its height reports are dropped on the floor — but they must not
@@ -186,6 +307,7 @@ const afterIdle = (fn: () => void) => {
 
 onMounted(() => {
   syncHeroThemeFromLocation()
+  syncDocumentSignupLinks()
 
   // Mobile load gate: on small viewports, deactivate by default to preserve bandwidth
   if (window.innerWidth < 768) {
@@ -336,7 +458,7 @@ onBeforeUnmount(() => {
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment says why you started. Three picks — check each before you post.</p>
+                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment is where you explain why you started. I found three cuts — open one, tighten the range, and check it before you post.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
@@ -553,6 +675,7 @@ onBeforeUnmount(() => {
               <div :style="{ minHeight: `${iframeHeight}px` }">
                 <iframe
                   v-if="demoActivated && embedUrl"
+                  ref="editorIframe"
                   :src="embedUrl"
                   title="BitterClip — the live transcript editor"
                   loading="lazy"

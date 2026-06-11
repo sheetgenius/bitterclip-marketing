@@ -182,6 +182,51 @@ onBeforeUnmount(() => {
       </p>
     </section>
 
+    <!-- Submission readiness -->
+    <section class="mb-20 border-y border-zinc-900 py-10">
+      <p class="font-mono text-[11px] uppercase tracking-widest text-[#f28f84] mb-3 font-bold">
+        ChatGPT App Directory
+      </p>
+      <h3 class="font-display text-2xl sm:text-3xl font-bold text-white mb-4 tracking-tight">
+        Submit it as BitterClip.
+      </h3>
+      <p class="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-3xl font-sans mb-8">
+        The public app should be named <span class="text-zinc-100 font-semibold">BitterClip</span> and submitted from a verified BitterClip or Bitter Platform organization. Its job is narrow: find source-linked clip candidates from a user's recordings, open the transcript editor, create approved clips, export MP4s, and prepare publishing packages only when the user asks.
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="glass-panel-accented glass-reflection p-5 rounded-2xl">
+          <h4 class="font-display font-semibold text-white text-sm mb-3">Public fields</h4>
+          <ul class="space-y-2 text-xs text-zinc-400 font-sans leading-relaxed">
+            <li><span class="text-zinc-200">App name:</span> BitterClip</li>
+            <li><span class="text-zinc-200">Website:</span> https://bitterclip.com</li>
+            <li><span class="text-zinc-200">Privacy:</span> https://bitterclip.com/privacy</li>
+            <li><span class="text-zinc-200">Terms:</span> https://bitterclip.com/terms</li>
+            <li><span class="text-zinc-200">Support:</span> hello@bitterclip.com</li>
+            <li><span class="text-zinc-200">MCP resource:</span> https://app.bitterclip.com/mcp</li>
+          </ul>
+        </div>
+
+        <div class="glass-panel-accented glass-reflection p-5 rounded-2xl">
+          <h4 class="font-display font-semibold text-white text-sm mb-3">Review flow</h4>
+          <ul class="space-y-2 text-xs text-zinc-400 font-sans leading-relaxed">
+            <li>Test the remote MCP server in ChatGPT Developer Mode before submission.</li>
+            <li>Scan the live MCP endpoint in the OpenAI Platform Dashboard after the backend deploy that defines the final tool list.</li>
+            <li>Provide screenshots, test prompts, expected responses, and a demo account with sample recordings in the dashboard.</li>
+          </ul>
+        </div>
+
+        <div class="glass-panel-accented glass-reflection p-5 rounded-2xl">
+          <h4 class="font-display font-semibold text-white text-sm mb-3">Submission boundaries</h4>
+          <ul class="space-y-2 text-xs text-zinc-400 font-sans leading-relaxed">
+            <li>Do not publish OAuth secrets, demo credentials, provider payloads, or private review accounts in this repository.</li>
+            <li>Keep billing checkout on BitterClip's own domain; the submitted ChatGPT toolset should not expose checkout or subscription purchase tools.</li>
+            <li>Publishing tools should be labeled as write and open-world actions, and should run only after explicit user approval.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- Interactive Tabs Header -->
     <div class="flex items-center gap-2.5 overflow-x-auto pb-4 mb-8 custom-scrollbar border-b border-zinc-900/60">
       <button 
@@ -259,7 +304,7 @@ onBeforeUnmount(() => {
           The tools your AI can call
         </h3>
         <p class="text-zinc-400 text-sm leading-relaxed mb-6 font-sans">
-          BitterClip exposes a small, named set of tools. They give your AI control over recordings, clips, and exports — picking the words, never inventing the timing.
+          BitterClip exposes a focused set of operations for recordings, transcripts, moments, clips, compositions, publishing packages, and account state. They let the model work from transcript context while BitterClip keeps timing, rendering, and approval tied to the source media.
         </p>
       </div>
 
@@ -282,36 +327,66 @@ onBeforeUnmount(() => {
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[02]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_suggest</td>
-              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Reads the transcript and proposes moments worth clipping for a given goal.</td>
-              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, goal }</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">transcript_read</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Read the full diarized, line-numbered transcript so the model can choose useful moments from context.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[03]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_render_candidate_editor</td>
-              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Mounts the interactive <code>ui://bitterclip/candidate-editor-v4</code> widget in the chat.</td>
-              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, candidates }</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">transcript_words_window</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Return word-level timing for selected transcript lines when sub-line trimming is needed.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, start_line, end_line }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[04]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_create</td>
-              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Commits a chosen moment as a durable clip. Timing is derived from the audio — never invented by the model.</td>
-              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, start/end (derived from the words picked), title }</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">open_recording</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Open a recording in the transcript editor with suggested line ranges for review and trimming.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, selections }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[05]</td>
-              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_export</td>
-              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Triggers background render queue to export captioned MP4 media asset.</td>
-              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ clip_id }</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">moments_create</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Create a saved moment from an explicit time range or transcript unit selection.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, start/end }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
               <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[06]</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_create</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Commits a chosen moment as a durable clip. Timing is derived from the audio — never invented by the model.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ recording_id, start/end, title, idempotency_key }</td>
+            </tr>
+            <tr class="hover:bg-zinc-900/20 transition-colors">
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[07]</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_export</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Triggers background render queue to export captioned MP4 media asset.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ clip_id, idempotency_key }</td>
+            </tr>
+            <tr class="hover:bg-zinc-900/20 transition-colors">
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[08]</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_get_status</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Check whether an export is queued, rendering, ready, or failed.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ clip_id, export_id }</td>
+            </tr>
+            <tr class="hover:bg-zinc-900/20 transition-colors">
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[09]</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_get_download_url</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Return a short-lived download URL for a completed export.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ clip_id, export_id }</td>
+            </tr>
+            <tr class="hover:bg-zinc-900/20 transition-colors">
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[10]</td>
               <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">clips_compose</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Stitch spans from one or more recordings into a single clip, then render.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{ segments[] }</td>
             </tr>
             <tr class="hover:bg-zinc-900/20 transition-colors">
-              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[07]</td>
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[11]</td>
+              <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">publishing_publish_approval</td>
+              <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Publish a package only after the user has reviewed it and explicitly asks to publish.</td>
+              <td class="p-4 text-[10px] text-zinc-500 font-medium">{ approval_id, idempotency_key }</td>
+            </tr>
+            <tr class="hover:bg-zinc-900/20 transition-colors">
+              <td class="p-4 border-r border-zinc-900/60 text-zinc-600 font-bold">[12]</td>
               <td class="p-4 border-r border-zinc-900/60 font-semibold text-[#f28f84]">account_get_credit_balance</td>
               <td class="p-4 border-r border-zinc-900/60 font-sans text-xs">Check plan credit counts and subscription limits.</td>
               <td class="p-4 text-[10px] text-zinc-500 font-medium">{}</td>
@@ -418,14 +493,14 @@ export const HOST_ACTION_METHODS = [
             <h4 class="font-display font-semibold text-white text-sm">ChatGPT</h4>
           </div>
           <p class="text-zinc-400 text-sm font-sans leading-relaxed">
-            Enable the BitterClip app. Same tools, same editor — it's an MCP App, so it works the same way.
+            During development, connect the remote MCP server in ChatGPT Developer Mode and sign in. After review and publication, users can enable the BitterClip app with the same tools and editor.
           </p>
         </div>
 
       </div>
 
       <p class="text-zinc-500 text-sm font-sans mt-3">
-        Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Create an account, then your plan unlocks uploads, renders, publishing, and connector use.
+        Account creation, plan management, and checkout stay on BitterClip's own domain. The ChatGPT app should focus on source-linked clipping, exports, and explicit publishing approvals.
       </p>
     </div>
 

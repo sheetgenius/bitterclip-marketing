@@ -92,7 +92,9 @@ source, and let the cut follow the audio.
 
 The homepage phone preview renders that live surface with theme-aware chat
 chrome, loading state, and embedded recording surface so the same product
-component can be checked in dark and light assistant contexts.
+component can be checked in dark and light assistant contexts. The preview runs
+in safe demo mode: expensive or account-scoped actions are stubbed, meaningful
+demo interactions are measured, and signup links carry demo-stage attribution.
 
 BitterClip focuses on:
 
@@ -196,16 +198,49 @@ Supported methods:
 - `resources/list` - list ingested audio/video resources
 - `resources/read` - read a recording transcript and clips
 
+## ChatGPT App Directory Submission
+
+The public app should be named BitterClip and submitted from a verified
+BitterClip or Bitter Platform organization.
+
+The app's job is narrow: find source-linked clip candidates from a user's
+recordings, open the transcript editor for human review, create approved clips,
+export MP4s, and prepare publishing packages only when the user asks.
+
+Public submission fields:
+
+- app name: BitterClip
+- website: https://bitterclip.com
+- privacy policy: https://bitterclip.com/privacy
+- terms of service: https://bitterclip.com/terms
+- support contact: hello@bitterclip.com
+- MCP resource: https://app.bitterclip.com/mcp
+
+Review materials such as OAuth credentials, demo credentials, provider payloads,
+private review accounts, screenshots, test prompts, expected responses, and
+sample-workspace credentials belong in the OpenAI Platform Dashboard submission,
+not in this public repository.
+
+Billing checkout stays on BitterClip's own domain. The submitted ChatGPT toolset
+should not expose checkout or subscription purchase tools. Publishing tools
+should be labeled as write and open-world actions, and should run only after
+explicit user approval.
+
 Representative tools:
 
 | Tool | Purpose |
 | --- | --- |
 | `recordings_list` | Retrieve ingested recordings for selection. |
-| `clips_suggest` | Read the transcript and propose moments worth clipping for a goal. |
-| `clips_render_candidate_editor` | Mount the interactive candidate editor widget in chat. |
+| `transcript_read` | Read the full diarized, line-numbered transcript so the model can choose useful moments from context. |
+| `transcript_words_window` | Return word-level timing for selected transcript lines when sub-line trimming is needed. |
+| `open_recording` | Open a recording in the transcript editor with suggested line ranges for review and trimming. |
+| `moments_create` | Create a saved moment from an explicit time range or transcript unit selection. |
 | `clips_create` | Commit a chosen moment as a durable clip. |
 | `clips_export` | Trigger the render queue to export a captioned MP4. |
+| `clips_get_status` | Check whether an export is queued, rendering, ready, or failed. |
+| `clips_get_download_url` | Return a short-lived download URL for a completed export. |
 | `clips_compose` | Stitch spans from one or more recordings into a single clip. |
+| `publishing_publish_approval` | Publish a package only after the user has reviewed it and explicitly asks to publish. |
 | `account_get_credit_balance` | Check plan credits and subscription limits. |
 
 ## Host Bridge
@@ -231,12 +266,14 @@ Canonical event chain:
 BitterClip connects as a remote MCP server: a hosted endpoint with sign-in. It
 does not require local setup, config files, or local processes.
 
-Claude users can add BitterClip as a Connector and sign in. ChatGPT users can
-enable the BitterClip app. The same tools and editor appear through the MCP App
-surface.
+Claude users can add BitterClip as a Connector and sign in. During development,
+ChatGPT users can connect the remote MCP server in Developer Mode and sign in.
+After review and publication, users can enable the BitterClip app with the same
+tools and editor.
 
-Plans run from Free ($0) through Clip ($9/month) to Pro ($99/month). Your plan
-unlocks uploads, renders, publishing, and connector use.
+Account creation, plan management, and checkout stay on BitterClip's own domain.
+The ChatGPT app should focus on source-linked clipping, exports, and explicit
+publishing approvals.
 
 ## Privacy Policy
 

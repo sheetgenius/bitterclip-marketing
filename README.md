@@ -74,6 +74,7 @@ This repository owns:
 - public legal pages at `/privacy` and `/terms`
 - Markdown alternates for every public page route
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
+- public, non-secret ChatGPT app submission context on the `/mcp` page
 - crawlable routes in `public/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
@@ -85,6 +86,7 @@ This repository owns:
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
+  (remote MCP, ChatGPT submission posture, and review boundaries)
 - Privacy policy: [bitterclip.com/privacy](https://bitterclip.com/privacy)
 - Terms of service: [bitterclip.com/terms](https://bitterclip.com/terms)
 - Markdown page mirrors:

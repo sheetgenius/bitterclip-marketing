@@ -12,12 +12,14 @@ and publishing workflows.
 ## Canonical Pages
 
 - [BitterClip home](https://bitterclip.com/): Product overview, positioning,
-  theme-aware live editor demo, pricing, and signup link.
+  theme-aware live editor demo with safe demo-mode stubs and attributed signup
+  links, pricing, and signup link.
 - [How BitterClip works](https://bitterclip.com/docs): Recording -> Moment ->
   Clip explanation, source timing model, media custody, and developer pointer.
 - [MCP and AI assistant workflow](https://bitterclip.com/mcp): How ChatGPT,
   Claude, and MCP hosts can open the transcript editor and call BitterClip
-  tools.
+  tools, including the public ChatGPT App Directory submission posture and
+  dashboard-only review boundaries.
 - [Privacy policy](https://bitterclip.com/privacy): How BitterClip handles
   account data, media, transcripts, clips, connector access, analytics, and
   publishing integrations.
@@ -35,7 +37,8 @@ for agents, crawlers, and public repository indexing.
 - [How it works Markdown](https://bitterclip.com/docs.md): Markdown version of
   the product model.
 - [MCP Markdown](https://bitterclip.com/mcp.md): Markdown version of the MCP and
-  AI assistant workflow page.
+  AI assistant workflow page, including ChatGPT submission fields and the
+  non-secret review checklist.
 - [Privacy Markdown](https://bitterclip.com/privacy.md): Markdown version of the
   privacy policy.
 - [Terms Markdown](https://bitterclip.com/terms.md): Markdown version of the

@@ -30,6 +30,14 @@ under a dated entry.
 
 ### Website
 
+- Added a public ChatGPT App Directory submission packet to the MCP page:
+  app name, public URLs, support contact, MCP resource, review flow, and the
+  public/private boundary for dashboard-only materials such as OAuth secrets,
+  demo credentials, screenshots, test prompts, and sample workspace accounts.
+  Refreshed the representative tool list against the live production operation
+  catalog and documented that billing checkout should stay on BitterClip's own
+  domain rather than appear in the submitted ChatGPT toolset. Markdown twins,
+  `llms.txt`, and `llms-full.txt` now carry the same submission posture.
 - Added a first-class light preview path for the hero phone:
   `?heroTheme=light` (or `?theme=light`) now themes the phone chrome, loading
   skeleton, conversation treatment, and embedded recording surface through the

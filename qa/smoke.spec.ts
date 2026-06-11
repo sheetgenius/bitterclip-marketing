@@ -8,9 +8,10 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   expect(jsonLd).toContain('SoftwareApplication')
   await expect(page.getByRole('heading', { level: 1, name: /Cut your clips/ })).toBeVisible()
   await expect(page.getByText('opens a real editor right in the chat')).toBeVisible()
-  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
-  const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })
+  await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
+  const navCta = page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
+  await expect(navCta).toHaveAttribute('href', /utm_content=default/)
   await expect(navCta).not.toHaveClass(/bg-purple-300/)
   await expect(navCta).not.toHaveClass(/bg-amber-400/)
   await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
@@ -27,6 +28,42 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
+})
+
+test('attributes signup links after hero demo engagement', async ({ page }) => {
+  await page.goto('/')
+
+  const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
+  await expect(hero).toHaveAttribute('src', /embed\/recording/)
+
+  await page.evaluate(() => {
+    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — episode one, cut into clips"]')
+    if (!frame?.contentWindow) throw new Error('hero iframe missing')
+    window.dispatchEvent(new MessageEvent('message', {
+      data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
+      source: frame.contentWindow,
+    }))
+  })
+
+  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toHaveAttribute('href', /utm_content=hero_export_revealed/)
+})
+
+test('attributes signup links after mid-page editor engagement', async ({ page }) => {
+  await page.goto('/')
+
+  const editor = page.locator('iframe[title="BitterClip — the live transcript editor"]')
+  await expect(editor).toHaveAttribute('src', /embed\/clip-demo/)
+
+  await page.evaluate(() => {
+    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — the live transcript editor"]')
+    if (!frame?.contentWindow) throw new Error('editor iframe missing')
+    window.dispatchEvent(new MessageEvent('message', {
+      data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
+      source: frame.contentWindow,
+    }))
+  })
+
+  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toHaveAttribute('href', /utm_content=editor_export_revealed/)
 })
 
 test('previews the light hero phone and forwards the theme to the embed', async ({ page }) => {
@@ -52,7 +89,10 @@ test('renders the MCP specification page and handles tab switches', async ({ pag
 
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/mcp.md"]')).toHaveCount(1)
   await expect(page.getByRole('heading', { level: 2, name: 'How ChatGPT and Claude open the editor.' })).toBeVisible()
-  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
+  await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Submit it as BitterClip.' })).toBeVisible()
+  await expect(page.getByText('MCP resource:')).toBeVisible()
+  await expect(page.getByText('Keep billing checkout on BitterClip')).toBeVisible()
   
   // Verify tabs are available
   await expect(page.getByRole('button', { name: 'Endpoint & methods' })).toBeVisible()
@@ -60,7 +100,8 @@ test('renders the MCP specification page and handles tab switches', async ({ pag
 
   // Switch to catalog tab
   await page.getByRole('button', { name: 'Tools' }).click()
-  await expect(page.getByRole('cell', { name: 'clips_render_candidate_editor' })).toBeVisible()
+  await expect(page.getByRole('cell', { name: 'transcript_read' })).toBeVisible()
+  await expect(page.getByRole('cell', { name: 'publishing_publish_approval' })).toBeVisible()
 
   // Switch to bridge tab
   await page.getByRole('button', { name: 'The bridge' }).click()
@@ -129,6 +170,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFull.ok()).toBeTruthy()
   const llmsFullText = await llmsFull.text()
   expect(llmsFullText).toContain('Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing')
+  expect(llmsFullText).toContain('ChatGPT App Directory Submission')
   expect(llmsFullText).toContain('Terms Of Service')
   expect(llmsFullText).toContain('Repository Boundary')
 })

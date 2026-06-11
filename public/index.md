@@ -33,8 +33,12 @@ together. Drag across words, check the source, and the cut follows the audio.
 This is the same class of editor surface an agent can open when working inside
 AI chat environments.
 
-The public homepage frames that live surface inside a phone-style chat preview.
-The preview supports dark and light chrome from the same embedded surface so
+The public homepage frames that live surface inside a phone-style chat preview:
+the assistant finds three candidate cuts, opens one in the editor, and invites
+the visitor to tighten the range before posting. The preview runs in demo mode:
+expensive or account-scoped actions use safe stubs, completed demo interactions
+are measured, and signup links carry the visitor's last demo milestone. The
+preview supports dark and light chrome from the same embedded surface so
 BitterClip can verify contrast across assistant hosts.
 
 ## Why It Works

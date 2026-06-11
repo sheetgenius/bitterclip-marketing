@@ -1,6 +1,34 @@
 <script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+
 // Global application setup
-const signupUrl = 'https://app.bitterclip.com/sign_up'
+const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
+const signupStage = ref('default')
+
+const signupUrl = computed(() => {
+  const url = new URL(signupBaseUrl)
+  url.searchParams.set('utm_source', 'bitterclip.com')
+  url.searchParams.set('utm_medium', 'landing_page')
+  url.searchParams.set('utm_campaign', 'homepage_editor_demo')
+  url.searchParams.set('utm_content', signupStage.value)
+  url.searchParams.set('from', `landing_${signupStage.value}`)
+  return url.toString()
+})
+
+const updateSignupStage = (event: Event) => {
+  const stage = (event as CustomEvent<{ stage?: unknown }>).detail?.stage
+  if (typeof stage === 'string' && /^[a-z0-9_]+$/.test(stage)) {
+    signupStage.value = stage
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('bitterclip:signup-stage', updateSignupStage)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('bitterclip:signup-stage', updateSignupStage)
+})
 </script>
 
 <template>
