@@ -12,7 +12,7 @@ and publishing workflows.
 ## Canonical Pages
 
 - [BitterClip home](https://bitterclip.com/): Product overview, positioning,
-  live editor demo, pricing, and signup link.
+  theme-aware live editor demo, pricing, and signup link.
 - [How BitterClip works](https://bitterclip.com/docs): Recording -> Moment ->
   Clip explanation, source timing model, media custody, and developer pointer.
 - [MCP and AI assistant workflow](https://bitterclip.com/mcp): How ChatGPT,

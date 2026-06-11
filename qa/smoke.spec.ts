@@ -8,23 +8,32 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   expect(jsonLd).toContain('SoftwareApplication')
   await expect(page.getByRole('heading', { level: 1, name: /Cut your clips/ })).toBeVisible()
   await expect(page.getByText('opens a real editor right in the chat')).toBeVisible()
-  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one' }).first()).toBeVisible()
-  const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one' })
+  await expect(page.locator('a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
+  const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
   await expect(navCta).not.toHaveClass(/bg-purple-300/)
   await expect(navCta).not.toHaveClass(/bg-amber-400/)
+  await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
+  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=dark/)
   await expect(page.getByRole('heading', { name: 'Other clippers guess. Yours knows the whole conversation.' })).toBeVisible()
   await expect(page.getByText('72%')).toBeVisible()
   await expect(page.getByText('28%')).toBeVisible()
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Finished clips — out the door, your way.' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Start free' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Start clipping' })).toBeVisible()
+  await expect(page.locator('#pricing').getByRole('link', { name: 'Start free' })).toBeVisible()
+  await expect(page.locator('#pricing').getByRole('link', { name: 'Start clipping' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Go Pro' })).toBeVisible()
   await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
+})
+
+test('previews the light hero phone and forwards the theme to the embed', async ({ page }) => {
+  await page.goto('/?heroTheme=light')
+
+  await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(253, 253, 252)')
+  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=light/)
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {
@@ -79,7 +88,7 @@ test('renders the terms of service page', async ({ page }) => {
   await expect(page.getByText('Effective date:')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Using BitterClip' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Publishing Integrations' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'hello@bitterclip.com' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'hello@bitterclip.com' }).first()).toBeVisible()
 })
 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {

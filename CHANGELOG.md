@@ -30,6 +30,10 @@ under a dated entry.
 
 ### Website
 
+- Added a first-class light preview path for the hero phone:
+  `?heroTheme=light` (or `?theme=light`) now themes the phone chrome, loading
+  skeleton, conversation treatment, and embedded recording surface through the
+  same embed `theme` parameter while production remains dark by default.
 - The hero phone now runs the FULL composition surface: tapping the widget's
   "Open in editor" opens the real composition editor in-frame — live video
   playback, scrubbing, the full word-level transcript (lazy-loaded, gzipped),

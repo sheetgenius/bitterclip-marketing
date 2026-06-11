@@ -2,6 +2,19 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const signupUrl = 'https://app.bitterclip.com/sign_up'
+type HeroTheme = 'dark' | 'light'
+const DEFAULT_HERO_THEME: HeroTheme = 'dark'
+
+const resolveHeroTheme = (value: string | null): HeroTheme => (
+  value === 'light' ? 'light' : DEFAULT_HERO_THEME
+)
+
+const readHeroThemeFromLocation = (): HeroTheme => {
+  if (!import.meta.client) return DEFAULT_HERO_THEME
+
+  const params = new URLSearchParams(window.location.search)
+  return resolveHeroTheme(params.get('heroTheme') || params.get('theme'))
+}
 
 // FAQ: objection handling right before the pricing ask. Answers must stay
 // grounded in shipped behavior (mcp.md, pricing ladder) — no invented features.
@@ -118,12 +131,18 @@ const demoActivated = ref(true)
 // bubble days, the screen just got roomier.
 // (+20 from the full-bleed pass: the thread's old top padding became screen.)
 const HERO_SCREEN_HEIGHT = 508
-// 'dark' | 'light' — themes the phone chrome AND the embedded widget
-// (?theme= on the embed URL). One constant flips the whole phone together;
-// light is wired and deployable (prod embed honors &theme=light) but held off
-// until the light-mode editor canvas polish lands.
-const HERO_THEME = 'dark'
+// Themes the phone chrome AND the embedded widget (?theme= on the embed URL).
+// Production defaults to dark, while ?heroTheme=light (or ?theme=light) gives a
+// stable preview path for the light-mode polish without a source edit.
+const heroTheme = ref<HeroTheme>(readHeroThemeFromLocation())
 const heroIframe = ref<HTMLIFrameElement | null>(null)
+
+const syncHeroThemeFromLocation = (): HeroTheme => {
+  const resolvedTheme = readHeroThemeFromLocation()
+  heroTheme.value = resolvedTheme
+  return resolvedTheme
+}
+
 // src is set only after the page is interactive (deferred) so the cross-origin
 // widget (which loads video) doesn't compete with first paint / hurt LCP+TBT.
 const heroSrc = ref('')
@@ -166,6 +185,8 @@ const afterIdle = (fn: () => void) => {
 }
 
 onMounted(() => {
+  syncHeroThemeFromLocation()
+
   // Mobile load gate: on small viewports, deactivate by default to preserve bandwidth
   if (window.innerWidth < 768) {
     demoActivated.value = false
@@ -178,6 +199,8 @@ onMounted(() => {
   // height up front (skeleton for the hero, min-height for the editor), so swapping
   // in the real iframe causes no layout shift.
   afterIdle(() => {
+    const resolvedHeroTheme = syncHeroThemeFromLocation()
+
     // Build the editor embed URL: base (overridable via ?embed= for local dev) +
     // the bare editor + a real demo clip the site hosts, so Export plays + downloads.
     const base = (new URLSearchParams(window.location.search).get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
@@ -190,7 +213,7 @@ onMounted(() => {
     // pre-rendered MP4 to reveal — same contract as the clip-demo above.
     // (Only https origins pass the embed's allowlist, so on plain-http local
     // dev the export reveal is simply absent — everything else still works.)
-    heroSrc.value = `https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${HERO_THEME}&clip=${encodeURIComponent(clip)}`
+    heroSrc.value = `https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`
     handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
   })
 })
@@ -272,35 +295,48 @@ onBeforeUnmount(() => {
             <!-- black bezel band -->
             <div class="rounded-[2.8rem] bg-black p-[7px]">
               <!-- screen (themed: ChatGPT dark vs light chrome) -->
-              <div class="relative rounded-[2.45rem] overflow-hidden" :class="HERO_THEME === 'light' ? 'bg-white' : 'bg-black'">
+              <div
+                data-testid="hero-phone-screen"
+                class="relative rounded-[2.45rem] overflow-hidden"
+                :class="heroTheme === 'light' ? 'bg-[#fdfdfc] shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]' : 'bg-black'"
+              >
                 <!-- glass reflection -->
-                <div class="absolute inset-0 z-20 pointer-events-none bg-gradient-to-br from-white/[0.10] via-transparent to-transparent"></div>
+                <div
+                  class="absolute inset-0 z-20 pointer-events-none"
+                  :class="heroTheme === 'light' ? 'bg-gradient-to-br from-white/55 via-transparent to-zinc-950/[0.03]' : 'bg-gradient-to-br from-white/[0.10] via-transparent to-transparent'"
+                ></div>
                 <!-- top fade: content scrolls UNDER the floating chrome and
                      dissolves at the screen edge (the iOS frosted top), instead
                      of stopping below it. Sits above content, below the island. -->
                 <div
                   class="absolute inset-x-0 top-0 h-14 z-[25] pointer-events-none"
-                  :class="HERO_THEME === 'light' ? 'bg-gradient-to-b from-white via-white/75 to-transparent' : 'bg-gradient-to-b from-black via-black/75 to-transparent'"
+                  :class="heroTheme === 'light' ? 'bg-gradient-to-b from-[#fdfdfc] via-[#fdfdfc]/75 to-transparent' : 'bg-gradient-to-b from-black via-black/75 to-transparent'"
                 ></div>
                 <!-- dynamic island -->
-                <div class="absolute top-2.5 left-1/2 -translate-x-1/2 w-[34%] h-[26px] bg-black rounded-full z-30 ring-1 ring-white/5"></div>
+                <div
+                  class="absolute top-2.5 left-1/2 -translate-x-1/2 w-[34%] h-[26px] bg-black rounded-full z-30 ring-1"
+                  :class="heroTheme === 'light' ? 'ring-zinc-950/10' : 'ring-white/5'"
+                ></div>
 
               <!-- conversation thread: full-bleed — the first bubble tucks up
                    under the camera pill (slightly occluded, like real content
                    mid-scroll) and the top fade sells the depth. -->
               <div class="pt-[22px] pb-7 px-3 space-y-3">
                 <!-- user message bubble, right — faithful to ChatGPT per theme:
-                     light mode uses a black bubble with white text; dark mode
-                     the familiar light-gray bubble with dark text. -->
+                     light mode keeps the softer native ChatGPT gray on white;
+                     dark mode preserves the current approved production look. -->
                 <div class="flex justify-end">
-                  <div class="max-w-[88%] rounded-3xl px-3.5 py-2" :class="HERO_THEME === 'light' ? 'bg-[#0d0d0d]' : 'bg-[#f4f4f4]'">
-                    <p class="text-[13px] leading-relaxed text-left" :class="HERO_THEME === 'light' ? 'text-white' : 'text-zinc-900'">Pull the strongest moments from episode one and cut me clips.</p>
+                  <div
+                    class="max-w-[88%] rounded-3xl px-3.5 py-2"
+                    :class="heroTheme === 'light' ? 'bg-[#f4f4f4] border border-zinc-200/80 shadow-sm' : 'bg-[#f4f4f4]'"
+                  >
+                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Pull the strongest moments from episode one and cut me clips.</p>
                   </div>
                 </div>
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] leading-relaxed text-left" :class="HERO_THEME === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment says why you started. Three picks — check each before you post.</p>
+                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment says why you started. Three picks — check each before you post.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
@@ -311,16 +347,17 @@ onBeforeUnmount(() => {
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
                     v-if="!heroSrc"
-                    class="absolute inset-0 rounded-2xl bg-zinc-900/40 border border-zinc-800/60 p-3 flex flex-col gap-3 overflow-hidden"
+                    class="absolute inset-0 rounded-2xl border p-3 flex flex-col gap-3 overflow-hidden"
+                    :class="heroTheme === 'light' ? 'bg-zinc-50 border-zinc-200/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]' : 'bg-zinc-900/40 border-zinc-800/60'"
                     aria-hidden="true"
                   >
-                    <div class="h-24 rounded-xl bg-zinc-800/50 animate-pulse"></div>
-                    <div class="h-3 w-2/3 rounded bg-zinc-800/50 animate-pulse"></div>
-                    <div class="h-3 w-1/2 rounded bg-zinc-800/40 animate-pulse"></div>
+                    <div class="h-24 rounded-xl animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/80' : 'bg-zinc-800/50'"></div>
+                    <div class="h-3 w-2/3 rounded animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/90' : 'bg-zinc-800/50'"></div>
+                    <div class="h-3 w-1/2 rounded animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/70' : 'bg-zinc-800/40'"></div>
                     <div class="mt-1 grid grid-cols-3 gap-2">
-                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
-                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
-                      <div class="h-14 rounded-lg bg-zinc-800/40 animate-pulse"></div>
+                      <div class="h-14 rounded-lg animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/70' : 'bg-zinc-800/40'"></div>
+                      <div class="h-14 rounded-lg animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/70' : 'bg-zinc-800/40'"></div>
+                      <div class="h-14 rounded-lg animate-pulse" :class="heroTheme === 'light' ? 'bg-zinc-200/70' : 'bg-zinc-800/40'"></div>
                     </div>
                   </div>
                   <iframe
@@ -337,7 +374,7 @@ onBeforeUnmount(() => {
               </div>
 
               <!-- home indicator -->
-              <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-[36%] h-[5px] rounded-full z-30" :class="HERO_THEME === 'light' ? 'bg-black/30' : 'bg-white/40'"></div>
+              <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-[36%] h-[5px] rounded-full z-30" :class="heroTheme === 'light' ? 'bg-black/25' : 'bg-white/40'"></div>
               </div>
             </div>
           </div>

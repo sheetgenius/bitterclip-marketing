@@ -90,6 +90,10 @@ The live product surface is a transcript editor where a human can review the
 source media and transcript together. The user can drag across words, check the
 source, and let the cut follow the audio.
 
+The homepage phone preview renders that live surface with theme-aware chat
+chrome, loading state, and embedded recording surface so the same product
+component can be checked in dark and light assistant contexts.
+
 BitterClip focuses on:
 
 - speaker-aware transcript context

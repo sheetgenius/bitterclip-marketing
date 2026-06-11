@@ -33,6 +33,10 @@ together. Drag across words, check the source, and the cut follows the audio.
 This is the same class of editor surface an agent can open when working inside
 AI chat environments.
 
+The public homepage frames that live surface inside a phone-style chat preview.
+The preview supports dark and light chrome from the same embedded surface so
+BitterClip can verify contrast across assistant hosts.
+
 ## Why It Works
 
 Good clips depend on more than interesting words. They depend on who said them,
