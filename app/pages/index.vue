@@ -399,7 +399,7 @@ onBeforeUnmount(() => {
                 decoding="async"
                 class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
               />
-              <figcaption class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
+              <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Andrew Williams</span>
                 <span class="block mt-0.5 text-zinc-500">Head Coach</span>
                 <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener" class="mt-1.5 inline-flex items-center justify-center gap-1.5 text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">
@@ -414,7 +414,7 @@ onBeforeUnmount(() => {
                   />
                   <span>Strength &amp; Positions</span>
                 </a>
-              </figcaption>
+              </div>
             </div>
             <!-- muted base, white key phrase: the quote skims itself. The opening
                  mark hangs in the margin so every line starts flush. -->
@@ -434,11 +434,11 @@ onBeforeUnmount(() => {
                 decoding="async"
                 class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
               />
-              <figcaption class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
+              <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Rohan Karunakaran</span>
                 <span class="block mt-0.5 text-zinc-500">Founder</span>
                 <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener" class="mt-1.5 inline-block text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">Frontier Studio</a>
-              </figcaption>
+              </div>
             </div>
             <blockquote class="font-display text-lg sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
               &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
