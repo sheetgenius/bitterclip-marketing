@@ -261,3 +261,40 @@ P1 mobile loading:
   cross-origin hero iframe URL until the phone slot is substantially in view.
 - Smoke coverage verifies the iframe is absent on initial 390px mobile load and
   appears after scrolling the hero phone into view.
+
+### 2026-06-11 checkpoint 4 receipt
+
+Clip-sheet polish follow-up after visual review:
+- App commit `e0ae6383` fixes the landing-demo clip detail sheet where saved
+  clips could open with no title/description and the Generate button appeared to
+  do nothing.
+- Clip sheets now seed editable title/description from moment text when explicit
+  metadata is missing.
+- Demo-mode Generate now has a local rotating fallback after the fake latency,
+  so repeated clicks still produce plausible copy if the host bridge returns
+  nothing or fails.
+- The landing-demo host gets its own `data-demo-host` treatment: no chat-composer
+  bottom reserve, a tighter preview, visible metadata fields, and actions placed
+  directly below the description.
+- The viewer carousel arrow now zeroes default button padding and absolutely
+  centers its SVG icon inside the circular handle.
+
+Verification run:
+- `/Users/c3po/co/bitterclip/apps/bitterclip-rails`: `RBENV_VERSION=3.3.2 rbenv exec bundle exec rails test test/controllers/embed_controller_test.rb`
+- `/Users/c3po/co/bitterclip`: `bun run build:mcp-widgets`
+- `/Users/c3po/co/bitterclip`: `bun run verify:mcp-widgets-fresh`
+- `/Users/c3po/co/bitterclip`: `bun run verify:mcp-widget`
+- `/Users/c3po/co/bitterclip`: `git diff --check`
+
+Visual/protocol checks:
+- Local recording embed at `http://127.0.0.1:3110/embed/recording/src_1izpuehnl4enjlaugrzn`
+  was driven with Playwright in a 390x700 viewport.
+- Synthetic blank saved moment opened a clip sheet with seeded copy, compact
+  133px preview, visible title/description controls, and actions immediately
+  below the description.
+- Generate click rotated to canned demo copy after latency; captured screenshots:
+  `/tmp/bc-local-clip-sheet-flow-before-generate.png` and
+  `/tmp/bc-local-clip-sheet-flow-after-generate.png`.
+- Synthetic overflowing viewer carousel verified the left-arrow SVG center
+  matched the circular button center exactly (`deltaX=0`, `deltaY=0`); screenshot:
+  `/tmp/bc-local-viewer-arrow-centered-2.png`.
