@@ -298,3 +298,52 @@ Visual/protocol checks:
 - Synthetic overflowing viewer carousel verified the left-arrow SVG center
   matched the circular button center exactly (`deltaX=0`, `deltaY=0`); screenshot:
   `/tmp/bc-local-viewer-arrow-centered-2.png`.
+
+### 2026-06-11 checkpoint 5 receipt
+
+Production deploy and live verification:
+- App release `84a0c647a04686a98bf0d86983d93f334f4f5623` is live on
+  `app.bitterclip.com`; `/up` returned HTTP 200 with
+  `x-bitterclip-release: 84a0c647a04686a98bf0d86983d93f334f4f5623`.
+- Additional app commits after the clip-sheet polish:
+  - `5986f456` allows app-origin demo clip URLs so hero exports keep a real
+    `download_url` instead of becoming a rendered-without-download dead end.
+  - `84a0c647` puts the demo signup CTA immediately after the live Download
+    action and demotes "Export again" below it.
+- The deploy was completed manually after push because no GitHub Actions deploy
+  run appeared, local macOS port 5000 was occupied by AirTunes instead of the
+  production registry, and BitterPass materialization timed out for a small set
+  of existing optional social/MCP secrets. The shipped route used a remote
+  BuildKit builder on the production Docker host, pushed the image to the
+  host-local registry, then ran Kamal with `--skip-push`.
+- No secrets were committed or printed. Missing runtime values were copied from
+  the previous running production container into a temporary deploy env file,
+  then used only for the Kamal rollout.
+
+Live `bitterclip.com` Playwright checks:
+- Hero phone sequence was driven end to end: "Open in editor" -> "Create clip"
+  -> clip detail sheet -> "Generate" -> "Export" -> "Download MP4".
+- Before Generate, the live clip sheet had seeded copy:
+  `titleBefore="My Own Marketing Asset"` and `descBeforeLen=76`.
+- After Generate, demo fallback copy rotated:
+  `titleAfter="The Founder Marketing Asset"` and `descAfterLen=105`; no
+  Generate error appeared, and Export/Done remained visible.
+- Live layout metrics stayed clear of the overlap failure:
+  `descBottom=393`, `exportTop=416`.
+- After Export, the live sheet had
+  `downloadUrl="https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4"`,
+  visible `Download MP4`, visible `Start free with your footage`, and no export
+  error.
+- Clicking `Download MP4` produced a browser download named
+  `My_Own_Marketing_Asset.mp4`, size `61221` bytes.
+- Live viewer carousel left-arrow centering passed after forced strip scroll:
+  `deltaX=0`, `deltaY=0`, button padding `0px`.
+- Screenshots captured:
+  `/tmp/bc-live-final-after-export.png` and `/tmp/bc-live-final-arrow.png`.
+
+Verification run for the final app state:
+- `/Users/c3po/co/bitterclip/apps/bitterclip-rails`: `RBENV_VERSION=3.3.2 rbenv exec bundle exec rails test test/controllers/embed_controller_test.rb`
+- `/Users/c3po/co/bitterclip`: `bun run build:mcp-widgets`
+- `/Users/c3po/co/bitterclip`: `bun run verify:mcp-widgets-fresh`
+- `/Users/c3po/co/bitterclip`: `bun run verify:mcp-widget`
+- `/Users/c3po/co/bitterclip`: `git diff --check`
