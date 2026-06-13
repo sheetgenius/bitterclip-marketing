@@ -259,9 +259,7 @@ body {
 
 /* Smoked Glass Backdrops and Inset Reflections */
 .hero-backdrop-mask {
-  background-image: 
-    radial-gradient(circle at 50% 30%, rgba(6, 6, 8, 0.25) 10%, #080909 75%),
-    url('/images/operational_glass_backdrop.png');
+  background-image: radial-gradient(circle at 50% 30%, rgba(6, 6, 8, 0.25) 10%, #080909 75%);
   background-size: cover;
   background-position: center 30%;
 }
@@ -288,9 +286,7 @@ body {
 }
 
 .cta-backdrop-mask {
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(6, 6, 8, 0.4) 10%, rgba(6, 6, 8, 0.9) 90%),
-    url('/images/operational_glass_backdrop.png');
+  background-image: radial-gradient(circle at 50% 50%, rgba(6, 6, 8, 0.4) 10%, rgba(6, 6, 8, 0.9) 90%);
   background-size: cover;
   background-position: center;
 }
