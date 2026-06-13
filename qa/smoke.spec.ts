@@ -16,7 +16,7 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(navCta).not.toHaveClass(/bg-amber-400/)
   await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=dark/)
-  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /editor=1/)
+  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).not.toHaveAttribute('src', /editor=1/)
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
   await expect(page.getByRole('heading', { name: 'Other clippers guess. Yours knows the whole conversation.' })).toBeVisible()
   await expect(page.getByText('72%')).toBeVisible()
@@ -84,7 +84,7 @@ test('defers the mobile hero recording iframe until the phone is in view', async
   await expect(hero).toHaveCount(0)
 
   await page.getByTestId('hero-phone-screen').scrollIntoViewIfNeeded()
-  await expect(hero).toHaveAttribute('src', /editor=1/)
+  await expect(hero).not.toHaveAttribute('src', /editor=1/)
   await expect(hero).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
 })
 
