@@ -354,13 +354,12 @@ onMounted(() => {
     const clip = params.get('clip') || demoClipUrl
     embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
 
-    // The hero embed is the FULL surface: tapping "Open in editor" opens the
-    // real composition editor in-frame (the embed host grants display-mode and
-    // lazy-loads the transcript). ?clip= gives its stubbed export a real
-    // pre-rendered MP4 to reveal — same contract as the clip-demo above.
+    // The hero embed starts directly in the full composition editor. ?clip=
+    // gives its stubbed export a real pre-rendered MP4 to reveal — same
+    // contract as the clip-demo above.
     // (Only https origins pass the embed's allowlist, so on plain-http local
     // dev the export reveal is simply absent — everything else still works.)
-    scheduleHeroSrc(`https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
+    scheduleHeroSrc(`https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&editor=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
     handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
   })
 })
