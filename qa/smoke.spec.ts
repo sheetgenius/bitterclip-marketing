@@ -9,12 +9,10 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: /Cut your clips/ })).toBeVisible()
   await expect(page.getByText('opens a real editor right in the chat')).toBeVisible()
   await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
-  await expect(page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })).toBeVisible()
-  const navCta = page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })
+  const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })
+  await expect(navCta).toBeVisible()
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
-  await expect(navCta).toHaveAttribute('href', /utm_content=default/)
-  await expect(navCta).not.toHaveClass(/bg-purple-300/)
-  await expect(navCta).not.toHaveClass(/bg-amber-400/)
+  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
   await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=dark/)
   await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).not.toHaveAttribute('src', /editor=1/)
@@ -48,7 +46,7 @@ test('attributes signup links after hero demo engagement', async ({ page }) => {
     }))
   })
 
-  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toHaveAttribute('href', /utm_content=hero_export_revealed/)
+  await expect(page.getByRole('link', { name: /Clip your first recording/ })).toHaveAttribute('href', /utm_content=hero_export_revealed/)
 })
 
 test('attributes signup links after mid-page editor engagement', async ({ page }) => {
@@ -66,7 +64,7 @@ test('attributes signup links after mid-page editor engagement', async ({ page }
     }))
   })
 
-  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toHaveAttribute('href', /utm_content=editor_export_revealed/)
+  await expect(page.getByRole('link', { name: /Clip your first recording/ })).toHaveAttribute('href', /utm_content=editor_export_revealed/)
 })
 
 test('previews the light hero phone and forwards the theme to the embed', async ({ page }) => {
@@ -82,7 +80,7 @@ test('defers the mobile hero recording iframe until the phone is in view', async
   await page.waitForTimeout(1500)
 
   await expect(page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })).toBeVisible()
-  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toBeVisible()
+  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
 
   const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
   await expect(hero).toHaveCount(0)

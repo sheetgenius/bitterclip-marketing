@@ -77,7 +77,8 @@ the account doorway.
 ## Decision
 
 The element of least surprise wins. Ship the conventional top-nav pattern first:
-a plain `Sign in` text link beside the existing filled `Start free` CTA.
+a single `Sign in` button. Keep signup CTAs in the page body where acquisition
+intent is already being explained.
 
 Do not add hero account microcopy, a decision tree, or extra explanatory UI in
 the first pass. The point is not to persuade returning users; it is to give them
@@ -89,19 +90,18 @@ Ship this as one small conversion-safe change:
 
 1. Add `signInUrl = "https://app.bitterclip.com/sign_in"` to the global app
    shell.
-2. Add a `Sign in` link in the header immediately before `Start free`.
-   - Desktop: visible text link, same visual family as other nav links.
+2. Replace the top-bar account controls with a single `Sign in` link.
+   - Desktop: visible filled button, using the existing top-bar CTA treatment.
    - Mobile: keep `Sign in` visible even if product nav links collapse or hide.
-   - `Start free` remains the only filled button.
+   - Remove `Start free` from the top bar so there is only one header button.
 3. Keep the sign-in URL clean and exact: `https://app.bitterclip.com/sign_in`.
 4. Leave the existing signup attribution untouched.
 
 Acceptance criteria:
 
-- A first-viewport desktop screenshot visibly contains both `Sign in` and
-  `Start free`.
-- A 390px mobile screenshot still exposes `Sign in` and `Start free` without
-  horizontal overflow.
+- A first-viewport desktop screenshot visibly contains one account button:
+  `Sign in`.
+- A 390px mobile screenshot still exposes `Sign in` without horizontal overflow.
 - The sign-in URL is exactly `https://app.bitterclip.com/sign_in`.
 - No signup CTA loses the existing `utm_content` / `from=landing_*` attribution.
 - The smoke test asserts the header sign-in link.
@@ -124,7 +124,7 @@ hero's comprehension load.
 
 Test A: header-only sign-in
 
-- Header: `Sign in` text link + filled `Start free`.
+- Single header button: `Sign in`.
 - No footer or hero account microcopy.
 - This isolates whether the missing navigational affordance caused the issue.
 
