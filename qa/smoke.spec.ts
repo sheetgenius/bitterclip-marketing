@@ -9,6 +9,7 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: /Cut your clips/ })).toBeVisible()
   await expect(page.getByText('opens a real editor right in the chat')).toBeVisible()
   await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
+  await expect(page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })).toBeVisible()
   const navCta = page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
   await expect(navCta).toHaveAttribute('href', /utm_content=default/)
@@ -79,6 +80,9 @@ test('defers the mobile hero recording iframe until the phone is in view', async
   await page.setViewportSize({ width: 390, height: 700 })
   await page.goto('/')
   await page.waitForTimeout(1500)
+
+  await expect(page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })).toBeVisible()
+  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' })).toBeVisible()
 
   const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
   await expect(hero).toHaveCount(0)

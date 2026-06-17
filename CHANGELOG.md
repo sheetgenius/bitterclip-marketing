@@ -30,6 +30,12 @@ under a dated entry.
 
 ### Website
 
+- Added a focused sign-in and conversion study after user feedback that the
+  public landing page did not make returning-user sign-in obvious. The study
+  verifies the live auth routes (`/sign_in` works, `/login` 404s), recommends
+  a conventional secondary Sign in link in the top nav beside the existing
+  Start free CTA, and defines screenshot, smoke-test, attribution, and mobile
+  guardrails for the first implementation slice.
 - Added a public ChatGPT App Directory submission packet to the MCP page:
   app name, public URLs, support contact, MCP resource, review flow, and the
   public/private boundary for dashboard-only materials such as OAuth secrets,

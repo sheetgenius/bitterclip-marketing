@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 // Global application setup
 const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
+const signInUrl = 'https://app.bitterclip.com/sign_in'
 const signupStage = ref('default')
 
 const signupUrl = computed(() => {
@@ -66,7 +67,13 @@ onBeforeUnmount(() => {
           <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#pricing">Pricing</NuxtLink>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <a
+            class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-full px-2.5 py-1.5 text-xs font-semibold text-zinc-300 transition duration-200 hover:bg-white/[0.06] hover:text-white"
+            :href="signInUrl"
+          >
+            Sign in
+          </a>
           <a
             class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] active:scale-[0.97] transition duration-200 shadow-lg shadow-[#f28f84]/20 hover:shadow-[#f28f84]/40"
             :href="signupUrl"
