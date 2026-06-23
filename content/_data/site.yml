@@ -1,0 +1,15 @@
+# Global facts that recur everywhere. Read by SignupCta, AssistantConnectionIntro,
+# SupportContact, and meta/og defaults. NO plans/prices here (pricing is in flux) —
+# pricing_url just points creators to where pricing is shown, never an inline number.
+# Values below are VERIFIED against the product repo (config/routes.rb: the sign_up and
+# mcp routes) and the existing marketing pages (index.vue's #pricing section, icon.png).
+signup_url: https://app.bitterclip.com/sign_up
+# Pricing lives on the marketing homepage's pricing section (the #pricing anchor used
+# by the site nav); there is no separate /pricing page or app-side pricing route.
+pricing_url: https://bitterclip.com/#pricing
+support_email: hello@bitterclip.com
+mcp_resource_url: https://app.bitterclip.com/mcp
+app_origin: https://app.bitterclip.com
+# Social card. /icon.png is the only branded raster asset shipped in public/ today;
+# swap this for a dedicated wide OG image (1200x630) once one is added to public/.
+og_image_default: /icon.png

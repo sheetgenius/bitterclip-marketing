@@ -1,0 +1,58 @@
+# Per-connector permissions, single-sourced from the app.
+# `scope` (raw OAuth string) is stored ONLY for cross-checking against
+# apps/bitterclip-rails/app/models/channel_connection.rb — it is NEVER rendered to creators.
+# The ConnectorScopes component renders ONLY plain_label.
+# Scope strings + required/optional flags are VERIFIED against channel_connection.rb
+# (YOUTUBE_REQUIRED_SCOPES, X_REQUIRED_SCOPES, LINKEDIN_REQUIRED_SCOPES).
+scopes:
+  # --- YouTube ---
+  - connector: youtube
+    scope: https://www.googleapis.com/auth/youtube.upload
+    plain_label: "Upload your finished clips to your channel"
+    required: true
+  - connector: youtube
+    scope: https://www.googleapis.com/auth/youtube.readonly
+    plain_label: "See your channel so it can post to the right place"
+    required: true
+  - connector: youtube
+    scope: https://www.googleapis.com/auth/yt-analytics.readonly
+    plain_label: "Read how your videos are doing"
+    required: false
+  # --- X ---
+  - connector: x
+    scope: tweet.write
+    plain_label: "Post to your X feed"
+    required: true
+  - connector: x
+    scope: media.write
+    plain_label: "Attach your clip's video to the post"
+    required: true
+  - connector: x
+    scope: tweet.read
+    plain_label: "See your posts so it can build threads correctly"
+    required: true
+  - connector: x
+    scope: users.read
+    plain_label: "Read your basic account info"
+    required: true
+  - connector: x
+    scope: offline.access
+    plain_label: "Stay connected so you don't have to reconnect each time"
+    required: true
+  # --- LinkedIn ---
+  - connector: linkedin
+    scope: w_member_social
+    plain_label: "Post to your own feed"
+    required: true
+  - connector: linkedin
+    scope: w_member_social_feed
+    plain_label: "Add a comment to your own post"
+    required: true
+  - connector: linkedin
+    scope: openid
+    plain_label: "Confirm who you are when you connect"
+    required: true
+  - connector: linkedin
+    scope: profile
+    plain_label: "Read your basic profile"
+    required: true

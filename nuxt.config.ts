@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
@@ -7,6 +8,14 @@ const gaMeasurementId = 'G-JRVVJM49G7'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
+
+  modules: [
+    '@nuxt/content',
+    // Local module: generates the machine-readable surfaces (.md twins, llms.txt,
+    // llms-full.txt, sitemap.xml, changelog RSS) from the content collection at build
+    // time so they are never hand-maintained. See modules/generated-surfaces.ts.
+    fileURLToPath(new URL('./modules/generated-surfaces', import.meta.url)),
+  ],
 
   css: ['~/assets/css/main.css'],
 

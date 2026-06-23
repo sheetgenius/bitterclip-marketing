@@ -1,0 +1,102 @@
+# A CURATED, creator-facing SUBSET of the MCP tool catalog.
+# The live server has ~80 operations (operation_catalog.rb); this is intentionally
+# small and the McpTools component LABELS it as a subset. Do not present as the full list.
+# open_workspace is the primary editor-opener (the aha-moment tool).
+# open_recording is deliberately OMITTED from the creator narrative (forbidden for clip suggestion).
+# Names + behavior verified against apps/bitterclip-rails/app/services/bitterclip/operation_catalog.rb
+# and mcp_server.rb instructions.
+#
+# Each row leads with a plain "ask" phrase (what a creator would say); the raw tool
+# `name` is internal and is NOT rendered as the primary column (creators shouldn't have
+# to read snake_case). Component renders `ask` + `plain_purpose`.
+tools:
+  - name: open_workspace
+    ask: "Open my episode with a strong clip picked"
+    group: clip
+    plain_purpose: "Opens an episode in the transcript editor right inside the chat, with a strong moment already selected for you to review, trim, or swap. This is the quick win: you go from a long recording to a clip in front of you without leaving the conversation."
+    primary: true
+    creator_facing: true
+  - name: episodes_list
+    ask: "Find the right episode"
+    group: browse
+    plain_purpose: "Lists your episodes so the assistant can find the one you mean."
+    primary: false
+    creator_facing: true
+  - name: episode_read
+    ask: "Read the transcript"
+    group: browse
+    plain_purpose: "Reads the full transcript of an episode so the assistant understands what was said before it suggests anything."
+    primary: false
+    creator_facing: true
+  - name: episode_zoom
+    ask: "Find the cleanest cut points"
+    group: browse
+    plain_purpose: "Looks closely at one stretch of an episode to find clean spots to start and end a clip, so a cut never lands mid-word."
+    primary: false
+    creator_facing: true
+  - name: open_uploader
+    ask: "Give me an upload link"
+    group: ingest
+    plain_purpose: "Hands you a link to drop in a video or audio file. It uploads to BitterClip and starts transcribing on its own."
+    primary: false
+    creator_facing: true
+  - name: recordings_create_from_url
+    ask: "Add a recording from a link"
+    group: ingest
+    plain_purpose: "Adds a recording from a public link, instead of a file on your computer."
+    primary: false
+    creator_facing: true
+  - name: episode_create
+    ask: "Save the clip we picked"
+    group: clip
+    plain_purpose: "Saves the clip you and the assistant settled on. This just stores your choice; it doesn't render a video yet and doesn't use an export credit."
+    primary: false
+    creator_facing: true
+  - name: episode_render
+    ask: "Render the finished video"
+    group: export
+    plain_purpose: "Turns the clip you picked into a finished video you can download, with captions burned in by default. A new render uses one export credit; asking again while it's still rendering, or when it's already done, doesn't spend another."
+    primary: false
+    creator_facing: true
+  - name: episode_status
+    ask: "Is my video ready yet?"
+    group: export
+    plain_purpose: "Checks how a render is coming along and hands back the download link once it's ready."
+    primary: false
+    creator_facing: true
+  - name: youtube_get_connection_status
+    ask: "Is my YouTube connected?"
+    group: connections
+    plain_purpose: "Checks whether your YouTube channel is connected before publishing there."
+    primary: false
+    creator_facing: true
+  - name: linkedin_get_connection_status
+    ask: "Is my LinkedIn connected?"
+    group: connections
+    plain_purpose: "Checks whether your LinkedIn account is connected before posting."
+    primary: false
+    creator_facing: true
+  - name: x_get_connection_status
+    ask: "Is my X connected?"
+    group: connections
+    plain_purpose: "Checks whether your X account is connected before posting."
+    primary: false
+    creator_facing: true
+  - name: publishing_prepare_publish_set
+    ask: "Get this ready to post"
+    group: publish
+    plain_purpose: "Stages a finished clip for your connected channels: YouTube, LinkedIn, and X. Depending on how the project is set up, it either posts on its own or waits for your go-ahead first."
+    primary: false
+    creator_facing: true
+  - name: publishing_publish_approval
+    ask: "Approve and post it"
+    group: publish
+    plain_purpose: "Posts a staged clip after you've looked it over and given the go-ahead."
+    primary: false
+    creator_facing: true
+  - name: clips_set_embed
+    ask: "Make a shareable link"
+    group: share
+    plain_purpose: "Publishes a finished clip as a shareable player you can embed on any website, if your plan includes it."
+    primary: false
+    creator_facing: true

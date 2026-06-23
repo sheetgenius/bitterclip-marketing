@@ -1,0 +1,31 @@
+# Connector status + capability matrix. Single source for "what works today" so the
+# capped Instagram reality and the LinkedIn reconnect note can't drift.
+# VERIFIED against apps/bitterclip-rails/app/models/channel_connection.rb (publish scopes)
+# and docs/build/instagram-distribution-capped.md: youtube/x/linkedin = connectable +
+# auto_publish true (post after approval or in auto mode); instagram = connectable
+# (Connect button exists, it authorizes) but auto_publish=false/capped, manual_handoff=true.
+# Owner reviews on any connector-manifest change.
+connectors:
+  - connector: youtube
+    status: connectable
+    auto_publish: true
+    manual_handoff: false
+    reconnect_note: "If your YouTube connection ever shows Reconnect required, sign in again with the same channel access to keep posting."
+  - connector: x
+    status: connectable
+    auto_publish: true
+    manual_handoff: false
+    reconnect_note: "If X shows Reconnect required, sign in again to renew your posting access. Your earlier setup stays in place."
+  - connector: linkedin
+    status: connectable
+    auto_publish: true
+    manual_handoff: false
+    reconnect_note: "If you connected LinkedIn a while ago, a quick Reconnect grants the newer posting permission LinkedIn now requires before your clips can reach your feed."
+  # Instagram's reconnect_note doubles as the one-line capped summary rendered by
+  # InstagramCappedNote.vue (Instagram has no real "reconnect" state since direct posting
+  # is capped). Keep it true in both readings: connecting works, direct posting doesn't.
+  - connector: instagram
+    status: capped
+    auto_publish: false
+    manual_handoff: true
+    reconnect_note: "Connecting Instagram signs you in just fine, but Meta doesn't let BitterClip post to your feed for you yet. Download your clip and post it from the Instagram app on your phone to get clips up today."

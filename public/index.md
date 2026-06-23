@@ -21,9 +21,10 @@ to post.
 
 1. Recording: upload the source.
 2. Speakers: know who said what.
-3. Moments: ask your agent to find the best parts.
-4. Verify: check source context.
-5. Export: post a finished MP4.
+3. Episode: one stitched transcript timeline you (or your agent) work in.
+4. Clips: ask your agent to find the strongest parts of the episode.
+5. Verify: check source context.
+6. Export: post a finished MP4.
 
 ## Live Product Surface
 
@@ -50,7 +51,7 @@ what came before, what came after, and whether the moment stands on its own.
 BitterClip structures the conversation with:
 
 - speaker-aware transcript context
-- source-linked moments
+- source-linked clips
 - human verification before export
 - recurring memory for speakers, clips, topics, and prior show context
 
@@ -71,7 +72,7 @@ Example selected moment:
 Generic AI clippers often provide opaque suggestions, flat transcripts, weak
 speaker memory, and limited source context.
 
-BitterClip focuses on source-linked moments, speaker-aware transcripts,
+BitterClip focuses on source-linked clips, speaker-aware transcripts,
 confirmed recurring speakers, transcript and media verification, exports, and
 publishing.
 
