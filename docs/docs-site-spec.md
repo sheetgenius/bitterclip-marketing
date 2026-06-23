@@ -99,7 +99,8 @@ content/
   getting-started/
     what-is-bitterclip.md
     your-first-clip.md
-    recordings-episodes-clips.md   (migrate from docs.vue: Recording → Moment → Clip)
+    recordings-episodes-clips.md   (migrate docs.vue, but update to current nouns:
+                                    Recording → Episode → Clip; docs.vue's "Moment" is stale)
   assistants/                      "Use BitterClip from your AI assistant"
     overview.md                    (migrate/condense from mcp.vue)
     connect-chatgpt.md
@@ -114,8 +115,8 @@ content/
     <YYYY-MM-DD>-<slug>.md          (one entry per change; see §5)
 ```
 
-Sidebar nav groups = top-level folders, ordered + titled via frontmatter / a
-`.navigation.yml` per folder (Docus convention).
+Sidebar nav groups = top-level folders, ordered + titled via frontmatter and
+`@nuxt/content`'s navigation config.
 
 **Connector-guide content is single-sourced where possible.** The "what scopes / what
 permissions" facts should not drift from the app. Either (a) hand-authored now and kept in
@@ -148,13 +149,17 @@ summary: "One-line shown in the feed and RSS."
 
 Public repo + agent-first ethos → docs are first-class machine-readable:
 
-- **Raw `.md` twin per page:** `…/youtube` ↔ `…/youtube.md` returns the source markdown
-  (frontmatter + body). Generalizes the existing `/docs.md`, `/mcp.md` alternate links into a
-  rule for every page. *(This is functional plumbing — a small server route/module — and is
-  explicitly exempt from the "no custom" branding rule in §2; the no-custom rule governs
-  CSS/layout/theme, not the agent surface, which is a core requirement.)*
-- **`/llms.txt`** (and `/docs/llms-full.txt`): an index + concatenated corpus of the docs for
-  LLM ingestion, following the emerging convention.
+- **Raw `.md` twin per page — built, not served.** This site has **no server** (Dockerfile
+  = `nuxt generate` → nginx static). The existing `/docs.md`, `/mcp.md`, `/llms.txt`,
+  `/sitemap.xml` are **hand-written static files in `public/`**, routed by a bespoke
+  `nginx.conf`, and already drifting from their `.vue` sources. So a `.md` twin for every page
+  must be a **build-time prerender artifact** (a Nitro prerender/build hook that emits one
+  `.md` per content page) plus nginx routing — NOT a runtime route, and NOT "small plumbing."
+  Real P0 work.
+- **`/llms.txt`, `/llms-full.txt`, `/sitemap.xml`, and the changelog RSS must become
+  GENERATED** from the content collection at prerender time. They are hand-maintained today
+  and will rot the moment docs become N markdown files. RSS especially cannot be a runtime
+  route (no server) — emit it in the prerender hook.
 - **Structured frontmatter** on every file (title, description, section, order, updated,
   tags) so the corpus is queryable, not just prose.
 - Stretch: BitterClip's own MCP/agent can fetch these `.md` endpoints to answer "how do I
@@ -185,6 +190,36 @@ Public repo + agent-first ethos → docs are first-class machine-readable:
 - **Connector-guide single-sourcing:** hand-authored + review now, or later generated from
   the app's connector manifest? (Avoids scope/permission drift.)
 - **Verify** `@nuxt/content` v3 plays cleanly with the repo's Nuxt 4.4 + Tailwind v4 at P0.
+  (Review confirms v3 works under `nuxt generate` — it ships a SQLite-WASM dump queried
+  client-side, so search needs no server.)
+
+## 9. Review corrections (Opus deep review, 2026-06-24)
+
+A grounded review (`docs/docs-site-spec.review.md`) verified the spec against the real repo:
+strategy sound (subdir `/docs` SEO call correct; `@nuxt/content` works under static generate;
+hand-roll defensible), but the build is **under-scoped**. Bind these before P0:
+
+- **Static reality (BLOCKER — fixed in §6):** no server (`nuxt generate` → nginx). The
+  `.md`/`llms.txt`/sitemap/RSS surfaces are prerender-generated artifacts + `nginx.conf`
+  routing, not runtime routes. Current `public/*.md` + `llms*.txt` are hand-written + drifting.
+- **`mcp.vue` is NOT prose.** It's a live, stateful iframe embed of the real editor
+  (postMessage auto-resize, client URL building, mobile gate) — the measurable marketing-hero
+  demo. Migrate it to an **MDC component embedded in markdown**, don't flatten to text. Its
+  tools table is also **stale** (`recordings_list`/`clips_create`); rewrite to the live
+  episode-first primitives (`episode_read`/`episode_edit`/…).
+- **Hand-roll is bigger than "a layout + a couple components."** `@nuxt/content` gives *data*,
+  not styled/accessible UI. To hit the Mintlify/Stripe/Linear bar, hand-build: sidebar + mobile
+  drawer, scroll-spy TOC, prev/next, a **prose stylesheet** (no `@tailwindcss/typography` in
+  this repo), Shiki code blocks + copy, Callout/Steps/Tabs/Card components, ⌘K search overlay.
+  ~a dozen pieces. Adjust P0/P4 scope accordingly.
+- **Fonts declared ≠ loaded.** `main.css` `@theme` declares Manrope + IBM Plex Mono, but only
+  Caveat is loaded. Typography bar is unreachable until they're actually loaded — fix in P0.
+- **Redirects under-specified.** `/docs` *changes meaning* (explainer → overview), not just
+  location; the `/docs` + `/mcp` 301s live in `nginx.conf` and must reconcile with canonicals
+  + the generated sitemap.
+- **Add:** an OG-image story and a docs CI / link-check.
+
+Full severity-tagged findings + 10-item punch list: `docs/docs-site-spec.review.md`.
 - **Connector-guide single-sourcing:** hand-authored + review now, or generated from the
   app's connector manifest later? (Avoids scope/permission drift.)
 - **Nuxt Content v3 + Docus version compatibility** with the repo's Nuxt 4.4 — verify exact
