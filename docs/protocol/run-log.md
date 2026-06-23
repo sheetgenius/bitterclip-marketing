@@ -91,3 +91,23 @@ RSS auto-discovers any future `section: changelog` page.
   fires after all HTML/`.md`-route prerendering, with `nitro.options.output.publicDir` resolved.
 - Retiring a page means hunting its inbound links too — the crawler fails the build on a 404,
   which is a useful guardrail (caught the stale `/mcp` nav links).
+
+### Run 3 — 2026-06-24 — review rounds, humanize, acceptance GO, committed
+- Review R1 (Codex xhigh + 7-frontier round-robin) → merged per-file fix workflow applied all
+  21 fixes (incl. the export-shape contradiction, McpTools snake_case→plain-ask, Claude
+  paid-plan prereq, broken-callout conversion).
+- Full humanizer-skill pass over all 16 pages (em/en-dash hard ban; accuracy + snippet
+  invocations preserved). Final acceptance review → **GO** (all HIGH fixes verified landed,
+  all spot-checked claims TRUE vs the product repo). Committed `6a3cb8f` (build green, 47 routes).
+
+**Learnings (fold into artifacts next run):**
+- **Quote frontmatter values containing a colon.** A humanized `description:` with "BitterClip:
+  cost" broke the YAML build (`Nested mappings not allowed`). Add to authoring-conventions:
+  any frontmatter value with `: ` must be quoted.
+- **Include `content/_data/*.yml` in humanizer + em-dash sweeps.** The page pass missed the
+  data files, which still rendered em-dashes in the McpTools table. Sweep data values too
+  (dev comments are exempt).
+- **Generated surfaces don't cover `public/index.md`** (the hand-maintained homepage twin):
+  it still hard-codes prices/storage and can silently drift. Candidate to generate or de-price.
+- **Nav-order ties** (`getting-started` 0×2, `assistants` 2×2) are harmless now (nothing reads
+  `navigation.order`) but clean them before a sidebar ships.
