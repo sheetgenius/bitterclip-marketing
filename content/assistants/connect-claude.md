@@ -29,26 +29,46 @@ On the free tier there's no place to add one, so if you can't find the option, t
 usually why. It isn't anything you did wrong.
 ::
 
-## Add BitterClip as a Connector in Claude
-
-In Claude, open your settings, find the Connectors section, and add a new connector.
-There's nothing to download or run on your computer.
+## Add BitterClip as a connector in Claude
 
 ::assistant-connection-intro
 ::
 
-When Claude asks for a URL, paste in that address (the one ending in `/mcp`). Then sign
-in to your BitterClip account in the browser window Claude opens. That sign-in is part
-of adding the connector, not a separate step you do later.
+There's nothing to download or run on your computer:
 
-::callout{type="note"}
-Claude moves its menus around now and then, so the wording can differ from what you see
-here. Look for **Connectors** (sometimes filed under integrations or tools), add a new
-one, and point it at the BitterClip address above.
+1. In Claude, open **Settings → Connectors** and click **Add custom connector** (it's marked BETA).
+2. Fill in:
+   - **Name** — BitterClip
+   - **URL** — paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
+   - Leave **Advanced settings** (OAuth Client ID / Secret) blank — you don't need them.
+3. Click **Add**.
+
+![Claude's "Add custom connector" dialog with BitterClip and the app.bitterclip.com/mcp URL](/img/docs/claude-add-custom-connector.png)
+
+## Connect and sign in
+
+BitterClip now shows up in your connectors with **"You are not connected to BitterClip yet."**
+Click **Connect**, then sign in to your BitterClip account in the window Claude opens. That's
+the only sign-in step.
+
+![Claude showing BitterClip not connected yet, with a Connect button](/img/docs/claude-connect.png)
+
+::callout{type="tip"}
+Optional: on the BitterClip connector's page you can set **Tool permissions** to **Always
+allow** so Claude stops asking each time it opens an episode or reads a transcript. You can
+also allow tools one at a time.
 ::
 
-You'll know it worked when BitterClip's tools turn up in your conversation and Claude
-can answer about your recordings.
+![Claude's BitterClip connector page with tool permissions set to Always allow](/img/docs/claude-tool-permissions.png)
+
+::callout{type="note"}
+Claude moves its menus around now and then, so the wording can differ. The shape stays the
+same: **Settings → Connectors → Add custom connector**, point it at the BitterClip address
+above, then click **Connect** to sign in.
+::
+
+You'll know it worked when BitterClip's tools turn up in your conversation and Claude can
+answer about your recordings.
 
 ## Make your first clip in chat
 
