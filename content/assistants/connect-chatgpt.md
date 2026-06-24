@@ -39,7 +39,9 @@ by hand as a custom app. It takes about a minute:
    - **Authentication** — OAuth
 4. Tick **"I understand and want to continue"** (ChatGPT shows this for any app it hasn't reviewed itself), then click **Create**.
 
-[screenshot: ChatGPT's New App window with the BitterClip name, the /mcp server URL, and OAuth selected]
+![ChatGPT Settings, Apps tab — "Create app" sits next to Advanced settings](/img/docs/chatgpt-apps-create-app.png)
+
+![ChatGPT's New App window with BitterClip's name, the app.bitterclip.com/mcp server URL, and OAuth selected](/img/docs/chatgpt-new-app-dialog.png)
 
 ::callout{type="note"}
 ChatGPT moves its menus and labels around now and then, so the exact wording may differ.
