@@ -46,8 +46,10 @@ const SECTION_LABELS: Record<string, string> = {
 function flatten(items: any[] | undefined, acc: NavItem[] = []): NavItem[] {
   if (!items) return acc
   for (const item of items) {
-    // A navigable page has a path and is not hidden.
-    if (item.path && item.page !== false) {
+    // A navigable page has a path and is not hidden. Dedupe by path: a directory
+    // with an index.md surfaces both as a folder node and its index child sharing
+    // the same path (e.g. /docs/changelog), so keep only the first.
+    if (item.path && item.page !== false && !acc.some((a) => a.path === item.path)) {
       acc.push({
         title: item.title ?? item.path,
         path: item.path,

@@ -48,16 +48,7 @@ onBeforeUnmount(() => {
     <header class="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
       <nav aria-label="Primary" class="flex items-center justify-between px-5 py-2.5 rounded-full nav-glass">
         <div class="m-0 p-0 font-display font-bold text-lg tracking-tight">
-          <NuxtLink class="flex items-center gap-2.5 group focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded-lg" to="/">
-            <!-- Telemetry Crop Indicator Logo SVG -->
-            <svg class="w-6 h-6 text-[#f28f84] transition duration-300 group-hover:drop-shadow-[0_0_8px_rgba(242,143,132,0.55)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M15 3h4a2 2 0 012 2v4M21 15v4a2 2 0 01-2 2h-4M9 21H5a2 2 0 01-2-2v-4" />
-              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            </svg>
-            <span class="bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition duration-300 font-mono tracking-tight text-base uppercase">
-              BitterClip
-            </span>
-          </NuxtLink>
+          <BrandLogo />
         </div>
 
         <div class="hidden md:flex items-center gap-1 font-sans text-sm font-medium tracking-tight text-zinc-300">
