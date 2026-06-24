@@ -23,30 +23,36 @@ ChatGPT opens the editor with a clip already picked out, ready for you to review
 ::connect-prereqs
 ::
 
-## Add the BitterClip connection in ChatGPT
+## Add BitterClip in ChatGPT
 
 ::assistant-connection-intro
 ::
 
 BitterClip is still going through ChatGPT's app-directory review, so for now you add it
-by hand. Open ChatGPT's settings, turn on Developer Mode, and add a new connection. When
-ChatGPT asks for a URL, paste in the address above (it ends in `/mcp`), then sign in.
-Once the BitterClip app is published, you'll add it the same way you'd add any app, with
-no Developer Mode step.
+by hand as a custom app. It takes about a minute:
 
-[screenshot: ChatGPT settings with the Developer Mode toggle and the "add connection" screen]
+1. In ChatGPT, open **Settings → Apps**.
+2. Scroll to **Advanced settings** and click **Create app**.
+3. In the **New App** window, fill in:
+   - **Name** — BitterClip
+   - **Connection** — leave this on **Server URL** and paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
+   - **Authentication** — OAuth
+4. Tick **"I understand and want to continue"** (ChatGPT shows this for any app it hasn't reviewed itself), then click **Create**.
+
+[screenshot: ChatGPT's New App window with the BitterClip name, the /mcp server URL, and OAuth selected]
 
 ::callout{type="note"}
-ChatGPT moves its menus and labels around now and then, so the exact wording may differ
-from what you see. Look for the place to add a connection or app, and point it at the
-BitterClip address. If you don't see Developer Mode at all, the
-[Troubleshooting](/docs/help/troubleshooting) page has what to try next.
+ChatGPT moves its menus and labels around now and then, so the exact wording may differ.
+The shape stays the same: **Settings → Apps → Advanced settings → Create app**, then point
+it at the BitterClip address. Once BitterClip is published in ChatGPT's app directory,
+you'll add it from there with no Create-app step. Stuck? See
+[Troubleshooting](/docs/help/troubleshooting).
 ::
 
 ## Sign in to BitterClip
 
-When you add the connection, ChatGPT opens a browser window so you can sign in. That's
-the only sign-in step.
+When you click **Create**, ChatGPT opens a browser window to sign you in to BitterClip and
+authorize the connection. Approve it and you're set — that's the only sign-in step.
 
 ## Make your first clip in chat
 
