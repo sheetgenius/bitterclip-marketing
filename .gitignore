@@ -18,3 +18,4 @@ mike_and_john/
 *.pem
 *.key
 *.p12
+.screenshots/

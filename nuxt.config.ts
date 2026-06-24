@@ -19,6 +19,20 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // @nuxt/content: dark Shiki theme so fenced code blocks read against the dark
+  // docs surface, with the handful of languages our docs actually use.
+  content: {
+    build: {
+      markdown: {
+        toc: { depth: 3, searchDepth: 3 },
+        highlight: {
+          theme: 'github-dark-dimmed',
+          langs: ['bash', 'json', 'js', 'ts', 'yaml', 'md', 'vue', 'html', 'ruby'],
+        },
+      },
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
@@ -53,7 +67,7 @@ export default defineNuxtConfig({
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms-full.txt', title: 'BitterClip full Markdown context' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap' },
       ],
       script: [
         {
