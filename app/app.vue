@@ -56,7 +56,6 @@ onBeforeUnmount(() => {
             <span class="bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent group-hover:from-white group-hover:to-zinc-100 transition duration-300 font-mono tracking-tight text-base uppercase">
               BitterClip
             </span>
-            <span class="px-1.5 py-0.5 text-[8px] font-mono font-bold rounded bg-[#f28f84]/10 text-[#f28f84] border border-[#f28f84]/20">Beta</span>
           </NuxtLink>
         </div>
 
