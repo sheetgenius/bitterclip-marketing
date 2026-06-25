@@ -36,7 +36,7 @@ usually why. It isn't anything you did wrong.
 
 There's nothing to download or run on your computer:
 
-1. In Claude, open **Settings → Connectors** and click **Add custom connector** (it's marked BETA).
+1. In Claude, open **Settings → Connectors** — or go straight to [claude.ai/customize/connectors](https://claude.ai/customize/connectors) — and click **Add custom connector** (it's marked BETA).
 2. Fill in:
    - **Name** — BitterClip
    - **URL** — paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
