@@ -31,7 +31,7 @@ ChatGPT opens the editor with a clip already picked out, ready for you to review
 BitterClip is still going through ChatGPT's app-directory review, so for now you add it
 by hand as a custom app. It takes about a minute:
 
-1. In ChatGPT, open **Settings → Apps**.
+1. In ChatGPT, open **Settings → Apps** — or go straight to [chatgpt.com/#settings/Connectors](https://chatgpt.com/#settings/Connectors).
 2. Scroll to **Advanced settings** and click **Create app**.
 3. In the **New App** window, fill in:
    - **Name** — BitterClip
