@@ -32,12 +32,13 @@ BitterClip is still going through ChatGPT's app-directory review, so for now you
 by hand as a custom app. It takes about a minute:
 
 1. In ChatGPT, open **Settings → Apps** — or go straight to [chatgpt.com/#settings/Connectors](https://chatgpt.com/#settings/Connectors).
-2. Scroll to **Advanced settings** and click **Create app**.
-3. In the **New App** window, fill in:
+2. Scroll to **Advanced settings** and turn on **Developer mode**. ChatGPT flags it as "Elevated risk" because it lets you add connectors it hasn't reviewed — that's what makes BitterClip addable until we're listed in its app directory.
+3. Still under **Advanced settings**, click **Create app**.
+4. In the **New App** window, fill in:
    - **Name** — BitterClip
    - **Connection** — leave this on **Server URL** and paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
    - **Authentication** — OAuth
-4. Tick **"I understand and want to continue"** (ChatGPT shows this for any app it hasn't reviewed itself), then click **Create**.
+5. Tick **"I understand and want to continue"** (ChatGPT shows this for any app it hasn't reviewed itself), then click **Create**.
 
 ![ChatGPT Settings, Apps tab — "Create app" sits next to Advanced settings](/img/docs/chatgpt-apps-create-app.png)
 
@@ -45,10 +46,10 @@ by hand as a custom app. It takes about a minute:
 
 ::callout{type="note"}
 ChatGPT moves its menus and labels around now and then, so the exact wording may differ.
-The shape stays the same: **Settings → Apps → Advanced settings → Create app**, then point
-it at the BitterClip address. Once BitterClip is published in ChatGPT's app directory,
-you'll add it from there with no Create-app step. Stuck? See
-[Troubleshooting](/docs/help/troubleshooting).
+The shape stays the same: **Settings → Apps → Advanced settings → Developer mode → Create
+app**, then point it at the BitterClip address. Once BitterClip is published in ChatGPT's
+app directory, you'll add it from there with no Developer-mode or Create-app step. Stuck?
+See [Troubleshooting](/docs/help/troubleshooting).
 ::
 
 ## Sign in to BitterClip
