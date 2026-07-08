@@ -142,7 +142,7 @@ useHead(() => {
   <main v-if="post" class="relative mx-auto max-w-5xl px-4 pt-10 pb-24 sm:px-6">
     <div class="absolute top-0 left-1/4 -z-10 h-[420px] w-[420px] rounded-full bg-[#f28f84]/5 blur-[110px] pointer-events-none" />
 
-    <div class="mb-8">
+    <div class="mx-auto mb-8 max-w-3xl">
       <NuxtLink
         to="/blog"
         class="font-mono text-xs uppercase tracking-[0.16em] text-zinc-500 transition hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
@@ -152,11 +152,11 @@ useHead(() => {
     </div>
 
     <article>
-      <header class="mb-8 border-b border-zinc-900 pb-8">
+      <header class="mx-auto mb-8 max-w-3xl border-b border-zinc-900 pb-8">
         <p class="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-[#f28f84]">
           {{ formatDate(post.date) }}
         </p>
-        <h1 class="max-w-4xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
           {{ post.title }}
         </h1>
         <p class="mt-5 max-w-3xl text-base italic leading-relaxed text-zinc-300 sm:text-lg">
@@ -167,7 +167,7 @@ useHead(() => {
         </p>
       </header>
 
-      <figure v-if="post.heroImage" class="mb-10">
+      <figure v-if="post.heroImage" class="mx-auto mb-10 max-w-4xl">
         <img
           class="w-full rounded-lg border border-zinc-900 bg-black"
           :src="post.heroImage"
