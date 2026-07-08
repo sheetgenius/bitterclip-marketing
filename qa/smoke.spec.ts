@@ -185,6 +185,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     { path: '/blog.md', text: 'Your show has a signature now' },
     { path: '/blog/your-show-has-a-signature-now.md', text: 'Know what mattered in the recording' },
+    { path: '/blog/we-stopped-making-templates.md', text: 'The template wall asked you to settle' },
+    { path: '/blog/a-condensed-memory-of-the-work.md', text: 'a condensed memory of the work' },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
   ]

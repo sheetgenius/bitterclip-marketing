@@ -30,6 +30,10 @@ under a dated entry.
 
 ### Website
 
+- Published blog posts two and three: "We stopped making templates"
+  (effects-as-code) and "A condensed memory of the work" (why highlight
+  reels are client memory, not marketing), each with hero/OG art and
+  Markdown-twin smoke coverage.
 - Added the public BitterClip blog at `/blog`, the first launch post for
   Identity Studio, per-post article SEO, BlogPosting JSON-LD, a generated
   `/blog.md` twin, generated post Markdown twins, `/blog/rss.xml`, sitemap
