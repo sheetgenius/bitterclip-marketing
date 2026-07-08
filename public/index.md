@@ -110,8 +110,7 @@ focused workspace to verify and export.
   files up to 4 GB (20 GB on Pro).
 - No new editor to learn: drag across the transcript words and the cut
   follows the audio.
-- Canceling: files stay downloadable on every plan; 30-day refund, annual
-  included.
+- Canceling: files stay downloadable on every plan; 30-day refund.
 
 ## Pricing
 
@@ -119,16 +118,16 @@ Three plans, one uniform price list:
 
 - Free — $0. 60 minutes of footage a month, 10 clip exports at 1080p
   (watermarked), file uploads up to 4 GB. Resets every month — not a trial.
-- Clip (recommended) — $9/month, or $90/year (2 months free). 10 hours of
-  footage a month, 150 clip exports at 1080p with no watermark, file uploads
-  up to 4 GB, and you can add 5 more hours for $5 anytime. For a weekly show
-  or regular interviews.
-- Pro — $99/month, or $799/year (about 4 months free). 40 hours of footage a
-  month, 1,000 clip exports at up to 4K, file uploads up to 20 GB, priority
-  processing, add 5 more hours for $5 anytime, and analysis workflows
-  included as they ship. For people whose footage is their business.
+- Clip (recommended) — $9/month. 10 hours of footage a month, 150 clip
+  exports at 1080p with no watermark, file uploads up to 4 GB, and clips can
+  be embedded on your own site. For a weekly show or regular interviews.
+- Pro — $99/month. 40 hours of footage a month, 1,000 clip exports at 1080p,
+  file uploads up to 20 GB, front-of-queue processing, and visual analysis
+  workflows. For people whose footage is their business.
 
-Every plan: 30-day refund (including annual), cancel anytime, and your files
-stay downloadable — canceling never strands your work.
+Every plan: 30-day refund, cancel anytime, and your files stay
+downloadable — canceling never strands your work.
 
-Signup: https://app.bitterclip.com/sign_up
+Signup: https://app.bitterclip.com/sign_up (Clip:
+https://app.bitterclip.com/sign_up?plan=clip · Pro:
+https://app.bitterclip.com/sign_up?plan=pro)
