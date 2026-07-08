@@ -61,15 +61,21 @@ const demoStageRank: Record<string, number> = {
 
 const demoSignupStage = ref('default')
 
-const signupUrl = computed(() => {
+// Paid pricing CTAs carry ?plan= so the app's signup hands off to
+// /billing?plan=… after account creation; every other CTA stays plan-less.
+const signupUrlFor = (plan?: string) => {
   const url = new URL(signupBaseUrl)
+  if (plan) url.searchParams.set('plan', plan)
   url.searchParams.set('utm_source', 'bitterclip.com')
   url.searchParams.set('utm_medium', 'landing_page')
   url.searchParams.set('utm_campaign', 'homepage_editor_demo')
   url.searchParams.set('utm_content', demoSignupStage.value)
   url.searchParams.set('from', `landing_${demoSignupStage.value}`)
   return url.toString()
-})
+}
+const signupUrl = computed(() => signupUrlFor())
+const signupUrlClip = computed(() => signupUrlFor('clip'))
+const signupUrlPro = computed(() => signupUrlFor('pro'))
 
 const resolveHeroTheme = (value: string | null): HeroTheme => (
   value === 'light' ? 'light' : DEFAULT_HERO_THEME
@@ -107,7 +113,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Your files stay downloadable on every plan, and everything has a 30-day refund — annual included.',
+    a: 'Your files stay downloadable on every plan, and everything has a 30-day refund.',
   },
 ]
 
@@ -269,7 +275,9 @@ const syncDocumentSignupLinks = () => {
     detail: { stage: demoSignupStage.value, href: signupUrl.value },
   }))
   document.querySelectorAll<HTMLAnchorElement>(`a[href="${signupBaseUrl}"], a[href^="${signupBaseUrl}?"]`).forEach((anchor) => {
-    anchor.href = signupUrl.value
+    // Preserve the pricing CTAs' ?plan= while refreshing the demo-stage UTM.
+    const plan = new URL(anchor.href).searchParams.get('plan')
+    anchor.href = plan ? signupUrlFor(plan) : signupUrl.value
   })
 }
 
@@ -875,8 +883,8 @@ onBeforeUnmount(() => {
 
 
         <!-- the ladder: Free / Clip / Pro. Clip carries the accent + the only filled
-             CTA (it's the plan we steer to; $99 Pro anchors the price). Every card's
-             CTA lands on the same signup — the app handles plan choice. -->
+             CTA (it's the plan we steer to; $99 Pro anchors the price). Paid CTAs
+             carry ?plan= so signup hands off to /billing with the plan highlighted. -->
         <div class="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto items-stretch text-left">
 
           <!-- FREE (second in the stack on mobile — Clip leads there) -->
@@ -905,16 +913,15 @@ onBeforeUnmount(() => {
             <p class="absolute top-6 right-6 font-mono text-[10px] uppercase tracking-widest text-[#f28f84] border border-[#f28f84]/40 rounded-full px-2.5 py-1">Recommended</p>
             <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Clip</p>
             <p class="font-display text-3xl font-bold text-white">$9<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
-            <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $90/year — 2 months free.</p>
-            <p class="text-zinc-400 text-xs mb-5">For a weekly show or regular interviews.</p>
+            <p class="text-zinc-400 text-xs mt-1.5 mb-5">For a weekly show or regular interviews.</p>
             <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 hours of footage a month</li>
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>No watermark — 150 clip exports at 1080p</li>
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Add 5 more hours for $5, anytime</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Embed clips on your own site</li>
             </ul>
             <a
-              :href="signupUrl"
+              :href="signupUrlClip"
               class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <span>Start clipping</span>
@@ -922,7 +929,7 @@ onBeforeUnmount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund, annual included · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund · cancel anytime</p>
           </div>
 
           <!-- PRO — plain panel: the $99 price anchors on its own; the accent lives
@@ -930,18 +937,16 @@ onBeforeUnmount(() => {
           <div class="relative rounded-2xl glass-panel p-6 flex flex-col max-md:order-3">
             <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Pro</p>
             <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
-            <p class="text-zinc-400 text-xs mt-1.5 mb-1">or $799/year — about 4 months free.</p>
-            <p class="text-zinc-400 text-xs mb-5">When footage is your business.</p>
+            <p class="text-zinc-400 text-xs mt-1.5 mb-5">When footage is your business.</p>
             <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 hours of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 clip exports, up to 4K</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 clip exports at 1080p</li>
               <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 20 GB</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority processing</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Add 5 more hours for $5, anytime</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Analysis workflows included, as they ship</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Front-of-queue processing</li>
+              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Visual analysis workflows</li>
             </ul>
             <a
-              :href="signupUrl"
+              :href="signupUrlPro"
               class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <span>Go Pro</span>
@@ -949,7 +954,7 @@ onBeforeUnmount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund, annual included · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund · cancel anytime</p>
           </div>
 
         </div>
