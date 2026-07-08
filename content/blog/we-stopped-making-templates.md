@@ -3,8 +3,8 @@ title: We stopped making templates
 description: 'Every effect in BitterClip is real code — which means your AI assistant can write one, look at rendered frames of its own work, and make it better. Why we built motion design that way.'
 date: '2026-07-08'
 author: Michael Ruescher, Founder
-ogImage: /images/blog/effects-are-code/og.jpg
-heroImage: /images/blog/effects-are-code/hero.jpg
+ogImage: /images/blog/effects-are-code/scene-code-og.jpg
+heroImage: /images/blog/effects-are-code/scene-code.jpg
 heroAlt: The Signal Lock scene as code — a dark editor panel where the frame function carries the direction note 'smeared horizontally — but not vertically'.
 tags:
   - Identity Studio

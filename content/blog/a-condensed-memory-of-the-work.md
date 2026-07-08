@@ -3,8 +3,7 @@ title: A condensed memory of the work
 description: 'A coach we work with sends every client a highlight reel of their session — not as marketing, but as memory. That habit explains more about where BitterClip is going than any feature list.'
 date: '2026-07-08'
 author: Michael Ruescher, Founder
-ogImage: /images/blog/condensed-memory/og.jpg
-heroImage: /images/blog/condensed-memory/hero.jpg
+ogImage: /images/blog/condensed-memory/ledger-og.jpg
 heroAlt: A ledger of weekly training reels — five dated highlight reels, each sent to the client, the newest marked ready.
 tags:
   - coaching
