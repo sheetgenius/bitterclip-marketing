@@ -27,7 +27,7 @@ We think that's what recordings are actually for.
 
 ## Most of what you record, you lose
 
-Be honest about your own archive. The podcast episodes, the client calls,
+Think about your own archive for a second. The podcast episodes, the client calls,
 the coaching sessions, the interviews: hours of the realest material your
 work produces, and almost all of it is write-only. You record it, store it,
 and never open it again, because opening it costs too much. An hour of video
@@ -68,10 +68,11 @@ known, every moment addressable. The work ahead of us is making the
 *sequence* as readable as the session, so your assistant can read a season
 of work the way it reads an episode.
 
-Most footage just rots. It piles up, and opening the folder feels worse
-every month. Kept the way Andrew keeps it, an archive does the opposite:
-each session you add makes the rest worth more, like a cellar you actually
-drink from.
+Most footage just sits in a folder somewhere. It piles up, and you never
+really go back into it. Andrew's archive works the other way: every session
+he adds makes the older ones more useful, because now there's a history to
+read across. It actually gets better with age, like good wine.
 
-That's the promise of recording everything. Not more posts. A memory of your
-work condensed enough to hold, and cited well enough to trust.
+That's the promise of recording everything: not more posts, but a memory of
+your work that's condensed enough to hold onto and cited well enough to
+trust.
