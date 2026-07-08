@@ -5,7 +5,7 @@ date: '2026-07-08'
 author: Michael Ruescher, Founder
 ogImage: /images/blog/effects-are-code/og.jpg
 heroImage: /images/blog/effects-are-code/hero.jpg
-heroAlt: The BitterClip wordmark mid-animation in the Signal Lock effect — letterforms smeared horizontally across a black stage.
+heroAlt: The Signal Lock scene as code — a dark editor panel where the frame function carries the direction note 'smeared horizontally — but not vertically'.
 tags:
   - Identity Studio
   - effects

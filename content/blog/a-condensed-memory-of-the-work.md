@@ -5,7 +5,7 @@ date: '2026-07-08'
 author: Michael Ruescher, Founder
 ogImage: /images/blog/condensed-memory/og.jpg
 heroImage: /images/blog/condensed-memory/hero.jpg
-heroAlt: A BitterClip project named Adrian — Tuesdays, a client's training sessions collected as episodes and cut into weekly highlight reels.
+heroAlt: A ledger of weekly training reels — five dated highlight reels, each sent to the client, the newest marked ready.
 tags:
   - coaching
   - memory
