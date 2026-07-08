@@ -34,6 +34,18 @@ const docsSchema = z.object({
   ogImage: z.string().optional(),
 })
 
+const blogSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: z.string(),
+  updated: z.string().optional(),
+  author: z.string(),
+  ogImage: z.string(),
+  heroImage: z.string().optional(),
+  heroAlt: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+})
+
 export default defineContentConfig({
   collections: {
     // Prose pages. _data/ is excluded so YAML data files are not parsed as pages.
@@ -41,11 +53,19 @@ export default defineContentConfig({
       type: 'page',
       source: {
         include: '**/*.md',
-        exclude: ['_data/**'],
+        exclude: ['_data/**', 'blog/**'],
         // Content lives at content/<section>/<page>.md and is served under /docs/...
         prefix: '/docs',
       },
       schema: docsSchema,
+    }),
+
+    blog: defineCollection({
+      type: 'page',
+      source: {
+        include: 'blog/*.md',
+      },
+      schema: blogSchema,
     }),
 
     // --- Data collections (single-sourced volatile facts) ---

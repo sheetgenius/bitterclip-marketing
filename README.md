@@ -70,10 +70,11 @@ This repository owns:
 
 - the public BitterClip website
 - public product copy and metadata
-- public documentation pages at `/docs`, `/mcp`, and `/privacy`
+- public documentation pages at `/docs` and the public blog at `/blog`
 - public legal pages at `/privacy` and `/terms`
 - Markdown alternates for every public page route
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
+- public blog RSS at `/blog/rss.xml`
 - public, non-secret ChatGPT app submission context on the `/mcp` page
 - crawlable routes in `public/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
@@ -84,6 +85,8 @@ This repository owns:
 - BitterClip app signup:
   [app.bitterclip.com/sign_up](https://app.bitterclip.com/sign_up)
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
+- BitterClip blog: [bitterclip.com/blog](https://bitterclip.com/blog)
+- Blog RSS: [bitterclip.com/blog/rss.xml](https://bitterclip.com/blog/rss.xml)
 - MCP and AI assistant workflow:
   [bitterclip.com/mcp](https://bitterclip.com/mcp)
   (remote MCP, ChatGPT submission posture, and review boundaries)
@@ -92,6 +95,8 @@ This repository owns:
 - Markdown page mirrors:
   [index.md](https://bitterclip.com/index.md),
   [docs.md](https://bitterclip.com/docs.md),
+  [blog.md](https://bitterclip.com/blog.md),
+  [your-show-has-a-signature-now.md](https://bitterclip.com/blog/your-show-has-a-signature-now.md),
   [mcp.md](https://bitterclip.com/mcp.md),
   [privacy.md](https://bitterclip.com/privacy.md),
   [terms.md](https://bitterclip.com/terms.md)
@@ -137,16 +142,19 @@ bun run qa:smoke
 Useful files:
 
 - `app/pages/index.vue` - home page
-- `app/pages/docs.vue` - product explanation page
-- `app/pages/mcp.vue` - MCP and AI assistant workflow page
+- `app/pages/docs/[...slug].vue` - documentation page renderer
+- `app/pages/blog/index.vue` - blog index page
+- `app/pages/blog/[slug].vue` - blog post page
+- `content/blog/` - blog post Markdown
 - `app/pages/privacy.vue` - privacy policy page
 - `app/pages/terms.vue` - terms of service page
-- `public/index.md`, `public/docs.md`, `public/mcp.md`, `public/privacy.md`,
-  `public/terms.md` - Markdown twins for public pages
+- `public/index.md`, `public/privacy.md`, `public/terms.md`, and generated
+  docs/blog `.md` files - Markdown twins for public pages
 - `public/llms.txt` - AI crawler entry point that links canonical pages and
   Markdown alternates
-- `public/llms-full.txt` - compact bundled Markdown context for one-fetch agent
+- `public/llms-full.txt` - compact bundled Markdown context for one-fetch AI
   ingestion
+- `public/images/blog/` - public blog images and social cards
 - `nuxt.config.ts` - site metadata and Nuxt configuration
 - `public/sitemap.xml` - crawlable public routes
 - `CHANGELOG.md` - public semantic change history

@@ -30,6 +30,10 @@ under a dated entry.
 
 ### Website
 
+- Added the public BitterClip blog at `/blog`, the first launch post for
+  Identity Studio, per-post article SEO, BlogPosting JSON-LD, a generated
+  `/blog.md` twin, generated post Markdown twins, `/blog/rss.xml`, sitemap
+  entries, and discovery-file coverage for the new route.
 - Added a focused sign-in and conversion study after user feedback that the
   public landing page did not make returning-user sign-in obvious. The study
   verifies the live auth routes (`/sign_in` works, `/login` 404s), recommends

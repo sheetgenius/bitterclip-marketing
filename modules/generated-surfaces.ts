@@ -14,11 +14,12 @@ import { parse as parseYaml } from 'yaml'
  *   1. Per-page `.md` twins at `/docs/<path>.md` (verbatim frontmatter + body).
  *   2. `/llms.txt`     — a structured index of the docs.
  *   3. `/llms-full.txt`— the concatenated docs corpus.
- *   4. `/sitemap.xml`  — every `/docs/*` page plus the marketing routes.
+ *   4. `/sitemap.xml`  — every `/docs/*` page, blog route, blog post, and marketing route.
  *   5. `/changelog.xml`— an RSS feed built from the changelog entries.
+ *   6. `/blog/rss.xml` — an RSS feed built from the blog collection.
  *
  * DRY: add or edit a `content/*.md` page (or `site.yml`) and every surface above
- * regenerates on the next build. No surface is authored by hand.
+ * regenerates on the next build. No generated surface is authored by hand.
  */
 
 const SITE_ORIGIN = 'https://bitterclip.com'
@@ -46,6 +47,31 @@ interface DocPage {
     date?: string
     summary?: string
     navigation?: { order?: number } | false
+    [k: string]: unknown
+  }
+}
+
+interface BlogPost {
+  /** Source path relative to content/, e.g. "blog/example.md". */
+  sourceRel: string
+  /** Slug without the blog/ prefix or .md extension. */
+  slug: string
+  /** Public URL path, e.g. "/blog/example". */
+  urlPath: string
+  /** Public `.md` twin path, e.g. "/blog/example.md". */
+  mdPath: string
+  /** Verbatim file contents (frontmatter + body). */
+  raw: string
+  /** Markdown body only (frontmatter stripped). */
+  body: string
+  frontmatter: {
+    title?: string
+    description?: string
+    date?: string
+    updated?: string
+    author?: string
+    ogImage?: string
+    tags?: string[]
     [k: string]: unknown
   }
 }
@@ -78,7 +104,7 @@ async function readDocs(contentDir: string): Promise<DocPage[]> {
   const pages: DocPage[] = []
   for await (const entry of glob('**/*.md', { cwd: contentDir })) {
     const sourceRel = entry.replace(/\\/g, '/')
-    if (sourceRel.startsWith('_data/')) continue
+    if (sourceRel.startsWith('_data/') || sourceRel.startsWith('blog/')) continue
     const raw = await fs.readFile(join(contentDir, sourceRel), 'utf8')
     const { frontmatter, body } = splitFrontmatter(raw)
     const urlPath = toUrlPath(sourceRel)
@@ -105,6 +131,32 @@ async function readDocs(contentDir: string): Promise<DocPage[]> {
   return pages
 }
 
+async function readBlogPosts(contentDir: string): Promise<BlogPost[]> {
+  const posts: BlogPost[] = []
+  for await (const entry of glob('blog/*.md', { cwd: contentDir })) {
+    const sourceRel = entry.replace(/\\/g, '/')
+    const slug = sourceRel.replace(/^blog\//, '').replace(/\.md$/, '')
+    const raw = await fs.readFile(join(contentDir, sourceRel), 'utf8')
+    const { frontmatter, body } = splitFrontmatter(raw)
+    posts.push({
+      sourceRel,
+      slug,
+      urlPath: `/blog/${slug}`,
+      mdPath: `/blog/${slug}.md`,
+      raw,
+      body,
+      frontmatter: frontmatter as BlogPost['frontmatter'],
+    })
+  }
+  posts.sort((a, b) => {
+    const ad = a.frontmatter.updated ?? a.frontmatter.date ?? ''
+    const bd = b.frontmatter.updated ?? b.frontmatter.date ?? ''
+    if (ad !== bd) return bd.localeCompare(ad)
+    return (a.frontmatter.title ?? '').localeCompare(b.frontmatter.title ?? '')
+  })
+  return posts
+}
+
 async function readSite(contentDir: string): Promise<Record<string, string>> {
   const raw = await fs.readFile(join(contentDir, '_data/site.yml'), 'utf8')
   return (parseYaml(raw) ?? {}) as Record<string, string>
@@ -112,7 +164,7 @@ async function readSite(contentDir: string): Promise<Record<string, string>> {
 
 // --- Surface builders -------------------------------------------------------
 
-function buildLlmsIndex(pages: DocPage[]): string {
+function buildLlmsIndex(pages: DocPage[], posts: BlogPost[]): string {
   const groups = new Map<string, DocPage[]>()
   for (const p of pages) {
     const section = p.frontmatter.section ?? 'docs'
@@ -156,17 +208,27 @@ function buildLlmsIndex(pages: DocPage[]): string {
     }
     lines.push('')
   }
+  if (posts.length > 0) {
+    lines.push('## Blog')
+    lines.push('')
+    for (const post of posts) {
+      const title = post.frontmatter.title ?? post.urlPath
+      const desc = post.frontmatter.description ?? ''
+      lines.push(`- [${title}](${SITE_ORIGIN}${post.urlPath}): ${desc}`.trimEnd())
+    }
+    lines.push('')
+  }
   return lines.join('\n').trimEnd() + '\n'
 }
 
-function buildLlmsFull(pages: DocPage[]): string {
+function buildLlmsFull(pages: DocPage[], posts: BlogPost[]): string {
   const parts: string[] = []
-  parts.push('# BitterClip — full documentation corpus')
+  parts.push('# BitterClip — full documentation and blog corpus')
   parts.push('')
   parts.push(
-    'Concatenated Markdown of every BitterClip docs page, generated from the content ' +
-      'collection. Recording → Episode → Clip is the product model (the retired "Moment" ' +
-      'noun is not used).',
+    'Concatenated Markdown of every BitterClip docs page and blog post, generated from ' +
+      'the content collections. Recording → Episode → Clip is the product model (the ' +
+      'retired "Moment" noun is not used).',
   )
   parts.push('')
   for (const p of pages) {
@@ -179,14 +241,34 @@ function buildLlmsFull(pages: DocPage[]): string {
     parts.push(p.body.trim())
     parts.push('')
   }
+  for (const post of posts) {
+    parts.push('---')
+    parts.push('')
+    parts.push(`# ${post.frontmatter.title ?? post.urlPath}`)
+    parts.push(`Source: ${SITE_ORIGIN}${post.urlPath}`)
+    if (post.frontmatter.description) parts.push(`Description: ${post.frontmatter.description}`)
+    if (post.frontmatter.date) parts.push(`Date: ${post.frontmatter.date}`)
+    if (post.frontmatter.author) parts.push(`Author: ${post.frontmatter.author}`)
+    parts.push('')
+    parts.push(post.body.trim())
+    parts.push('')
+  }
   return parts.join('\n').trimEnd() + '\n'
 }
 
-function buildSitemap(pages: DocPage[]): string {
+function buildSitemap(pages: DocPage[], posts: BlogPost[]): string {
   const today = new Date().toISOString().slice(0, 10)
   const entries: { loc: string; lastmod: string }[] = []
   for (const route of MARKETING_ROUTES) {
     entries.push({ loc: `${SITE_ORIGIN}${route === '/' ? '/' : route}`, lastmod: today })
+  }
+  const latestPostDate = posts[0]?.frontmatter.updated ?? posts[0]?.frontmatter.date ?? today
+  entries.push({ loc: `${SITE_ORIGIN}/blog`, lastmod: latestPostDate })
+  for (const post of posts) {
+    entries.push({
+      loc: `${SITE_ORIGIN}${post.urlPath}`,
+      lastmod: post.frontmatter.updated ?? post.frontmatter.date ?? today,
+    })
   }
   for (const p of pages) {
     entries.push({
@@ -254,6 +336,70 @@ function buildChangelogRss(pages: DocPage[]): string {
   )
 }
 
+function buildBlogIndexMarkdown(posts: BlogPost[]): string {
+  const lines: string[] = []
+  lines.push('# BitterClip blog')
+  lines.push('')
+  lines.push('Canonical HTML page: https://bitterclip.com/blog')
+  lines.push('')
+  lines.push('RSS feed: https://bitterclip.com/blog/rss.xml')
+  lines.push('')
+  lines.push('Launch notes, product updates, and field notes from BitterClip.')
+  lines.push('')
+  lines.push('## Posts')
+  lines.push('')
+  if (posts.length === 0) {
+    lines.push('No posts published yet.')
+  } else {
+    for (const post of posts) {
+      const title = post.frontmatter.title ?? post.urlPath
+      const date = post.frontmatter.date ? ` — ${post.frontmatter.date}` : ''
+      const desc = post.frontmatter.description ? `: ${post.frontmatter.description}` : ''
+      lines.push(`- [${title}](${SITE_ORIGIN}${post.urlPath})${date}${desc}`)
+    }
+  }
+  return lines.join('\n').trimEnd() + '\n'
+}
+
+function buildBlogRss(posts: BlogPost[]): string {
+  const items = posts
+    .map((post) => {
+      const link = `${SITE_ORIGIN}${post.urlPath}`
+      const pub = new Date(`${post.frontmatter.date ?? new Date().toISOString().slice(0, 10)}T00:00:00Z`).toUTCString()
+      const desc = post.frontmatter.description ?? ''
+      const tags = (post.frontmatter.tags ?? [])
+        .map((tag) => `      <category>${xmlEscape(tag)}</category>`)
+        .join('\n')
+      return (
+        `    <item>\n` +
+        `      <title>${xmlEscape(post.frontmatter.title ?? post.urlPath)}</title>\n` +
+        `      <link>${link}</link>\n` +
+        `      <guid isPermaLink="true">${link}</guid>\n` +
+        `      <pubDate>${pub}</pubDate>\n` +
+        `      <description>${xmlEscape(desc)}</description>\n` +
+        (tags ? `${tags}\n` : '') +
+        `    </item>`
+      )
+    })
+    .join('\n')
+
+  const buildDate = new Date().toUTCString()
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n` +
+    `  <channel>\n` +
+    `    <title>BitterClip Blog</title>\n` +
+    `    <link>${SITE_ORIGIN}/blog</link>\n` +
+    `    <description>Launch notes, product updates, and field notes from BitterClip.</description>\n` +
+    `    <language>en</language>\n` +
+    `    <lastBuildDate>${buildDate}</lastBuildDate>\n` +
+    `    <atom:link href="${SITE_ORIGIN}/blog/rss.xml" rel="self" type="application/rss+xml" />\n` +
+    `${items}\n` +
+    `  </channel>\n` +
+    `</rss>\n`
+  )
+}
+
 async function writeFile(publicDir: string, urlPath: string, contents: string): Promise<void> {
   // urlPath is a leading-slash public path; map it to a file under publicDir.
   const rel = urlPath.replace(/^\//, '')
@@ -274,6 +420,7 @@ export default defineNuxtModule({
       nitro.hooks.hook('prerender:done', async () => {
         const publicDir = nitro.options.output.publicDir
         const pages = await readDocs(contentDir)
+        const posts = await readBlogPosts(contentDir)
 
         // 1. Per-page raw .md twins.
         let twinCount = 0
@@ -281,19 +428,27 @@ export default defineNuxtModule({
           await writeFile(publicDir, p.mdPath, p.raw.endsWith('\n') ? p.raw : `${p.raw}\n`)
           twinCount++
         }
+        for (const post of posts) {
+          await writeFile(publicDir, post.mdPath, post.raw.endsWith('\n') ? post.raw : `${post.raw}\n`)
+          twinCount++
+        }
+        await writeFile(publicDir, '/blog.md', buildBlogIndexMarkdown(posts))
 
         // 2 + 3. llms.txt index + full corpus (replaces the stale hand-written ones).
-        await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages))
-        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(pages))
+        await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages, posts))
+        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(pages, posts))
 
-        // 4. sitemap.xml — marketing routes + every /docs page.
-        await writeFile(publicDir, '/sitemap.xml', buildSitemap(pages))
+        // 4. sitemap.xml — marketing routes + every /docs page + blog.
+        await writeFile(publicDir, '/sitemap.xml', buildSitemap(pages, posts))
 
         // 5. changelog RSS.
         await writeFile(publicDir, '/changelog.xml', buildChangelogRss(pages))
 
+        // 6. Blog RSS.
+        await writeFile(publicDir, '/blog/rss.xml', buildBlogRss(posts))
+
         nitro.logger.success(
-          `[generated-surfaces] ${twinCount} .md twins + llms.txt, llms-full.txt, sitemap.xml, changelog.xml`,
+          `[generated-surfaces] ${twinCount} .md twins + blog.md, llms.txt, llms-full.txt, sitemap.xml, changelog.xml, blog/rss.xml`,
         )
       })
     })

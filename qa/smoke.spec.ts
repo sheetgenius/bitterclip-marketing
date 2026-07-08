@@ -93,36 +93,57 @@ test('defers the mobile hero recording iframe until the phone is in view', async
 test('renders the developer documentation page and navigation', async ({ page }) => {
   await page.goto('/docs')
 
-  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/docs.md"]')).toHaveCount(1)
-  await expect(page.getByRole('heading', { level: 2, name: 'How a clip gets made.' })).toBeVisible()
-  await expect(page.locator('strong').filter({ hasText: /Recording.*Moment.*Clip/ })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Recording', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Moment', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Clip', exact: true })).toBeVisible()
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="/docs.md"]')).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 1, name: 'BitterClip docs' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'Start here' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: 'Use it from your AI assistant' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Your first clip' }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Connect ChatGPT' }).first()).toBeVisible()
 })
 
-test('renders the MCP specification page and handles tab switches', async ({ page }) => {
-  await page.goto('/mcp')
+test('renders the assistant documentation page and live editor', async ({ page }) => {
+  await page.goto('/docs/assistants/overview')
 
-  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/mcp.md"]')).toHaveCount(1)
-  await expect(page.getByRole('heading', { level: 2, name: 'How ChatGPT and Claude open the editor.' })).toBeVisible()
-  await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start with one recording' }).first()).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Submit it as BitterClip.' })).toBeVisible()
-  await expect(page.getByText('MCP resource:')).toBeVisible()
-  await expect(page.getByText('Keep billing checkout on BitterClip')).toBeVisible()
-  
-  // Verify tabs are available
-  await expect(page.getByRole('button', { name: 'Endpoint & methods' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Tools' })).toBeVisible()
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="/docs/assistants/overview.md"]')).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 1, name: 'Use BitterClip from your AI assistant' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Try the editor right here' })).toBeVisible()
+  await expect(page.locator('iframe[title="BitterClip — the live transcript editor"]')).toHaveAttribute('src', /embed\/clip-demo/)
+  await expect(page.getByText('app.bitterclip.com/mcp')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'What you can ask for' })).toBeVisible()
+  await expect(page.getByText('not the full list')).toBeVisible()
+})
 
-  // Switch to catalog tab
-  await page.getByRole('button', { name: 'Tools' }).click()
-  await expect(page.getByRole('cell', { name: 'transcript_read' })).toBeVisible()
-  await expect(page.getByRole('cell', { name: 'publishing_publish_approval' })).toBeVisible()
+test('renders the blog index and Identity Studio launch post', async ({ page }) => {
+  await page.goto('/blog')
 
-  // Switch to bridge tab
-  await page.getByRole('button', { name: 'The bridge' }).click()
-  await expect(page.getByText('One contract')).toBeVisible()
+  await expect(page.locator('link[rel="canonical"][href="https://bitterclip.com/blog"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/blog.md"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="alternate"][type="application/rss+xml"][href="https://bitterclip.com/blog/rss.xml"]')).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 1, name: 'BitterClip Blog' })).toBeVisible()
+  await expect(page.getByRole('link', { name: /Your show has a signature now/ })).toBeVisible()
+
+  await page.getByRole('link', { name: /Your show has a signature now/ }).click()
+  await page.waitForURL('**/blog/your-show-has-a-signature-now')
+
+  await expect(page.locator('link[rel="canonical"][href="https://bitterclip.com/blog/your-show-has-a-signature-now"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/blog/your-show-has-a-signature-now.md"]')).toHaveCount(1)
+  await expect(page.locator('meta[property="og:type"][content="article"]')).toHaveCount(1)
+  await expect(page.locator('meta[property="og:image"][content="https://bitterclip.com/images/blog/identity-studio/your-show-has-a-signature-now-og.jpg"]')).toHaveCount(1)
+  await expect(page.locator('meta[name="twitter:card"][content="summary_large_image"]')).toHaveCount(1)
+  await expect(page.locator('meta[property="article:published_time"][content="2026-07-08T00:00:00Z"]')).toHaveCount(1)
+  await expect(page.locator('meta[property="article:author"][content="Michael Ruescher"]')).toHaveCount(1)
+  const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
+  expect(jsonLd).toContain('BlogPosting')
+  expect(jsonLd).toContain('Michael Ruescher')
+  expect(jsonLd).toContain('BitterClip')
+
+  await expect(page.getByRole('heading', { level: 1, name: 'Your show has a signature now' })).toBeVisible()
+  await expect(page.getByText('Introducing Identity Studio: branded openers, outros, and a signature look')).toBeVisible()
+  await expect(page.getByAltText('Signature Studio full-screen lab showing a BitterClip wordmark opener mid-animation on a dark stage.')).toBeVisible()
+  await expect(page.getByAltText('Project FX tab showing the signature shelf with saved opener and outro effects.')).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Founder-Led Podcast' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Strength & Positions' })).toBeVisible()
+  await expect(page.getByText('Read my mind. MVP for a podcast: 30-sec sizzle intro hook')).toBeVisible()
 })
 
 test('renders the privacy policy page', async ({ page }) => {
@@ -152,8 +173,10 @@ test('renders the terms of service page', async ({ page }) => {
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Cut clips where your context lives.' },
-    { path: '/docs.md', text: 'Recording -> Moment -> Clip' },
-    { path: '/mcp.md', text: 'How ChatGPT And Claude Open The Editor' },
+    { path: '/docs.md', text: 'Use it from your AI assistant' },
+    { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
+    { path: '/blog.md', text: 'Your show has a signature now' },
+    { path: '/blog/your-show-has-a-signature-now.md', text: 'Know what mattered in the recording' },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
   ]
@@ -167,27 +190,36 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   const sitemap = await request.get('/sitemap.xml')
   expect(sitemap.ok()).toBeTruthy()
   const sitemapText = await sitemap.text()
-  expect(sitemapText).toContain('https://bitterclip.com/index.md')
-  expect(sitemapText).toContain('https://bitterclip.com/docs.md')
-  expect(sitemapText).toContain('https://bitterclip.com/mcp.md')
+  expect(sitemapText).toContain('https://bitterclip.com/')
+  expect(sitemapText).toContain('https://bitterclip.com/docs')
+  expect(sitemapText).toContain('https://bitterclip.com/docs/assistants/overview')
+  expect(sitemapText).toContain('https://bitterclip.com/blog')
+  expect(sitemapText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
-  expect(sitemapText).toContain('https://bitterclip.com/privacy.md')
   expect(sitemapText).toContain('https://bitterclip.com/terms')
-  expect(sitemapText).toContain('https://bitterclip.com/terms.md')
-  expect(sitemapText).toContain('https://bitterclip.com/llms.txt')
-  expect(sitemapText).toContain('https://bitterclip.com/llms-full.txt')
+  expect(sitemapText).toContain('https://bitterclip.com/docs/help/troubleshooting')
+
+  const rss = await request.get('/blog/rss.xml')
+  expect(rss.ok()).toBeTruthy()
+  const rssText = await rss.text()
+  expect(rssText).toContain('<rss version="2.0"')
+  expect(rssText).toContain('<title>Your show has a signature now</title>')
+  expect(rssText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
   const llmsText = await llms.text()
-  expect(llmsText).toContain('Markdown Alternates')
-  expect(llmsText).toContain('Contributing')
+  expect(llmsText).toContain('Recording → Episode → Clip')
+  expect(llmsText).toContain('Use it from your AI assistant')
+  expect(llmsText).toContain('Your show has a signature now')
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
   const llmsFullText = await llmsFull.text()
-  expect(llmsFullText).toContain('Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing')
-  expect(llmsFullText).toContain('ChatGPT App Directory Submission')
-  expect(llmsFullText).toContain('Terms Of Service')
-  expect(llmsFullText).toContain('Repository Boundary')
+  expect(llmsFullText).toContain('Recording → Episode → Clip')
+  expect(llmsFullText).toContain('Use BitterClip from your AI assistant')
+  expect(llmsFullText).toContain('Connect ChatGPT')
+  expect(llmsFullText).toContain('Troubleshooting')
+  expect(llmsFullText).toContain('Your show has a signature now')
+  expect(llmsFullText).toContain('Know what mattered in the recording')
 })
