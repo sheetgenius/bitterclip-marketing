@@ -53,7 +53,8 @@ Motion design in BitterClip isn't a template picker. Every effect is a small
 piece of real code — a scene with a stage, elements, and motion keyed to time
 and sound. Which means something interesting: **a model can write one.**
 
-Connect ChatGPT or Claude, hand it your logo, and describe the vibe —
+[Connect ChatGPT or Claude](/docs/assistants/overview), hand it your logo,
+and describe the vibe —
 "minimal, confident, dark, one pulse of color when the wordmark locks in."
 Your assistant ingests the asset, writes your brand pack, and then writes the
 scene itself. It previews actual frames of its own work, looks at them,
@@ -71,6 +72,9 @@ templates are frozen at whatever taste we had the day we made them, and
 models get better every quarter. Effects-as-code means the ceiling on your
 opener is the ceiling on your assistant — and that ceiling keeps moving up.
 You bring the taste and the yes/no. The assistant brings the hands.
+
+*Want to see it on your own show? [Connect your assistant](/docs/assistants/overview)
+and ask for an opener.*
 
 ## Built with our design partners
 
@@ -114,10 +118,5 @@ hand it to a client, drop it into a Zapier flow, feed it to a captioning or
 scheduling tool. No integration required on their side; if it can fetch a
 URL, it can take your clip. Ask your assistant for "a public link to that
 render" and it's done.
-
-## Try it
-
-BitterClip is free to start. Upload a recording, open the FX tab, and give
-your show its signature — or connect your assistant and just describe it.
 
 *Know what mattered in the recording — then make it look like yours.*

@@ -34,6 +34,11 @@ under a dated entry.
   Identity Studio, per-post article SEO, BlogPosting JSON-LD, a generated
   `/blog.md` twin, generated post Markdown twins, `/blog/rss.xml`, sitemap
   entries, and discovery-file coverage for the new route.
+- Blog presentation and conversion pass: every post now ends with a real
+  get-started card (buttons, not a heading), posts show reading time and a
+  share row (X, LinkedIn, copy link, RSS), quotes render as message bubbles,
+  the index features the post's social image with an accessible card link,
+  and body contrast was raised for long-form reading.
 - Added a focused sign-in and conversion study after user feedback that the
   public landing page did not make returning-user sign-in obvious. The study
   verifies the live auth routes (`/sign_in` works, `/login` 404s), recommends
