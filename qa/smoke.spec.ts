@@ -101,6 +101,70 @@ test('renders the developer documentation page and navigation', async ({ page })
   await expect(page.getByRole('link', { name: 'Connect ChatGPT' }).first()).toBeVisible()
 })
 
+test('tracks docs article, section, TOC, and sidebar analytics', async ({ page }) => {
+  await page.goto('/docs/getting-started/your-first-clip')
+
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'docs_article_view' &&
+      event.params.docs_path === '/docs/getting-started/your-first-clip',
+    ),
+  )
+
+  await page.locator('.docs-prose h2').first().scrollIntoViewIfNeeded()
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'docs_section_view' &&
+      event.params.docs_path === '/docs/getting-started/your-first-clip',
+    ),
+  )
+
+  await page.locator('.docs-toc a').first().click()
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'docs_toc_click' &&
+      event.params.docs_path === '/docs/getting-started/your-first-clip',
+    ),
+  )
+
+  await page.locator('.docs-sidebar a[href="/docs/assistants/overview"]').first().click()
+  await page.waitForURL('**/docs/assistants/overview')
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'docs_nav_click' &&
+      String(event.params.link_url).includes('/docs/assistants/overview'),
+    ) &&
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'page_view' &&
+      event.params.page_path === '/docs/assistants/overview',
+    ),
+  )
+})
+
+test('forwards docs live editor demo events to analytics', async ({ page }) => {
+  await page.goto('/docs/assistants/overview')
+
+  const editor = page.locator('iframe[title="BitterClip — the live transcript editor"]')
+  await expect(editor).toHaveAttribute('src', /embed\/clip-demo/)
+
+  await page.evaluate(() => {
+    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — the live transcript editor"]')
+    if (!frame?.contentWindow) throw new Error('docs editor iframe missing')
+    window.dispatchEvent(new MessageEvent('message', {
+      data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
+      source: frame.contentWindow,
+    }))
+  })
+
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'bitterclip_demo_export_revealed' &&
+      event.params.demo_surface === 'docs' &&
+      event.params.docs_path === '/docs/assistants/overview',
+    ),
+  )
+})
+
 test('renders the assistant documentation page and live editor', async ({ page }) => {
   await page.goto('/docs/assistants/overview')
 
