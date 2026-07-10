@@ -3,9 +3,9 @@ title: Connect Claude
 description: Add BitterClip to Claude as a Connector and make your first clip in chat.
 navigation:
   label: Connect Claude
-  order: 2
+  order: 3
 section: assistants
-updated: '2026-06-24'
+updated: '2026-07-10'
 tags:
   - assistants
   - claude
@@ -24,9 +24,9 @@ conversation. Here's how to set it up and pull your first clip.
 ::
 
 ::callout{type="note"}
-Adding your own connector in Claude takes a paid plan (Pro, Max, Team, or Enterprise).
-On the free tier there's no place to add one, so if you can't find the option, that's
-usually why. It isn't anything you did wrong.
+Claude supports custom connectors on Free, Pro, Max, Team, and Enterprise plans. A Free
+account can add one custom connector, so BitterClip can be that one. The feature is still
+marked beta, which is why some labels may move.
 ::
 
 ## Add BitterClip as a connector in Claude
@@ -100,7 +100,7 @@ lands in your project once it's done.
 ::approval-promise
 ::
 
-## Run into trouble?
+## Troubleshooting
 
 If a connection won't stick or a clip doesn't show up, see the
 [troubleshooting guide](/docs/help/troubleshooting).

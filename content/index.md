@@ -1,6 +1,6 @@
 ---
 title: BitterClip docs
-description: Turn long recordings into short, source-accurate clips, in your browser or right inside ChatGPT and Claude. Start here.
+description: Turn long recordings into short, source-accurate clips in your browser or a supported AI assistant. Start here.
 navigation:
   label: Overview
   order: 0

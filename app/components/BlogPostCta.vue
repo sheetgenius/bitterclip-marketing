@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { buildSignupUrl } from '~/utils/signup-attribution'
+
 // End-of-post conversion card. Rendered by app/pages/blog/[slug].vue after the
 // prose so every post ends with a real pathway (never a heading that looks
 // like a link). Reads signup_url from _data/site.yml — quotes NO price.
@@ -13,6 +16,13 @@ withDefaults(defineProps<{
 const { data: site } = await useAsyncData('site', () =>
   queryCollection('site').first(),
 )
+const route = useRoute()
+const signupUrl = computed(() => buildSignupUrl({
+  baseUrl: site.value?.signup_url,
+  query: route.query,
+  surface: 'blog_post',
+  landingPath: route.path,
+}))
 </script>
 
 <template>
@@ -30,7 +40,7 @@ const { data: site } = await useAsyncData('site', () =>
     </p>
     <div class="mt-6 flex flex-wrap items-center gap-3">
       <a
-        :href="site?.signup_url"
+        :href="signupUrl"
         class="inline-flex items-center rounded-full bg-[#f28f84] px-5 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       >
         Start free
@@ -39,7 +49,7 @@ const { data: site } = await useAsyncData('site', () =>
         to="/docs/assistants/overview"
         class="inline-flex items-center rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 transition hover:border-[#f28f84]/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       >
-        See it in ChatGPT
+        Use it with your assistant
       </NuxtLink>
     </div>
   </aside>

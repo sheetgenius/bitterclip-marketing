@@ -3,8 +3,6 @@
 // Instagram) app settings as the "Data Deletion Instructions URL", and linked from
 // the privacy policy. Plain instructions for removing data BitterClip stored from a
 // connected account, plus full account/workspace deletion.
-const signupUrl = 'https://app.bitterclip.com/sign_up'
-
 useHead({
   title: 'BitterClip - Data deletion',
   meta: [

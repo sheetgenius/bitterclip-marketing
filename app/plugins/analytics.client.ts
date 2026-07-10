@@ -184,18 +184,39 @@ export default defineNuxtPlugin((nuxtApp) => {
     setupDocsSectionObserver(path)
   }
 
-  function handleDocsClick(event: MouseEvent) {
-    if (!isDocsRoute(route.path)) return
+  function handleMarketingClick(event: MouseEvent) {
     const target = event.target instanceof Element ? event.target : null
     const anchor = target?.closest('a')
     if (!(anchor instanceof HTMLAnchorElement)) return
 
     const url = normalizedUrl(anchor)
     if (!url) return
-    const base = {
-      ...docsBaseParams(route.path),
+    const marketingBase = {
+      page_path: route.path,
       link_url: url.href,
       link_text: linkText(anchor),
+    }
+
+    if (url.origin === APP_ORIGIN && url.pathname === '/sign_up') {
+      sendEvent('signup_click', {
+        ...marketingBase,
+        plan: url.searchParams.get('plan') || 'free',
+        marketing_surface: url.searchParams.get('bc_surface') || 'unknown',
+        marketing_stage: url.searchParams.get('bc_stage') || 'default',
+      })
+      if (isDocsRoute(route.path)) {
+        sendEvent('docs_signup_click', {
+          ...docsBaseParams(route.path),
+          ...marketingBase,
+        })
+      }
+      return
+    }
+
+    if (!isDocsRoute(route.path)) return
+    const base = {
+      ...docsBaseParams(route.path),
+      ...marketingBase,
     }
 
     if (anchor.closest('.docs-toc')) {
@@ -213,11 +234,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     if (anchor.closest('.docs-md-link')) {
       sendEvent('docs_markdown_click', base)
-      return
-    }
-
-    if (url.origin === APP_ORIGIN && url.pathname === '/sign_up') {
-      sendEvent('docs_signup_click', base)
       return
     }
 
@@ -258,7 +274,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     sendEvent(`bitterclip_demo_${name}`, params)
   }
 
-  document.addEventListener('click', handleDocsClick, true)
+  document.addEventListener('click', handleMarketingClick, true)
   window.addEventListener('message', handleDocsDemoMessage)
   watch(() => route.path, () => {
     requestAnimationFrame(() => { void refreshDocsTracking() })

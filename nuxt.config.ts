@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
-  'BitterClip turns your podcasts, interviews, and founder calls into clips — and the editor opens right inside ChatGPT. Find the moment, check the source, post a finished clip.'
+  'BitterClip turns podcasts, interviews, and founder calls into source-linked clips. Find the moment, check the source, and export a finished clip in your browser or supported AI assistant.'
 const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({
@@ -55,9 +55,13 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
-        { name: 'twitter:card', content: 'summary' },
+        { property: 'og:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
         { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

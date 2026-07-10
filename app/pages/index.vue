@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 
-const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
+const route = useRoute()
+const signupBaseUrl = SIGNUP_BASE_URL
 const demoClipUrl = 'https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
@@ -64,14 +66,13 @@ const demoSignupStage = ref('default')
 // Paid pricing CTAs carry ?plan= so the app's signup hands off to
 // /billing?plan=… after account creation; every other CTA stays plan-less.
 const signupUrlFor = (plan?: string) => {
-  const url = new URL(signupBaseUrl)
-  if (plan) url.searchParams.set('plan', plan)
-  url.searchParams.set('utm_source', 'bitterclip.com')
-  url.searchParams.set('utm_medium', 'landing_page')
-  url.searchParams.set('utm_campaign', 'homepage_editor_demo')
-  url.searchParams.set('utm_content', demoSignupStage.value)
-  url.searchParams.set('from', `landing_${demoSignupStage.value}`)
-  return url.toString()
+  return buildSignupUrl({
+    query: route.query,
+    plan,
+    surface: 'homepage',
+    stage: demoSignupStage.value,
+    landingPath: route.path,
+  })
 }
 const signupUrl = computed(() => signupUrlFor())
 const signupUrlClip = computed(() => signupUrlFor('clip'))
@@ -93,15 +94,15 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Create the free account, connect BitterClip in ChatGPT or Claude, and upload a recording. Ask for the strongest moment and the editor opens with it — check it, trim it, export.',
+    a: 'Create the free account and upload a recording in your browser. Open it there, or connect Claude or a ChatGPT workspace where custom apps are enabled and ask for the strongest moment. Check the cut, trim it, export.',
   },
   {
     q: 'Do I need ChatGPT, or does Claude work too?',
-    a: 'Both. Enable the BitterClip app in ChatGPT, or add it as a Connector in Claude, and sign in. There’s no local setup and nothing to install.',
+    a: 'You can always use BitterClip in your browser. Claude supports custom connectors on every Claude plan. In ChatGPT, custom-app access and available actions depend on your plan and workspace policy.',
   },
   {
     q: 'Can the AI post something without me?',
-    a: 'No. You see every clip in the editor before it’s exported, and nothing publishes without your explicit approval.',
+    a: 'Approval is the default. Nothing posts until you connect a channel and approve the clip. If you later turn on automatic publishing for a project, ready clips can post to the channels you chose.',
   },
   {
     q: 'What can I upload?',
@@ -109,11 +110,11 @@ const faqItems = [
   },
   {
     q: 'Do I have to learn a new editor?',
-    a: 'The editor opens right in the chat. Drag across the words in the transcript and the cut follows the audio — if you can highlight text, you can cut a clip.',
+    a: 'No. Drag across the words in the transcript and the cut follows the audio. It is the same focused editor in the browser and in supported assistant hosts.',
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Your files stay downloadable on every plan, and everything has a 30-day refund.',
+    a: 'Your paid plan runs through the period you already paid for, then your account moves to Free. Your files stay downloadable, so canceling never strands your work.',
   },
 ]
 
@@ -132,7 +133,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'Turn long podcasts, interviews, and founder calls into short clips — right inside ChatGPT.',
+    description: 'Turn long podcasts, interviews, and founder calls into source-linked clips in your browser or a supported AI assistant.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -274,11 +275,6 @@ const syncDocumentSignupLinks = () => {
   window.dispatchEvent(new CustomEvent('bitterclip:signup-stage', {
     detail: { stage: demoSignupStage.value, href: signupUrl.value },
   }))
-  document.querySelectorAll<HTMLAnchorElement>(`a[href="${signupBaseUrl}"], a[href^="${signupBaseUrl}?"]`).forEach((anchor) => {
-    // Preserve the pricing CTAs' ?plan= while refreshing the demo-stage UTM.
-    const plan = new URL(anchor.href).searchParams.get('plan')
-    anchor.href = plan ? signupUrlFor(plan) : signupUrl.value
-  })
 }
 
 const recordDemoEvent = (surface: DemoSurface, name: DemoEventName, detail: Record<string, unknown>) => {
@@ -399,7 +395,7 @@ onBeforeUnmount(() => {
           </h1>
 
           <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-            Upload a podcast, interview, or founder call and just ask. ChatGPT finds the moment and opens a real editor right in the chat — trim it, hear it in context, and post a finished clip. No new app to learn.
+            Upload a podcast, interview, or founder call and just ask. In a ChatGPT workspace with custom apps enabled, your assistant finds the moment and opens a real editor beside the conversation. Trim it, hear it in context, and export a finished clip. The same workspace works in your browser and Claude.
           </p>
 
           <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
@@ -420,7 +416,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Made for founders, podcasters, and coaches doing their own marketing.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Browser and Claude are open to everyone; the full ChatGPT app currently needs an eligible workspace.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -430,8 +426,8 @@ onBeforeUnmount(() => {
                overlap); the arrow sweeps DOWN to the live MCP widget below — not
                the top of the conversation. -->
           <div class="hidden lg:block absolute -top-8 -left-[22.5rem] z-30 w-[340px] text-right -rotate-[5deg] pointer-events-none select-none">
-            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8] block whitespace-nowrap">this is the actual UI</span>
-            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8]/80 block whitespace-nowrap">inside ChatGPT &amp; Claude</span>
+            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8] block whitespace-nowrap">this is the real editor</span>
+            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8]/80 block whitespace-nowrap">your assistant opens</span>
           </div>
           <svg viewBox="0 0 130 210" fill="none" class="hidden lg:block absolute top-[2.8rem] -left-[6rem] w-[130px] h-[210px] z-30 text-[#ffb4a8]/85 pointer-events-none">
             <path d="M44 2 C 24 76, 30 152, 114 197" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
@@ -616,12 +612,12 @@ onBeforeUnmount(() => {
               Other clippers guess. Yours knows the whole conversation.
             </h2>
             <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
-              Drop in a podcast, a founder call, or a training session. BitterClip transcribes it and labels every speaker — names and all — automatically. By the time you open ChatGPT or Claude, the whole conversation is already there: who said it, what came before and after. Ask for the sharpest exchange — the moments it picks land.
+              Drop in a podcast, a founder call, or a training session. BitterClip transcribes it and separates the speakers automatically. Confirm a name once and BitterClip can recognize that person when they return. Your assistant gets the whole conversation: who said what, and what came before and after. Ask for the sharpest exchange, then check the source yourself.
             </p>
 
             <!-- motif row: it suggests → you approve → you post -->
             <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-              <span class="text-[#f28f84]">ChatGPT suggests</span>
+              <span class="text-[#f28f84]">your assistant suggests</span>
               <span class="text-zinc-600">&rarr;</span>
               <span class="text-[#f28f84]">you approve</span>
               <span class="text-zinc-600">&rarr;</span>
@@ -735,7 +731,7 @@ onBeforeUnmount(() => {
             Finished clips — out the door, your way.
           </h2>
           <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-            Trim it, export, done. Post it straight to YouTube, X, Instagram, or LinkedIn, or grab a shareable link. And invite a client to the same recording so they can pull their own clips in their ChatGPT or Claude — upload once, everyone clips.
+            Trim it, export, done. Publish directly to YouTube, X, or LinkedIn, or grab a shareable link. For Instagram, send the finished clip to your phone and post it from the Instagram app. Invite a client to the same recording and they can pull their own clips too — upload once, everyone clips.
           </p>
         </div>
 
@@ -877,7 +873,7 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with clips.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Upload a podcast, interview, or founder call — finished clips you've checked yourself, cut right inside ChatGPT. Start free; upgrade when an hour a month stops being enough.
+            Upload a podcast, interview, or founder call and leave with clips you've checked yourself. Work in the browser or bring the same editor into a supported assistant. Start free; upgrade when an hour a month stops being enough.
           </p>
         </div>
 
@@ -929,7 +925,7 @@ onBeforeUnmount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
           </div>
 
           <!-- PRO — plain panel: the $99 price anchors on its own; the accent lives
@@ -954,7 +950,7 @@ onBeforeUnmount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">30-day refund · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
           </div>
 
         </div>

@@ -6,8 +6,10 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/index.md"]')).toHaveCount(1)
   const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
   expect(jsonLd).toContain('SoftwareApplication')
+  await expect(page.locator('meta[property="og:image"][content="https://bitterclip.com/images/bitterclip-og.png"]')).toHaveCount(1)
+  await expect(page.locator('meta[name="twitter:card"][content="summary_large_image"]')).toHaveCount(1)
   await expect(page.getByRole('heading', { level: 1, name: /Cut your clips/ })).toBeVisible()
-  await expect(page.getByText('opens a real editor right in the chat')).toBeVisible()
+  await expect(page.getByText('opens a real editor beside the conversation')).toBeVisible()
   await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
   const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })
   await expect(navCta).toBeVisible()
@@ -23,6 +25,9 @@ test('renders the speaker-aware clipping hero', async ({ page }) => {
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Finished clips — out the door, your way.' })).toBeVisible()
+  await expect(page.getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
+  await expect(page.getByText('Browser and Claude are open to everyone')).toBeVisible()
+  await expect(page.getByText('30-day refund')).toHaveCount(0)
   await expect(page.locator('#pricing').getByRole('link', { name: 'Start free' })).toBeVisible()
   await expect(page.locator('#pricing').getByRole('link', { name: 'Start clipping' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Go Pro' })).toBeVisible()
@@ -65,6 +70,26 @@ test('attributes signup links after mid-page editor engagement', async ({ page }
   })
 
   await expect(page.getByRole('link', { name: /Clip your first recording/ })).toHaveAttribute('href', /utm_content=editor_export_revealed/)
+})
+
+test('records a sitewide signup CTA event without navigating', async ({ page }) => {
+  await page.goto('/?utm_source=newsletter&utm_campaign=summer_launch')
+
+  await page.evaluate(() => {
+    const anchor = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))
+      .find((candidate) => candidate.textContent?.includes('Clip your first recording'))
+    if (!anchor) throw new Error('signup CTA missing')
+    anchor.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    anchor.click()
+  })
+
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'signup_click' &&
+      event.params.page_path === '/' &&
+      event.params.marketing_surface === 'homepage',
+    ),
+  )
 })
 
 test('previews the light hero phone and forwards the theme to the embed', async ({ page }) => {
@@ -170,6 +195,8 @@ test('renders the assistant documentation page and live editor', async ({ page }
 
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="/docs/assistants/overview.md"]')).toHaveCount(1)
   await expect(page.getByRole('heading', { level: 1, name: 'Use BitterClip from your AI assistant' })).toBeVisible()
+  await expect(page.getByText('Claude supports custom connectors on every plan')).toBeVisible()
+  await expect(page.locator('article')).toContainText('custom-app access and the actions an app may take depend on your plan and workspace policy')
   await expect(page.getByRole('heading', { name: 'Try the editor right here' })).toBeVisible()
   await expect(page.locator('iframe[title="BitterClip — the live transcript editor"]')).toHaveAttribute('src', /embed\/clip-demo/)
   await expect(page.getByText('app.bitterclip.com/mcp')).toBeVisible()
@@ -214,7 +241,7 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   const startFree = page.getByRole('link', { name: 'Start free' })
   await expect(startFree).toBeVisible()
   await expect(startFree).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
-  await expect(page.getByRole('link', { name: 'See it in ChatGPT' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Use it with your assistant' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible()
 })
 
@@ -244,7 +271,7 @@ test('renders the terms of service page', async ({ page }) => {
 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
-    { path: '/index.md', text: 'Cut clips where your context lives.' },
+    { path: '/index.md', text: 'Cut your clips inside ChatGPT.' },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     { path: '/blog.md', text: 'Your show has a signature now' },

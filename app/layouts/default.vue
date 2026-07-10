@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 
 // Default marketing chrome — the rounded glass nav pill + the full footer.
 // This is the homepage / legal-page shell. Docs use layouts/docs.vue instead.
-const signupBaseUrl = 'https://app.bitterclip.com/sign_up'
+const route = useRoute()
+const signupBaseUrl = SIGNUP_BASE_URL
 const signInUrl = 'https://app.bitterclip.com/sign_in'
 const signupStage = ref('default')
 
 const signupUrl = computed(() => {
-  const url = new URL(signupBaseUrl)
-  url.searchParams.set('utm_source', 'bitterclip.com')
-  url.searchParams.set('utm_medium', 'landing_page')
-  url.searchParams.set('utm_campaign', 'homepage_editor_demo')
-  url.searchParams.set('utm_content', signupStage.value)
-  url.searchParams.set('from', `landing_${signupStage.value}`)
-  return url.toString()
+  return buildSignupUrl({
+    baseUrl: signupBaseUrl,
+    query: route.query,
+    surface: 'footer',
+    stage: signupStage.value,
+    landingPath: route.path,
+  })
 })
 
 const updateSignupStage = (event: Event) => {
@@ -53,7 +55,7 @@ onBeforeUnmount(() => {
 
         <div class="hidden md:flex items-center gap-1 font-sans text-sm font-medium tracking-tight text-zinc-300">
           <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#demo">Demo</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs/assistants/overview">In ChatGPT</NuxtLink>
+          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs/assistants/overview">Assistants</NuxtLink>
           <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs">Docs</NuxtLink>
           <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/blog">Blog</NuxtLink>
           <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#pricing">Pricing</NuxtLink>
@@ -91,9 +93,9 @@ onBeforeUnmount(() => {
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
             <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
-              Turn long podcasts, interviews, and founder calls into short clips — right inside ChatGPT.
+              Turn long podcasts, interviews, and founder calls into source-linked clips you can check before they leave your hands.
             </p>
-            <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip%20early%20access">hello@bitterclip.com</a>
+            <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
           </div>
 
           <!-- Link columns -->
@@ -102,7 +104,7 @@ onBeforeUnmount(() => {
               <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Product</h2>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs">Docs</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/blog">Blog</NuxtLink>
-              <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">In ChatGPT</NuxtLink>
+              <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">Assistants</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/#pricing">Pricing</NuxtLink>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start clipping</a>
             </div>

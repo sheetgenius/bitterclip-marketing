@@ -11,11 +11,11 @@ publishing.
 
 ## Hero
 
-Cut clips where your context lives.
+Cut your clips inside ChatGPT.
 
-BitterClip turns podcasts, interviews, founder calls, demos, and recurring shows
-into speaker-aware clips your agent can find, you can verify, and export ready
-to post.
+Upload a podcast, interview, founder call, demo, or recurring show. In an eligible
+ChatGPT workspace, your assistant finds the moment and opens a real editor beside
+the conversation. The same source-linked workspace works in your browser and Claude.
 
 ## Product Loop
 
@@ -34,7 +34,7 @@ together. Drag across words, check the source, and the cut follows the audio.
 This is the same class of editor surface an agent can open when working inside
 AI chat environments.
 
-The public homepage frames that live surface inside a phone-style chat preview:
+The public homepage frames that live surface inside a phone-style assistant preview:
 the assistant finds three candidate cuts, opens one in the editor, and invites
 the visitor to tighten the range before posting. The preview runs in demo mode:
 expensive or account-scoped actions use safe stubs, completed demo interactions
@@ -99,18 +99,23 @@ focused workspace to verify and export.
 
 ## Common Questions
 
-- What happens after signup: create the free account, connect BitterClip in
-  ChatGPT or Claude, upload a recording, and ask for the strongest moment —
-  the editor opens with it.
-- ChatGPT or Claude: both work. Enable the BitterClip app in ChatGPT, or add
-  it as a Connector in Claude. No local setup.
-- The AI never posts without you: every clip is checked in the editor before
-  export, and publishing requires explicit approval.
+- What happens after signup: create the free account and upload a recording in
+  your browser. Open it there, or connect a supported assistant and ask for the
+  strongest moment; the editor opens with it.
+- ChatGPT or Claude: both work, with different setup rules. Claude supports a
+  custom connector on every plan. In ChatGPT, custom-app access and available
+  actions depend on the plan and workspace policy.
+- Publishing starts in approval mode: nothing posts until a channel is connected
+  and the clip is approved. A project can later opt into automatic publishing.
 - Uploads: podcasts, interviews, calls, training sessions — audio or video,
   files up to 4 GB (20 GB on Pro).
-- No new editor to learn: drag across the transcript words and the cut
-  follows the audio.
-- Canceling: files stay downloadable on every plan; 30-day refund.
+- No new editor to learn: drag across the transcript words and the cut follows
+  the audio. The same focused editor works in the browser and supported assistants.
+- Assistant availability: Claude supports custom connectors on every plan. The
+  ChatGPT custom-app path depends on plan and workspace policy. The browser
+  workspace is available to everyone.
+- Canceling: the paid plan runs through the current paid period, then the account
+  moves to Free. Files stay downloadable.
 
 ## Pricing
 
@@ -125,8 +130,8 @@ Three plans, one uniform price list:
   file uploads up to 20 GB, front-of-queue processing, and visual analysis
   workflows. For people whose footage is their business.
 
-Every plan: 30-day refund, cancel anytime, and your files stay
-downloadable — canceling never strands your work.
+Paid plans are month to month and can be canceled at any time. Your files stay
+downloadable, so canceling never strands your work.
 
 Signup: https://app.bitterclip.com/sign_up (Clip:
 https://app.bitterclip.com/sign_up?plan=clip · Pro:

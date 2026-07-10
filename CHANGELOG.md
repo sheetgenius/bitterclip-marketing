@@ -30,6 +30,20 @@ under a dated entry.
 
 ### Website
 
+- Preserved original campaign UTMs and ad click IDs across every marketing,
+  docs, blog, footer, and pricing signup link. BitterClip's own page and demo
+  context now travels in separate `bc_*` fields, and sitewide signup clicks
+  produce explicit analytics events instead of being inferred from pageviews.
+- Aligned public copy with shipped behavior: removed the unsupported refund
+  promise, described Instagram as a phone handoff, explained approval-mode and
+  opt-in automatic publishing, described confirmed speaker recognition rather
+  than automatic names, and documented the current Claude and ChatGPT custom-app
+  availability rules.
+- Added a dedicated 1200x630 BitterClip social card, large-card Open Graph and X
+  metadata, explicit `/pricing` and `/signup` aliases, and real 404 responses for
+  unknown marketing paths instead of silently serving the homepage.
+- Added docs engagement analytics for article, section, table-of-contents,
+  sidebar, signup, and live-editor interactions, with Playwright coverage.
 - Published blog posts two and three: "We stopped making templates"
   (effects-as-code) and "A condensed memory of the work" (why highlight
   reels are client memory, not marketing), each with hero/OG art and
@@ -76,8 +90,8 @@ under a dated entry.
   chip, and the only filled CTA (Pro demoted to a plain panel — the $99 price
   anchors on its own); plan features reworded for cold visitors ("clip
   exports", "Upload files up to 4 GB", "Add 5 more hours for $5, anytime");
-  risk reversal moved to the point of decision ("30-day refund, annual
-  included · cancel anytime" under each paid CTA, "Resets every month — not a
+  cancellation and custody language moved to the point of decision ("Month to
+  month · cancel anytime" under each paid CTA, "Resets every month — not a
   trial" under Free); on mobile the recommended plan stacks first. Added a
   six-question FAQ section before pricing (after-signup flow, ChatGPT/Claude,
   human approval, upload limits, editor learning curve, cancellation custody)
@@ -115,15 +129,13 @@ under a dated entry.
   matching the destination logos: an archetypal black media-clip glyph with a
   centered play button and scrub bar. The poster image asset remains in
   `public/clips/` but is no longer referenced by the page.
-- Replaced the single $99/month launch-access card with the three-tier pricing
-  ladder: Free ($0, 60 min footage/month, 10 watermarked 1080p exports, 4 GB
-  uploads), Clip ($9/month or $90/year, 10 hrs footage, 150 exports, no
-  watermark, $5 per +5 hr top-ups), and Pro ($99/month or $799/year, 40 hrs
-  footage, 1,000 exports up to 4K, 20 GB uploads, priority processing,
-  analysis workflows as they ship). Updated the index and MCP Markdown twins,
-  `llms-full.txt`, structured-data offers (now an AggregateOffer, $0–$99), and
-  smoke tests to match. Every plan: 30-day refund, cancel anytime, files stay
-  downloadable.
+- Replaced the single $99/month launch-access card with the current three-tier
+  ladder: Free ($0, 60 minutes/month, 10 watermarked 1080p exports, 4 GB
+  uploads), Clip ($9/month, 10 hours, 150 1080p exports, no watermark), and Pro
+  ($99/month, 40 hours, 1,000 1080p exports, 20 GB uploads, priority processing,
+  and visual analysis workflows). Updated the index Markdown twin, structured
+  data, and smoke tests to match. Paid plans are month to month, can be canceled
+  at any time, and files remain downloadable.
 - Added a YouTube API Services disclosure section to the privacy policy and
   terms of service (HTML pages and Markdown twins), covering the YouTube Terms
   of Service and Google Privacy Policy references, what YouTube connection data
@@ -138,6 +150,12 @@ under a dated entry.
 - Added `https://bitterclip.com/terms` and `https://bitterclip.com/terms.md`
   so provider app registration and public users have discoverable terms for the
   website, app, connector, billing, and publishing integrations.
+
+### Public Hygiene
+
+- Removed an internal production-readiness report from the public repository,
+  rewrote the two affected tip commits out of branch history, restored branch
+  protection, and kept production/customer detail out of the public docs tree.
 
 ## 2026-06-04
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { buildSignupUrl } from '~/utils/signup-attribution'
+
 const siteOrigin = 'https://bitterclip.com'
 const description = 'Launch notes, product updates, and field notes from BitterClip.'
 
@@ -8,6 +10,13 @@ const { data: posts } = await useAsyncData('blog:index', () =>
 const { data: site } = await useAsyncData('site', () =>
   queryCollection('site').first(),
 )
+const route = useRoute()
+const signupUrl = computed(() => buildSignupUrl({
+  baseUrl: site.value?.signup_url,
+  query: route.query,
+  surface: 'blog_index',
+  landingPath: route.path,
+}))
 
 const sortedPosts = computed(() =>
   [...(posts.value ?? [])].sort((a, b) =>
@@ -72,10 +81,10 @@ useHead(() => {
         {{ description }}
       </p>
       <p class="mt-3 max-w-2xl text-sm leading-relaxed text-zinc-500">
-        New here? BitterClip turns long recordings into source-true clips — in your
-        browser or right inside ChatGPT and Claude.
+        New here? BitterClip turns long recordings into source-true clips in your
+        browser or a supported AI assistant.
         <a
-          :href="site?.signup_url"
+          :href="signupUrl"
           class="text-[#f28f84] underline decoration-[#f28f84]/40 underline-offset-4 transition hover:text-[#ffa89e]"
         >It's free to start</a>.
       </p>

@@ -10,6 +10,5 @@ pricing_url: https://bitterclip.com/#pricing
 support_email: hello@bitterclip.com
 mcp_resource_url: https://app.bitterclip.com/mcp
 app_origin: https://app.bitterclip.com
-# Social card. /icon.png is the only branded raster asset shipped in public/ today;
-# swap this for a dedicated wide OG image (1200x630) once one is added to public/.
-og_image_default: /icon.png
+# Default 1200x630 social card for marketing and docs routes.
+og_image_default: /images/bitterclip-og.png

@@ -5,7 +5,7 @@ navigation:
   label: FAQ
   order: 1
 section: help
-updated: '2026-06-24'
+updated: '2026-07-10'
 tags:
   - faq
   - help
@@ -32,7 +32,10 @@ BitterClip transcribes the recording for you, lining up every word with the audi
 
 ## Does it work with ChatGPT, Claude, or both?
 
-Both. You can add BitterClip to ChatGPT or to Claude and clip by chatting with it. The [assistant guide](/docs/assistants/overview) walks through connecting each one. You can also skip the assistant and work in your browser instead.
+Both, but the connection rules are different today. Claude lets every plan add a custom
+connector (Free accounts can add one). In ChatGPT, custom-app access and available actions
+depend on your plan and workspace policy. The [assistant guide](/docs/assistants/overview)
+walks through both paths. You can always skip the assistant and work in your browser.
 
 ## Do I have to use an AI assistant, or can I use the browser?
 

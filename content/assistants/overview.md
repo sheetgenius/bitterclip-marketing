@@ -5,7 +5,7 @@ navigation:
   label: Use it from your assistant
   order: 1
 section: assistants
-updated: '2026-06-24'
+updated: '2026-07-10'
 tags:
   - assistants
   - mcp
@@ -18,7 +18,14 @@ tags:
 You connect BitterClip to ChatGPT or Claude once, then you make clips by talking to your
 assistant. No timeline, no settings to learn. You ask for a good moment, and the transcript
 editor opens right there in the chat with a clip already picked. From there you watch it,
-nudge the edges if you want, and export when it's right. You never leave the chat.
+nudge the edges if you want, and export when it's right. The same work is waiting in your
+browser whenever that is easier.
+
+::callout{type="note"}
+Claude supports custom connectors on every plan. In ChatGPT, custom-app access and the
+actions an app may take depend on your plan and workspace policy. BitterClip's browser
+workspace works for everyone.
+::
 
 You'll need a BitterClip account first, which is free to start. Already have one and just
 want the connect steps? [Jump to Connect your assistant](#connect-your-assistant).
@@ -82,13 +89,13 @@ conversation simple. Everything else lives in the web app.
 
 ## Connect your assistant
 
-Connecting takes a minute and it works the same way on both. You add BitterClip as a
-connection and sign in once with the account you made above.
+Both assistants connect to the same BitterClip account, but their setup rules differ.
+Choose the guide for the host you use:
 
-- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: add BitterClip as a connector
-  and sign in.
-- **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip as a connection
-  and sign in.
+- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: enable custom apps, add
+  BitterClip, then sign in. Workspace policy may require an admin.
+- **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip as a custom
+  connector on any Claude plan, then sign in.
 
 If the connection doesn't take or your recordings don't show up, the
 [troubleshooting guide](/docs/help/troubleshooting) covers the usual fixes, and you can

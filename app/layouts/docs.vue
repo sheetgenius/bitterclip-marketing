@@ -76,7 +76,7 @@ useHead({
         <nav class="docs-header__nav" aria-label="Site">
           <NuxtLink to="/docs" class="docs-header__navlink">Docs</NuxtLink>
           <NuxtLink to="/blog" class="docs-header__navlink">Blog</NuxtLink>
-          <NuxtLink to="/docs/assistants/overview" class="docs-header__navlink">In ChatGPT</NuxtLink>
+          <NuxtLink to="/docs/assistants/overview" class="docs-header__navlink">Assistants</NuxtLink>
           <NuxtLink to="/#pricing" class="docs-header__navlink">Pricing</NuxtLink>
           <NuxtLink to="/" class="docs-header__navlink">Main site →</NuxtLink>
         </nav>

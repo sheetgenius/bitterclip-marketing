@@ -32,6 +32,34 @@ test.describe('pricing section', () => {
     expect(clipHref).toContain('plan=clip')
   })
 
+  test('paid campaign attribution survives the marketing-to-app handoff', async ({ page }) => {
+    await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
+
+    const heroCta = page.getByRole('link', { name: /Clip your first recording/ })
+    const initialUrl = new URL(String(await heroCta.getAttribute('href')))
+    expect(initialUrl.searchParams.get('utm_source')).toBe('google')
+    expect(initialUrl.searchParams.get('utm_medium')).toBe('cpc')
+    expect(initialUrl.searchParams.get('utm_campaign')).toBe('clip_launch')
+    expect(initialUrl.searchParams.get('utm_content')).toBe('ad_a')
+    expect(initialUrl.searchParams.get('gclid')).toBe('audit-click-id')
+    expect(initialUrl.searchParams.get('bc_surface')).toBe('homepage')
+    expect(initialUrl.searchParams.get('bc_stage')).toBe('default')
+
+    await page.evaluate(() => {
+      const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — episode one, cut into clips"]')
+      if (!frame?.contentWindow) throw new Error('hero iframe missing')
+      window.dispatchEvent(new MessageEvent('message', {
+        data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
+        source: frame.contentWindow,
+      }))
+    })
+
+    await expect(heroCta).toHaveAttribute('href', /bc_stage=hero_export_revealed/)
+    const engagedUrl = new URL(String(await heroCta.getAttribute('href')))
+    expect(engagedUrl.searchParams.get('utm_content')).toBe('ad_a')
+    expect(engagedUrl.searchParams.get('gclid')).toBe('audit-click-id')
+  })
+
   test('the page makes no deferred or unbuilt pricing claims', async ({ page }) => {
     await page.goto('/')
     const pricingText = await page.locator('#pricing').innerText()
@@ -40,6 +68,7 @@ test.describe('pricing section', () => {
     expect(pricingText).not.toContain('4K')
     expect(pricingText).not.toContain('Add 5 more hours')
     expect(pricingText).not.toContain('annual')
+    expect(pricingText).not.toContain('30-day refund')
 
     expect(pricingText).toContain('$9')
     expect(pricingText).toContain('$99')

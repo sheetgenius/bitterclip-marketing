@@ -5,7 +5,7 @@ navigation:
   label: Connect ChatGPT
   order: 2
 section: assistants
-updated: '2026-06-24'
+updated: '2026-07-10'
 tags:
   - chatgpt
   - assistants
@@ -18,6 +18,12 @@ This page walks you through connecting BitterClip to ChatGPT and asking it for y
 first clip. Once it's set up, you can say "find me a good bit from this interview" and
 ChatGPT opens the editor with a clip already picked out, ready for you to review.
 
+::callout{type="note"}
+ChatGPT supports apps across plans, but access to custom developer apps and the actions
+they may take can depend on your workspace policy. If the controls below are missing, ask
+your workspace admin or use BitterClip in your browser or [connect Claude](/docs/assistants/connect-claude).
+::
+
 ## Before you start
 
 ::connect-prereqs
@@ -28,34 +34,34 @@ ChatGPT opens the editor with a clip already picked out, ready for you to review
 ::assistant-connection-intro
 ::
 
-BitterClip is still going through ChatGPT's app-directory review, so for now you add it
-by hand as a custom app. It takes about a minute:
+BitterClip is not in ChatGPT's public plugin directory yet. Until its plugin is approved
+and published, add it as a custom developer app:
 
-1. In ChatGPT, open **Settings → Apps** — or go straight to [chatgpt.com/#settings/Connectors](https://chatgpt.com/#settings/Connectors).
-2. Scroll to **Advanced settings** and turn on **Developer mode**. ChatGPT flags it as "Elevated risk" because it lets you add connectors it hasn't reviewed — that's what makes BitterClip addable until we're listed in its app directory.
-3. Still under **Advanced settings**, click **Create app**.
+1. Open ChatGPT **Settings → Security and login** and turn on **Developer mode**. Your workspace may require an admin to make this available.
+2. Open **Settings → Plugins**, or go to `chatgpt.com/plugins`.
+3. Click **Create** to add a plugin.
 4. In the **New App** window, fill in:
    - **Name** — BitterClip
    - **Connection** — leave this on **Server URL** and paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
    - **Authentication** — OAuth
-5. Tick **"I understand and want to continue"** (ChatGPT shows this for any app it hasn't reviewed itself), then click **Create**.
+5. Accept ChatGPT's developer-app warning, then click **Create**.
 
 ![ChatGPT Settings, Apps tab — "Create app" sits next to Advanced settings](/img/docs/chatgpt-apps-create-app.png)
 
 ![ChatGPT's New App window with BitterClip's name, the app.bitterclip.com/mcp server URL, and OAuth selected](/img/docs/chatgpt-new-app-dialog.png)
 
 ::callout{type="note"}
-ChatGPT moves its menus and labels around now and then, so the exact wording may differ.
-The shape stays the same: **Settings → Apps → Advanced settings → Developer mode → Create
-app**, then point it at the BitterClip address. Once BitterClip is published in ChatGPT's
-app directory, you'll add it from there with no Developer-mode or Create-app step. Stuck?
-See [Troubleshooting](/docs/help/troubleshooting).
+ChatGPT moves its menus and labels around, so the exact wording can differ. The shape stays
+the same: enable developer mode, create a plugin pointed at the BitterClip address, and
+authorize it. Once BitterClip's public plugin is available, you will add it from ChatGPT's
+plugin directory instead. Stuck? See
+[Troubleshooting](/docs/help/troubleshooting).
 ::
 
 ## Sign in to BitterClip
 
 When you click **Create**, ChatGPT opens a browser window to sign you in to BitterClip and
-authorize the connection. Approve it and you're set — that's the only sign-in step.
+authorize the connection. Approve it and you're set. That's the only sign-in step.
 
 ## Make your first clip in chat
 
@@ -85,6 +91,9 @@ BitterClip renders the finished video and drops it in your project.
 If the connection won't show up, the sign-in window doesn't open, or a clip doesn't
 appear the way you expected, see [Troubleshooting](/docs/help/troubleshooting).
 
+::signup-cta
+::
+
 ## Next steps
 
 ::next-steps
@@ -97,7 +106,4 @@ links:
   - to: /docs/help/troubleshooting
     label: Troubleshooting
 ---
-::
-
-::signup-cta
 ::
