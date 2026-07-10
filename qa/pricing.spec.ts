@@ -45,6 +45,7 @@ test.describe('pricing section', () => {
     expect(initialUrl.searchParams.get('bc_surface')).toBe('homepage')
     expect(initialUrl.searchParams.get('bc_stage')).toBe('default')
 
+    await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveCount(1)
     await page.evaluate(() => {
       const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — episode one, cut into clips"]')
       if (!frame?.contentWindow) throw new Error('hero iframe missing')

@@ -81,6 +81,10 @@ export default defineNuxtConfig({
         {
           innerHTML: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
+gtag('set', 'linker', {
+  domains: ['bitterclip.com', 'app.bitterclip.com'],
+  decorate_forms: true,
+});
 gtag('js', new Date());
 gtag('config', '${gaMeasurementId}');`,
         },
