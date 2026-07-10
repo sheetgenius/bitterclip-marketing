@@ -10,7 +10,9 @@ servers:
 
 proxy:
   ssl: true
-  host: bitterclip.com
+  hosts:
+    - bitterclip.com
+    - www.bitterclip.com
   app_port: 80
   response_timeout: 30
   healthcheck:
@@ -38,4 +40,3 @@ ssh:
   port: <%= ENV.fetch("DEPLOY_REMOTE_PORT", "22") %>
   keys:
     - <%= ENV.fetch("BITTERGRID_DEPLOY_SSH_KEY", File.expand_path("~/.ssh/id_ed25519")) %>
-

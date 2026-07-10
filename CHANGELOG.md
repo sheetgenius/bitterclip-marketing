@@ -42,6 +42,8 @@ under a dated entry.
 - Added a dedicated 1200x630 BitterClip social card, large-card Open Graph and X
   metadata, explicit `/pricing` and `/signup` aliases, and real 404 responses for
   unknown marketing paths instead of silently serving the homepage.
+- Replaced the broken Porkbun `www` forwarding path with a first-class TLS host
+  that redirects to the canonical apex while preserving campaign parameters.
 - Added docs engagement analytics for article, section, table-of-contents,
   sidebar, signup, and live-editor interactions, with Playwright coverage.
 - Published blog posts two and three: "We stopped making templates"
