@@ -17,6 +17,11 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
   await expect(hero).toHaveAttribute('tabindex', '0')
   await expect(hero).not.toHaveAttribute('aria-hidden', 'true')
 
+  const phoneFrame = page.getByTestId('hero-phone-frame')
+  const compactPhoneBox = await phoneFrame.boundingBox()
+  if (!compactPhoneBox) throw new Error('phone frame is not laid out')
+  expect(Math.abs((compactPhoneBox.width / compactPhoneBox.height) - (393 / 852))).toBeLessThan(0.02)
+
   await page.waitForFunction(() => window.frames.length >= 1)
   await expect.poll(() => Boolean(widgetFrame(page)), { timeout: 15_000 }).toBe(true)
   const widget = widgetFrame(page)
@@ -104,6 +109,10 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
   await swatches.nth(1).click()
   await widget.getByRole('button', { name: /Open in editor/ }).click()
   await expect(page.locator('[data-display-mode="fullscreen"]')).toBeVisible()
+  const editorPhoneBox = await phoneFrame.boundingBox()
+  if (!editorPhoneBox) throw new Error('expanded phone frame is not laid out')
+  expect(Math.abs(editorPhoneBox.height - compactPhoneBox.height)).toBeLessThanOrEqual(1)
+  expect(Math.abs((editorPhoneBox.width / editorPhoneBox.height) - (393 / 852))).toBeLessThan(0.02)
   await expect.poll(() => page.evaluate(() => {
     const header = document.querySelector('header')?.getBoundingClientRect()
     const editor = document.querySelector('[data-display-mode="fullscreen"]')?.getBoundingClientRect()
@@ -125,7 +134,7 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
     return editor?._focusedMomentId || ''
   })).toBe('')
   await editorBack.click()
-  await expect(page.locator('[data-display-mode="inline"]')).toHaveCSS('height', '508px')
+  await expect(page.locator('[data-display-mode="inline"]')).toHaveCSS('height', '600px')
 })
 
 test('the marketing shell and real clip rail honor reduced motion', async ({ page }) => {

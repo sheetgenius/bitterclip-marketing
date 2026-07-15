@@ -183,11 +183,10 @@ useHead({
 })
 
 // --- Live recording-card widget: the REAL product component, embedded ---
-// The compact viewer reserves a stable first-paint height. A deliberate
-// "Open in editor" transition may expand that screen; closing the editor
-// restores the compact geometry. Ordinary widget hugs never move the page.
-const HERO_SCREEN_HEIGHT = 508
-const HERO_EDITOR_HEIGHT = 820
+// Keep the physical device close to the iPhone 14 Pro's 393:852 silhouette in
+// both states. "Open in editor" swaps the workspace inside the phone; it must
+// never stretch the hardware itself into a short preview or an extra-long mock.
+const HERO_APP_VIEWPORT_HEIGHT = 600
 // Themes the phone chrome AND the embedded widget (?theme= on the embed URL).
 // Production defaults to dark, while ?heroTheme=light (or ?theme=light) gives a
 // stable preview path for the light-mode polish without a source edit.
@@ -197,7 +196,6 @@ const heroPhoneSlot = ref<HTMLElement | null>(null)
 const handoffSection = ref<HTMLElement | null>(null)
 const heroOrigin = ref(DEFAULT_APP_ORIGIN)
 const heroReady = ref(false)
-const heroScreenHeight = ref(HERO_SCREEN_HEIGHT)
 const heroDisplayMode = ref<'inline' | 'fullscreen'>('inline')
 let heroLoadObserver: IntersectionObserver | null = null
 let handoffLoadObserver: IntersectionObserver | null = null
@@ -289,9 +287,9 @@ const alignExpandedHeroBelowHeader = () => {
 
 const revealExpandedHeroBelowHeader = () => {
   // The click inside the iframe can prompt Chromium to reveal its newly focused
-  // control while the outer slot is growing. Align once before that work and
-  // once after the height transition so the editor bar never lands beneath the
-  // sticky marketing header.
+  // control while the workspace swaps modes. Align once before that work and
+  // once after the editor has settled so its bar never lands beneath the sticky
+  // marketing header.
   alignExpandedHeroBelowHeader()
   if (heroExpansionScrollTimer) clearTimeout(heroExpansionScrollTimer)
   const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 320
@@ -302,19 +300,14 @@ const revealExpandedHeroBelowHeader = () => {
   }, delay)
 }
 
-const setHeroDisplayMode = (mode: unknown, requestedHeight?: unknown) => {
+const setHeroDisplayMode = (mode: unknown) => {
   if (mode === 'fullscreen') {
     heroDisplayMode.value = 'fullscreen'
-    const height = Number(requestedHeight)
-    heroScreenHeight.value = Number.isFinite(height)
-      ? Math.max(720, Math.min(900, Math.round(height)))
-      : HERO_EDITOR_HEIGHT
     revealExpandedHeroBelowHeader()
     return
   }
   if (mode === 'inline') {
     heroDisplayMode.value = 'inline'
-    heroScreenHeight.value = HERO_SCREEN_HEIGHT
   }
 }
 
@@ -364,7 +357,7 @@ const handleMessage = (event: MessageEvent) => {
     detail?: unknown
   }
   if (data.bitterclip_embed_mode === 'fullscreen' || data.bitterclip_embed_mode === 'inline') {
-    setHeroDisplayMode(data.bitterclip_embed_mode, data.height)
+    setHeroDisplayMode(data.bitterclip_embed_mode)
   }
   if (data.bitterclip_embed_ready === true) {
     heroReady.value = true
@@ -374,7 +367,7 @@ const handleMessage = (event: MessageEvent) => {
     const detail = data.detail && typeof data.detail === 'object' && !Array.isArray(data.detail)
       ? data.detail as Record<string, unknown>
       : {}
-    if (data.bitterclip_demo_event === 'editor_opened') setHeroDisplayMode('fullscreen', data.height)
+    if (data.bitterclip_demo_event === 'editor_opened') setHeroDisplayMode('fullscreen')
     if (data.bitterclip_demo_event === 'editor_closed') setHeroDisplayMode('inline')
     recordDemoEvent(data.bitterclip_demo_event as DemoEventName, detail)
   }
@@ -497,7 +490,7 @@ onBeforeUnmount(() => {
             <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
 
             <!-- phone: titanium frame -->
-          <div class="relative rounded-[3rem] p-[3px] bg-gradient-to-br from-zinc-500 via-zinc-700 to-zinc-800 ring-1 ring-white/20 shadow-[0_45px_90px_-25px_rgba(0,0,0,0.85)]">
+          <div data-testid="hero-phone-frame" class="relative rounded-[3rem] p-[3px] bg-gradient-to-br from-zinc-500 via-zinc-700 to-zinc-800 ring-1 ring-white/20 shadow-[0_45px_90px_-25px_rgba(0,0,0,0.85)]">
             <!-- side buttons (titanium) -->
             <span class="absolute -left-[3px] top-[104px] w-[3px] h-8 rounded-l-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
             <span class="absolute -left-[3px] top-[152px] w-[3px] h-12 rounded-l-md bg-gradient-to-b from-zinc-500 to-zinc-700"></span>
@@ -556,9 +549,9 @@ onBeforeUnmount(() => {
                      seamless skeleton of the same height holds the space until then. -->
                 <div
                   ref="heroPhoneSlot"
-                  class="relative w-full scroll-mt-24 transition-[height] duration-300 motion-reduce:transition-none"
+                  class="relative w-full scroll-mt-24"
                   :data-display-mode="heroDisplayMode"
-                  :style="{ height: heroScreenHeight + 'px', overflowAnchor: 'none' }">
+                  :style="{ height: HERO_APP_VIEWPORT_HEIGHT + 'px', overflowAnchor: 'none' }">
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
                     v-if="!heroReady"
