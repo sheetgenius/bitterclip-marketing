@@ -30,6 +30,11 @@ under a dated entry.
 
 ### Website
 
+- Reframed the homepage around BitterClip as a second brain for long-form audio
+  and video: the page now leads from buried source material to exact,
+  source-linked moments and useful outputs. Removed the redundant second editor
+  demo and its placeholder speaker scores, leaving the real hero embed as the
+  one canonical interactive product proof.
 - Preserved original campaign UTMs and ad click IDs across every marketing,
   docs, blog, footer, and pricing signup link. BitterClip's own page and demo
   context now travels in separate `bc_*` fields, and sitewide signup clicks

@@ -2,7 +2,7 @@
   "name": "bitterclip-marketing",
   "type": "module",
   "private": true,
-  "description": "BitterClip is a speaker-aware media workspace for turning long recordings into source-linked clips.",
+  "description": "BitterClip makes long-form audio and video searchable, source-linked, and reusable.",
   "packageManager": "bun@1.3.13",
   "scripts": {
     "build": "nuxt build",

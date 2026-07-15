@@ -36,7 +36,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#303030] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
+  <div class="relative min-h-screen bg-[#121313] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
 
     <!-- Cinematic Data Flow Backdrops -->
     <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.10] pointer-events-none" />
@@ -54,16 +54,16 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="hidden md:flex items-center gap-1 font-sans text-sm font-medium tracking-tight text-zinc-300">
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#demo">Demo</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs/assistants/overview">Assistants</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs">Docs</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/blog">Blog</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#pricing">Pricing</NuxtLink>
+          <NuxtLink class="inline-flex min-h-11 items-center px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#demo">How it works</NuxtLink>
+          <NuxtLink class="inline-flex min-h-11 items-center px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs/assistants/overview">Assistants</NuxtLink>
+          <NuxtLink class="inline-flex min-h-11 items-center px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs">Docs</NuxtLink>
+          <NuxtLink class="inline-flex min-h-11 items-center px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/blog">Blog</NuxtLink>
+          <NuxtLink class="inline-flex min-h-11 items-center px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#pricing">Pricing</NuxtLink>
         </div>
 
         <div class="flex items-center">
           <a
-            class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] active:scale-[0.97] transition duration-200 shadow-lg shadow-[#f28f84]/20 hover:shadow-[#f28f84]/40"
+            class="inline-flex min-h-11 items-center justify-center focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] active:scale-[0.97] transition duration-200 shadow-lg shadow-[#f28f84]/20 hover:shadow-[#f28f84]/40"
             :href="signInUrl"
           >
             Sign in
@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
             <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
-              Turn long podcasts, interviews, and founder calls into source-linked clips you can check before they leave your hands.
+              A second brain for long-form audio and video: search what was said, return to the source, and turn the moment into something useful.
             </p>
             <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
           </div>

@@ -183,10 +183,10 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[]): string {
   lines.push('# BitterClip')
   lines.push('')
   lines.push(
-    '> BitterClip turns long video and audio recordings into short, source-accurate clips. ' +
-      'You (or your AI assistant) pick the strongest moment by the words you keep; BitterClip ' +
-      'derives the exact cut from the audio. It runs in the browser at app.bitterclip.com and ' +
-      'inside ChatGPT and Claude via a connection.',
+    '> BitterClip is a second brain for long-form audio and video. It makes a recording ' +
+      'searchable, returns the exact source in context, and lets you or your AI assistant ' +
+      'turn the moment into a clip you can verify. It runs in the browser at ' +
+      'app.bitterclip.com and inside supported ChatGPT and Claude workspaces.',
   )
   lines.push('')
   lines.push(
@@ -227,7 +227,8 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[]): string {
   parts.push('')
   parts.push(
     'Concatenated Markdown of every BitterClip docs page and blog post, generated from ' +
-      'the content collections. Recording → Episode → Clip is the product model (the ' +
+      'the content collections. BitterClip makes long-form audio and video searchable, ' +
+      'source-linked, and reusable. Recording → Episode → Clip is the product model (the ' +
       'retired "Moment" noun is not used).',
   )
   parts.push('')

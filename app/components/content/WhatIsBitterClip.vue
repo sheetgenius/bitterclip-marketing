@@ -12,10 +12,9 @@ const appHost = computed(() =>
 
 <template>
   <p class="docs-snippet">
-    BitterClip turns a long video or audio recording into short clips you can trust.
-    You bring the recording; it writes out a transcript with every word tied to the moment
-    it was spoken. Then you, or an AI assistant like ChatGPT or Claude, pick the strongest
-    moments, and BitterClip cuts the exact clip straight from the audio. No timeline to
-    drag, no timestamps to guess. It runs in your browser at {{ appHost }}.
+    BitterClip turns a long video or audio recording into a record you can search and use.
+    Every word stays tied to the moment it was spoken, so you or an AI assistant like
+    ChatGPT or Claude can ask in plain language, return to the exact source, and make a
+    clip without guessing at timestamps. It runs in your browser at {{ appHost }}.
   </p>
 </template>

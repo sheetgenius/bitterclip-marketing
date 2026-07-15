@@ -5,9 +5,9 @@ import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 const route = useRoute()
 const signupBaseUrl = SIGNUP_BASE_URL
 const demoClipUrl = 'https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4'
+const DEFAULT_APP_ORIGIN = 'https://app.bitterclip.com'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
-type DemoSurface = 'hero' | 'editor'
 type DemoEventName =
   | 'editor_opened'
   | 'editor_closed'
@@ -55,10 +55,6 @@ const demoStageRank: Record<string, number> = {
   hero_download_failed: 54,
   hero_download_clicked: 60,
   hero_demo_cta_clicked: 70,
-  editor_clip_created: 30,
-  editor_export_started: 34,
-  editor_export_revealed: 35,
-  editor_download_clicked: 45,
 }
 
 const demoSignupStage = ref('default')
@@ -89,7 +85,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
   return resolveHeroTheme(params.get('heroTheme') || params.get('theme'))
 }
 
-// FAQ: objection handling right before the pricing ask. Answers must stay
+// FAQ: objection handling after the product and pricing. Answers must stay
 // grounded in shipped behavior (mcp.md, pricing ladder) — no invented features.
 const faqItems = [
   {
@@ -133,7 +129,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'Turn long podcasts, interviews, and founder calls into source-linked clips in your browser or a supported AI assistant.',
+    description: 'A second brain for long-form audio and video. Search what was said, return to the exact source, and turn the moment into something useful.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -147,7 +143,7 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
-    description: 'Ask ChatGPT for the best moments in a recording, trim them in a real editor, and post finished clips.',
+    description: 'Make long-form audio and video searchable, source-linked, and reusable in the browser or a supported AI assistant.',
     offers: {
       '@type': 'AggregateOffer',
       lowPrice: '0',
@@ -185,14 +181,6 @@ useHead({
   ],
 })
 
-// --- Live Editor Embed ---
-// iframeHeight default (540) matches the widget's measured stable height, so the
-// reserved slot doesn't shift when the real height postMessage lands.
-const embedUrl = ref('')
-const iframeHeight = ref(540)
-const isIframeLoading = ref(true)
-const demoActivated = ref(true)
-
 // --- Live recording-card widget: the REAL product component, embedded ---
 // The phone screen is FIXED so nothing ever moves the layout: not the embed
 // reporting its hug height on load, not opening the in-frame editor (which
@@ -209,9 +197,13 @@ const HERO_SCREEN_HEIGHT = 508
 // stable preview path for the light-mode polish without a source edit.
 const heroTheme = ref<HeroTheme>(readHeroThemeFromLocation())
 const heroIframe = ref<HTMLIFrameElement | null>(null)
-const editorIframe = ref<HTMLIFrameElement | null>(null)
 const heroPhoneSlot = ref<HTMLElement | null>(null)
+const handoffSection = ref<HTMLElement | null>(null)
+const heroOrigin = ref(DEFAULT_APP_ORIGIN)
+const heroReady = ref(false)
 let heroLoadObserver: IntersectionObserver | null = null
+let handoffLoadObserver: IntersectionObserver | null = null
+let heroReadinessFallback: ReturnType<typeof setTimeout> | null = null
 
 const syncHeroThemeFromLocation = (): HeroTheme => {
   const resolvedTheme = readHeroThemeFromLocation()
@@ -224,7 +216,10 @@ const syncHeroThemeFromLocation = (): HeroTheme => {
 const heroSrc = ref('')
 
 const loadHeroSrc = (url: string) => {
-  if (!heroSrc.value) heroSrc.value = url
+  if (!heroSrc.value) {
+    heroReady.value = false
+    heroSrc.value = url
+  }
 }
 
 const scheduleHeroSrc = (url: string) => {
@@ -249,22 +244,55 @@ const scheduleHeroSrc = (url: string) => {
 // placeholder until the iframe paints its own (near-identical) rest state.
 const handoffClipSrc = ref('')
 
-const onIframeLoad = () => {
-  isIframeLoading.value = false
+const scheduleHandoffClipSrc = (url: string) => {
+  if (!('IntersectionObserver' in window) || !handoffSection.value) {
+    handoffClipSrc.value = url
+    return
+  }
+  handoffLoadObserver?.disconnect()
+  handoffLoadObserver = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      handoffClipSrc.value = url
+      handoffLoadObserver?.disconnect()
+      handoffLoadObserver = null
+    }
+  }, { rootMargin: '400px 0px', threshold: 0 })
+  handoffLoadObserver.observe(handoffSection.value)
 }
 
-const activateDemo = () => {
-  demoActivated.value = true
+const resolveAppOrigin = (value: string | null): string => {
+  if (!value) return DEFAULT_APP_ORIGIN
+  try {
+    const url = new URL(value)
+    const isLocal = ['127.0.0.1', 'localhost'].includes(url.hostname)
+    if (url.origin === DEFAULT_APP_ORIGIN || (isLocal && ['http:', 'https:'].includes(url.protocol))) {
+      return url.origin
+    }
+  } catch {
+    // Invalid review overrides fall back to the production app origin.
+  }
+  return DEFAULT_APP_ORIGIN
 }
 
-const sourceForMessage = (event: MessageEvent): DemoSurface | null => {
-  if (heroIframe.value && event.source === heroIframe.value.contentWindow) return 'hero'
-  if (editorIframe.value && event.source === editorIframe.value.contentWindow) return 'editor'
-  return null
+const isHeroMessage = (event: MessageEvent): boolean => {
+  return Boolean(
+    heroIframe.value
+    && event.source === heroIframe.value.contentWindow
+    && event.origin === heroOrigin.value,
+  )
 }
 
-const setDemoStage = (surface: DemoSurface, name: DemoEventName) => {
-  const next = `${surface}_${name}`
+const onHeroIframeLoad = () => {
+  if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
+  // Compatibility fallback for the production control while the coordinated app
+  // branch adopts the explicit ready message. The message wins when available.
+  heroReadinessFallback = setTimeout(() => {
+    heroReady.value = true
+  }, 2500)
+}
+
+const setDemoStage = (name: DemoEventName) => {
+  const next = `hero_${name}`
   if ((demoStageRank[next] || 0) > (demoStageRank[demoSignupStage.value] || 0)) {
     demoSignupStage.value = next
   }
@@ -277,12 +305,12 @@ const syncDocumentSignupLinks = () => {
   }))
 }
 
-const recordDemoEvent = (surface: DemoSurface, name: DemoEventName, detail: Record<string, unknown>) => {
-  setDemoStage(surface, name)
+const recordDemoEvent = (name: DemoEventName, detail: Record<string, unknown>) => {
+  setDemoStage(name)
   syncDocumentSignupLinks()
   const win = window as WindowWithDemoAnalytics
   const eventPayload: Record<string, unknown> = {
-    demo_surface: surface,
+    demo_surface: 'hero',
     demo_event: name,
     demo_signup_stage: demoSignupStage.value,
   }
@@ -292,7 +320,7 @@ const recordDemoEvent = (surface: DemoSurface, name: DemoEventName, detail: Reco
     }
   }
   win.__bitterclipDemoEvents = win.__bitterclipDemoEvents || []
-  win.__bitterclipDemoEvents.push({ name, surface, detail, at: Date.now() })
+  win.__bitterclipDemoEvents.push({ name, surface: 'hero', detail, at: Date.now() })
   if (typeof win.gtag === 'function') {
     win.gtag('event', `bitterclip_demo_${name}`, eventPayload)
   }
@@ -300,26 +328,20 @@ const recordDemoEvent = (surface: DemoSurface, name: DemoEventName, detail: Reco
 
 const handleMessage = (event: MessageEvent) => {
   if (!event.data || typeof event.data !== 'object') return
-  const data = event.data as { height?: unknown, bitterclip_demo_event?: unknown, detail?: unknown }
+  if (!isHeroMessage(event)) return
+  const data = event.data as { bitterclip_embed_ready?: unknown, bitterclip_demo_event?: unknown, detail?: unknown }
+  if (data.bitterclip_embed_ready === true) {
+    if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
+    heroReadinessFallback = null
+    heroReady.value = true
+    return
+  }
   if (typeof data.bitterclip_demo_event === 'string' && DEMO_EVENT_ALLOWLIST.has(data.bitterclip_demo_event as DemoEventName)) {
-    const surface = sourceForMessage(event)
-    if (!surface) return
     const detail = data.detail && typeof data.detail === 'object' && !Array.isArray(data.detail)
       ? data.detail as Record<string, unknown>
       : {}
-    recordDemoEvent(surface, data.bitterclip_demo_event as DemoEventName, detail)
-    return
+    recordDemoEvent(data.bitterclip_demo_event as DemoEventName, detail)
   }
-  if (!('height' in data)) return
-  const height = Number(data.height)
-  if (isNaN(height) || height < 200 || height > 1500) return
-  // Route by source: the hero phone's screen is FIXED (no layout movement,
-  // ever) so its height reports are dropped on the floor — but they must not
-  // fall through to resize the lower editor demo.
-  if (heroIframe.value && event.source === heroIframe.value.contentWindow) {
-    return
-  }
-  iframeHeight.value = height
 }
 
 // Run after the browser is idle (post first-paint), with a timeout fallback.
@@ -336,36 +358,25 @@ onMounted(() => {
   syncHeroThemeFromLocation()
   syncDocumentSignupLinks()
 
-  // Mobile load gate: on small viewports, deactivate by default to preserve bandwidth
-  if (window.innerWidth < 768) {
-    demoActivated.value = false
-  }
-
   window.addEventListener('message', handleMessage)
 
   // Defer loading the live cross-origin widgets until the browser is idle, so they
-  // don't block first paint / hurt LCP+TBT. Both slots reserve their measured stable
-  // height up front (skeleton for the hero, min-height for the editor), so swapping
-  // in the real iframe causes no layout shift.
+  // do not compete with first paint. The hero reserves its stable compact height.
   afterIdle(() => {
     const resolvedHeroTheme = syncHeroThemeFromLocation()
 
-    // Build the editor embed URL: base (overridable via ?embed= for local dev) +
-    // the bare editor + an app-origin branded sample clip, so Export plays +
-    // downloads without invoking a live render.
     const params = new URLSearchParams(window.location.search)
-    const base = (params.get('embed') || 'https://app.bitterclip.com/embed/clip-demo').split('?')[0]
     const clip = params.get('clip') || demoClipUrl
-    embedUrl.value = `${base}?bare=1&clip=${encodeURIComponent(clip)}`
+    heroOrigin.value = resolveAppOrigin(params.get('appOrigin'))
 
     // The hero embed starts in the compact recording viewer. ?clip= gives its
-    // stubbed export a real pre-rendered MP4 to reveal — same contract as the
-    // clip-demo above. The real transcript editor opens after the user taps the
+    // stubbed export a real pre-rendered MP4 to reveal. The real transcript editor
+    // opens after the user taps the
     // viewer's "Open in editor" control, keeping first load lighter.
     // (Only https origins pass the embed's allowlist, so on plain-http local
     // dev the export reveal is simply absent — everything else still works.)
-    scheduleHeroSrc(`https://app.bitterclip.com/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
-    handoffClipSrc.value = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba'
+    scheduleHeroSrc(`${heroOrigin.value}/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
+    scheduleHandoffClipSrc('https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba')
   })
 })
 
@@ -373,6 +384,10 @@ onBeforeUnmount(() => {
   window.removeEventListener('message', handleMessage)
   heroLoadObserver?.disconnect()
   heroLoadObserver = null
+  handoffLoadObserver?.disconnect()
+  handoffLoadObserver = null
+  if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
+  heroReadinessFallback = null
 })
 </script>
 
@@ -383,19 +398,19 @@ onBeforeUnmount(() => {
     <main class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 pb-24 relative">
 
       <!-- 1. Hero -->
-      <div class="grid lg:grid-cols-[1.25fr_0.75fr] gap-10 lg:gap-12 items-center mb-16 sm:mb-24">
+      <div class="grid lg:grid-cols-[1.18fr_0.82fr] gap-10 lg:gap-14 items-center mb-16 sm:mb-24">
 
         <!-- Left: the pitch -->
         <div class="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
-          <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.035em] text-white leading-[1.04] mb-6">
-            Cut your clips
+          <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.04em] text-white leading-[1.02] mb-6">
+            A second brain
             <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">
-              inside ChatGPT.
+              for your video content.
             </span>
           </h1>
 
           <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-            Upload a podcast, interview, or founder call and just ask. In a ChatGPT workspace with custom apps enabled, your assistant finds the moment and opens a real editor beside the conversation. Trim it, hear it in context, and export a finished clip. The same workspace works in your browser and Claude.
+            No one has time to rewatch every recording. BitterClip remembers what is inside your long-form audio and video, finds the exact moment in context, and turns it into something useful.
           </p>
 
           <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
@@ -403,7 +418,7 @@ onBeforeUnmount(() => {
               :href="signupUrl"
               class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Clip your first recording</span>
+              <span>Start with a recording</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -412,16 +427,16 @@ onBeforeUnmount(() => {
               href="#demo"
               class="inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/40 px-5 py-2.5 font-mono text-xs font-bold text-zinc-300 transition duration-200 hover:border-[#f28f84]/40 hover:bg-[#f28f84]/[0.06] hover:text-white min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              Try the editor
+              See how it works
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Browser and Claude are open to everyone; the full ChatGPT app currently needs an eligible workspace.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Use it in your browser, or bring the same workspace into Claude and supported ChatGPT workspaces. Free to start.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
              Max-sized frame (~iPhone Pro Max) so the live widget gets room. -->
-        <div class="relative mx-auto w-full max-w-[368px] lg:max-w-none lg:w-[392px]">
+        <div id="product" class="relative mx-auto w-full max-w-[368px] lg:max-w-none lg:w-[392px] scroll-mt-28">
           <!-- handwritten callout. Text sits clear to the LEFT of the phone (no
                overlap); the arrow sweeps DOWN to the live MCP widget below — not
                the top of the conversation. -->
@@ -483,13 +498,13 @@ onBeforeUnmount(() => {
                     class="max-w-[88%] rounded-3xl px-3.5 py-2"
                     :class="heroTheme === 'light' ? 'bg-[#f4f4f4] border border-zinc-200/80 shadow-sm' : 'bg-[#f4f4f4]'"
                   >
-                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Pull the strongest moments from episode one and cut me clips.</p>
+                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Find the strongest moments in episode one and cut me three clips.</p>
                   </div>
                 </div>
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment is where you explain why you started. I found three cuts — open one, tighten the range, and check it before you post.</p>
+                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment is where you explain why human-made content still matters. I found three cuts and opened that one so you can hear it in context.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
@@ -499,7 +514,7 @@ onBeforeUnmount(() => {
                 <div ref="heroPhoneSlot" class="relative w-full" :style="{ height: HERO_SCREEN_HEIGHT + 'px' }">
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
-                    v-if="!heroSrc"
+                    v-if="!heroReady"
                     class="absolute inset-0 rounded-2xl border p-3 flex flex-col gap-3 overflow-hidden"
                     :class="heroTheme === 'light' ? 'bg-zinc-50 border-zinc-200/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]' : 'bg-zinc-900/40 border-zinc-800/60'"
                     aria-hidden="true"
@@ -520,7 +535,11 @@ onBeforeUnmount(() => {
                     title="BitterClip — episode one, cut into clips"
                     loading="lazy"
                     scrolling="no"
-                    class="absolute inset-0 w-full h-full block rounded-2xl overflow-hidden bg-transparent"
+                    allow="autoplay; fullscreen"
+                    allowfullscreen
+                    @load="onHeroIframeLoad"
+                    class="absolute inset-0 w-full h-full block rounded-2xl overflow-hidden bg-transparent transition-opacity duration-300"
+                    :class="heroReady ? 'opacity-100' : 'opacity-0'"
                     :style="{ border: 0 }"
                   ></iframe>
                 </div>
@@ -601,137 +620,101 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <!-- SECTION 01 — Right in ChatGPT & Claude (copy LEFT, live editor RIGHT — the centerpiece) -->
-      <section id="demo" aria-label="Right in ChatGPT and Claude" class="mb-24 relative scroll-mt-28">
-        <div class="grid lg:grid-cols-[1fr_minmax(520px,1.1fr)] gap-8 lg:gap-12 items-center">
-
-          <!-- LEFT: the copy -->
+      <!-- SECTION 01 — one source, carried through every result. The timeline is
+           intentionally static: the hero above is the single interactive product demo. -->
+      <section id="demo" aria-label="How BitterClip uses the complete recording" class="mb-24 relative scroll-mt-28">
+        <div class="grid lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 items-center">
           <div class="max-w-xl">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — Right in ChatGPT &amp; Claude</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — The complete recording</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-              Other clippers guess. Yours knows the whole conversation.
+              No one has time to rewatch every recording.
             </h2>
-            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
-              Drop in a podcast, a founder call, or a training session. BitterClip transcribes it and separates the speakers automatically. Confirm a name once and BitterClip can recognize that person when they return. Your assistant gets the whole conversation: who said what, and what came before and after. Ask for the sharpest exchange, then check the source yourself.
+            <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
+              The useful part is usually somewhere in the middle: the exchange worth sharing, the detail you meant to remember, the moment a client made progress. BitterClip keeps the complete recording behind every result. Search in your own words, open the exact moment, and hear what came before and after.
             </p>
 
-            <!-- motif row: it suggests → you approve → you post -->
-            <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-              <span class="text-[#f28f84]">your assistant suggests</span>
-              <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you approve</span>
-              <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you post</span>
-            </div>
-
-            <!-- mid-page CTA: the editor alongside is the peak-interest moment —
-                 give it an action so momentum doesn't die between hero and pricing. -->
-            <div class="mt-8 flex items-center gap-4">
-              <a
-                :href="signupUrl"
-                class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              >
-                <span>Try it with your recording</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
-              </a>
-              <span class="text-[11px] text-zinc-500">Free — 60 minutes a month</span>
-            </div>
-          </div>
-
-          <!-- RIGHT: the live editor, bare. The speaker chips straddle its top edge like
-               presence indicators — the same peach/emerald the embed color-codes speakers with. -->
-          <div class="relative w-full">
-            <!-- speaker-colored atmosphere, one soft glow per speaker -->
-            <div class="absolute -inset-x-10 -inset-y-12 -z-10 pointer-events-none" aria-hidden="true">
-              <div class="absolute left-0 top-0 w-3/4 h-3/4 rounded-full bg-[#f28f84]/[0.06] blur-3xl"></div>
-              <div class="absolute right-0 bottom-0 w-3/4 h-3/4 rounded-full bg-emerald-400/[0.05] blur-3xl"></div>
-            </div>
-
-            <!-- two little speaker bubbles — in-flow on mobile, straddling the embed's top edge from sm: up.
-                 Andrew's chip uses his headshot, while Adrian's chip uses the product's no-photo fallback.
-                 Speaking-share %s are placeholders until the embed points at the coaching recording. -->
-            <div class="flex items-center justify-end gap-2 mb-3 z-30 sm:absolute sm:-top-3.5 sm:right-5 sm:mb-0">
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-[#f28f84]/30 bg-zinc-950/90 backdrop-blur-sm pl-1 pr-2.5 py-1 shadow-lg shadow-black/40">
-                <img
-                  src="/images/andrew_williams_strength_and_positions_coach.jpg"
-                  alt="Andrew"
-                  width="20"
-                  height="20"
-                  class="rounded-full w-5 h-5 ring-1 ring-[#f28f84]/60 object-cover shrink-0"
-                />
-                <span class="text-xs font-semibold text-white">Andrew</span>
-                <span class="font-mono text-[10px] text-[#f28f84]">72%</span>
-              </span>
-              <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-zinc-950/90 backdrop-blur-sm pl-1 pr-2.5 py-1 shadow-lg shadow-black/40">
-                <span class="flex items-center justify-center rounded-full w-5 h-5 ring-1 ring-emerald-400/60 bg-emerald-400/15 font-mono text-[9px] font-bold text-emerald-400 shrink-0" aria-hidden="true">A</span>
-                <span class="text-xs font-semibold text-white">Adrian</span>
-                <span class="font-mono text-[10px] text-emerald-400">28%</span>
-              </span>
-            </div>
-
-            <!-- the embed, bare — hairline ring and a deep soft shadow, no chrome -->
-            <div class="relative rounded-2xl overflow-hidden ring-1 ring-white/[0.06] shadow-[0_24px_80px_-28px_rgba(0,0,0,0.8)] min-h-[400px]">
-
-              <!-- Mobile Activation Gate -->
-              <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
-                <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
-                <h3 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h3>
-                <p class="text-zinc-400 text-xs max-w-sm mb-6 leading-relaxed">
-                  Drag across the words to cut a clip, then check it against the recording. Tap to load it.
-                </p>
-                <button
-                  @click="activateDemo"
-                  class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-lg shadow-lg shadow-[#f28f84]/10 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                >
-                  Load the editor
-                </button>
-              </div>
-
-              <!-- Skeleton loader -->
-              <div v-if="demoActivated && isIframeLoading" role="status" class="absolute inset-0 bg-[#060608]/90 backdrop-blur-sm flex flex-col items-center justify-center z-10 pointer-events-none transition-opacity duration-300">
-                <div class="flex flex-col items-center gap-4 text-center p-6">
-                  <div class="relative w-8 h-8" aria-hidden="true">
-                    <div class="absolute inset-0 rounded-full border-2 border-[#f28f84]/20"></div>
-                    <div class="absolute inset-0 rounded-full border-2 border-t-[#f28f84] animate-spin"></div>
-                  </div>
-                  <span class="font-mono text-[9px] text-zinc-400 uppercase tracking-widest">Loading the editor…</span>
+            <ol class="mt-8 border-y border-white/[0.08] divide-y divide-white/[0.08]">
+              <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
+                <span class="font-mono text-[10px] text-[#f28f84] pt-1">01</span>
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Remember the whole recording</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Keep the media, transcript, speakers, and surrounding context together.</p>
                 </div>
-              </div>
+              </li>
+              <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
+                <span class="font-mono text-[10px] text-[#f28f84] pt-1">02</span>
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Find the exact moment</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Ask in your own words and return to the source instead of a loose summary.</p>
+                </div>
+              </li>
+              <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
+                <span class="font-mono text-[10px] text-[#f28f84] pt-1">03</span>
+                <div>
+                  <h3 class="text-sm font-semibold text-white">Make it useful</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Review the moment, make the clip, or carry the context into the next conversation.</p>
+                </div>
+              </li>
+            </ol>
 
-              <!-- Reserve the editor's stable height up front so the panel doesn't grow
-                   when the (deferred) iframe mounts. The src is only set after the page
-                   is idle, so the live editor doesn't compete with first paint. -->
-              <div :style="{ minHeight: `${iframeHeight}px` }">
-                <iframe
-                  v-if="demoActivated && embedUrl"
-                  ref="editorIframe"
-                  :src="embedUrl"
-                  title="BitterClip — the live transcript editor"
-                  loading="lazy"
-                  @load="onIframeLoad"
-                  @mouseenter="$event.target.contentWindow?.focus()"
-                  class="w-full block transition-[height] duration-200"
-                  :style="{ height: `${iframeHeight}px`, border: 0, background: 'transparent' }"
-                />
-              </div>
-
-            </div>
+            <a
+              :href="signupUrl"
+              class="group mt-8 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              <span>Start with your recording</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
           </div>
 
+          <figure class="source-context-figure rounded-3xl border border-white/[0.08] bg-black/30 p-5 sm:p-7 shadow-[0_28px_90px_-44px_rgba(0,0,0,0.9)]">
+            <figcaption class="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-5">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">Complete recording</p>
+                <p class="mt-1 font-display text-xl font-semibold text-white">Episode one</p>
+              </div>
+              <span class="shrink-0 font-mono text-xs text-zinc-400">46:23</span>
+            </figcaption>
+
+            <div class="py-8 sm:py-10">
+              <div class="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+                <span>0:00</span>
+                <span>One media clock</span>
+                <span>46:23</span>
+              </div>
+              <div class="source-context-rail" aria-label="A selected fourteen-second moment within a complete 46 minute recording">
+                <span class="source-context-before">Context before</span>
+                <span class="source-context-selection">Selected moment</span>
+                <span class="source-context-after">Context after</span>
+              </div>
+              <div class="mt-3 grid grid-cols-[1fr_auto_1fr] items-center font-mono text-[10px] text-zinc-500">
+                <span>02:05</span>
+                <span class="rounded-full border border-[#f28f84]/35 bg-[#f28f84]/10 px-3 py-1.5 text-[#ffb4a8]">02:05–02:19 · exact source</span>
+                <span class="text-right">02:19</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 border-t border-white/[0.08] pt-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">Ready to review</p>
+                <p class="mt-1 text-sm text-zinc-300">The source stays attached.</p>
+              </div>
+              <span class="font-mono text-xs text-zinc-300">Clip 1 of 3 · 0:14</span>
+            </div>
+          </figure>
         </div>
       </section>
 
-      <!-- SECTION 02 — The handoff (copy on top, clip→destinations fan-out below) -->
-      <section aria-label="The handoff" class="mb-24">
+      <!-- SECTION 02 — The moment can leave the archive without losing its source. -->
+      <section ref="handoffSection" aria-label="Turn a source-backed moment into a finished clip" class="mb-24">
         <div class="max-w-2xl mb-10">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — The handoff</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — Put the moment to work</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-            Finished clips — out the door, your way.
+            The exact moment, ready to use.
           </h2>
           <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-            Trim it, export, done. Publish directly to YouTube, X, or LinkedIn, or grab a shareable link. For Instagram, send the finished clip to your phone and post it from the Instagram app. Invite a client to the same recording and they can pull their own clips too — upload once, everyone clips.
+            Hear it in context, move the edges, and export when it says what you meant. Download the finished clip, publish it to a connected channel, or share a link. For Instagram, send it to your phone and post from the app. The complete recording stays in BitterClip for the next question.
           </p>
         </div>
 
@@ -845,35 +828,16 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <!-- SECTION 03 — FAQ: catch bottom-funnel objections before the pricing ask.
-           Every answer is grounded in documented product facts (mcp.md / pricing
-           ladder) — no invented capabilities. Also emitted as FAQPage JSON-LD. -->
-      <section id="faq" aria-label="Common questions" class="mb-24 scroll-mt-28">
-        <div class="max-w-2xl mb-10">
-          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">03 — Before you ask</p>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            The questions everyone asks first.
-          </h2>
-        </div>
-
-        <dl class="grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
-          <div v-for="item in faqItems" :key="item.q">
-            <dt class="text-sm font-semibold text-white mb-1.5">{{ item.q }}</dt>
-            <dd class="text-sm text-zinc-400 leading-relaxed">{{ item.a }}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <!-- 7. Close -->
-      <section id="pricing" class="relative scroll-mt-28">
+      <!-- SECTION 03 — the concrete starting point comes before the objection list. -->
+      <section id="pricing" class="relative mb-24 scroll-mt-28">
         <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
         <div class="max-w-2xl mx-auto text-center mb-8">
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-            Bring one recording. Leave with clips.
+            Start with the recording you already have.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Upload a podcast, interview, or founder call and leave with clips you've checked yourself. Work in the browser or bring the same editor into a supported assistant. Start free; upgrade when an hour a month stops being enough.
+            Upload it once, then search, review, and make clips without replaying the whole thing. Work in the browser or bring the same workspace into a supported assistant. Start free; upgrade when an hour a month stops being enough.
           </p>
         </div>
 
@@ -960,11 +924,107 @@ onBeforeUnmount(() => {
         </p>
       </section>
 
+      <!-- SECTION 04 — grounded objections after visitors understand the product and price. -->
+      <section id="faq" aria-label="Common questions" class="scroll-mt-28">
+        <div class="max-w-2xl mb-10">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">04 — Common questions</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            A few things worth knowing.
+          </h2>
+        </div>
+
+        <dl class="grid md:grid-cols-2 gap-x-12 gap-y-8 max-w-5xl">
+          <div v-for="item in faqItems" :key="item.q">
+            <dt class="text-sm font-semibold text-white mb-1.5">{{ item.q }}</dt>
+            <dd class="text-sm text-zinc-400 leading-relaxed">{{ item.a }}</dd>
+          </div>
+        </dl>
+      </section>
+
     </main>
   </div>
 </template>
 
 <style scoped>
+.source-context-figure {
+  position: relative;
+  isolation: isolate;
+}
+
+.source-context-figure::before {
+  content: '';
+  position: absolute;
+  inset: 18% 12%;
+  z-index: -1;
+  border-radius: 999px;
+  background: rgba(242, 143, 132, 0.08);
+  filter: blur(56px);
+  pointer-events: none;
+}
+
+.source-context-rail {
+  display: grid;
+  grid-template-columns: minmax(4rem, 1.6fr) minmax(7.5rem, 1fr) minmax(4rem, 1.8fr);
+  min-height: 7rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.045) 0,
+      rgba(255, 255, 255, 0.045) 2px,
+      transparent 2px,
+      transparent 13px
+    ),
+    rgba(0, 0, 0, 0.32);
+}
+
+.source-context-rail > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.source-context-before,
+.source-context-after {
+  color: rgba(161, 161, 170, 0.74);
+}
+
+.source-context-selection {
+  position: relative;
+  color: #fff4f1;
+  background: rgba(242, 143, 132, 0.16);
+  border-inline: 1px solid rgba(242, 143, 132, 0.58);
+  box-shadow: inset 0 0 30px rgba(242, 143, 132, 0.08);
+}
+
+.source-context-selection::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.7rem;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 420px) {
+  .source-context-rail {
+    grid-template-columns: minmax(3rem, 1fr) minmax(6.5rem, 1.25fr) minmax(3rem, 1fr);
+  }
+
+  .source-context-rail > span {
+    padding-inline: 0.35rem;
+    font-size: 0.55rem;
+  }
+}
+
 /* SECTION 02 — fan-out syndication visual.
    One clip on the left arcs five brand-colored lines to five destinations
    stacked on the right. The SVG (preserveAspectRatio="none") stretches to the

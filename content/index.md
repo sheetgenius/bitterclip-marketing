@@ -1,6 +1,6 @@
 ---
 title: BitterClip docs
-description: Turn long recordings into short, source-accurate clips in your browser or a supported AI assistant. Start here.
+description: Make long recordings searchable, return to the exact source, and turn the moment into something useful in your browser or a supported AI assistant.
 navigation:
   label: Overview
   order: 0
@@ -20,7 +20,7 @@ tags:
 
 ## Start here
 
-New to BitterClip? Walk through making your first clip, then pick up the handful of words you'll see everywhere. You can make clips in your browser, or hand the job to your AI assistant. Most people begin by setting up a project, which is the home for one show or series.
+New to BitterClip? Start with one recording and learn the handful of words you'll see everywhere. BitterClip keeps the complete source searchable, whether you work in the browser or hand a question to your AI assistant. Most people begin by setting up a project, which is the home for one show, client, or recurring body of work.
 
 ::next-steps
 ---

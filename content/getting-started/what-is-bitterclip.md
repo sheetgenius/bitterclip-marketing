@@ -1,6 +1,6 @@
 ---
 title: What is BitterClip?
-description: A plain introduction to BitterClip, the Recording → Episode → Clip model, and how a clip gets made.
+description: A plain introduction to BitterClip, how it makes long recordings searchable, and the Recording → Episode → Clip model.
 navigation:
   label: What is BitterClip?
   order: 0
@@ -13,7 +13,7 @@ tags:
 
 # What is BitterClip?
 
-If you make long videos or podcasts and want short clips out of them, this page explains what BitterClip does and the few words you'll see throughout the docs.
+If useful details keep disappearing inside long videos, podcasts, calls, or sessions, this page explains what BitterClip does and the few words you'll see throughout the docs.
 
 ## BitterClip in plain words
 

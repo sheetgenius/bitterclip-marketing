@@ -1,14 +1,14 @@
 # BitterClip
 
-[BitterClip](https://bitterclip.com/) is a speaker-aware media workspace for
-turning long recordings into source-linked clips. It is designed for AI agents
-that can search transcript context and for human operators who need to verify
-the final cut before publishing.
+[BitterClip](https://bitterclip.com/) is a second brain for long-form audio and
+video. It keeps recordings, transcripts, speakers, and source context connected
+so people and their AI assistants can search what was said, return to the exact
+moment, and turn it into something useful.
 
 It is built for podcasts, interviews, founder calls, demos, livestreams, expert
-conversations, and recurring shows where the strongest moments are buried inside
-long-form media. BitterClip keeps the recording, transcript, speaker identity,
-clip boundary, export, publishing state, and source history connected.
+conversations, and recurring work where useful context gets buried inside
+long-form media. A source-backed clip is one output of that memory, not the
+entire product category.
 
 ## Place In Bitter
 

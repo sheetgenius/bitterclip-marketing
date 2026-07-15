@@ -20,6 +20,13 @@ defineProps<{ tag?: string }>()
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
+  min-height: 2.75rem;
+  padding-inline: 0.15rem;
+  border-radius: 0.5rem;
+}
+.brand:focus-visible {
+  outline: 2px solid #f28f84;
+  outline-offset: 2px;
 }
 .brand__icon {
   width: 1.4rem;

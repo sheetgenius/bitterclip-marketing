@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
-  'BitterClip turns podcasts, interviews, and founder calls into source-linked clips. Find the moment, check the source, and export a finished clip in your browser or supported AI assistant.'
+  'BitterClip is a second brain for long-form audio and video. Search what was said, return to the exact source, and turn the moment into something useful.'
 const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'BitterClip — Clip your recordings inside ChatGPT',
+      title: 'BitterClip — A second brain for your video content',
       htmlAttrs: {
         lang: 'en',
       },
@@ -52,14 +52,14 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#111111' },
         { name: 'description', content: description },
-        { property: 'og:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
+        { property: 'og:title', content: 'BitterClip — A second brain for your video content' },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
         { property: 'og:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
+        { name: 'twitter:title', content: 'BitterClip — A second brain for your video content' },
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
       ],

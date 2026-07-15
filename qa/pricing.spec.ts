@@ -35,7 +35,7 @@ test.describe('pricing section', () => {
   test('paid campaign attribution survives the marketing-to-app handoff', async ({ page }) => {
     await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
 
-    const heroCta = page.getByRole('link', { name: /Clip your first recording/ })
+    const heroCta = page.getByRole('link', { name: /Start with a recording/ })
     const initialUrl = new URL(String(await heroCta.getAttribute('href')))
     expect(initialUrl.searchParams.get('utm_source')).toBe('google')
     expect(initialUrl.searchParams.get('utm_medium')).toBe('cpc')
@@ -51,6 +51,7 @@ test.describe('pricing section', () => {
       if (!frame?.contentWindow) throw new Error('hero iframe missing')
       window.dispatchEvent(new MessageEvent('message', {
         data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
+        origin: 'https://app.bitterclip.com',
         source: frame.contentWindow,
       }))
     })

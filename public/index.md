@@ -4,135 +4,121 @@ Canonical HTML page: https://bitterclip.com/
 
 Markdown version: https://bitterclip.com/index.md
 
-BitterClip is a speaker-aware media workspace for turning long recordings into
-source-linked clips. It is designed for AI agents that can search transcript
-context and for human operators who need to verify the final cut before
-publishing.
+BitterClip is a second brain for long-form audio and video. It keeps the
+recording, transcript, speakers, and source context connected so people and
+their AI assistants can search what was said, return to the exact moment, and
+turn it into something useful.
 
 ## Hero
 
-Cut your clips inside ChatGPT.
+A second brain for your video content.
 
-Upload a podcast, interview, founder call, demo, or recurring show. In an eligible
-ChatGPT workspace, your assistant finds the moment and opens a real editor beside
-the conversation. The same source-linked workspace works in your browser and Claude.
+No one has time to rewatch every recording. BitterClip remembers what is inside
+your long-form audio and video, finds the exact moment in context, and turns it
+into something useful.
 
-## Product Loop
+Use it in your browser, or bring the same workspace into Claude and supported
+ChatGPT workspaces. It is free to start.
 
-1. Recording: upload the source.
-2. Speakers: know who said what.
-3. Episode: one stitched transcript timeline you (or your agent) work in.
-4. Clips: ask your agent to find the strongest parts of the episode.
-5. Verify: check source context.
-6. Export: post a finished MP4.
+## The Complete Recording
 
-## Live Product Surface
+The useful part is usually somewhere in the middle: the exchange worth sharing,
+the detail you meant to remember, the moment a client made progress. BitterClip
+keeps the complete recording behind every result.
 
-The BitterClip editor lets a human review the transcript and the source media
-together. Drag across words, check the source, and the cut follows the audio.
+1. **Remember the whole recording.** Keep the media, transcript, speakers, and
+   surrounding context together.
+2. **Find the exact moment.** Ask in your own words and return to the source
+   instead of a loose summary.
+3. **Make it useful.** Review the moment, make the clip, or carry the context
+   into the next conversation.
 
-This is the same class of editor surface an agent can open when working inside
-AI chat environments.
+## The Real Product Surface
 
-The public homepage frames that live surface inside a phone-style assistant preview:
-the assistant finds three candidate cuts, opens one in the editor, and invites
-the visitor to tighten the range before posting. The preview runs in demo mode:
-expensive or account-scoped actions use safe stubs, completed demo interactions
-are measured, signup links carry the visitor's last demo milestone, and the
-sample export is a BitterClip-branded MP4 served from the app origin. The preview
-supports dark and light chrome from the same embedded surface so BitterClip can
-verify contrast across assistant hosts.
+The homepage contains one canonical interactive demonstration: the real
+BitterClip recording viewer and editor inside a phone-sized assistant preview.
+The assistant finds three cuts, opens one for review, and keeps the source media
+visible while the visitor listens, switches clips, or opens the full editor.
 
-## Why It Works
+The preview runs in demo mode. Account-scoped actions use safe stubs, completed
+interactions are measured, signup links carry the last demo milestone, and the
+sample export is a BitterClip-branded MP4 served from the app origin. The same
+component supports dark and light assistant-host chrome.
 
-Good clips depend on more than interesting words. They depend on who said them,
+## Why The Source Stays Attached
+
+Good results depend on more than an isolated quote. They depend on who said it,
 what came before, what came after, and whether the moment stands on its own.
 
-BitterClip structures the conversation with:
+BitterClip keeps these parts connected:
 
-- speaker-aware transcript context
-- source-linked clips
-- human verification before export
-- recurring memory for speakers, clips, topics, and prior show context
+- the complete audio or video recording
+- a time-aligned transcript
+- speaker identity and surrounding conversation
+- the selected clip boundary
+- the finished export and publishing state
 
-## Speaker-Aware Clipping
+ChatGPT and Claude are powerful ways to ask BitterClip for what you need. They
+are interfaces to the same source-backed workspace, not the complete product
+category. The browser workspace remains available to everyone.
 
-The best clips depend on knowing who said what. BitterClip works from the shape
-of the conversation, not a flat transcript blob.
+## The Exact Moment, Ready To Use
 
-Example selected moment:
+Hear the moment in context, move the edges, and export when it says what you
+meant. Download the finished clip, publish it to a connected channel, or share a
+link. For Instagram, send it to your phone and post from the app. The complete
+recording stays in BitterClip for the next question.
 
-- Michael: "We kept thinking the product was the picker."
-- John: "But the actual value is trust, right? You know who said it, where it
-  happened, and why the clip works."
-- Michael: "Exactly. The clip only works if the source is still attached."
+## Built For Recorded Work
 
-## Different By Design
+BitterClip is useful wherever long recordings accumulate faster than people can
+revisit them:
 
-Generic AI clippers often provide opaque suggestions, flat transcripts, weak
-speaker memory, and limited source context.
+- founder calls, interviews, podcasts, and recurring shows
+- coaching and training sessions where continuity matters
+- demos, expert conversations, and client work
+- agencies and editors who need judgment and source context before decoration
 
-BitterClip focuses on source-linked clips, speaker-aware transcripts,
-confirmed recurring speakers, transcript and media verification, exports, and
-publishing.
-
-## Built For Real Conversations
-
-BitterClip is built for founder calls, interviews, podcasts, demos, expert
-conversations, and recurring shows.
-
-Use cases include:
-
-- turning founder-led conversations into clips that explain what is being built
-- finding strong exchanges in podcasts and expert interviews
-- turning coaching and personal-training sessions into cue clips for athletes
-- giving agencies and editors faster discovery with human control
-- building show memory from speakers, topics, and prior clips
-
-## Agent Cockpit
-
-Your agent can find the moment. BitterClip helps finish it.
-
-Ask your agent for the strongest moment from a recording. BitterClip exposes the
-transcript, speakers, and candidate clip, then brings the human operator into a
-focused workspace to verify and export.
+One customer uses accumulated training sessions to prepare for the next client
+session without scrambling. Another came to BitterClip with a backlog of founder
+interviews and a manual process for identifying the highest-impact moments. The
+same machinery supports both: keep the complete recording, find the moment in
+context, and turn it into something useful.
 
 ## Common Questions
 
-- What happens after signup: create the free account and upload a recording in
-  your browser. Open it there, or connect a supported assistant and ask for the
-  strongest moment; the editor opens with it.
-- ChatGPT or Claude: both work, with different setup rules. Claude supports a
-  custom connector on every plan. In ChatGPT, custom-app access and available
-  actions depend on the plan and workspace policy.
-- Publishing starts in approval mode: nothing posts until a channel is connected
-  and the clip is approved. A project can later opt into automatic publishing.
-- Uploads: podcasts, interviews, calls, training sessions — audio or video,
-  files up to 4 GB (20 GB on Pro).
-- No new editor to learn: drag across the transcript words and the cut follows
-  the audio. The same focused editor works in the browser and supported assistants.
-- Assistant availability: Claude supports custom connectors on every plan. The
-  ChatGPT custom-app path depends on plan and workspace policy. The browser
-  workspace is available to everyone.
-- Canceling: the paid plan runs through the current paid period, then the account
-  moves to Free. Files stay downloadable.
+- **What happens after signup?** Create the free account and upload a recording
+  in your browser. Open it there, or connect Claude or a ChatGPT workspace where
+  custom apps are enabled and ask for the strongest moment. Check the cut, trim
+  it, and export.
+- **ChatGPT or Claude?** The browser workspace is always available. Claude
+  supports custom connectors on every Claude plan. In ChatGPT, custom-app access
+  and available actions depend on the plan and workspace policy.
+- **Can the AI post without approval?** Approval is the default. Nothing posts
+  until a channel is connected and the clip is approved. A project can later opt
+  into automatic publishing.
+- **What can I upload?** Podcasts, interviews, calls, and training sessions —
+  audio or video, in files up to 4 GB (20 GB on Pro).
+- **Is there a new editor to learn?** Drag across transcript words and the cut
+  follows the audio. The same focused editor works in the browser and supported
+  assistants.
+- **What happens after cancellation?** A paid plan runs through the current
+  paid period, then the account moves to Free. Files stay downloadable.
 
 ## Pricing
 
-Three plans, one uniform price list:
+Start with the recording you already have.
 
-- Free — $0. 60 minutes of footage a month, 10 clip exports at 1080p
-  (watermarked), file uploads up to 4 GB. Resets every month — not a trial.
-- Clip (recommended) — $9/month. 10 hours of footage a month, 150 clip
-  exports at 1080p with no watermark, file uploads up to 4 GB, and clips can
-  be embedded on your own site. For a weekly show or regular interviews.
-- Pro — $99/month. 40 hours of footage a month, 1,000 clip exports at 1080p,
-  file uploads up to 20 GB, front-of-queue processing, and visual analysis
-  workflows. For people whose footage is their business.
+- **Free — $0.** 60 minutes of footage a month, 10 clip exports at 1080p
+  (watermarked), and uploads up to 4 GB. It resets every month and is not a trial.
+- **Clip — $9/month.** 10 hours of footage a month, 150 clip exports at 1080p
+  with no watermark, uploads up to 4 GB, and embeddable clips.
+- **Pro — $99/month.** 40 hours of footage a month, 1,000 clip exports at 1080p,
+  uploads up to 20 GB, front-of-queue processing, and visual-analysis workflows.
 
-Paid plans are month to month and can be canceled at any time. Your files stay
-downloadable, so canceling never strands your work.
+Paid plans are month to month and can be canceled at any time. Files remain
+downloadable on every plan.
 
-Signup: https://app.bitterclip.com/sign_up (Clip:
-https://app.bitterclip.com/sign_up?plan=clip · Pro:
-https://app.bitterclip.com/sign_up?plan=pro)
+Signup: https://app.bitterclip.com/sign_up
+Clip: https://app.bitterclip.com/sign_up?plan=clip
+Pro: https://app.bitterclip.com/sign_up?plan=pro
