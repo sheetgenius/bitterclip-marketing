@@ -5,6 +5,7 @@ import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 const route = useRoute()
 const signupBaseUrl = SIGNUP_BASE_URL
 const demoClipUrl = 'https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4'
+const coachingClipUrl = 'https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba/media'
 const DEFAULT_APP_ORIGIN = 'https://app.bitterclip.com'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
@@ -90,7 +91,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Create the free account and upload a recording in your browser. Open it there, or connect Claude or a ChatGPT workspace where custom apps are enabled and ask for the strongest moment. Check the cut, trim it, export.',
+    a: 'Create the free account and upload a recording in your browser. Open it there, or connect Claude or a ChatGPT workspace where custom apps are enabled and ask for the moment you need. Check the cut, trim it, export.',
   },
   {
     q: 'Do I need ChatGPT, or does Claude work too?',
@@ -129,7 +130,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'A second brain for long-form audio and video. Search what was said, return to the exact source, and turn the moment into something useful.',
+    description: 'A second brain for long-form audio and video. Search what was said, return to the exact source, and use the moment again.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -182,16 +183,11 @@ useHead({
 })
 
 // --- Live recording-card widget: the REAL product component, embedded ---
-// The phone screen is FIXED so nothing ever moves the layout: not the embed
-// reporting its hug height on load, not opening the in-frame editor (which
-// asks for 640). Height messages from this iframe are deliberately ignored;
-// content taller than the screen scrolls inside it, like a real phone.
-// 488 = the widget's settled viewer height at both our widths (447 desktop /
-// 441 mobile, measured 2026-06-10) plus the ~2 chat-bubble lines the terser
-// assistant reply freed up — total phone height is unchanged from the 4-line
-// bubble days, the screen just got roomier.
-// (+20 from the full-bleed pass: the thread's old top padding became screen.)
+// The compact viewer reserves a stable first-paint height. A deliberate
+// "Open in editor" transition may expand that screen; closing the editor
+// restores the compact geometry. Ordinary widget hugs never move the page.
 const HERO_SCREEN_HEIGHT = 508
+const HERO_EDITOR_HEIGHT = 820
 // Themes the phone chrome AND the embedded widget (?theme= on the embed URL).
 // Production defaults to dark, while ?heroTheme=light (or ?theme=light) gives a
 // stable preview path for the light-mode polish without a source edit.
@@ -201,9 +197,11 @@ const heroPhoneSlot = ref<HTMLElement | null>(null)
 const handoffSection = ref<HTMLElement | null>(null)
 const heroOrigin = ref(DEFAULT_APP_ORIGIN)
 const heroReady = ref(false)
+const heroScreenHeight = ref(HERO_SCREEN_HEIGHT)
+const heroDisplayMode = ref<'inline' | 'fullscreen'>('inline')
 let heroLoadObserver: IntersectionObserver | null = null
 let handoffLoadObserver: IntersectionObserver | null = null
-let heroReadinessFallback: ReturnType<typeof setTimeout> | null = null
+let heroExpansionScrollTimer: ReturnType<typeof setTimeout> | null = null
 
 const syncHeroThemeFromLocation = (): HeroTheme => {
   const resolvedTheme = readHeroThemeFromLocation()
@@ -229,19 +227,18 @@ const scheduleHeroSrc = (url: string) => {
   }
   heroLoadObserver?.disconnect()
   heroLoadObserver = new IntersectionObserver((entries) => {
-    if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.55)) {
+    if (entries.some((entry) => entry.isIntersecting)) {
       loadHeroSrc(url)
       heroLoadObserver?.disconnect()
       heroLoadObserver = null
     }
-  }, { threshold: [0.55] })
+  }, { rootMargin: '160px 0px', threshold: 0 })
   heroLoadObserver.observe(heroPhoneSlot.value)
 }
 
-// The handoff fan-out's clip card is a live instance of the clip-embed
-// primitive (app.bitterclip.com/embed/clip/:id — poster + play, ~5KB page).
-// Deferred like the other widgets; the static poster underneath is the
-// placeholder until the iframe paints its own (near-identical) rest state.
+// The handoff fan-out uses the published clip's stable public media route.
+// Keep the source detached until this below-fold proof nears the viewport so
+// native media metadata does not compete with the hero's first paint.
 const handoffClipSrc = ref('')
 
 const scheduleHandoffClipSrc = (url: string) => {
@@ -282,13 +279,43 @@ const isHeroMessage = (event: MessageEvent): boolean => {
   )
 }
 
-const onHeroIframeLoad = () => {
-  if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
-  // Compatibility fallback for the production control while the coordinated app
-  // branch adopts the explicit ready message. The message wins when available.
-  heroReadinessFallback = setTimeout(() => {
-    heroReady.value = true
-  }, 2500)
+const alignExpandedHeroBelowHeader = () => {
+  const slot = heroPhoneSlot.value
+  if (window.innerWidth >= 768 || !slot) return
+  const headerBottom = document.querySelector<HTMLElement>('header')?.getBoundingClientRect().bottom || 0
+  const documentTop = slot.getBoundingClientRect().top + window.scrollY
+  window.scrollTo({ top: Math.max(0, documentTop - headerBottom - 12), behavior: 'auto' })
+}
+
+const revealExpandedHeroBelowHeader = () => {
+  // The click inside the iframe can prompt Chromium to reveal its newly focused
+  // control while the outer slot is growing. Align once before that work and
+  // once after the height transition so the editor bar never lands beneath the
+  // sticky marketing header.
+  alignExpandedHeroBelowHeader()
+  if (heroExpansionScrollTimer) clearTimeout(heroExpansionScrollTimer)
+  const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 320
+  heroExpansionScrollTimer = setTimeout(() => {
+    heroExpansionScrollTimer = null
+    alignExpandedHeroBelowHeader()
+    window.requestAnimationFrame(alignExpandedHeroBelowHeader)
+  }, delay)
+}
+
+const setHeroDisplayMode = (mode: unknown, requestedHeight?: unknown) => {
+  if (mode === 'fullscreen') {
+    heroDisplayMode.value = 'fullscreen'
+    const height = Number(requestedHeight)
+    heroScreenHeight.value = Number.isFinite(height)
+      ? Math.max(720, Math.min(900, Math.round(height)))
+      : HERO_EDITOR_HEIGHT
+    revealExpandedHeroBelowHeader()
+    return
+  }
+  if (mode === 'inline') {
+    heroDisplayMode.value = 'inline'
+    heroScreenHeight.value = HERO_SCREEN_HEIGHT
+  }
 }
 
 const setDemoStage = (name: DemoEventName) => {
@@ -329,10 +356,17 @@ const recordDemoEvent = (name: DemoEventName, detail: Record<string, unknown>) =
 const handleMessage = (event: MessageEvent) => {
   if (!event.data || typeof event.data !== 'object') return
   if (!isHeroMessage(event)) return
-  const data = event.data as { bitterclip_embed_ready?: unknown, bitterclip_demo_event?: unknown, detail?: unknown }
+  const data = event.data as {
+    bitterclip_embed_ready?: unknown
+    bitterclip_embed_mode?: unknown
+    bitterclip_demo_event?: unknown
+    height?: unknown
+    detail?: unknown
+  }
+  if (data.bitterclip_embed_mode === 'fullscreen' || data.bitterclip_embed_mode === 'inline') {
+    setHeroDisplayMode(data.bitterclip_embed_mode, data.height)
+  }
   if (data.bitterclip_embed_ready === true) {
-    if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
-    heroReadinessFallback = null
     heroReady.value = true
     return
   }
@@ -340,6 +374,8 @@ const handleMessage = (event: MessageEvent) => {
     const detail = data.detail && typeof data.detail === 'object' && !Array.isArray(data.detail)
       ? data.detail as Record<string, unknown>
       : {}
+    if (data.bitterclip_demo_event === 'editor_opened') setHeroDisplayMode('fullscreen', data.height)
+    if (data.bitterclip_demo_event === 'editor_closed') setHeroDisplayMode('inline')
     recordDemoEvent(data.bitterclip_demo_event as DemoEventName, detail)
   }
 }
@@ -375,8 +411,13 @@ onMounted(() => {
     // viewer's "Open in editor" control, keeping first load lighter.
     // (Only https origins pass the embed's allowlist, so on plain-http local
     // dev the export reveal is simply absent — everything else still works.)
-    scheduleHeroSrc(`${heroOrigin.value}/embed/recording/src_qjxzecbketjkby2eynbi?bare=1&theme=${resolvedHeroTheme}&clip=${encodeURIComponent(clip)}`)
-    scheduleHandoffClipSrc('https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba')
+    const embedUrl = new URL('/embed/recording/src_qjxzecbketjkby2eynbi', heroOrigin.value)
+    embedUrl.searchParams.set('bare', '1')
+    embedUrl.searchParams.set('theme', resolvedHeroTheme)
+    embedUrl.searchParams.set('clip', clip)
+    embedUrl.searchParams.set('parent_origin', window.location.origin)
+    scheduleHeroSrc(embedUrl.toString())
+    scheduleHandoffClipSrc(coachingClipUrl)
   })
 })
 
@@ -386,8 +427,8 @@ onBeforeUnmount(() => {
   heroLoadObserver = null
   handoffLoadObserver?.disconnect()
   handoffLoadObserver = null
-  if (heroReadinessFallback) clearTimeout(heroReadinessFallback)
-  heroReadinessFallback = null
+  if (heroExpansionScrollTimer) clearTimeout(heroExpansionScrollTimer)
+  heroExpansionScrollTimer = null
 })
 </script>
 
@@ -395,43 +436,45 @@ onBeforeUnmount(() => {
   <div class="relative w-full">
     <div class="absolute top-0 left-0 right-0 h-[680px] hero-backdrop-mask opacity-[0.08] -z-10 pointer-events-none" />
 
-    <main class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 pb-24 relative">
+    <main class="mx-auto max-w-6xl px-4 pt-6 sm:pt-16 pb-24 relative">
 
       <!-- 1. Hero -->
-      <div class="grid lg:grid-cols-[1.18fr_0.82fr] gap-10 lg:gap-14 items-center mb-16 sm:mb-24">
+      <div class="grid lg:grid-cols-[1.18fr_0.82fr] gap-4 sm:gap-10 lg:gap-14 items-center mb-14 sm:mb-24">
 
         <!-- Left: the pitch -->
         <div class="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
-          <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.04em] text-white leading-[1.02] mb-6">
+          <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.04em] text-white leading-[1.02] mb-3 sm:mb-6">
             A second brain
             <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">
               for your video content.
             </span>
           </h1>
 
-          <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-            No one has time to rewatch every recording. BitterClip remembers what is inside your long-form audio and video, finds the exact moment in context, and turns it into something useful.
+          <p class="text-zinc-400 text-base sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-[1.55] sm:leading-relaxed mb-4 sm:mb-8">
+            No one has time to rewatch every recording. BitterClip remembers what is inside your long-form audio and video, finds the exact moment with its source attached, and lets you use it again.
           </p>
 
-          <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
+          <div class="flex flex-row items-center lg:justify-start justify-center gap-2 sm:gap-3">
             <a
               :href="signupUrl"
-              class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="group inline-flex flex-1 sm:flex-none items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-3.5 sm:px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Start with a recording</span>
+              <span class="sm:hidden">Start free</span>
+              <span class="hidden sm:inline">Upload a recording</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
             <a
               href="#demo"
-              class="inline-flex items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/40 px-5 py-2.5 font-mono text-xs font-bold text-zinc-300 transition duration-200 hover:border-[#f28f84]/40 hover:bg-[#f28f84]/[0.06] hover:text-white min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="inline-flex flex-1 sm:flex-none items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/40 px-3.5 sm:px-5 py-2.5 font-mono text-xs font-bold text-zinc-300 transition duration-200 hover:border-[#f28f84]/40 hover:bg-[#f28f84]/[0.06] hover:text-white min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              See how it works
+              <span class="sm:hidden">See product</span>
+              <span class="hidden sm:inline">See how it works</span>
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Use it in your browser, or bring the same workspace into Claude and supported ChatGPT workspaces. Free to start.</p>
+          <p class="hidden lg:block text-xs text-zinc-400 font-mono mt-5">Use it in your browser, or bring the same workspace into Claude and supported ChatGPT workspaces. Free to start.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -498,20 +541,24 @@ onBeforeUnmount(() => {
                     class="max-w-[88%] rounded-3xl px-3.5 py-2"
                     :class="heroTheme === 'light' ? 'bg-[#f4f4f4] border border-zinc-200/80 shadow-sm' : 'bg-[#f4f4f4]'"
                   >
-                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Find the strongest moments in episode one and cut me three clips.</p>
+                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Find where we explain why human-made content still matters.</p>
                   </div>
                 </div>
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment is where you explain why human-made content still matters. I found three cuts and opened that one so you can hear it in context.</p>
+                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">I found three relevant moments. The clearest starts at 33:53, so I opened it in the original recording.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
                      The slot reserves its measured stable height up front (no CLS),
                      and the live iframe src is set only after the page is idle. A
                      seamless skeleton of the same height holds the space until then. -->
-                <div ref="heroPhoneSlot" class="relative w-full" :style="{ height: HERO_SCREEN_HEIGHT + 'px' }">
+                <div
+                  ref="heroPhoneSlot"
+                  class="relative w-full scroll-mt-24 transition-[height] duration-300 motion-reduce:transition-none"
+                  :data-display-mode="heroDisplayMode"
+                  :style="{ height: heroScreenHeight + 'px', overflowAnchor: 'none' }">
                   <!-- skeleton placeholder: looks like the recording card loading -->
                   <div
                     v-if="!heroReady"
@@ -537,9 +584,10 @@ onBeforeUnmount(() => {
                     scrolling="no"
                     allow="autoplay; fullscreen"
                     allowfullscreen
-                    @load="onHeroIframeLoad"
                     class="absolute inset-0 w-full h-full block rounded-2xl overflow-hidden bg-transparent transition-opacity duration-300"
-                    :class="heroReady ? 'opacity-100' : 'opacity-0'"
+                    :class="heroReady ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'"
+                    :tabindex="heroReady ? 0 : -1"
+                    :aria-hidden="heroReady ? undefined : 'true'"
                     :style="{ border: 0 }"
                   ></iframe>
                 </div>
@@ -551,6 +599,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
           </div>
+          <p class="mt-4 px-3 text-center text-[11px] leading-relaxed text-zinc-400 font-mono lg:hidden">Use it in your browser, or bring the same workspace into Claude and supported ChatGPT workspaces.</p>
         </div>
 
       </div>
@@ -560,8 +609,8 @@ onBeforeUnmount(() => {
       <section aria-label="Customer testimonials" class="mb-24">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-          <figure class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-7 sm:gap-9">
-            <div class="shrink-0 flex flex-col items-center gap-4">
+          <figure class="flex flex-row items-start text-left gap-4 sm:gap-9">
+            <div class="w-24 sm:w-auto shrink-0 flex flex-col items-center gap-2 sm:gap-4">
               <img
                 src="/images/andrew_williams_strength_and_positions_coach.jpg"
                 alt="Andrew Williams"
@@ -569,12 +618,12 @@ onBeforeUnmount(() => {
                 height="160"
                 loading="lazy"
                 decoding="async"
-                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+                class="w-20 h-20 sm:w-40 sm:h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
               />
               <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Andrew Williams</span>
-                <span class="block mt-0.5 text-zinc-500">Head Coach</span>
-                <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener" class="mt-1.5 inline-flex items-center justify-center gap-1.5 text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">
+                <span class="block mt-0.5 text-zinc-400">Head Coach</span>
+                <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener" class="mt-1 inline-flex min-h-11 items-center justify-center gap-1.5 text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">
                   <img
                     src="/images/andrew_williams_strength_and_positions.png"
                     alt=""
@@ -590,13 +639,13 @@ onBeforeUnmount(() => {
             </div>
             <!-- muted base, white key phrase: the quote skims itself. The opening
                  mark hangs in the margin so every line starts flush. -->
-            <blockquote class="font-display text-lg sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
+            <blockquote class="flex-1 font-display text-base sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
               &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
             </blockquote>
           </figure>
 
-          <figure class="flex flex-col sm:flex-row items-center text-center sm:text-left gap-7 sm:gap-9">
-            <div class="shrink-0 flex flex-col items-center gap-4">
+          <figure class="flex flex-row items-start text-left gap-4 sm:gap-9">
+            <div class="w-24 sm:w-auto shrink-0 flex flex-col items-center gap-2 sm:gap-4">
               <img
                 src="/images/rohan_karunakaran.jpg"
                 alt="Rohan Karunakaran"
@@ -604,15 +653,15 @@ onBeforeUnmount(() => {
                 height="160"
                 loading="lazy"
                 decoding="async"
-                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+                class="w-20 h-20 sm:w-40 sm:h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
               />
               <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Rohan Karunakaran</span>
-                <span class="block mt-0.5 text-zinc-500">Founder</span>
-                <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener" class="mt-1.5 inline-block text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">Frontier Studio</a>
+                <span class="block mt-0.5 text-zinc-400">Founder</span>
+                <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener" class="mt-1 inline-flex min-h-11 items-center justify-center text-[#f28f84]/90 hover:text-[#ffa89e] transition-colors">Frontier Studio</a>
               </div>
             </div>
-            <blockquote class="font-display text-lg sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
+            <blockquote class="flex-1 font-display text-base sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
               &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
             </blockquote>
           </figure>
@@ -627,18 +676,18 @@ onBeforeUnmount(() => {
           <div class="max-w-xl">
             <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — The complete recording</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-              No one has time to rewatch every recording.
+              Find the moment. Keep the source.
             </h2>
             <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-              The useful part is usually somewhere in the middle: the exchange worth sharing, the detail you meant to remember, the moment a client made progress. BitterClip keeps the complete recording behind every result. Search in your own words, open the exact moment, and hear what came before and after.
+              The part you need is usually somewhere in the middle: the exchange worth sharing, the detail you meant to remember, the moment a client made progress. Ask in your own words. BitterClip returns the exact words, speaker, time, and recording, so you can listen before and after instead of trusting a loose summary.
             </p>
 
             <ol class="mt-8 border-y border-white/[0.08] divide-y divide-white/[0.08]">
               <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
                 <span class="font-mono text-[10px] text-[#f28f84] pt-1">01</span>
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Remember the whole recording</h3>
-                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Keep the media, transcript, speakers, and surrounding context together.</p>
+                  <h3 class="text-sm font-semibold text-white">Remember every recording</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Keep the media, transcript, speakers, and surrounding context together across the project.</p>
                 </div>
               </li>
               <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
@@ -651,8 +700,8 @@ onBeforeUnmount(() => {
               <li class="grid grid-cols-[2.25rem_1fr] gap-3 py-4">
                 <span class="font-mono text-[10px] text-[#f28f84] pt-1">03</span>
                 <div>
-                  <h3 class="text-sm font-semibold text-white">Make it useful</h3>
-                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Review the moment, make the clip, or carry the context into the next conversation.</p>
+                  <h3 class="text-sm font-semibold text-white">Carry it forward</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-zinc-400">Make the clip, prepare for the next session, or bring the source into the next conversation.</p>
                 </div>
               </li>
             </ol>
@@ -671,16 +720,21 @@ onBeforeUnmount(() => {
           <figure class="source-context-figure rounded-3xl border border-white/[0.08] bg-black/30 p-5 sm:p-7 shadow-[0_28px_90px_-44px_rgba(0,0,0,0.9)]">
             <figcaption class="flex items-start justify-between gap-4 border-b border-white/[0.08] pb-5">
               <div>
-                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">Complete recording</p>
-                <p class="mt-1 font-display text-xl font-semibold text-white">Episode one</p>
+                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">Complete recording</p>
+                <p class="mt-1 max-w-sm font-display text-xl font-semibold leading-tight text-white">Origin Story, bitter, and Loop Architecture</p>
               </div>
               <span class="shrink-0 font-mono text-xs text-zinc-400">46:23</span>
             </figcaption>
 
-            <div class="py-8 sm:py-10">
-              <div class="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+            <div class="pt-6">
+              <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">Asked in plain language</p>
+              <p class="mt-2 border-l-2 border-[#f28f84] pl-3 text-sm leading-relaxed text-zinc-200">Where do they explain why human-made content still matters?</p>
+            </div>
+
+            <div class="py-7 sm:py-9">
+              <div class="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-wider text-zinc-400">
                 <span>0:00</span>
-                <span>One media clock</span>
+                <span>Original timeline</span>
                 <span>46:23</span>
               </div>
               <div class="source-context-rail" aria-label="A selected fourteen-second moment within a complete 46 minute recording">
@@ -688,19 +742,19 @@ onBeforeUnmount(() => {
                 <span class="source-context-selection">Selected moment</span>
                 <span class="source-context-after">Context after</span>
               </div>
-              <div class="mt-3 grid grid-cols-[1fr_auto_1fr] items-center font-mono text-[10px] text-zinc-500">
-                <span>02:05</span>
-                <span class="rounded-full border border-[#f28f84]/35 bg-[#f28f84]/10 px-3 py-1.5 text-[#ffb4a8]">02:05–02:19 · exact source</span>
-                <span class="text-right">02:19</span>
+              <div class="mt-3 grid grid-cols-[1fr_auto_1fr] items-center font-mono text-[10px] text-zinc-400">
+                <span>33:53</span>
+                <span class="rounded-full border border-[#f28f84]/35 bg-[#f28f84]/10 px-3 py-1.5 text-[#ffb4a8]">33:53–34:07 · exact source</span>
+                <span class="text-right">34:07</span>
               </div>
             </div>
 
             <div class="flex flex-col gap-3 border-t border-white/[0.08] pt-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">Ready to review</p>
-                <p class="mt-1 text-sm text-zinc-300">The source stays attached.</p>
+                <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-400">Ready to review</p>
+                <p class="mt-1 text-sm text-zinc-300">The Human Part Is Precious</p>
               </div>
-              <span class="font-mono text-xs text-zinc-300">Clip 1 of 3 · 0:14</span>
+              <span class="font-mono text-xs text-zinc-300">Clip 2 of 3 · 0:14</span>
             </div>
           </figure>
         </div>
@@ -720,41 +774,26 @@ onBeforeUnmount(() => {
 
         <!-- Fan-out: one finished clip on the left arcs to four destinations on the right -->
         <div class="handoff-fan mt-2">
-          <!-- SOURCE: the featured customer clip — Andrew coaching Adrian (Lu Xiaojun-style
-               technique work) — served LIVE by the clip-embed primitive
-               (/embed/clip/:id), the same surface a Pro customer projects onto
-               their own site. The static poster card paints first and stays as
-               the placeholder; the deferred iframe lays its near-identical rest
-               state over it, and one click plays. -->
+          <!-- SOURCE: the featured customer clip — Andrew coaching Adrian. This
+               is a finished output, not a second product demo, so native media
+               controls are the honest interface. Its source is attached only
+               when this below-fold section approaches the viewport. -->
           <div class="handoff-source">
             <div class="relative w-[250px] sm:w-[280px]">
               <div class="relative rounded-xl overflow-hidden ring-1 ring-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.8)]">
-                <img
-                  src="/clips/coaching-session-poster.jpg"
-                  alt="Andrew Williams coaching his client Adrian through a lift at Strength & Positions"
+                <video
+                  :src="handoffClipSrc || undefined"
+                  :poster="handoffClipSrc ? '/clips/coaching-session-poster.jpg' : undefined"
                   width="280"
                   height="158"
-                  loading="lazy"
-                  decoding="async"
-                  class="w-full aspect-video object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="flex items-center justify-center w-10 h-10 rounded-full bg-[#f28f84] shadow-[0_0_24px_rgba(242,143,132,0.45)]">
-                    <svg viewBox="0 0 24 24" fill="#1a1a1a" class="w-4 h-4 translate-x-px" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
-                  </span>
-                </div>
-                <span class="absolute bottom-2 right-2.5 font-mono text-[10px] font-semibold text-white/90">1:09</span>
-                <iframe
-                  v-if="handoffClipSrc"
-                  :src="handoffClipSrc"
-                  class="absolute inset-0 w-full h-full"
-                  style="border:0"
-                  title="Watch: Andrew Williams coaching Adrian at Strength & Positions"
-                  loading="lazy"
-                  allow="fullscreen"
-                  allowfullscreen
-                ></iframe>
+                  preload="metadata"
+                  controls
+                  playsinline
+                  aria-label="Watch Andrew Williams coach Adrian at Strength and Positions"
+                  class="block w-full aspect-video object-cover bg-black"
+                >
+                  <track v-if="handoffClipSrc" kind="captions" srclang="en" label="English" src="/clips/coaching-session-en.vtt" default />
+                </video>
               </div>
             </div>
           </div>
@@ -833,6 +872,7 @@ onBeforeUnmount(() => {
         <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
         <div class="max-w-2xl mx-auto text-center mb-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">03 — Start with one recording</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
             Start with the recording you already have.
           </h2>
@@ -861,7 +901,7 @@ onBeforeUnmount(() => {
               :href="signupUrl"
               class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >Start free</a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Resets every month — not a trial</p>
+            <p class="text-center text-[11px] text-zinc-400 mt-2.5">Resets every month — not a trial</p>
           </div>
 
           <!-- CLIP — the recommended plan carries the accent and the only filled CTA.
@@ -884,12 +924,12 @@ onBeforeUnmount(() => {
               :href="signupUrlClip"
               class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Start clipping</span>
+              <span>Choose the $9 plan</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-400 mt-2.5">Month to month · cancel anytime</p>
           </div>
 
           <!-- PRO — plain panel: the $99 price anchors on its own; the accent lives
@@ -914,14 +954,11 @@ onBeforeUnmount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
+            <p class="text-center text-[11px] text-zinc-400 mt-2.5">Month to month · cancel anytime</p>
           </div>
 
         </div>
 
-        <p class="text-center text-xs text-zinc-400 mt-7">
-          Your files stay downloadable on every plan — canceling never strands your work.
-        </p>
       </section>
 
       <!-- SECTION 04 — grounded objections after visitors understand the product and price. -->

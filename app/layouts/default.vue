@@ -36,7 +36,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#121313] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
+  <div class="relative min-h-screen bg-[#121313] selection:bg-[#f28f84]/25 text-zinc-100 overflow-x-clip bg-grid-pattern flex flex-col justify-between">
 
     <!-- Cinematic Data Flow Backdrops -->
     <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.10] pointer-events-none" />
@@ -92,30 +92,30 @@ onBeforeUnmount(() => {
               </svg>
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
-            <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
-              A second brain for long-form audio and video: search what was said, return to the source, and turn the moment into something useful.
+            <p class="font-sans text-zinc-400 leading-relaxed max-w-[16rem]">
+              A second brain for long-form audio and video: search what was said, return to the exact source, and use the moment again.
             </p>
-            <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
+            <a class="inline-flex min-h-11 items-center focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
           </div>
 
           <!-- Link columns -->
           <nav aria-label="Footer" class="grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 lg:gap-x-16">
-            <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Product</h2>
+            <div class="flex flex-col [&>a]:inline-flex [&>a]:min-h-11 [&>a]:items-center">
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Product</h2>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs">Docs</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/blog">Blog</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">Assistants</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/#pricing">Pricing</NuxtLink>
-              <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start clipping</a>
+              <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start free</a>
             </div>
-            <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Legal</h2>
+            <div class="flex flex-col [&>a]:inline-flex [&>a]:min-h-11 [&>a]:items-center">
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Legal</h2>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/privacy">Privacy</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/terms">Terms</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/data-deletion">Data deletion</NuxtLink>
             </div>
-            <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Developers</h2>
+            <div class="flex flex-col [&>a]:inline-flex [&>a]:min-h-11 [&>a]:items-center">
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Developers</h2>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="/llms.txt">llms.txt</a>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="/llms-full.txt">Markdown</a>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="https://github.com/sheetgenius/bitterclip-marketing">GitHub</a>
@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Bottom bar -->
-        <div class="mt-12 pt-6 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-600">
+        <div class="mt-12 pt-6 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-400">
           <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
           <span class="font-mono tracking-wide">A Bitter project.</span>
         </div>

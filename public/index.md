@@ -14,8 +14,8 @@ turn it into something useful.
 A second brain for your video content.
 
 No one has time to rewatch every recording. BitterClip remembers what is inside
-your long-form audio and video, finds the exact moment in context, and turns it
-into something useful.
+your long-form audio and video, finds the exact moment with its source attached,
+and lets you use it again.
 
 Use it in your browser, or bring the same workspace into Claude and supported
 ChatGPT workspaces. It is free to start.
@@ -35,15 +35,13 @@ keeps the complete recording behind every result.
 
 ## The Real Product Surface
 
-The homepage contains one canonical interactive demonstration: the real
-BitterClip recording viewer and editor inside a phone-sized assistant preview.
-The assistant finds three cuts, opens one for review, and keeps the source media
-visible while the visitor listens, switches clips, or opens the full editor.
+The live example above is the real BitterClip recording viewer and editor.
+Ask for an idea in your own words and BitterClip opens the matching passage in
+the original recording, with related moments to compare. Listen, switch clips,
+or open the focused editor to check the cut yourself.
 
-The preview runs in demo mode. Account-scoped actions use safe stubs, completed
-interactions are measured, signup links carry the last demo milestone, and the
-sample export is a BitterClip-branded MP4 served from the app origin. The same
-component supports dark and light assistant-host chrome.
+The same source-backed workspace is available in the browser, Claude, and
+supported ChatGPT workspaces.
 
 ## Why The Source Stays Attached
 
@@ -85,26 +83,6 @@ interviews and a manual process for identifying the highest-impact moments. The
 same machinery supports both: keep the complete recording, find the moment in
 context, and turn it into something useful.
 
-## Common Questions
-
-- **What happens after signup?** Create the free account and upload a recording
-  in your browser. Open it there, or connect Claude or a ChatGPT workspace where
-  custom apps are enabled and ask for the strongest moment. Check the cut, trim
-  it, and export.
-- **ChatGPT or Claude?** The browser workspace is always available. Claude
-  supports custom connectors on every Claude plan. In ChatGPT, custom-app access
-  and available actions depend on the plan and workspace policy.
-- **Can the AI post without approval?** Approval is the default. Nothing posts
-  until a channel is connected and the clip is approved. A project can later opt
-  into automatic publishing.
-- **What can I upload?** Podcasts, interviews, calls, and training sessions —
-  audio or video, in files up to 4 GB (20 GB on Pro).
-- **Is there a new editor to learn?** Drag across transcript words and the cut
-  follows the audio. The same focused editor works in the browser and supported
-  assistants.
-- **What happens after cancellation?** A paid plan runs through the current
-  paid period, then the account moves to Free. Files stay downloadable.
-
 ## Pricing
 
 Start with the recording you already have.
@@ -122,3 +100,23 @@ downloadable on every plan.
 Signup: https://app.bitterclip.com/sign_up
 Clip: https://app.bitterclip.com/sign_up?plan=clip
 Pro: https://app.bitterclip.com/sign_up?plan=pro
+
+## Common Questions
+
+- **What happens after signup?** Create the free account and upload a recording
+  in your browser. Open it there, or connect Claude or a ChatGPT workspace where
+  custom apps are enabled and ask for the moment you need. Check the cut, trim
+  it, and export.
+- **ChatGPT or Claude?** The browser workspace is always available. Claude
+  supports custom connectors on every Claude plan. In ChatGPT, custom-app access
+  and available actions depend on the plan and workspace policy.
+- **Can the AI post without approval?** Approval is the default. Nothing posts
+  until a channel is connected and the clip is approved. A project can later opt
+  into automatic publishing.
+- **What can I upload?** Podcasts, interviews, calls, and training sessions —
+  audio or video, in files up to 4 GB (20 GB on Pro).
+- **Is there a new editor to learn?** Drag across transcript words and the cut
+  follows the audio. The same focused editor works in the browser and supported
+  assistants.
+- **What happens after cancellation?** A paid plan runs through the current
+  paid period, then the account moves to Free. Files stay downloadable.

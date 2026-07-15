@@ -7,7 +7,7 @@ test.describe('pricing section', () => {
     await page.goto('/')
     const pricing = page.locator('#pricing')
 
-    const clipCta = pricing.getByRole('link', { name: /Start clipping/ })
+    const clipCta = pricing.getByRole('link', { name: /Choose the \$9 plan/ })
     await expect(clipCta).toBeVisible()
     expect(await clipCta.getAttribute('href')).toContain('plan=clip')
 
@@ -28,14 +28,14 @@ test.describe('pricing section', () => {
       window.dispatchEvent(new CustomEvent('bitterclip:demo', { detail: {} }))
     })
     // Trigger the sync path directly via a stage event no-op: reload-safe check
-    const clipHref = await page.locator('#pricing').getByRole('link', { name: /Start clipping/ }).getAttribute('href')
+    const clipHref = await page.locator('#pricing').getByRole('link', { name: /Choose the \$9 plan/ }).getAttribute('href')
     expect(clipHref).toContain('plan=clip')
   })
 
   test('paid campaign attribution survives the marketing-to-app handoff', async ({ page }) => {
     await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
 
-    const heroCta = page.getByRole('link', { name: /Start with a recording/ })
+    const heroCta = page.getByRole('link', { name: /Upload a recording/ })
     const initialUrl = new URL(String(await heroCta.getAttribute('href')))
     expect(initialUrl.searchParams.get('utm_source')).toBe('google')
     expect(initialUrl.searchParams.get('utm_medium')).toBe('cpc')
