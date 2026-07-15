@@ -41,6 +41,26 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
   await expect(activePosition).toHaveText('Clip 2 of 3')
   await expect(activeTitle).toHaveText('The Human Part Is Precious')
   await expect(widget.getByText(/Review speakers/)).toHaveCount(0)
+  const boundedLayout = await widget.evaluate(() => {
+    const view = document.querySelector('#view') as HTMLElement & { shadowRoot: ShadowRoot }
+    const editor = view?.shadowRoot?.querySelector('bitterclip-composition-editor') as HTMLElement & { shadowRoot: ShadowRoot }
+    const viewer = editor?.shadowRoot?.querySelector('bitterclip-composition-inline-viewer') as HTMLElement & { shadowRoot: ShadowRoot }
+    const actions = viewer?.shadowRoot?.querySelector('.viewer-actions')
+    const editorRect = editor?.getBoundingClientRect()
+    const viewerRect = viewer?.getBoundingClientRect()
+    const actionsRect = actions?.getBoundingClientRect()
+    return {
+      bounded: editor?.hasAttribute('data-bounded-viewport') && viewer?.hasAttribute('bounded'),
+      editorHeight: editorRect?.height || 0,
+      viewerHeight: viewerRect?.height || 0,
+      actionBottomGap: viewerRect && actionsRect ? viewerRect.bottom - actionsRect.bottom : Number.POSITIVE_INFINITY,
+    }
+  })
+  expect(boundedLayout.bounded).toBe(true)
+  expect(Math.abs(boundedLayout.editorHeight - 600)).toBeLessThanOrEqual(1)
+  expect(Math.abs(boundedLayout.viewerHeight - 600)).toBeLessThanOrEqual(1)
+  expect(boundedLayout.actionBottomGap).toBeGreaterThanOrEqual(0)
+  expect(boundedLayout.actionBottomGap).toBeLessThanOrEqual(16)
 
   const expected = [
     ['My Own Marketing Asset', 'Clip 1 of 3'],

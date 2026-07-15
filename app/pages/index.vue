@@ -409,6 +409,10 @@ onMounted(() => {
     embedUrl.searchParams.set('theme', resolvedHeroTheme)
     embedUrl.searchParams.set('clip', clip)
     embedUrl.searchParams.set('parent_origin', window.location.origin)
+    // The phone is a real finite viewport, not a content-hugging chat card.
+    // The shared viewer handles this generic host contract; no marketing-only
+    // UI is rendered inside the screen.
+    embedUrl.searchParams.set('viewport_sizing', 'bounded')
     scheduleHeroSrc(embedUrl.toString())
     scheduleHandoffClipSrc(coachingClipUrl)
   })
