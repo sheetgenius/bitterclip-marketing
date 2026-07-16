@@ -91,7 +91,10 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
       )
     }), { timeout: 12_000 }).toBe(true)
     if (index === 1) {
-      await expect(widget.locator('.viewer-caption')).toContainText('human content is so valuable now.')
+      const captionTrack = widget.locator('.viewer-caption-track')
+      await expect(captionTrack).toContainText('human content is so valuable now.')
+      await expect(captionTrack).toHaveCSS('height', '42px')
+      expect(await captionTrack.evaluate((caption) => caption.closest('.vstage') === null)).toBe(true)
     }
   }
 
