@@ -41,6 +41,16 @@ test('the real homepage viewer retrieves, plays, centers, and opens clips for re
   await expect(activePosition).toHaveText('Clip 2 of 3')
   await expect(activeTitle).toHaveText('The Human Part Is Precious')
   await expect(widget.getByText(/Review speakers/)).toHaveCount(0)
+  const clipPosters = await swatches.locator('.swatch-thumb').evaluateAll((elements) => (
+    elements.map((element) => getComputedStyle(element).backgroundImage)
+  ))
+  expect(clipPosters).toHaveLength(3)
+  expect(new Set(clipPosters).size).toBe(3)
+  for (const poster of clipPosters) {
+    expect(poster).toContain('/workspace/media/sources/')
+    expect(poster).toContain('/moments/')
+    expect(poster).toContain('/poster.jpg')
+  }
   const boundedLayout = await widget.evaluate(() => {
     const view = document.querySelector('#view') as HTMLElement & { shadowRoot: ShadowRoot }
     const editor = view?.shadowRoot?.querySelector('bitterclip-composition-editor') as HTMLElement & { shadowRoot: ShadowRoot }
