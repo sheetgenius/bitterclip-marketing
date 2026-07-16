@@ -602,7 +602,8 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- TESTIMONIAL BAND — two featured customers, right beneath the hero.
-           Both quotes signed off by Andrew and Rohan (2026-06-10). -->
+           Representative drafts grounded in customer interviews; refresh
+           customer approval before promoting this branch to production. -->
       <section aria-label="Customer testimonials" class="mb-24">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
@@ -637,7 +638,7 @@ onBeforeUnmount(() => {
             <!-- muted base, white key phrase: the quote skims itself. The opening
                  mark hangs in the margin so every line starts flush. -->
             <blockquote class="flex-1 font-display text-base sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
-              &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
+              &ldquo;So much happens in an hour. You think you&rsquo;ll remember it, and then it&rsquo;s gone. BitterClip gives me <span class="text-white">a record I can pull up before the next session,</span> so I&rsquo;m dialed in instead of scrambling.&rdquo;
             </blockquote>
           </figure>
 
@@ -659,7 +660,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <blockquote class="flex-1 font-display text-base sm:text-xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance sm:[text-indent:-0.5em]">
-              &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
+              &ldquo;The bells and whistles are downstream. <span class="text-white">The real value is finding the high-impact moment in the full episode,</span> then making it stupid simple to review, clip, and export.&rdquo;
             </blockquote>
           </figure>
 
