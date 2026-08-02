@@ -5,7 +5,7 @@ navigation:
   label: Troubleshooting
   order: 2
 section: help
-updated: '2026-06-24'
+updated: '2026-08-01'
 tags:
   - help
   - troubleshooting
@@ -44,6 +44,17 @@ You don't have to sit and wait. Finished clips land in your project's Outputs ta
 BitterClip takes any common video or audio file. When an upload bounces, it's almost always because your device tagged the file as something other than audio or video, not because of its name or extension.
 
 The fix is to re-export it as a standard format (mp4 or mov for video, mp3 for audio) and upload that. One more thing to check: very large files depend on your plan, so if a long recording won't go through, that may be the reason.
+
+## My YouTube archive import is missing videos
+
+First, make sure you selected every ZIP part from the same Google Takeout export. A 2 GB
+archive size can produce many parts, and a missing part can hold videos or their metadata.
+
+If the files are all there, check which Google account created the export. Channels attached
+to a Brand Account need an export made while that Brand Account is selected. Also confirm
+that videos were included under **YouTube and YouTube Music** in Takeout. The
+[YouTube archive import guide](/docs/getting-started/import-youtube-takeout) covers the exact
+setup and how to continue a batch without duplicating completed Episodes.
 
 ## My YouTube channel doesn't show up when I connect
 
@@ -94,6 +105,8 @@ If the clip did post, you're done, nothing more to do. If it didn't, you can pub
 links:
   - to: /docs/getting-started/your-first-clip
     label: Your first clip
+  - to: /docs/getting-started/import-youtube-takeout
+    label: Import your YouTube archive
   - to: /docs/connect/youtube
     label: Connect YouTube
   - to: /docs/connect/instagram

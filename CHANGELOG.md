@@ -30,6 +30,12 @@ under a dated entry.
 
 ### Website
 
+- Added a creator-facing Google Takeout import guide covering archive setup,
+  split ZIP handling, metadata and source-privacy provenance, Project mapping,
+  resumable one-by-one Episode ingestion, video-quality limits, and the clear
+  boundary between restoring owned uploads and connecting YouTube for
+  publishing. Added discovery links from the docs hub, first-clip guide, FAQ,
+  and troubleshooting, and made canonical URLs explicit on every docs article.
 - Preserved original campaign UTMs and ad click IDs across every marketing,
   docs, blog, footer, and pricing signup link. BitterClip's own page and demo
   context now travels in separate `bc_*` fields, and sitewide signup clicks

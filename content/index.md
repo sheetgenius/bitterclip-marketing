@@ -5,7 +5,7 @@ navigation:
   label: Overview
   order: 0
 section: getting-started
-updated: '2026-06-24'
+updated: '2026-08-01'
 tags:
   - overview
 ---
@@ -31,6 +31,8 @@ links:
     label: What is BitterClip?
   - to: /docs/getting-started/projects-and-collaborators
     label: Projects and collaborators
+  - to: /docs/getting-started/import-youtube-takeout
+    label: Import your YouTube archive
 ---
 ::
 

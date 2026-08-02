@@ -15,11 +15,15 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Doc not found', fatal: true })
 }
 
+const canonicalUrl = computed(() => `https://bitterclip.com${route.path.replace(/\/+$/, '') || '/'}`)
+
 useHead(() => ({
   title: page.value?.title ? `${page.value.title} · BitterClip docs` : 'BitterClip docs',
-  meta: page.value?.description
-    ? [{ name: 'description', content: page.value.description }]
-    : [],
+  meta: [
+    ...(page.value?.description ? [{ name: 'description', content: page.value.description }] : []),
+    { property: 'og:url', content: canonicalUrl.value },
+  ],
+  link: [{ rel: 'canonical', href: canonicalUrl.value }],
 }))
 </script>
 

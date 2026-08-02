@@ -5,7 +5,7 @@ navigation:
   label: Your first clip
   order: 1
 section: getting-started
-updated: '2026-06-24'
+updated: '2026-08-01'
 tags:
   - quickstart
   - getting-started
@@ -36,6 +36,12 @@ raw file you're starting from: an interview, an episode, a talk you gave. Bitter
 any file your device sees as audio or video. How large it can be depends on your plan.
 
 [screenshot: dragging a file onto the upload area]
+
+::callout{type="tip"}
+Moving a whole channel instead of one recording? Use
+[Import your YouTube archive](/docs/getting-started/import-youtube-takeout) to turn the
+videos you exported with Google Takeout into individual Episodes.
+::
 
 ::callout{type="note"}
 Uploading and transcribing need a verified email first. Click the link in the email

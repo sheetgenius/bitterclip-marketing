@@ -5,7 +5,7 @@ navigation:
   label: FAQ
   order: 1
 section: help
-updated: '2026-07-10'
+updated: '2026-08-01'
 tags:
   - faq
   - help
@@ -29,6 +29,14 @@ No. BitterClip is built for creators, not developers. There's nothing to install
 ## What happens after I upload?
 
 BitterClip transcribes the recording for you, lining up every word with the audio. Once that's done, you open the episode and pick the part you want, either in the browser or by chatting with your assistant. How long the transcription takes depends on how long your recording is, but you can leave the page and come back to it later.
+
+## Can I bring over all the videos I uploaded to YouTube?
+
+Yes. Export your own uploads with Google Takeout, then give BitterClip the ZIP file or all
+parts of a split archive. You can review the videos, choose one Project, and import each
+selected video as its own Episode. This does not download other people's videos and does not
+publish anything. Follow [Import your YouTube archive](/docs/getting-started/import-youtube-takeout)
+for the full walkthrough.
 
 ## Does it work with ChatGPT, Claude, or both?
 
@@ -91,6 +99,8 @@ links:
     label: Make your first clip
   - to: /docs/getting-started/projects-and-collaborators
     label: Invite a collaborator
+  - to: /docs/getting-started/import-youtube-takeout
+    label: Import your YouTube archive
   - to: /docs/connect/youtube
     label: Connect your channels
   - to: /docs/help/troubleshooting

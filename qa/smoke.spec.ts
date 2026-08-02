@@ -126,6 +126,43 @@ test('renders the developer documentation page and navigation', async ({ page })
   await expect(page.getByRole('link', { name: 'Connect ChatGPT' }).first()).toBeVisible()
 })
 
+test('renders the YouTube archive import guide with its ownership and publishing boundaries', async ({ page }) => {
+  await page.goto('/docs/getting-started/import-youtube-takeout')
+
+  await expect(
+    page.locator(
+      'link[rel="alternate"][type="text/markdown"][href="/docs/getting-started/import-youtube-takeout.md"]',
+    ),
+  ).toHaveCount(1)
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/docs/getting-started/import-youtube-takeout',
+  )
+  await expect(page.getByRole('heading', { level: 1, name: 'Import your YouTube archive' })).toBeVisible()
+  await expect(page.getByText('This is an archive import, not a YouTube downloader')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: '2. Choose ZIP and an archive size' })).toBeVisible()
+  await expect(page.locator('article')).toContainText('50 GB is recommended')
+  await expect(page.locator('article')).toContainText('2 GB works too')
+  await expect(page.locator('article')).toContainText('Nothing in this flow publishes to YouTube')
+  await expect(page.getByRole('link', { name: 'Takeout help' })).toHaveAttribute(
+    'href',
+    'https://support.google.com/accounts/answer/3024190',
+  )
+  await expect(page.getByRole('link', { name: 'YouTube owner-download help' })).toHaveAttribute(
+    'href',
+    'https://support.google.com/youtube/answer/56100?hl=en',
+  )
+  await expect(page.getByRole('link', { name: 'Connect YouTube for publishing' })).toBeVisible()
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  const sizes = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    content: document.documentElement.scrollWidth,
+  }))
+  expect(sizes.content).toBeLessThanOrEqual(sizes.viewport)
+  await expect(page.getByRole('button', { name: 'Toggle navigation' })).toBeVisible()
+})
+
 test('tracks docs article, section, TOC, and sidebar analytics', async ({ page }) => {
   await page.goto('/docs/getting-started/your-first-clip')
 
@@ -274,6 +311,10 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/index.md', text: 'Cut your clips inside ChatGPT.' },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
+    {
+      path: '/docs/getting-started/import-youtube-takeout.md',
+      text: 'This is an archive import, not a YouTube downloader',
+    },
     { path: '/blog.md', text: 'Your show has a signature now' },
     { path: '/blog/your-show-has-a-signature-now.md', text: 'Know what mattered in the recording' },
     { path: '/blog/we-stopped-making-templates.md', text: 'The template wall asked you to settle' },
@@ -294,6 +335,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/')
   expect(sitemapText).toContain('https://bitterclip.com/docs')
   expect(sitemapText).toContain('https://bitterclip.com/docs/assistants/overview')
+  expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(sitemapText).toContain('https://bitterclip.com/blog')
   expect(sitemapText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
@@ -312,6 +354,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   const llmsText = await llms.text()
   expect(llmsText).toContain('Recording → Episode → Clip')
   expect(llmsText).toContain('Use it from your AI assistant')
+  expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
+  expect(llmsText).toContain('Import your YouTube archive')
   expect(llmsText).toContain('Your show has a signature now')
 
   const llmsFull = await request.get('/llms-full.txt')
@@ -320,6 +364,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Recording → Episode → Clip')
   expect(llmsFullText).toContain('Use BitterClip from your AI assistant')
   expect(llmsFullText).toContain('Connect ChatGPT')
+  expect(llmsFullText).toContain('This is an archive import, not a YouTube downloader')
+  expect(llmsFullText).toContain('50 GB is recommended')
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
