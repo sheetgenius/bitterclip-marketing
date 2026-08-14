@@ -30,6 +30,14 @@ under a dated entry.
 
 ### Website
 
+- Published "One lesson, multiple witnesses: why Gemini 3.7 did not become
+  BitterClip's default," an
+  anonymized field report covering the locked two-camera benchmark, its
+  operational gains, failed repeatability and poison gates, and the exact
+  non-promoting production canary that kept invalid source times out of product
+  understanding. Added an aggregate decision chart, Markdown twin, RSS,
+  sitemap, and discovery-file coverage without publishing footage or private
+  transcript material.
 - Added a creator-facing Google Takeout import guide covering archive setup,
   split ZIP handling, metadata and source-privacy provenance, Project mapping,
   resumable one-by-one Episode ingestion, video-quality limits, and the clear

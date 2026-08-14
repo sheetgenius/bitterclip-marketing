@@ -282,6 +282,30 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible()
 })
 
+test('renders the Gemini 3.7 benchmark post and its public evidence boundaries', async ({ page }) => {
+  await page.goto('/blog/gemini-3-7-multiple-witnesses')
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/blog/gemini-3-7-multiple-witnesses',
+  )
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/blog/gemini-3-7-multiple-witnesses.md',
+  )
+  await expect(page.getByRole('heading', {
+    level: 1,
+    name: "One lesson, multiple witnesses: why Gemini 3.7 did not become BitterClip's default",
+  })).toBeVisible()
+  await expect(page.locator('article')).toContainText('47.4% lower')
+  await expect(page.locator('article')).toContainText('19.9% lower')
+  await expect(page.locator('article')).toContainText('five visual observations outside')
+  await expect(page.locator('article')).toContainText('No candidate annotations entered product understanding')
+  await expect(page.locator('article')).toContainText('The default model is still')
+  await expect(page.getByAltText(/failed BitterClip's production temporal-grounding gate/)).toBeVisible()
+  await expect(page.locator('article img')).toHaveCount(2)
+})
+
 test('renders the privacy policy page', async ({ page }) => {
   await page.goto('/privacy')
 
@@ -319,6 +343,10 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/blog/your-show-has-a-signature-now.md', text: 'Know what mattered in the recording' },
     { path: '/blog/we-stopped-making-templates.md', text: 'The template wall asked you to settle' },
     { path: '/blog/a-condensed-memory-of-the-work.md', text: 'a condensed memory of the work' },
+    {
+      path: '/blog/gemini-3-7-multiple-witnesses.md',
+      text: 'Speed bought the model another test. It did not buy it the clock.',
+    },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
   ]
@@ -338,6 +366,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(sitemapText).toContain('https://bitterclip.com/blog')
   expect(sitemapText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
+  expect(sitemapText).toContain('https://bitterclip.com/blog/gemini-3-7-multiple-witnesses')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
   expect(sitemapText).toContain('https://bitterclip.com/terms')
   expect(sitemapText).toContain('https://bitterclip.com/docs/help/troubleshooting')
@@ -348,6 +377,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(rssText).toContain('<rss version="2.0"')
   expect(rssText).toContain('<title>Your show has a signature now</title>')
   expect(rssText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
+  expect(rssText).toContain("<title>One lesson, multiple witnesses: why Gemini 3.7 did not become BitterClip's default</title>")
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
@@ -357,6 +387,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(llmsText).toContain('Import your YouTube archive')
   expect(llmsText).toContain('Your show has a signature now')
+  expect(llmsText).toContain("why Gemini 3.7 did not become BitterClip's default")
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
@@ -369,4 +400,5 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
+  expect(llmsFullText).toContain('Speed bought the model another test')
 })
