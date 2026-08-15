@@ -295,15 +295,16 @@ test('renders the Gemini 3.7 benchmark post and its public evidence boundaries',
   )
   await expect(page.getByRole('heading', {
     level: 1,
-    name: "One lesson, multiple witnesses: why Gemini 3.7 did not become BitterClip's default",
+    name: 'One lesson, two cameras, and a Gemini 3.7 upgrade that got weird',
   })).toBeVisible()
   await expect(page.locator('article')).toContainText('47.4% lower')
   await expect(page.locator('article')).toContainText('19.9% lower')
-  await expect(page.locator('article')).toContainText('five visual observations outside')
-  await expect(page.locator('article')).toContainText('No candidate annotations entered product understanding')
-  await expect(page.locator('article')).toContainText('The default model is still')
-  await expect(page.getByAltText(/failed BitterClip's production temporal-grounding gate/)).toBeVisible()
-  await expect(page.locator('article img')).toHaveCount(2)
+  await expect(page.locator('article')).toContainText('146.0 →  20.8')
+  await expect(page.locator('article')).toContainText('cannot honestly say Gemini 3.7 proved better')
+  await expect(page.locator('article')).toContainText('The default remains gemini-3.6-flash')
+  await expect(page.getByAltText(/two abstract camera witnesses/i)).toBeVisible()
+  await expect(page.getByAltText(/interval reversing from 146 seconds back to 20.8 seconds/i)).toBeVisible()
+  await expect(page.locator('article img')).toHaveCount(3)
 })
 
 test('renders the privacy policy page', async ({ page }) => {
@@ -345,7 +346,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/blog/a-condensed-memory-of-the-work.md', text: 'a condensed memory of the work' },
     {
       path: '/blog/gemini-3-7-multiple-witnesses.md',
-      text: 'Speed bought the model another test. It did not buy it the clock.',
+      text: 'Gemini 3.7 bought itself another test. It did not buy the clock.',
     },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
@@ -377,7 +378,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(rssText).toContain('<rss version="2.0"')
   expect(rssText).toContain('<title>Your show has a signature now</title>')
   expect(rssText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
-  expect(rssText).toContain("<title>One lesson, multiple witnesses: why Gemini 3.7 did not become BitterClip's default</title>")
+  expect(rssText).toContain('<title>One lesson, two cameras, and a Gemini 3.7 upgrade that got weird</title>')
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
@@ -387,7 +388,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(llmsText).toContain('Import your YouTube archive')
   expect(llmsText).toContain('Your show has a signature now')
-  expect(llmsText).toContain("why Gemini 3.7 did not become BitterClip's default")
+  expect(llmsText).toContain('Gemini 3.7 upgrade that got weird')
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
@@ -400,5 +401,5 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
-  expect(llmsFullText).toContain('Speed bought the model another test')
+  expect(llmsFullText).toContain('Gemini 3.7 bought itself another test')
 })

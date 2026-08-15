@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">The timestamp reversal that stopped the Gemini 3.7 production switch</title>
+  <desc id="desc">Within a source window from zero to 194.321 seconds, observation seven runs from 136 to 146 seconds, observation eight reverses from 146 to 20.8 seconds, and observation nine runs from 20.8 to 141 seconds.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#121310"/>
+      <stop offset="1" stop-color="#24231d"/>
+    </linearGradient>
+    <linearGradient id="bad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f5c56b"/>
+      <stop offset="1" stop-color="#ef756b"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#ef756b"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="680" rx="24" fill="url(#bg)"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="64" y="68" fill="#f7f4eb" font-size="31" font-weight="760">The response was valid JSON. The time was impossible.</text>
+    <text x="64" y="103" fill="#aaa99f" font-size="17">Raw production output · first chunk · strict validation · no correction applied</text>
+
+    <g transform="translate(64 162)">
+      <text x="0" y="0" fill="#85857c" font-size="13" font-weight="700" letter-spacing="1.6">DECLARED SOURCE WINDOW</text>
+      <text x="0" y="38" fill="#f1efe7" font-size="22" font-weight="700">0.000</text>
+      <text x="986" y="38" fill="#f1efe7" font-size="22" font-weight="700">194.321 s</text>
+      <rect x="0" y="57" width="1072" height="8" rx="4" fill="#5b5b53"/>
+      <path d="M115 49V74M752 49V74M806 49V74" stroke="#aaa99f" stroke-width="2"/>
+      <text x="99" y="96" fill="#87877f" font-size="13">20.8</text>
+      <text x="731" y="96" fill="#87877f" font-size="13">136</text>
+      <text x="788" y="96" fill="#87877f" font-size="13">146</text>
+    </g>
+
+    <g transform="translate(64 303)">
+      <text x="0" y="25" fill="#8d8d85" font-size="14" font-weight="700">OBS 7</text>
+      <rect x="752" y="5" width="54" height="34" rx="17" fill="#6c8e71"/>
+      <text x="779" y="27" fill="#f8faf5" font-size="13" font-weight="740" text-anchor="middle">136–146</text>
+
+      <text x="0" y="100" fill="#ef9b89" font-size="14" font-weight="700">OBS 8</text>
+      <path d="M806 81C650 18 340 18 115 81" fill="none" stroke="url(#bad)" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <circle cx="806" cy="81" r="8" fill="#f5c56b"/>
+      <text x="823" y="86" fill="#f5c56b" font-size="16" font-weight="760">146</text>
+      <text x="45" y="86" fill="#ef756b" font-size="16" font-weight="760">20.8</text>
+      <rect x="385" y="98" width="411" height="47" rx="23.5" fill="#4d211e" stroke="#ef756b" stroke-opacity="0.65"/>
+      <text x="590" y="128" fill="#f6d4cc" font-size="17" font-weight="730" text-anchor="middle">end_seconds is earlier than start_seconds</text>
+
+      <text x="0" y="207" fill="#8d8d85" font-size="14" font-weight="700">OBS 9</text>
+      <rect x="115" y="187" width="665" height="34" rx="17" fill="#5c6f78"/>
+      <text x="447" y="209" fill="#f2f6f8" font-size="13" font-weight="740" text-anchor="middle">20.8–141</text>
+    </g>
+
+    <g transform="translate(64 565)">
+      <rect width="1072" height="63" rx="15" fill="#0b0c0a" stroke="#fff" stroke-opacity="0.09"/>
+      <circle cx="30" cy="31.5" r="9" fill="#ef756b"/>
+      <text x="53" y="27" fill="#f3f0e8" font-size="15" font-weight="730">STRICT GATE: STOP</text>
+      <text x="53" y="47" fill="#8f8f87" font-size="13">No combined result · no annotation written · both temporary uploads deleted</text>
+      <text x="1042" y="39" fill="#ef9b89" font-size="18" font-weight="800" text-anchor="end">HOLD</text>
+    </g>
+  </g>
+</svg>

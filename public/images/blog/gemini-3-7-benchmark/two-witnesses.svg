@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">One lesson observed by two camera witnesses</title>
+  <desc id="desc">A wide phone view sees the teacher and learner together, while a first-person camera sees close details but loses full body context. Both are aligned to an audio synchronization spine before evidence is combined.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8f3e7"/>
+      <stop offset="1" stop-color="#ede6d7"/>
+    </linearGradient>
+    <linearGradient id="phone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#26352c"/>
+      <stop offset="1" stop-color="#17221c"/>
+    </linearGradient>
+    <linearGradient id="pov" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#453126"/>
+      <stop offset="1" stop-color="#291d18"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="720" rx="24" fill="url(#bg)"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="60" y="67" fill="#26231e" font-size="31" font-weight="760">The same lesson, seen differently</text>
+    <text x="60" y="101" fill="#716b60" font-size="17">Synchronize first. Observe each source. Combine only what the evidence supports.</text>
+
+    <g transform="translate(60 145)">
+      <rect width="485" height="330" rx="22" fill="url(#phone)"/>
+      <rect x="18" y="18" width="449" height="294" rx="12" fill="#7f9b70" opacity="0.26" stroke="#dce7d3" stroke-opacity="0.24"/>
+      <path d="M18 240C135 198 230 264 340 220C386 201 429 207 467 224V312H18Z" fill="#18261d" opacity="0.86"/>
+      <path d="M84 229V146M76 168H92M355 238V142M347 165H363" stroke="#efe8d8" stroke-width="13" stroke-linecap="round"/>
+      <circle cx="84" cy="125" r="19" fill="#efe8d8"/>
+      <circle cx="355" cy="121" r="19" fill="#efe8d8"/>
+      <path d="M84 198L52 249M84 198L118 252M355 199L316 246M355 199L395 241" stroke="#efe8d8" stroke-width="12" stroke-linecap="round"/>
+      <rect x="30" y="30" width="102" height="31" rx="15" fill="#111812" fill-opacity="0.8"/>
+      <circle cx="48" cy="45.5" r="5" fill="#ef8f76"/>
+      <text x="62" y="51" fill="#f7f4ea" font-size="13" font-weight="700" letter-spacing="1.3">PHONE</text>
+      <text x="26" y="367" fill="#2b2924" font-size="19" font-weight="730">Wide witness</text>
+      <text x="26" y="395" fill="#746e63" font-size="15">Sees roles, whole-body movement, mirroring</text>
+    </g>
+
+    <g transform="translate(655 145)">
+      <rect width="485" height="330" rx="22" fill="url(#pov)"/>
+      <rect x="18" y="18" width="449" height="294" rx="12" fill="#ab8168" opacity="0.17" stroke="#f2d2bc" stroke-opacity="0.22"/>
+      <path d="M18 228C120 211 236 256 333 220C378 203 429 209 467 224V312H18Z" fill="#241c18" opacity="0.86"/>
+      <path d="M89 296C126 235 146 181 170 135" stroke="#e9ddcd" stroke-width="31" stroke-linecap="round"/>
+      <path d="M396 298C372 240 354 203 320 170" stroke="#c59779" stroke-width="20" stroke-linecap="round"/>
+      <circle cx="457" cy="190" r="36" fill="#e9ddcd" opacity="0.85"/>
+      <path d="M0 0L174 0L103 112L0 155Z" fill="#0e0b0a" opacity="0.45"/>
+      <rect x="30" y="30" width="89" height="31" rx="15" fill="#160f0c" fill-opacity="0.82"/>
+      <circle cx="48" cy="45.5" r="5" fill="#ef8f76"/>
+      <text x="62" y="51" fill="#f7f4ea" font-size="13" font-weight="700" letter-spacing="1.3">POV</text>
+      <text x="26" y="367" fill="#2b2924" font-size="19" font-weight="730">Close witness</text>
+      <text x="26" y="395" fill="#746e63" font-size="15">Sees nearby detail; often loses full-body context</text>
+    </g>
+
+    <g transform="translate(60 584)">
+      <text x="0" y="-25" fill="#5f594f" font-size="14" font-weight="730" letter-spacing="1.5">ALIGNED FROM AUDIO</text>
+      <rect x="0" y="0" width="1080" height="5" rx="2.5" fill="#c5bbab"/>
+      <path d="M0 2.5H1080" stroke="#ef8f76" stroke-width="4" stroke-dasharray="7 12"/>
+      <g fill="#3f3b34" font-size="13">
+        <text x="0" y="31">episode 00:00</text>
+        <text x="326" y="31">instruction</text>
+        <text x="526" y="31">visible response</text>
+        <text x="975" y="31">transition</text>
+      </g>
+      <path d="M375 -9V14M590 -9V14M1031 -9V14" stroke="#3f3b34" stroke-width="2"/>
+    </g>
+
+    <rect x="410" y="658" width="380" height="38" rx="19" fill="#27251f"/>
+    <text x="600" y="683" fill="#f8f3e7" font-size="14" font-weight="720" text-anchor="middle" letter-spacing="0.5">KEEP EACH VIEW SEPARATE · COMBINE SECOND</text>
+  </g>
+</svg>

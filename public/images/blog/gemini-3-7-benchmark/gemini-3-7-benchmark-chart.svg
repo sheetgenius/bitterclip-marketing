@@ -1,57 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Gemini 3.7 benchmark decision</title>
-  <desc id="desc">Gemini 3.7 had 47.4 percent lower provider-attempt latency and 19.9 percent lower mean paired estimated cost in the offline comparison, but its production canary failed BitterClip's temporal-grounding gate.</desc>
+  <title id="title">Faster model, same broken clock</title>
+  <desc id="desc">Gemini 3.7 was 47.4 percent faster in 69 matched provider calls. Six diagnostic development runs were too small to rank reliability, and a production timestamp reversed from 146 seconds to 20.8 seconds, so BitterClip held the model switch.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#171717"/>
-      <stop offset="1" stop-color="#303030"/>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11120f"/>
+      <stop offset="0.62" stop-color="#202019"/>
+      <stop offset="1" stop-color="#2b1c18"/>
     </linearGradient>
-    <linearGradient id="coral" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#f8b36a"/>
-      <stop offset="1" stop-color="#f28f84"/>
+    <linearGradient id="warm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f5c56b"/>
+      <stop offset="1" stop-color="#ef8f76"/>
     </linearGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="18"/>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="34"/>
     </filter>
   </defs>
 
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle cx="1060" cy="80" r="190" fill="#f28f84" opacity="0.08" filter="url(#glow)"/>
-  <path d="M0 112H1200M0 224H1200M0 336H1200M0 448H1200M0 560H1200" stroke="#ffffff" stroke-opacity="0.035"/>
-  <path d="M160 0V630M320 0V630M480 0V630M640 0V630M800 0V630M960 0V630" stroke="#ffffff" stroke-opacity="0.025"/>
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <circle cx="1070" cy="70" r="190" fill="#ef8f76" opacity="0.10" filter="url(#soft)"/>
+  <circle cx="58" cy="626" r="160" fill="#f5c56b" opacity="0.06" filter="url(#soft)"/>
+  <path d="M0 157H1200M0 315H1200M0 473H1200" stroke="#fff" stroke-opacity="0.035"/>
+  <path d="M300 0V630M600 0V630M900 0V630" stroke="#fff" stroke-opacity="0.025"/>
 
-  <g font-family="IBM Plex Mono, ui-monospace, monospace">
-    <text x="72" y="70" fill="#f28f84" font-size="18" font-weight="600" letter-spacing="3">BITTERCLIP FIELD TEST</text>
-    <text x="72" y="125" fill="#ffffff" font-size="45" font-weight="750">Lower latency offline.</text>
-    <text x="72" y="176" fill="#ffffff" font-size="45" font-weight="750">Rejected by the production gate.</text>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="68" y="64" fill="#f1a57e" font-size="17" font-weight="700" letter-spacing="3">BITTERCLIP FIELD TEST</text>
+    <text x="68" y="119" fill="#faf9f5" font-size="46" font-weight="760">Faster model. Same broken clock.</text>
+    <text x="68" y="157" fill="#b9b9ae" font-size="20">What happened when Gemini 3.7 met one real video job</text>
 
-    <g transform="translate(72 230)">
-      <rect width="315" height="190" rx="22" fill="#111111" stroke="#ffffff" stroke-opacity="0.10"/>
-      <text x="26" y="42" fill="#a1a1aa" font-size="16" letter-spacing="1.5">OFFLINE LATENCY</text>
-      <text x="26" y="111" fill="url(#coral)" font-size="58" font-weight="750">-47.4%</text>
-      <text x="26" y="151" fill="#d4d4d8" font-size="17">69 matched pairs</text>
-      <text x="26" y="174" fill="#71717a" font-size="14">provider attempt only</text>
+    <g transform="translate(68 211)">
+      <rect width="318" height="218" rx="22" fill="#0d0e0c" fill-opacity="0.82" stroke="#fff" stroke-opacity="0.11"/>
+      <text x="25" y="39" fill="#92928a" font-size="14" font-weight="700" letter-spacing="1.7">MATCHED PROVIDER CALLS</text>
+      <text x="25" y="105" fill="url(#warm)" font-size="55" font-weight="800">−47.4%</text>
+      <text x="25" y="139" fill="#e2e1da" font-size="17">mean paired latency</text>
+      <path d="M25 165H293" stroke="#fff" stroke-opacity="0.10"/>
+      <text x="25" y="195" fill="#96968e" font-size="14">69 pairs · same bytes and prompt</text>
     </g>
 
-    <g transform="translate(410 230)">
-      <rect width="315" height="190" rx="22" fill="#111111" stroke="#ffffff" stroke-opacity="0.10"/>
-      <text x="26" y="42" fill="#a1a1aa" font-size="16" letter-spacing="1.5">ESTIMATED COST</text>
-      <text x="26" y="111" fill="url(#coral)" font-size="58" font-weight="750">-19.9%</text>
-      <text x="26" y="151" fill="#d4d4d8" font-size="17">same temporary tariff</text>
-      <text x="26" y="174" fill="#71717a" font-size="14">observed usage mix</text>
+    <g transform="translate(411 211)">
+      <rect width="318" height="218" rx="22" fill="#0d0e0c" fill-opacity="0.82" stroke="#fff" stroke-opacity="0.11"/>
+      <text x="25" y="39" fill="#92928a" font-size="14" font-weight="700" letter-spacing="1.7">CORRECTED DEV JOBS</text>
+      <text x="25" y="103" fill="#faf9f5" font-size="48" font-weight="800">6 RUNS</text>
+      <text x="25" y="139" fill="#e2e1da" font-size="17">3.7 passed 3 · 3.6 passed 1</text>
+      <path d="M25 165H293" stroke="#fff" stroke-opacity="0.10"/>
+      <text x="25" y="195" fill="#96968e" font-size="14">diagnostic only · too small to rank</text>
     </g>
 
-    <g transform="translate(748 230)">
-      <rect width="380" height="190" rx="22" fill="#241716" stroke="#f28f84" stroke-opacity="0.55"/>
-      <text x="26" y="42" fill="#f2aaa1" font-size="16" letter-spacing="1.5">PRODUCTION CANARY</text>
-      <text x="26" y="105" fill="#ffffff" font-size="46" font-weight="750">FAILED</text>
-      <text x="26" y="145" fill="#f4d5d1" font-size="17">invalid chunk-local times</text>
-      <text x="26" y="171" fill="#b98983" font-size="14">0 annotations promoted</text>
+    <g transform="translate(754 211)">
+      <rect width="378" height="218" rx="22" fill="#2b1714" fill-opacity="0.84" stroke="#ef8f76" stroke-opacity="0.62"/>
+      <text x="25" y="39" fill="#e89f8c" font-size="14" font-weight="700" letter-spacing="1.7">EXACT PRODUCTION CANARY</text>
+      <text x="25" y="103" fill="#faf9f5" font-size="49" font-weight="800">146 → 20.8</text>
+      <text x="25" y="139" fill="#f0c7bd" font-size="17">one impossible interval</text>
+      <path d="M25 165H353" stroke="#fff" stroke-opacity="0.12"/>
+      <text x="25" y="195" fill="#ca9589" font-size="14">promotion stopped · no annotation written</text>
     </g>
 
-    <path d="M72 480H1128" stroke="#ffffff" stroke-opacity="0.12"/>
-    <text x="72" y="523" fill="#d4d4d8" font-size="18">Decision: keep Gemini 3.6 as BitterClip's production default.</text>
-    <text x="72" y="558" fill="#8b8b94" font-size="15">The wider confirmation suite missed the repeatability gate: 0.320 observed vs 0.850 required.</text>
-    <text x="72" y="594" fill="#71717a" font-size="13">One real two-camera lesson · 15 windows · 23 witness excerpts · 3 repeats · one non-promoting production canary</text>
+    <path d="M68 485H1132" stroke="#fff" stroke-opacity="0.13"/>
+    <text x="68" y="531" fill="#f4f2eb" font-size="21" font-weight="650">Model switch: held.</text>
+    <text x="264" y="531" fill="#aaa9a0" font-size="21">Timing and receipt hardening: shipped.</text>
+    <text x="68" y="574" fill="#85857e" font-size="14">15 windows · 23 camera witnesses · 138 matched calls · one preregistered production canary</text>
+    <text x="68" y="600" fill="#6f6f68" font-size="13">No semantic superiority claim. No reruns in search of a pass.</text>
   </g>
 </svg>

@@ -1,11 +1,12 @@
 ---
-title: "One lesson, multiple witnesses: why Gemini 3.7 did not become BitterClip's default"
-description: 'Gemini 3.7 had 47.4% lower provider-attempt latency and 20% lower estimated cost offline. Then a production canary returned invalid source times. Here is why BitterClip stayed on 3.6.'
+title: "One lesson, two cameras, and a Gemini 3.7 upgrade that got weird"
+description: "Gemini 3.7 was much faster than 3.6 in a real video benchmark. We found and fixed a bad test, then one impossible timestamp stopped the production switch."
 date: '2026-08-14'
+updated: '2026-08-14'
 author: Michael Ruescher, Founder
 ogImage: /images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-og.png
-heroImage: /images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-og.png
-heroAlt: A benchmark card reading Lower latency offline, rejected by the production gate, with Gemini 3.7 latency, cost, and temporal-gate results.
+heroImage: /images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-chart.svg
+heroAlt: Gemini 3.7 benchmark card showing lower latency, matched development runs, and an impossible production timestamp that held the upgrade.
 tags:
   - Gemini
   - visual understanding
@@ -13,203 +14,270 @@ tags:
   - engineering
 ---
 
-Gemini 3.7 looked like an easy upgrade. In our offline comparison its
-provider-attempt latency was 47.4% lower, and its outputs cost an estimated 20%
-less to process. Then it failed
-the test that mattered most: running through BitterClip's real production job,
-it placed five observations outside the video chunk it was describing. The same
-response also contained an interval that ended before it began.
+I wanted this to be a shipping post.
 
-We did not make it the default.
+Gemini 3.7 had just landed, the early chatter was enthusiastic, and BitterClip
+was already using Gemini 3.6 to understand video. A faster model with strong
+early reviews looked like the pleasant kind of upgrade: change the exact model
+ID, run the tests, watch the bill go down, ship.
 
-![Gemini 3.7 had lower latency and estimated cost in the offline comparison, but failed BitterClip's production temporal-grounding gate.](/images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-chart.svg)
+That is not what happened.
 
-That is not the same as saying Gemini 3.7 is a worse model. It is the narrower,
-more useful conclusion: **Gemini 3.7 did not earn control of BitterClip's source
-clock.**
+The short version is that Gemini 3.7 was substantially faster in our matched
+comparison, and I found no good evidence that it understood our footage worse
+than 3.6. But it is still not BitterClip's production default. Our first result
+was contaminated by a mistake in our own prompt. After we fixed that, one fresh
+production run returned an observation that began at 146 seconds and ended at
+20.8 seconds.
 
-## Why one lesson needed two cameras
+One impossible timestamp was enough to stop the switch.
 
-The test footage was one real outdoor coaching session, recorded at the same
-time from a static phone and a close first-person camera. One camera could see
-the shape of the lesson. The other could see details the wide shot lost. In
-some moments, a person was mostly hidden in one view and clear in the other.
+The useful part is how we got there, because the failure changed how BitterClip
+asks models to look at video.
 
-This is the everyday multi-camera problem in miniature. If a coach gives an
-instruction, demonstrates it, watches the learner try it, and then offers a
-correction, a useful system has to keep several things straight:
+## A better test than a demo reel
 
-- who is teaching and who is responding;
-- what each camera actually shows;
-- whether an instruction is followed by a visible action;
-- which details become knowable only after combining views;
-- when the picture is too occluded or ambiguous to support a claim.
+The footage was a real outdoor movement lesson. A friend was teaching; I was
+trying to follow along. A stationary phone could see both of us. A first-person
+camera could see the same lesson from close range, but often lost the teacher's
+body or caught only the edge of mine.
 
-We synchronized the recordings from their audio before asking a model anything.
-The overlap was fixed by BitterClip, not guessed by Gemini. That distinction is
-important: two cameras only become two witnesses after the system establishes
-that they are showing the same moment.
+That made the session a compact version of the problem BitterClip actually has
+to solve. One camera sees the shape of an event. Another sees a hand, foot, or
+change in stance that the wide shot misses. Sometimes the second angle adds a
+fact. Sometimes it adds nothing. Sometimes two clips look plausible together
+but are not the same moment at all.
 
-We also kept observation separate from editing. A camera can contain useful
-evidence without being the shot an editor should choose. Coverage is not the
-cut.
+At the start of this project, I remembered a line like “Where are we going?”
+The recording did not contain it. The real opening was simply an introduction
+to the lesson. Small correction, big point: when memory and the recording
+disagree, the recording wins.
 
-## The benchmark
+Later, the wide camera clearly showed me copying a lateral movement. The close
+camera could see only part of my head and shoulder. In another negative-control
+pair, one view showed the teacher gesturing while the other showed both of his
+hands planted on a table. If those were truly simultaneous views of the same
+two people, both descriptions could not be true.
 
-We tested Google's stable `gemini-3.7-flash` against the exact
-`gemini-3.6-flash` baseline. We selected 15 diagnostic moments and 23 individual
-camera excerpts. They
-covered setup, demonstration, attempts, corrections, fine body position,
-sustained movement, transitions, occlusion, and deliberately bad pairings. The
-locked visual comparison used checksummed clips with audio removed, so a model
-could not smuggle spoken instructions into what we called visual understanding.
+![Two abstract camera witnesses cover different parts of the same lesson, joined by a deterministic synchronization spine.](/images/blog/gemini-3-7-benchmark/two-witnesses.svg)
 
-For the cleanest model comparison, Gemini 3.6 and 3.7 received the same media,
-prompt, schema, and transform. Each source-local case ran three times, producing
-69 matched pairs. We recorded the exact requested and served model, latency,
-token use, estimated cost, normalized output, and every normalization action.
+Before Gemini saw anything, BitterClip synchronized the recordings from their
+audio. The model never had to guess whether two clips overlapped. That matters:
+two videos do not become two witnesses because a prompt calls them that. They
+become witnesses after the system proves that they share time.
 
-([Gemini 3.7 Flash model details](https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash))
+The illustrations in this post are abstract on purpose. We are not publishing
+recognizable participant footage or private transcript excerpts as part of the
+benchmark.
 
-The wider workshop also explored sampled frames, native video, several media
-resolutions and thinking levels, transcript and vision combinations, one-pass
-versus observe-then-synthesize analysis, two videos in one request, and
-duplicate, shifted, mismatched, and withheld-camera controls.
+## What we actually tested
 
-Not every exploratory arm became a scored result. Thinking-level, free-form,
-and modality comparisons stayed in discovery. A whole-recording response failed
-our deterministic time-bound checks, so it produced no efficacy result. We also
-did not finish a blinded comparative human score after the preregistered
-repeatability gate failed. Guided human spot checks improved the truth set, but
-they are not a substitute for that comparison.
+We selected 15 diagnostic moments and 23 individual camera excerpts from the
+session. They covered arrival, demonstration, an attempt, a visible response to
+an instruction, fine body position, a held movement, transitions, occlusion,
+and deliberately shifted or mismatched views.
 
-## What looked better
+For the clean model comparison, every visual clip had its audio removed. Gemini
+3.6 and 3.7 received the same bytes, prompt, output schema, and settings. Each
+witness ran three times, giving us 69 matched calls per model—138 calls in all.
+We recorded the exact requested and served model, request and response hashes,
+latency, token use, estimated cost, and every normalization action.
 
-All 138 requests completed—69 per model—forming 69 matched pairs. On those
-pairs, Gemini 3.7 was clearly better operationally:
+We tried the more ambitious versions too: multiple videos in one request, a
+synchronized mosaic, separate camera notes followed by synthesis, and several
+input settings. They were useful for learning, but not stable enough to support
+a public claim. Repeated runs varied, and deliberately mismatched angles did
+not reliably make the model stop and say, “these are not the same moment.” We
+also did not complete a blinded human comparison.
 
-| Measure | Gemini 3.6 | Gemini 3.7 | Difference |
-| --- | ---: | ---: | ---: |
-| Mean paired provider-attempt latency | baseline | lower | **47.4% lower** |
-| Mean paired estimated provider cost | baseline | lower | **19.9% lower** |
-| Lexical claim-set repeatability | 0.333 | 0.341 | slightly higher |
+So I cannot honestly say Gemini 3.7 proved better at understanding multiple
+cameras. The decision we could make was narrower: was it safe enough to replace
+3.6 in the visual-analysis job BitterClip already runs on each recording?
 
-The latency result is a mean paired difference. Its window-clustered 95%
-interval was 42.9% to 52.0% lower. The mean paired estimated-cost difference had
-a 95% interval of 15.3% to 24.3% lower. Separately, aggregate estimated provider
-cost per analyzed minute was $0.0649 for 3.6 and $0.0513 for 3.7, a 21.0% lower
-aggregate ratio.
+## At first, 3.7 looked like the easy winner
 
-Gemini 3.7 was not on a cheaper tariff. Google listed 3.6 and 3.7 at the same
-temporary promotional Standard rates through December 31, 2026. The difference
-came from the observed token and cache mix in these runs. These are rate-card
-estimates, not a reconciled provider invoice. They also measure provider
-attempts, not synchronization, video preparation, queues, storage, or the full
-BitterClip job. ([Google's current pricing](https://ai.google.dev/gemini-api/docs/pricing))
+All 138 matched provider calls completed. Gemini 3.7's mean paired
+provider-attempt latency was 47.4% lower than 3.6's, with a window-clustered 95%
+interval from 42.9% to 52.0% lower. Its estimated provider cost was 19.9% lower,
+with a 95% interval from 15.3% to 24.3% lower.
 
-The model-only numbers gave us a reason to continue. They did not give us a
-reason to switch production.
+| Locked source-local comparison | Gemini 3.6 | Gemini 3.7 |
+| --- | ---: | ---: |
+| Completed calls | 69 / 69 | 69 / 69 |
+| Mean paired provider latency | baseline | **47.4% lower** |
+| Mean paired estimated cost | baseline | **19.9% lower** |
 
-## The multi-camera result was not stable enough
+The cost result needs one caveat. Google listed 3.6 and 3.7 at the same temporary
+promotional Standard tariff. The difference came from the token and cache mix
+we observed, not a cheaper price for 3.7. These are rate-card estimates, not a
+reconciled invoice. ([Google's Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing))
 
-We registered an intentionally strict median Jaccard threshold of 0.85 before
-seeing any provider output. The exact lexical projection used to calculate that
-score was locked later: after repeat-2 execution had begun, but before semantic
-inspection and before repeat 3. For the same system, moment, and witness, it
-normalized the set of claims and measured how much the three runs overlapped.
+The visual output could be genuinely useful. A representative normalized row,
+with the labels shortened for publication, looked like this:
 
-The observed median across the wider confirmation suite was 0.320.
+```text
+128.0–141.0 seconds
+Coach demonstrates a right torso lean and a lateral pelvis shift.
+Learner mirrors the movement.
+certainty: seen
+```
 
-Gemini 3.7's source-local slice scored 0.341, slightly above Gemini 3.6 at
-0.333. That tiny difference does not show that 3.7 was worse. It shows that
-neither model came close to our absolute rule. The metric is lexical, so it can
-punish harmless paraphrase, and 0.85 may have been too ambitious. But changing a
-rule after seeing the result would turn the benchmark into a negotiation.
+That is close to what a person watching the wide shot would say. It separates
+the demonstration from the attempt and puts both on the source clock.
 
-The poison tests supplied a second warning. In two of seven registered units,
-the structural presence or absence of a cross-witness relationship array changed
-across repeats. These were not human-adjudicated false same-moment claims. A
-separate duplicate-media control showed why the architecture matters: label the
-same bytes as two witnesses and a model may still describe their agreement as
-corroboration.
+It was not flawless. In the same successful run, a human role was accidentally
+labeled `screen_surface` in one internal field. The prose understood the scene;
+the type label did not. That is a good example of why “the answer looked smart”
+is not a sufficient benchmark.
 
-The safer design is now clear:
+## The first production failure was ours
 
-1. keep each camera's observations intact;
-2. establish media identity, synchronization, and overlap outside the model;
-3. let a later synthesis cite those observations without rewriting them.
+BitterClip's production path is not the little benchmark script. It fetches the
+Recording, creates silent chunks, uploads them through Google's Files API,
+waits for them to become active, asks for structured observations, normalizes
+their times, stitches the chunks, and writes source-linked evidence.
 
-When synchronization is missing, BitterClip should forbid a combined claim. A
-model obeying that rule has not detected a mismatch; it has followed a guard the
-host already proved.
+Our first 3.7 canary failed that path badly. Several observations landed outside
+the chunk. The tempting conclusion was obvious: 3.7 was fast in a lab and unsafe
+in production.
 
-## Then the production canary failed
+Then I asked the more embarrassing question: what if we had tested it badly?
 
-The offline benchmark used a candidate inline-media adapter. BitterClip's real
-visual-analysis job is different: it downloads the Recording, creates silent
-chunks, uploads them through Google's Files API, waits for them to become active,
-asks for structured observations, normalizes local times, stitches the chunks,
-and writes source-linked understanding.
+We had.
 
-So we added a narrow canary path before considering a default-model change. The
-canary was deliberately single-source: it tested the current B5 production job,
-not multi-camera synthesis. It required one exact model for every chunk,
-pinned requested and fallback to the same exact ID to prevent cross-model
-fallback, refused normalization repairs, prevented the candidate from entering
-product understanding, and required remote-file cleanup.
+The first chunk ended at 194.321 seconds. One transcript unit overlapped the
+edge of that chunk, so we included the whole unit in the prompt—including its
+unclipped end at 204.229 seconds. The same request also inherited the full
+recording duration, “cover the whole recording” language, and summaries from
+earlier material. We had handed the model several competing clocks and then
+scolded it for choosing the wrong one.
 
-One production canary ran against a real Recording. The response to the canary
-request pinned to `gemini-3.7-flash` contained:
+We fixed the harness before drawing another conclusion:
 
-- five visual observations outside the declared `0.000–194.321` second chunk;
-- one reversed visual-observation interval;
-- one boundary cue outside the same chunk.
+- boundary-crossing transcript units are now rebuilt only from timed words
+  inside the uploaded chunk, or withheld;
+- chunk requests no longer contain the full-source clock or prior-recording
+  summaries;
+- the chunk's minimum and maximum time are placed directly in the structured
+  output schema; and
+- success and failure receipts preserve hashes, model identity, token use,
+  numeric timestamp paths, and cleanup status without storing private prose.
 
-BitterClip's strict normalizer rejected the result after 431.8 seconds. No
-candidate annotations entered product understanding. The saved annotation
-projection remained byte-for-byte identical, the source and Project settings
-remained off, and the temporary Gemini Files store was empty after cleanup.
+Structured output gave us valid JSON, but not sensible time. That second check
+had to belong to BitterClip. ([Google's structured-output guide](https://ai.google.dev/gemini-api/docs/structured-output))
 
-This is the strong reason not to upgrade yet. BitterClip treats source media as
-timing authority. If an observation points outside the material it claims to
-describe, every downstream use becomes suspect: grounded questions, visual
-annotations, highlight discovery, and eventually camera decisions. Faster wrong
-coordinates are not a production improvement.
+On the corrected real job path in development, 3.7 completed three of three
+strict runs. Gemini 3.6 completed one of three. One 3.6 run jumped outside its
+window; another produced the interval `140 → 20`.
 
-It exposed a failure the successful development example did not; one run in
-either direction cannot estimate the failure rate.
+So our original story—“3.7 broke production”—was wrong. The timing contract was
+fragile across both models.
 
-## What shipped, and what did not
+That was a useful warning, not a model ranking. Three runs each are nowhere
+near enough to prove that 3.7 is more reliable.
 
-The default model is still `gemini-3.6-flash`. We did not need a rollback because
-3.7 never became the default.
+## One clean canary, one impossible interval
 
-The safety work did ship. BitterClip can now run an entitled, non-promoting
-model canary through the real job path; assert the exact served model for every
-chunk; pin requested and fallback to the same exact ID to prevent cross-model
-fallback; fail on timestamp repairs, drops, or clamps; isolate candidate output
-from normal recovery and product indexes; and record cleanup without persisting
-provider file handles.
+We shipped the harness hardening first, while leaving production on 3.6. Before
+running the next canary, we wrote down its pass/fail rules and agreed to one
+attempt against that exact release.
 
-The offline workshop's rate-card estimate was $10.46, including $3.50 in
-conservative reserves for calls without returned usage. Development job-path
-checks added about $0.28. The failed production canary returned no usable usage
-receipt, so we reserve another $0.50 rather than invent a smaller bill. Total
-conservative exposure remained under $11.25 against a $50 cap.
+The rules were deliberately unfriendly to cherry-picking:
 
-## What would change the decision
+- request exact `gemini-3.7-flash` and use the same ID as fallback;
+- run through the real production job;
+- reject any decoded, shifted, clamped, dropped, out-of-window, or reversed
+  timestamp;
+- keep the output out of BitterClip's product indexes; and
+- delete every temporary provider file.
 
-We will test 3.7 again, but not by repeatedly pulling the canary lever until one
-run happens to pass. The next attempt needs a declared prompt or schema change
-for chunk-local time, a newly registered series of production canaries, and the
-same fail-closed checks. Multi-camera synthesis still needs a durable blinded
-human review after the deterministic gates pass.
+Most of the canary behaved exactly as designed. Both chunks were served by the
+exact requested model. The second chunk completed. Both uploaded files were
+deleted. No annotation reached the product. The saved visual projection was
+unchanged.
 
-So the result is neither "Gemini 3.7 is bad" nor "benchmarks do not matter."
-The result is more concrete:
+The first chunk returned this sequence:
 
-**Gemini 3.7 did not earn the source-scoped production default because the exact
-canary broke the source-time contract. Separately, the proposed multi-witness
-architecture failed its repeatability and poison-stability gates.**
+```text
+observation 7     136.0 → 146.0
+observation 8     146.0 →  20.8   ← impossible
+observation 9      20.8 → 141.0
+```
 
-Speed bought the model another test. It did not buy it the clock.
+![A 194.321-second source window with one Gemini interval reversing from 146 seconds back to 20.8 seconds.](/images/blog/gemini-3-7-benchmark/timestamp-reversal.svg)
+
+The model's response was syntactically valid and inside the per-field minimum
+and maximum. JSON Schema can bound each number; it cannot express “the end must
+be after this row's start” using the subset Gemini supports. BitterClip's own
+semantic validator caught the contradiction and stopped before stitch.
+
+The full production job took about seven and a half minutes. The slower part
+was creating the two silent video chunks on our CPU-capped worker. The parallel
+Gemini attempts took 22.7 and 32.3 seconds. The run's rate-card estimate was
+about 7.5 cents for 6.48 minutes of source video. Provider latency and total job
+latency are not the same measurement.
+
+We had preregistered one attempt. It failed. Running it again until the dice
+came up clean would have made a nicer launch post and a worse experiment.
+
+## Why 3.6 is still the default
+
+Here is the slightly uncomfortable answer: 3.6 did not win.
+
+Gemini 3.6 produced the same class of reversed-time error in development.
+Gemini 3.7 was faster, cheaper in this usage mix, and completed more of the
+corrected strict development runs. We found no direct evidence that 3.7 is
+semantically worse.
+
+But a production migration is a change, and the candidate did not clear the
+production gate we wrote before seeing its response. Both models could break
+the same timestamp rule, so we kept the known production model, retained the
+model-independent hardening, and did not pretend a failed canary had passed.
+
+The default remains `gemini-3.6-flash`. The wider multi-camera synthesis path
+also remains off.
+
+The model did not change. The pipeline did:
+
+- every chunk has one authoritative source-time window;
+- transcript evidence is clipped to the same window;
+- requested and actually served model versions are recorded per chunk;
+- failed parallel jobs retain the successful sibling's evidence and cost;
+- strict canaries cannot publish annotations or suppress normal enrichment;
+- temporary Files API uploads must be confirmed deleted; and
+- receipts keep numeric evidence and hashes, not provider prose or private
+  transcript text.
+
+Our ledger reserved $11.84 against the $50 cap. That is an estimate from
+published rates, not a reconciled invoice.
+
+## What the two cameras taught us anyway
+
+The original question was more ambitious than a model upgrade: can one system
+understand a single embodied lesson through multiple visual witnesses?
+
+We do not have a publishable “yes” yet. We do have a much better architecture:
+
+1. synchronize cameras deterministically;
+2. keep each camera's observations intact;
+3. attach source and time evidence to every claim;
+4. synthesize only after the witness records exist; and
+5. forbid combined claims when overlap is missing or contradictory.
+
+That last point matters. If the wide shot shows hands on a table and the close
+view shows the same person's hand gesturing, the system should not ask a model
+to smooth the disagreement into a story. It should preserve the disagreement.
+
+Coverage is not the cut, and synthesis is not permission to erase provenance.
+
+## The next test
+
+The next version may stop asking a model for two independently fallible numbers
+per observation. We can ask for ordered boundaries and derive spans ourselves.
+That is a new contract, though—not a way to rescue this failed response. Its
+next start also jumped backward to 20.8 seconds. Before another canary, the new
+contract needs raw-order checks, fresh held-out footage, and repeated matched
+3.6/3.7 runs. Less satisfying than changing one constant, but it is what the
+work showed.
+
+Gemini 3.7 bought itself another test. It did not buy the clock.
