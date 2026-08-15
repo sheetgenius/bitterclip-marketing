@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
-  <title id="title">The timestamp reversal that stopped the Gemini 3.7 production switch</title>
+  <title id="title">The early Gemini 3.7 timestamp reversal</title>
   <desc id="desc">Within a source window from zero to 194.321 seconds, observation seven runs from 136 to 146 seconds, observation eight reverses from 146 to 20.8 seconds, and observation nine runs from 20.8 to 141 seconds.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -18,7 +18,7 @@
   <rect width="1200" height="680" rx="24" fill="url(#bg)"/>
   <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
     <text x="64" y="68" fill="#f7f4eb" font-size="31" font-weight="760">The response was valid JSON. The time was impossible.</text>
-    <text x="64" y="103" fill="#aaa99f" font-size="17">Raw production output · first chunk · strict validation · no correction applied</text>
+    <text x="64" y="103" fill="#aaa99f" font-size="17">Sanitized numeric diagnostic · first chunk · strict validation · no correction applied</text>
 
     <g transform="translate(64 162)">
       <text x="0" y="0" fill="#85857c" font-size="13" font-weight="700" letter-spacing="1.6">DECLARED SOURCE WINDOW</text>

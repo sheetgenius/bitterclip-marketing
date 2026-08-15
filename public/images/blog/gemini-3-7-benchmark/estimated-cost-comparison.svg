@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini 3.7's estimated Stage 2 cost was 25 percent lower under the same tariff</title>
+  <desc id="desc">For 96 Stage 2 calls per model, Gemini 3.6 cost an estimated 2.752 dollars and Gemini 3.7 cost an estimated 2.076 dollars. Both models had the same promotional token tariff, so the difference came from their observed token and caching mix. Actual billed cost is unknown.</desc>
+  <rect width="1200" height="560" rx="24" fill="#11130f"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="60" y="65" fill="#f7f4eb" font-size="31" font-weight="780">Same tariff. Different token mix.</text>
+    <text x="60" y="100" fill="#aaa99f" font-size="17">Estimated Stage 2 cost · 96 calls per model · actual bill unknown</text>
+    <g transform="translate(60 160)">
+      <text x="0" y="40" fill="#d7d6ce" font-size="18" font-weight="730">Gemini 3.6</text>
+      <rect x="148" y="10" width="780" height="50" rx="12" fill="#74776f"/>
+      <text x="951" y="44" fill="#f1eee5" font-size="24" font-weight="800">$2.75</text>
+      <text x="0" y="138" fill="#d7d6ce" font-size="18" font-weight="730">Gemini 3.7</text>
+      <rect x="148" y="108" width="588" height="50" rx="12" fill="#e38a6f"/>
+      <text x="759" y="142" fill="#f0b09c" font-size="24" font-weight="800">$2.08</text>
+      <rect x="148" y="213" width="392" height="58" rx="29" fill="#292b25" stroke="#f0c46f" stroke-opacity="0.55"/>
+      <text x="344" y="249" fill="#f0c46f" font-size="23" font-weight="810" text-anchor="middle">25% lower estimate</text>
+      <g transform="translate(635 210)">
+        <rect width="390" height="92" rx="16" fill="#1b1e18" stroke="#fff" stroke-opacity="0.09"/>
+        <text x="20" y="32" fill="#a9a99f" font-size="13" font-weight="720" letter-spacing="1.1">WHY THE ESTIMATE MOVED</text>
+        <text x="20" y="61" fill="#e2e0d8" font-size="15">3.7 used far fewer thinking tokens</text>
+        <text x="20" y="82" fill="#8f9088" font-size="13">Price per token was the same.</text>
+      </g>
+    </g>
+    <text x="60" y="508" fill="#85857e" font-size="14">Rate-card estimate from recorded usage. Not an invoice and not a final-production comparison.</text>
+  </g>
+</svg>

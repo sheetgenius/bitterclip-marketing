@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini 3.7 median provider latency was 61 percent lower in Stage 2 discovery</title>
+  <desc id="desc">On 96 calls per model across four response contracts and two fixed silent chunks, Gemini 3.6 had a median provider latency of 27.849 seconds and Gemini 3.7 had 10.837 seconds. These are provider-call latencies, not complete production job times.</desc>
+  <rect width="1200" height="560" rx="24" fill="#f6f0e4"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="60" y="65" fill="#28251f" font-size="31" font-weight="780">Gemini 3.7 answered much faster</text>
+    <text x="60" y="100" fill="#736d62" font-size="17">Median provider latency · Stage 2 discovery · 96 calls per model</text>
+    <g transform="translate(60 158)">
+      <text x="0" y="44" fill="#45413a" font-size="18" font-weight="730">Gemini 3.6</text>
+      <rect x="148" y="14" width="760" height="48" rx="12" fill="#6f756d"/>
+      <text x="931" y="47" fill="#45413a" font-size="24" font-weight="800">27.8 s</text>
+      <text x="0" y="139" fill="#45413a" font-size="18" font-weight="730">Gemini 3.7</text>
+      <rect x="148" y="109" width="296" height="48" rx="12" fill="#e48a6f"/>
+      <text x="467" y="142" fill="#9a4f40" font-size="24" font-weight="800">10.8 s</text>
+      <rect x="148" y="210" width="395" height="60" rx="30" fill="#272a24"/>
+      <text x="345" y="248" fill="#f8f3e8" font-size="24" font-weight="810" text-anchor="middle">61% lower median</text>
+      <line x1="148" y1="310" x2="1010" y2="310" stroke="#c9c0b1"/>
+      <text x="148" y="344" fill="#8a8378" font-size="13">0</text>
+      <text x="393" y="344" fill="#8a8378" font-size="13">10 s</text>
+      <text x="639" y="344" fill="#8a8378" font-size="13">20 s</text>
+      <text x="885" y="344" fill="#8a8378" font-size="13">30 s</text>
+    </g>
+    <text x="60" y="516" fill="#7d766b" font-size="14">Two fixed silent chunks. Provider time only. The final production confirmation did not complete.</text>
+  </g>
+</svg>

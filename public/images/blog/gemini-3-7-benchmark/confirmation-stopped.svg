@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">The final confirmation stopped after 24 of 106 jobs</title>
+  <desc id="desc">The locked confirmation completed 24 jobs and stopped before job 25. A Gemini 3.6 point sequence failed raw ordering, then BitterClip's receipt reader failed to recognize the validator's version 2 diagnostic. Gemini 3.7 had completed 13 of its planned 63 chunk calls, too few to authorize migration.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11130f"/>
+      <stop offset="1" stop-color="#25241d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="650" rx="24" fill="url(#bg)"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="60" y="65" fill="#f7f4eb" font-size="31" font-weight="780">The integrity gate stopped the run</text>
+    <text x="60" y="101" fill="#aaa99f" font-size="17">Locked plan: 106 jobs · completed prefix: 24 · no job 25</text>
+
+    <g transform="translate(60 150)">
+      <rect width="1080" height="105" rx="20" fill="#0b0d0a" stroke="#fff" stroke-opacity="0.1"/>
+      <text x="26" y="33" fill="#94948c" font-size="13" font-weight="720" letter-spacing="1.4">RUN PROGRESS</text>
+      <rect x="26" y="52" width="1028" height="18" rx="9" fill="#44463f"/>
+      <rect x="26" y="52" width="233" height="18" rx="9" fill="#e78c70"/>
+      <line x1="259" y1="42" x2="259" y2="81" stroke="#f7d39a" stroke-width="2"/>
+      <text x="26" y="94" fill="#d7d5ce" font-size="14">24 completed</text>
+      <text x="1054" y="94" fill="#85857e" font-size="14" text-anchor="end">82 never started</text>
+    </g>
+
+    <g transform="translate(60 300)">
+      <g>
+        <rect width="310" height="205" rx="20" fill="#161b15" stroke="#64806a"/>
+        <text x="24" y="35" fill="#9db8a1" font-size="13" font-weight="740" letter-spacing="1.3">1 · MODEL OUTPUT</text>
+        <text x="24" y="82" fill="#f5f1e8" font-size="31" font-weight="800">12.4 → 8.1</text>
+        <text x="24" y="113" fill="#c6c6bd" font-size="15">sanitized point sequence</text>
+        <text x="24" y="153" fill="#8f958d" font-size="13">Gemini 3.6 moved backward.</text>
+        <text x="24" y="175" fill="#8f958d" font-size="13">The response still finished normally.</text>
+      </g>
+      <path d="M322 102H367" stroke="#777970" stroke-width="3"/>
+      <path d="M359 94L371 102L359 110" fill="none" stroke="#777970" stroke-width="3"/>
+
+      <g transform="translate(385)">
+        <rect width="310" height="205" rx="20" fill="#161b15" stroke="#d4a45f"/>
+        <text x="24" y="35" fill="#e4bb75" font-size="13" font-weight="740" letter-spacing="1.3">2 · STRICT VALIDATOR</text>
+        <circle cx="48" cy="86" r="20" fill="#d8a45a"/>
+        <path d="M39 86L46 93L58 78" fill="none" stroke="#17140e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="82" y="94" fill="#f5f1e8" font-size="27" font-weight="790">Caught it</text>
+        <text x="24" y="153" fill="#a79e8d" font-size="13">Rejected before sorting or repair.</text>
+        <text x="24" y="175" fill="#a79e8d" font-size="13">No customer annotation changed.</text>
+      </g>
+      <path d="M707 102H752" stroke="#777970" stroke-width="3"/>
+      <path d="M744 94L756 102L744 110" fill="none" stroke="#777970" stroke-width="3"/>
+
+      <g transform="translate(770)">
+        <rect width="310" height="205" rx="20" fill="#2b1814" stroke="#e47a67"/>
+        <text x="24" y="35" fill="#e89c88" font-size="13" font-weight="740" letter-spacing="1.3">3 · AUDIT READER</text>
+        <text x="24" y="91" fill="#f5f1e8" font-size="28" font-weight="790">Did not know v2</text>
+        <text x="24" y="124" fill="#efc2b7" font-size="14">cleanup proof became incomplete</text>
+        <text x="24" y="162" fill="#b78679" font-size="13">Integrity gate: STOP</text>
+        <text x="24" y="184" fill="#b78679" font-size="13">Original run remains failed.</text>
+      </g>
+    </g>
+
+    <g transform="translate(60 552)">
+      <text x="0" y="0" fill="#f1eee5" font-size="19" font-weight="730">Gemini 3.7 prefix:</text>
+      <text x="192" y="0" fill="#b2b1a8" font-size="19">13 of 63 planned chunk calls, zero observed catastrophic failures.</text>
+      <text x="0" y="33" fill="#85857e" font-size="13">Encouraging, but too incomplete for the preregistered reliability or semantic decision.</text>
+    </g>
+  </g>
+</svg>
