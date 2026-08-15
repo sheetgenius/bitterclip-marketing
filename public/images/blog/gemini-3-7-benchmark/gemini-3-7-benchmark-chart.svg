@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Gemini 3.7 looked promising; the benchmark stopped</title>
-  <desc id="desc">Earlier matched discovery found Gemini 3.7 faster and cheaper by estimate. The final locked confirmation planned 106 jobs but stopped after 24, before enough candidate or semantic evidence existed to authorize the production migration.</desc>
+  <title id="title">Gemini 3.7 looked promising; BitterClip shipped the narrow change</title>
+  <desc id="desc">Earlier matched discovery found Gemini 3.7 faster and cheaper by estimate. The larger confirmation stopped after 24 of 106 planned jobs. BitterClip later made a bounded, reversible model-only upgrade after one strict canary and one promoting visual-path acceptance.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#10120f"/>
@@ -20,9 +20,9 @@
   <circle cx="65" cy="625" r="170" fill="#f4ca73" opacity="0.06" filter="url(#blur)"/>
   <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
     <text x="66" y="58" fill="#f0a17d" font-size="16" font-weight="760" letter-spacing="2.7">BITTERCLIP FIELD TEST</text>
-    <text x="66" y="112" fill="#faf8f2" font-size="43" font-weight="790">Gemini 3.7 looked promising.</text>
-    <text x="66" y="158" fill="url(#warm)" font-size="43" font-weight="790">The benchmark stopped.</text>
-    <text x="66" y="195" fill="#b8b8ad" font-size="18">A promising model, a real 3.6 timing error, and one audit bug that ended the run early.</text>
+    <text x="66" y="112" fill="#faf8f2" font-size="43" font-weight="790">The benchmark stopped.</text>
+    <text x="66" y="158" fill="url(#warm)" font-size="43" font-weight="790">We still made the narrow move.</text>
+    <text x="66" y="195" fill="#b8b8ad" font-size="18">An inconclusive comparison, a bounded production check, and a rollback kept close.</text>
 
     <g transform="translate(66 238)">
       <rect width="328" height="204" rx="21" fill="#0b0d0a" fill-opacity="0.78" stroke="#fff" stroke-opacity="0.11"/>
@@ -40,21 +40,21 @@
       <text x="24" y="133" fill="#efaa87" font-size="30" font-weight="780">24 completed</text>
       <rect x="24" y="154" width="280" height="8" rx="4" fill="#44463e"/>
       <rect x="24" y="154" width="63" height="8" rx="4" fill="#ef8b72"/>
-      <text x="24" y="184" fill="#85857d" font-size="12">stopped at the frozen integrity gate</text>
+      <text x="24" y="184" fill="#85857d" font-size="12">stopped at the integrity gate</text>
     </g>
 
     <g transform="translate(770 238)">
-      <rect width="364" height="204" rx="21" fill="#2b1814" fill-opacity="0.88" stroke="#ef8b72" stroke-opacity="0.62"/>
-      <text x="24" y="36" fill="#eaa18b" font-size="13" font-weight="730" letter-spacing="1.5">PRODUCTION DECISION</text>
-      <text x="24" y="92" fill="#faf8f2" font-size="43" font-weight="820">No swap</text>
-      <text x="24" y="126" fill="#efc2b5" font-size="16">3.7 completed 13 of 63 candidate chunk calls</text>
-      <text x="24" y="153" fill="#efc2b5" font-size="16">semantic screen never completed</text>
-      <text x="24" y="184" fill="#b68578" font-size="12">Gemini 3.6 remains the default</text>
+      <rect width="364" height="204" rx="21" fill="#18251b" fill-opacity="0.92" stroke="#8fbc91" stroke-opacity="0.68"/>
+      <text x="24" y="36" fill="#9fc8a1" font-size="13" font-weight="730" letter-spacing="1.5">BOUNDED RELEASE</text>
+      <text x="24" y="92" fill="#faf8f2" font-size="43" font-weight="820">3.7 shipped</text>
+      <text x="24" y="126" fill="#c7ddc8" font-size="16">strict canary + promoted visual check</text>
+      <text x="24" y="153" fill="#c7ddc8" font-size="16">model pin only · no fallback used</text>
+      <text x="24" y="184" fill="#8eaa90" font-size="12">Gemini 3.6 remains the live fallback</text>
     </g>
 
     <path d="M66 493H1134" stroke="#fff" stroke-opacity="0.12"/>
     <text x="66" y="536" fill="#f4f1e9" font-size="20" font-weight="680">The honest result:</text>
-    <text x="239" y="536" fill="#afaea5" font-size="20">encouraging is not the same as proven.</text>
-    <text x="66" y="577" fill="#82827a" font-size="13">No semantic superiority claim · no reruns in search of a pass · estimated cost is not a provider bill</text>
+    <text x="239" y="536" fill="#afaea5" font-size="20">inconclusive benchmark, reversible product decision.</text>
+    <text x="66" y="577" fill="#82827a" font-size="13">3.7 primary · 3.6 fallback · no semantic superiority claim · point and multi-camera paths remain off</text>
   </g>
 </svg>

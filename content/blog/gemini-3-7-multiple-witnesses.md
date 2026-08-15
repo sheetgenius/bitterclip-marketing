@@ -1,12 +1,12 @@
 ---
 title: "We blamed Gemini 3.7. Then Gemini 3.6 went backward too."
-description: "Gemini 3.7 was faster and had a lower estimated cost in our fixed video tests. Here is why BitterClip still did not ship it."
+description: "Gemini 3.7 was faster and had a lower estimated cost in our fixed video tests. Our big confirmation stopped early. Here is why we still made a small, reversible upgrade."
 date: '2026-08-14'
 updated: '2026-08-15'
 author: Michael Ruescher, Founder
 ogImage: /images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-og.png
 heroImage: /images/blog/gemini-3-7-benchmark/gemini-3-7-benchmark-chart.svg
-heroAlt: Gemini 3.7 visual benchmark summary showing a promising discovery result, a stopped confirmation, and no production model switch.
+heroAlt: Gemini 3.7 visual benchmark summary showing a promising discovery result, a stopped confirmation, and a bounded production upgrade with Gemini 3.6 as fallback.
 tags:
   - Gemini
   - visual understanding
@@ -34,11 +34,12 @@ model?” We were asking, “What is wrong with the job we gave both models?”
 The answer turned out to be more useful than a simple model ranking. Gemini 3.7
 was much faster in our fixed-chunk tests, and cheaper by rate-card estimate.
 Nothing in the work we completed established that it understood the footage
-worse. But we still did not ship it, because the production-shaped confirmation
-stopped before the model earned the change.
+worse. But our production-shaped confirmation still stopped before it could
+answer the larger comparison.
 
 This is the story of the bad question, the better one, and the test that caught
-one more bug—ours.
+one more bug—ours. It is also the story of how we eventually shipped the narrow
+change without pretending the unfinished test had passed.
 
 ## What we were asking Gemini to see
 
@@ -174,7 +175,8 @@ temporary promotional tariff. The difference came from the token mix we
 observed—especially fewer thinking tokens from 3.7—not a cheaper rate. These are
 rate-card estimates, not a reconciled provider bill. ([Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing))
 
-This was enough to make 3.7 the candidate. It was not enough to ship it.
+This was enough to make 3.7 the candidate. It was not enough, by itself, to
+ship it.
 
 Two chunks can test a response contract and expose a large speed difference.
 They cannot establish semantic parity across real footage. We still needed to
@@ -202,8 +204,8 @@ direct model comparison.
 
 The plan required 63 point-contract responses from each model. It also included
 a smaller strict version of the current Gemini 3.6 interval package and a
-semantic safety screen grounded in previously reviewed footage. The candidate
-could not ship on structural validity alone.
+semantic safety screen grounded in previously reviewed footage. The locked
+comparison could not authorize the candidate on structural validity alone.
 
 The run made it through 24 jobs. Then Gemini 3.6 returned a sequence of evidence
 points that moved backward.
@@ -232,7 +234,7 @@ We later performed one read-only Files inventory and found no remote files
 remaining. That establishes current absence. It does not prove the missing
 original delete, and it does not convert the stopped run into a pass.
 
-## No winner, no migration
+## No winner
 
 At the stop, Gemini 3.7 had completed eight point-contract jobs covering 13
 chunk responses without a catastrophic failure. That is encouraging. The gate
@@ -240,14 +242,58 @@ required 63 responses, and the semantic screen had not run.
 
 The honest result is **inconclusive**.
 
-The partial run did not establish a winner. Gemini 3.7 also did not finish the
-test required to earn a customer-facing change. We did not rerun the failed job,
+The partial run did not establish a winner. We did not rerun the failed job,
 replace the missing denominator, or weaken the gate after seeing the output.
 
-So BitterClip remains on `gemini-3.6-flash`, with the existing
-`gemini-3.5-flash-lite` fallback. The point contract is not active in ordinary
-production, and neither is the experimental multi-camera synthesis path. No
-rollback was necessary because the production model never changed.
+That settled the research result. It did not settle the product decision.
+
+Restarting the hundred-job comparison would answer the scientific question. We
+had a separate, narrower product question: did the accumulated evidence justify
+a reversible pin-only trial with a live fallback? We already knew four things:
+both models could fail the old timing contract; we had not found a 3.7-specific
+vision regression; 3.7 was materially faster and cheaper by estimate on the
+matched workload; and the model pin was easy to reverse.
+
+So we made a smaller decision than the benchmark had tried to make.
+
+## What we shipped
+
+First, we ran one strict, nonpromoting canary through BitterClip’s real B5 path.
+It covered two video chunks. Both calls requested and served Gemini 3.7 on the
+first attempt, ended normally, returned direct JSON, passed the production
+normalization checks, and cleaned up their temporary uploads. Nothing reached a
+customer-facing projection. The rate-card estimate was about eight cents.
+
+Then we changed only the visual-analysis pins: Gemini 3.7 became the primary
+model and Gemini 3.6 became its fallback. The analyzer and existing interval
+contract stayed put. The point contract and multi-camera synthesis path stayed
+off.
+
+Finally, we ran one promoting visual-path acceptance on a one-minute recording.
+Before starting it, we found that a completely ordinary completion would also
+kick off copywriting work and could fan visual processing out across 17 other
+recordings. That was unrelated to the model decision, expensive, and exactly the
+kind of accidental “one more test” we wanted to avoid. We suppressed those two
+downstream actions inside the isolated acceptance process and tested the visual
+path itself.
+
+The single Gemini call requested the deployed default, served 3.7 without using
+the fallback, ended with `STOP`, returned direct JSON, and deleted its upload.
+BitterClip normalized and stitched the result, wrote the run artifacts, and
+indexed eight visual actions. There was no second attempt. The estimate was just
+under two cents.
+
+The visual path completed, but the acceptance runner still marked its outer
+receipt failed because it expected a field that ordinary, non-strict mode never
+emits. We kept that receipt, inspected the preserved artifact without calling the
+model again, and found only two structural notes: the chunks had been stitched,
+and the B5 analyzer label had been enforced. There was no timestamp repair,
+reversal, or out-of-window warning. We recorded the correction as an amendment
+instead of rerunning for a prettier receipt.
+
+Gemini 3.7 is now BitterClip’s default visual-analysis model. Gemini 3.6 is the
+live fallback. If wider use exposes a problem, rollback is another pin-only
+change: restore Gemini 3.6 as primary and Gemini 3.5 Flash-Lite as fallback.
 
 | What we can say | What we cannot say |
 | --- | --- |
@@ -256,10 +302,12 @@ rollback was necessary because the production model never changed.
 | Both models produced temporal-contract failures somewhere in the workshop. | The final run proves one model is more reliable. |
 | The point contract removed per-row start/end reversal by construction and passed 48/48 discovery calls. | Point timestamps universally solve temporal grounding. |
 | The final confirmation stopped with 13 of 63 candidate chunk responses complete. | 3.7 passed semantic noninferiority or multi-camera understanding. |
+| One strict canary and one promoting visual-path acceptance completed on 3.7 without fallback. | The acceptance covered copy authoring, session-wide fanout, or every ordinary post-processing step. |
+| BitterClip made a bounded, reversible production change. | The benchmark proved 3.7 semantically superior. |
 
-## What changed anyway
+## What changed beyond the model
 
-The production model did not change. Our design did.
+The production model changed. More importantly, our design did.
 
 The workshop established a better boundary between model judgment and host
 responsibility:
@@ -276,9 +324,9 @@ responsibility:
 - Fail closed when exact model identity, completion, cleanup, or customer
   projection cannot be proved.
 
-The point path and its corrected version-2 failure collector are prospective
-development work. They have not been activated as the production default, and
-they do not rewrite the stopped result.
+The failure collector is now hardened for version-2 diagnostics. The point path
+itself remains prospective: it is not the production default, and none of that
+work rewrites the stopped result.
 
 That distinction matters. Good instrumentation is not a retroactive pass. A
 better contract is not proof that a new model is better. And a fast model is not
@@ -287,14 +335,16 @@ fails.
 
 ## The honest answer
 
-Gemini 3.7 still looks like a model I want BitterClip to use. It was faster in
-our fixed-chunk tests, and nothing we saw established that it understands the
-footage worse.
+We upgraded BitterClip’s visual-analysis default to Gemini 3.7.
 
-But promising is not the same as proven, and an unfinished confirmation is not
-a production gate.
+Not because the benchmark proved it was the smarter model. It did not. We
+shipped because the matched tests showed a large operational advantage, the
+failures were not unique to 3.7, the deployed B5 visual path passed a deliberately
+small canary and acceptance, and the rollback remained simple.
 
-So 3.6 stays put for now.
+That is less dramatic than declaring a benchmark winner. It is also how I want
+us to make product decisions: say exactly what the evidence supports, make the
+smallest useful move, and keep a clean way back.
 
 ---
 
@@ -316,12 +366,20 @@ stability, not factual correctness.
 The final confirmation was prospectively locked at 106 jobs and 164 planned
 chunk responses. It stopped at 24 jobs and 39 registered responses. Gemini 3.7
 contributed 13 of its required 63 responses; the semantic comparison never ran.
-Treating those repeated fixed-corpus calls as independent and exchangeable would put the one-sided 95%
-upper failure bound for 0/13 at about 20.6%, but that assumption is debatable and
-the incomplete denominator is the more important fact.
+Treating those repeated fixed-corpus calls as independent and exchangeable would
+put the one-sided 95% upper failure bound for 0/13 at about 20.6%, but that
+assumption is debatable and the incomplete denominator is the more important
+fact.
+
+The later release decision was separate. One strict nonpromoting canary made two
+Gemini 3.7 chunk calls. The promoting default-config visual-path acceptance made
+one more. It intentionally did not test queue dispatch, copy-authoring inference,
+session-wide visual fanout, whole-session synthesis, or full ordinary
+post-processing. Those three calls support the narrow deployed visual-path claim
+in this article, not semantic superiority or a population-wide reliability rate.
 
 Across the full workshop, cumulative estimated or conservatively reserved
-provider exposure was $32.17 under a $50 authorization. Actual billed cost is
+provider exposure was $32.27 under a $50 authorization. Actual billed cost is
 unknown. Raw media, transcript text, model bodies, internal identifiers, and the
 private truth set are not published.
 

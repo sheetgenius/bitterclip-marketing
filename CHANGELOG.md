@@ -34,9 +34,13 @@ under a dated entry.
   went backward too." The article separates a shared timestamp-contract problem
   from model quality, reports the fixed-corpus latency and estimated-cost gains,
   discloses the failed multi-witness repeatability and mismatch gates, and
-  explains why a stopped production confirmation meant no model switch. Added
-  privacy-safe explanatory diagrams and charts while keeping footage, private
-  transcript material, and raw provider responses out of the public site.
+  preserves the stopped production confirmation as inconclusive. The final
+  update documents the later bounded, reversible product decision: Gemini 3.7
+  became the visual-analysis primary after one strict canary and one narrowed
+  promoting visual-path acceptance, with Gemini 3.6 retained as fallback and no
+  semantic-superiority claim. Added privacy-safe explanatory diagrams and charts
+  while keeping footage, private transcript material, and raw provider responses
+  out of the public site.
 - Added a creator-facing Google Takeout import guide covering archive setup,
   split ZIP handling, metadata and source-privacy provenance, Project mapping,
   resumable one-by-one Episode ingestion, video-quality limits, and the clear

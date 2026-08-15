@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
   <title id="title">The final confirmation stopped after 24 of 106 jobs</title>
-  <desc id="desc">The locked confirmation completed 24 jobs and stopped before job 25. A Gemini 3.6 point sequence failed raw ordering, then BitterClip's receipt reader failed to recognize the validator's version 2 diagnostic. Gemini 3.7 had completed 13 of its planned 63 chunk calls, too few to authorize migration.</desc>
+  <desc id="desc">The locked confirmation completed 24 jobs and stopped before job 25. A Gemini 3.6 point sequence failed raw ordering, then BitterClip's receipt reader failed to recognize the validator's version 2 diagnostic. Gemini 3.7 had completed 13 of its planned 63 chunk calls, too few to pass the locked comparison.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#11130f"/>

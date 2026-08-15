@@ -301,7 +301,10 @@ test('renders the Gemini 3.7 benchmark post and its public evidence boundaries',
   await expect(page.locator('article')).toContainText('24.6% lower')
   await expect(page.locator('article')).toContainText('146 → 20.8')
   await expect(page.locator('article')).toContainText('The honest result is inconclusive')
-  await expect(page.locator('article')).toContainText('BitterClip remains on gemini-3.6-flash')
+  await expect(page.locator('article')).toContainText(
+    'Gemini 3.7 is now BitterClip’s default visual-analysis model',
+  )
+  await expect(page.locator('article')).toContainText('Gemini 3.6 is the live fallback')
   await expect(page.locator('article')).toContainText('13 of its required 63 responses')
   await expect(page.locator('article')).toContainText('94 evaluated units')
   await expect(page.locator('article')).toContainText('multi-camera path stayed off')
@@ -352,7 +355,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/blog/a-condensed-memory-of-the-work.md', text: 'a condensed memory of the work' },
     {
       path: '/blog/gemini-3-7-multiple-witnesses.md',
-      text: 'But promising is not the same as proven',
+      text: 'We upgraded BitterClip’s visual-analysis default to Gemini 3.7',
     },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
@@ -407,5 +410,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
-  expect(llmsFullText).toContain('But promising is not the same as proven')
+  expect(llmsFullText).toContain(
+    'We upgraded BitterClip’s visual-analysis default to Gemini 3.7',
+  )
 })
