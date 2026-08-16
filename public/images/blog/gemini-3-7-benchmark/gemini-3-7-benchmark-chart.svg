@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
-  <title id="title">Gemini 3.7 looked promising; BitterClip shipped the narrow change</title>
-  <desc id="desc">Earlier matched discovery found Gemini 3.7 faster and cheaper by estimate. The larger confirmation stopped after 24 of 106 planned jobs. BitterClip later made a bounded, reversible model-only upgrade after one strict canary and one promoting visual-path acceptance.</desc>
+  <title id="title">Visual analysis in BitterClip just got a lot faster</title>
+  <desc id="desc">In a fixed matched video test, Gemini 3.7 reduced median provider response time from 27.8 seconds to 10.8 seconds. It is now BitterClip's primary visual-analysis model, with Gemini 3.6 retained as fallback.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#10120f"/>
@@ -19,42 +19,41 @@
   <circle cx="1080" cy="64" r="190" fill="#ef8b72" opacity="0.11" filter="url(#blur)"/>
   <circle cx="65" cy="625" r="170" fill="#f4ca73" opacity="0.06" filter="url(#blur)"/>
   <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
-    <text x="66" y="58" fill="#f0a17d" font-size="16" font-weight="760" letter-spacing="2.7">BITTERCLIP FIELD TEST</text>
-    <text x="66" y="112" fill="#faf8f2" font-size="43" font-weight="790">The benchmark stopped.</text>
-    <text x="66" y="158" fill="url(#warm)" font-size="43" font-weight="790">We still made the narrow move.</text>
-    <text x="66" y="195" fill="#b8b8ad" font-size="18">An inconclusive comparison, a bounded production check, and a rollback kept close.</text>
+    <text x="66" y="58" fill="#f0a17d" font-size="16" font-weight="760" letter-spacing="2.7">BITTERCLIP UPDATE</text>
+    <text x="66" y="112" fill="#faf8f2" font-size="43" font-weight="790">Visual analysis just got</text>
+    <text x="66" y="158" fill="url(#warm)" font-size="43" font-weight="790">a lot faster.</text>
+    <text x="66" y="195" fill="#b8b8ad" font-size="18">Gemini 3.7 cut median model response time by 61% in our fixed video test.</text>
 
     <g transform="translate(66 238)">
       <rect width="328" height="204" rx="21" fill="#0b0d0a" fill-opacity="0.78" stroke="#fff" stroke-opacity="0.11"/>
-      <text x="24" y="36" fill="#92928a" font-size="13" font-weight="730" letter-spacing="1.5">MATCHED DISCOVERY</text>
-      <text x="24" y="92" fill="#f7f4ec" font-size="43" font-weight="820">192 calls</text>
-      <text x="24" y="126" fill="#d9d8d0" font-size="16">3.7 median latency: 61% lower</text>
-      <text x="24" y="153" fill="#d9d8d0" font-size="16">estimated cost: 25% lower</text>
-      <text x="24" y="184" fill="#85857d" font-size="12">two fixed silent chunks · exploratory</text>
+      <text x="24" y="36" fill="#92928a" font-size="13" font-weight="730" letter-spacing="1.5">GEMINI 3.6</text>
+      <text x="24" y="92" fill="#f7f4ec" font-size="43" font-weight="820">27.8 s</text>
+      <text x="24" y="126" fill="#d9d8d0" font-size="16">median model response</text>
+      <text x="24" y="153" fill="#d9d8d0" font-size="16">our previous primary model</text>
+      <text x="24" y="184" fill="#85857d" font-size="12">96 calls · fixed test workload</text>
     </g>
 
     <g transform="translate(418 238)">
       <rect width="328" height="204" rx="21" fill="#0b0d0a" fill-opacity="0.78" stroke="#fff" stroke-opacity="0.11"/>
-      <text x="24" y="36" fill="#92928a" font-size="13" font-weight="730" letter-spacing="1.5">LOCKED CONFIRMATION</text>
-      <text x="24" y="92" fill="#f7f4ec" font-size="43" font-weight="820">106 planned</text>
-      <text x="24" y="133" fill="#efaa87" font-size="30" font-weight="780">24 completed</text>
-      <rect x="24" y="154" width="280" height="8" rx="4" fill="#44463e"/>
-      <rect x="24" y="154" width="63" height="8" rx="4" fill="#ef8b72"/>
-      <text x="24" y="184" fill="#85857d" font-size="12">stopped at the integrity gate</text>
+      <text x="24" y="36" fill="#92928a" font-size="13" font-weight="730" letter-spacing="1.5">GEMINI 3.7</text>
+      <text x="24" y="92" fill="#f7f4ec" font-size="43" font-weight="820">10.8 s</text>
+      <text x="24" y="126" fill="#d9d8d0" font-size="16">median model response</text>
+      <text x="24" y="153" fill="#efaa87" font-size="16" font-weight="730">61% lower in matched calls</text>
+      <text x="24" y="184" fill="#85857d" font-size="12">96 calls · same test workload</text>
     </g>
 
     <g transform="translate(770 238)">
       <rect width="364" height="204" rx="21" fill="#18251b" fill-opacity="0.92" stroke="#8fbc91" stroke-opacity="0.68"/>
-      <text x="24" y="36" fill="#9fc8a1" font-size="13" font-weight="730" letter-spacing="1.5">BOUNDED RELEASE</text>
-      <text x="24" y="92" fill="#faf8f2" font-size="43" font-weight="820">3.7 shipped</text>
-      <text x="24" y="126" fill="#c7ddc8" font-size="16">strict canary + promoted visual check</text>
-      <text x="24" y="153" fill="#c7ddc8" font-size="16">model pin only · no fallback used</text>
-      <text x="24" y="184" fill="#8eaa90" font-size="12">Gemini 3.6 remains the live fallback</text>
+      <text x="24" y="36" fill="#9fc8a1" font-size="13" font-weight="730" letter-spacing="1.5">NOW LIVE</text>
+      <text x="24" y="92" fill="#faf8f2" font-size="38" font-weight="820">3.7 primary</text>
+      <text x="24" y="126" fill="#c7ddc8" font-size="16">Gemini 3.6 stays the fallback</text>
+      <text x="24" y="153" fill="#c7ddc8" font-size="16">easy to reverse if needed</text>
+      <text x="24" y="184" fill="#8eaa90" font-size="12">no strong semantic difference observed</text>
     </g>
 
     <path d="M66 493H1134" stroke="#fff" stroke-opacity="0.12"/>
-    <text x="66" y="536" fill="#f4f1e9" font-size="20" font-weight="680">The honest result:</text>
-    <text x="239" y="536" fill="#afaea5" font-size="20">inconclusive benchmark, reversible product decision.</text>
-    <text x="66" y="577" fill="#82827a" font-size="13">3.7 primary · 3.6 fallback · no semantic superiority claim · point and multi-camera paths remain off</text>
+    <text x="66" y="536" fill="#f4f1e9" font-size="20" font-weight="680">The practical result:</text>
+    <text x="264" y="536" fill="#afaea5" font-size="20">less time waiting on visual analysis.</text>
+    <text x="66" y="577" fill="#82827a" font-size="13">same pricing · estimated cost 25% lower · Gemini 3.6 stays ready as fallback</text>
   </g>
 </svg>

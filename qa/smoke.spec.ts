@@ -295,25 +295,22 @@ test('renders the Gemini 3.7 benchmark post and its public evidence boundaries',
   )
   await expect(page.getByRole('heading', {
     level: 1,
-    name: 'We blamed Gemini 3.7. Then Gemini 3.6 went backward too.',
+    name: 'Visual analysis in BitterClip just got a lot faster',
   })).toBeVisible()
   await expect(page.locator('article')).toContainText('61.1% lower')
   await expect(page.locator('article')).toContainText('24.6% lower')
-  await expect(page.locator('article')).toContainText('146 → 20.8')
-  await expect(page.locator('article')).toContainText('The honest result is inconclusive')
+  await expect(page.locator('article')).toContainText('began at 146 seconds and ended at 20.8 seconds')
   await expect(page.locator('article')).toContainText(
-    'Gemini 3.7 is now BitterClip’s default visual-analysis model',
+    'We did not find a strong semantic difference between the two models',
   )
-  await expect(page.locator('article')).toContainText('Gemini 3.6 is the live fallback')
-  await expect(page.locator('article')).toContainText('13 of its required 63 responses')
-  await expect(page.locator('article')).toContainText('94 evaluated units')
-  await expect(page.locator('article')).toContainText('multi-camera path stayed off')
-  await expect(page.locator('article')).toContainText('Actual billed cost is unknown')
-  await expect(page.getByAltText(/two abstract camera witnesses/i)).toBeVisible()
-  await expect(page.getByAltText(/impossible model-authored interval/i)).toBeVisible()
+  await expect(page.locator('article')).toContainText(
+    'Gemini 3.7 is now the primary model for BitterClip’s visual analysis',
+  )
+  await expect(page.locator('article')).toContainText('Gemini 3.6 remains the fallback')
+  await expect(page.locator('article')).toContainText('not a reconciled provider bill')
+  await expect(page.getByAltText(/sanitized model response/i)).toBeVisible()
   await expect(page.getByAltText(/model-authored evidence point/i)).toBeVisible()
-  await expect(page.getByAltText(/confirmation stopped after 24 of 106 jobs/i)).toBeVisible()
-  await expect(page.locator('article img')).toHaveCount(7)
+  await expect(page.locator('article img')).toHaveCount(3)
 })
 
 test('renders the privacy policy page', async ({ page }) => {
@@ -355,7 +352,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     { path: '/blog/a-condensed-memory-of-the-work.md', text: 'a condensed memory of the work' },
     {
       path: '/blog/gemini-3-7-multiple-witnesses.md',
-      text: 'We upgraded BitterClip’s visual-analysis default to Gemini 3.7',
+      text: 'Visual analysis in BitterClip just got a lot faster',
     },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
@@ -387,7 +384,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(rssText).toContain('<rss version="2.0"')
   expect(rssText).toContain('<title>Your show has a signature now</title>')
   expect(rssText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
-  expect(rssText).toContain('<title>We blamed Gemini 3.7. Then Gemini 3.6 went backward too.</title>')
+  expect(rssText).toContain('<title>Visual analysis in BitterClip just got a lot faster</title>')
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
@@ -397,7 +394,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(llmsText).toContain('Import your YouTube archive')
   expect(llmsText).toContain('Your show has a signature now')
-  expect(llmsText).toContain('We blamed Gemini 3.7')
+  expect(llmsText).toContain('Visual analysis in BitterClip just got a lot faster')
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
@@ -410,7 +407,5 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
-  expect(llmsFullText).toContain(
-    'We upgraded BitterClip’s visual-analysis default to Gemini 3.7',
-  )
+  expect(llmsFullText).toContain('Visual analysis in BitterClip just got a lot faster')
 })

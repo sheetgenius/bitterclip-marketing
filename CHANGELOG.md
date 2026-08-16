@@ -30,17 +30,12 @@ under a dated entry.
 
 ### Website
 
-- Rewrote the Gemini 3.7 field report as "We blamed Gemini 3.7. Then Gemini 3.6
-  went backward too." The article separates a shared timestamp-contract problem
-  from model quality, reports the fixed-corpus latency and estimated-cost gains,
-  discloses the failed multi-witness repeatability and mismatch gates, and
-  preserves the stopped production confirmation as inconclusive. The final
-  update documents the later bounded, reversible product decision: Gemini 3.7
-  became the visual-analysis primary after one strict canary and one narrowed
-  promoting visual-path acceptance, with Gemini 3.6 retained as fallback and no
-  semantic-superiority claim. Added privacy-safe explanatory diagrams and charts
-  while keeping footage, private transcript material, and raw provider responses
-  out of the public site.
+- Reworked the Gemini 3.7 field report into a short user-facing update led by the
+  practical result: median model response time fell 61% in the fixed test, the
+  estimated cost fell 25%, no strong semantic difference appeared in the footage
+  reviewed, and BitterClip upgraded with Gemini 3.6 kept as fallback. The article
+  retains the useful timestamp-contract lesson and privacy-safe diagrams without
+  turning the test into a broad benchmark claim.
 - Added a creator-facing Google Takeout import guide covering archive setup,
   split ZIP handling, metadata and source-privacy provenance, Project mapping,
   resumable one-by-one Episode ingestion, video-quality limits, and the clear
