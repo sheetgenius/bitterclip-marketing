@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Pi versus DeepSeek Harness for BitterClip</title>
+  <desc id="desc">BitterClip's editor connects through ACP to a small Pi runtime, which can reach only BitterClip MCP tools. Beside it, DeepSeek Harness is shown as a larger plugin platform with UI, jobs, goals, policy, shell, filesystem, and subagent capabilities.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c0d0c"/>
+      <stop offset="0.58" stop-color="#161713"/>
+      <stop offset="1" stop-color="#2a1b18"/>
+    </linearGradient>
+    <linearGradient id="warm" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f4ca73"/>
+      <stop offset="1" stop-color="#ef8b72"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="34"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#ef9a7c"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="38" r="180" fill="#ef8b72" opacity="0.10" filter="url(#glow)"/>
+  <circle cx="70" cy="610" r="150" fill="#f4ca73" opacity="0.05" filter="url(#glow)"/>
+
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif">
+    <text x="62" y="52" fill="#ef9a7c" font-size="15" font-weight="760" letter-spacing="2.6">BITTERCLIP ENGINEERING</text>
+    <text x="62" y="105" fill="#fbfaf6" font-size="43" font-weight="810">Pi vs. DeepSeek Harness</text>
+    <text x="62" y="142" fill="#b8b8b0" font-size="18">We needed an agent loop inside our product, not a second product backend.</text>
+
+    <g transform="translate(62 184)">
+      <rect width="655" height="335" rx="24" fill="#0a0c0a" fill-opacity="0.82" stroke="#ef9a7c" stroke-opacity="0.50"/>
+      <text x="25" y="37" fill="#efad90" font-size="13" font-weight="760" letter-spacing="1.7">OUR FIT: PI</text>
+      <text x="25" y="67" fill="#f5f3ed" font-size="20" font-weight="730">One small runtime between the editor and its tools</text>
+
+      <g transform="translate(25 108)">
+        <rect width="118" height="82" rx="15" fill="#1d201b" stroke="#fff" stroke-opacity="0.13"/>
+        <text x="59" y="35" text-anchor="middle" fill="#f6f4ef" font-size="16" font-weight="720">Editor</text>
+        <text x="59" y="58" text-anchor="middle" fill="#8f9189" font-size="12">person + video</text>
+
+        <path d="M125 41H178" stroke="#ef9a7c" stroke-width="2.5" marker-end="url(#arrow)"/>
+        <text x="151" y="27" text-anchor="middle" fill="#9b9c94" font-size="11" font-weight="700" letter-spacing="1">ACP</text>
+
+        <rect x="188" width="118" height="82" rx="15" fill="#32221d" stroke="#ef9a7c" stroke-opacity="0.82"/>
+        <text x="247" y="38" text-anchor="middle" fill="#fff7ef" font-size="22" font-weight="830">PI</text>
+        <text x="247" y="60" text-anchor="middle" fill="#efb49d" font-size="12">loop + memory</text>
+
+        <path d="M313 41H366" stroke="#ef9a7c" stroke-width="2.5" marker-end="url(#arrow)"/>
+        <text x="339" y="27" text-anchor="middle" fill="#9b9c94" font-size="11" font-weight="700" letter-spacing="1">MCP</text>
+
+        <rect x="376" width="229" height="82" rx="15" fill="#172219" stroke="#94bd93" stroke-opacity="0.62"/>
+        <text x="490.5" y="34" text-anchor="middle" fill="#f6f4ef" font-size="16" font-weight="720">BitterClip tools</text>
+        <text x="490.5" y="58" text-anchor="middle" fill="#9fbea0" font-size="12">authorized product operations</text>
+      </g>
+
+      <g transform="translate(25 223)">
+        <rect width="605" height="77" rx="15" fill="#141512" stroke="#fff" stroke-opacity="0.09"/>
+        <circle cx="25" cy="25" r="5" fill="#8fbc91"/>
+        <text x="40" y="30" fill="#d7d8d1" font-size="14" font-weight="660">Only MCP tools are registered</text>
+        <circle cx="25" cy="53" r="5" fill="#8fbc91"/>
+        <text x="40" y="58" fill="#d7d8d1" font-size="14" font-weight="660">No shell · no filesystem · no browser · no subagents</text>
+      </g>
+    </g>
+
+    <g transform="translate(743 184)">
+      <rect width="395" height="335" rx="24" fill="#111210" fill-opacity="0.86" stroke="#fff" stroke-opacity="0.13"/>
+      <text x="24" y="37" fill="#aaa9a1" font-size="13" font-weight="760" letter-spacing="1.6">DEEPSEEK HARNESS</text>
+      <text x="24" y="67" fill="#f5f3ed" font-size="20" font-weight="730">A plugin-based agent platform</text>
+
+      <g transform="translate(24 100)" font-size="12" font-weight="700">
+        <g fill="#1d201b" stroke="#fff" stroke-opacity="0.12">
+          <rect width="104" height="48" rx="12"/>
+          <rect x="117" width="104" height="48" rx="12"/>
+          <rect x="234" width="113" height="48" rx="12"/>
+          <rect y="61" width="104" height="48" rx="12"/>
+          <rect x="117" y="61" width="104" height="48" rx="12"/>
+          <rect x="234" y="61" width="113" height="48" rx="12"/>
+          <rect y="122" width="104" height="48" rx="12"/>
+          <rect x="117" y="122" width="104" height="48" rx="12"/>
+          <rect x="234" y="122" width="113" height="48" rx="12"/>
+        </g>
+        <g fill="#c8c8c0" text-anchor="middle">
+          <text x="52" y="30">UI</text>
+          <text x="169" y="30">JOBS</text>
+          <text x="290.5" y="30">GOALS</text>
+          <text x="52" y="91">SHELL</text>
+          <text x="169" y="91">EVENTS</text>
+          <text x="290.5" y="91">POLICY</text>
+          <text x="52" y="152">FILES</text>
+          <text x="169" y="152">TOOLS</text>
+          <text x="290.5" y="152">SUBAGENTS</text>
+        </g>
+      </g>
+
+      <path d="M24 294H371" stroke="#fff" stroke-opacity="0.10"/>
+      <text x="24" y="319" fill="#92938c" font-size="13">Powerful when the harness is the platform.</text>
+    </g>
+
+    <path d="M62 556H1138" stroke="#fff" stroke-opacity="0.11"/>
+    <text x="62" y="594" fill="url(#warm)" font-size="19" font-weight="760">We chose the harness that fit inside BitterClip.</text>
+  </g>
+</svg>

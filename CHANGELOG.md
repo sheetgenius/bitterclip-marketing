@@ -83,6 +83,11 @@ under a dated entry.
 
 ### Website
 
+- Added a field report on why BitterClip chose Pi for its embedded agent,
+  including the production failure that sharpened the boundary, the actual
+  ACP-to-Pi-to-MCP architecture, a fair comparison with DeepSeek Harness
+  v0.1.0-rc.7, and guidance for teams choosing between a narrow embedded
+  runtime and a broader agent platform.
 - Reworked the Gemini 3.7 field report into a short user-facing update led by the
   practical result: median model response time fell 61% in the fixed test, the
   estimated cost fell 25%, no strong semantic difference appeared in the footage

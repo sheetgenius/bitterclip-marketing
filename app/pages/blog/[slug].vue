@@ -182,7 +182,7 @@ useHead(() => {
       </div>
 
       <div class="mx-auto max-w-3xl">
-        <BlogPostCta />
+        <BlogPostCta :title="post.ctaTitle" :line="post.ctaLine" />
 
         <footer class="mt-10 flex flex-col gap-5 border-t border-zinc-900 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <NuxtLink
@@ -265,5 +265,26 @@ useHead(() => {
   font-size: 1rem;
   line-height: 1.75;
   color: rgb(228 228 231);
+}
+
+/* Keep comparison tables readable on phones. Let readers swipe the table
+   instead of compressing three prose-heavy columns into word-wide slivers. */
+@media (max-width: 640px) {
+  .blog-prose :deep(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .blog-prose :deep(th:first-child),
+  .blog-prose :deep(td:first-child) {
+    min-width: 9rem;
+  }
+
+  .blog-prose :deep(th:not(:first-child)),
+  .blog-prose :deep(td:not(:first-child)) {
+    min-width: 15rem;
+  }
 }
 </style>

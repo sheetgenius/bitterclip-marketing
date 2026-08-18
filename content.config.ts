@@ -94,6 +94,8 @@ const blogSchema = z.object({
   ogImage: z.string(),
   heroImage: z.string().optional(),
   heroAlt: z.string().optional(),
+  ctaTitle: z.string().optional(),
+  ctaLine: z.string().optional(),
   tags: z.array(z.string()).optional(),
 })
 

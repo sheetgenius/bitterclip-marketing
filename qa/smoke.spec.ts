@@ -317,6 +317,40 @@ test('renders the Gemini 3.7 benchmark post and its public evidence boundaries',
   await expect(page.locator('article img')).toHaveCount(3)
 })
 
+test('renders the Pi and DeepSeek Harness field report with its concrete architecture', async ({ page }) => {
+  await page.goto('/blog/pi-vs-deepseek-harness')
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/blog/pi-vs-deepseek-harness',
+  )
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/blog/pi-vs-deepseek-harness.md',
+  )
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    'content',
+    'https://bitterclip.com/images/blog/pi-vs-deepseek-harness/pi-vs-deepseek-harness-og.png',
+  )
+  await expect(page.getByRole('heading', {
+    level: 1,
+    name: 'Pi vs. DeepSeek Harness: why we chose Pi',
+  })).toBeVisible()
+  await expect(page.locator('article')).toContainText(
+    'The model is the intelligence. The harness is everything that lets that intelligence get work done',
+  )
+  await expect(page.locator('article')).toContainText('DeepSeek Harness v0.1.0-rc.7')
+  await expect(page.getByRole('heading', { name: 'How we embedded Pi in BitterClip' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Pi is not a security boundary' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Put the agent to work on a real recording' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Pi' }).first()).toHaveAttribute('href', 'https://pi.dev/')
+  await expect(page.getByRole('link', { name: 'DeepSeek Harness' }).first()).toHaveAttribute(
+    'href',
+    'https://github.com/deepseek-ai/deepseek-harness',
+  )
+  await expect(page.getByAltText(/BitterClip's embedded-agent architecture/i)).toBeVisible()
+})
+
 test('renders the privacy policy page', async ({ page }) => {
   await page.goto('/privacy')
 
@@ -358,6 +392,10 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
       path: '/blog/gemini-3-7-multiple-witnesses.md',
       text: 'Visual analysis in BitterClip just got a lot faster',
     },
+    {
+      path: '/blog/pi-vs-deepseek-harness.md',
+      text: 'BitterClip remembers the video',
+    },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
   ]
@@ -378,6 +416,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/blog')
   expect(sitemapText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
   expect(sitemapText).toContain('https://bitterclip.com/blog/gemini-3-7-multiple-witnesses')
+  expect(sitemapText).toContain('https://bitterclip.com/blog/pi-vs-deepseek-harness')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
   expect(sitemapText).toContain('https://bitterclip.com/terms')
   expect(sitemapText).toContain('https://bitterclip.com/docs/help/troubleshooting')
@@ -389,6 +428,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(rssText).toContain('<title>Your show has a signature now</title>')
   expect(rssText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
   expect(rssText).toContain('<title>Visual analysis in BitterClip just got a lot faster</title>')
+  expect(rssText).toContain('<title>Pi vs. DeepSeek Harness: why we chose Pi</title>')
 
   const llms = await request.get('/llms.txt')
   expect(llms.ok()).toBeTruthy()
@@ -399,6 +439,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsText).toContain('Import your YouTube archive')
   expect(llmsText).toContain('Your show has a signature now')
   expect(llmsText).toContain('Visual analysis in BitterClip just got a lot faster')
+  expect(llmsText).toContain('Pi vs. DeepSeek Harness: why we chose Pi')
 
   const llmsFull = await request.get('/llms-full.txt')
   expect(llmsFull.ok()).toBeTruthy()
@@ -412,4 +453,5 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')
   expect(llmsFullText).toContain('Visual analysis in BitterClip just got a lot faster')
+  expect(llmsFullText).toContain('BitterClip remembers the video')
 })
