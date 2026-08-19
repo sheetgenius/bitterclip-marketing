@@ -24,6 +24,9 @@ onMounted(async () => {
 
   renderer = createIsoRenderer(cv)
   renderer.resize()
+  // Workshop hook: lets a screenshot harness freeze the machine at an exact t,
+  // so two builds can be compared at the same instant. Harmless in prod.
+  ;(window as unknown as { __iso?: IsoRenderer }).__iso = renderer
 
   // Reduced motion gets ONE frame and no loop — not a slower loop. The canvas
   // is the whole animation here, so honouring the preference in CSS alone (as

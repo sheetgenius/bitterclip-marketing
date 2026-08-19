@@ -3,6 +3,8 @@
 Prototype route: **`/lab/iso`**
 Renderer: **`app/lib/hero-iso/renderer.ts`** (~830 lines, Canvas 2D, no dependencies)
 Mount: `app/components/HeroIso.client.vue` · Page: `app/pages/lab/iso.vue`
+Workshop charter: **`docs/hero-iso-workshop-start.md`** (phases, visual-appendage
+protocol, loop mechanics — read it alongside this brief)
 
 This is the direction. Everything below exists so the next person can keep
 workshopping it without re-deriving the decisions or re-making the mistakes.
@@ -62,9 +64,10 @@ is the shape of the rhythm; keep it.
 
 ## 3. Why isometric — do not undo this
 
-There is a perspective version of the same idea at `/lab/line`
-(`app/lib/hero-line/renderer.ts`, ~4,280 lines). It works, and it cost all of
-this: the film had to be chopped into ~50 affine slivers, each needing its own
+There was a perspective version of the same idea at `/lab/line`
+(`app/lib/hero-line/renderer.ts`, ~4,280 lines; retired 2026-08-18 along with
+the `/lab/ribbon` three.js study — recover either from git history at
+`0d923ca^` if ever needed). It worked, and it cost all of this: the film had to be chopped into ~50 affine slivers, each needing its own
 manually-built mip level; a curvature guard to stop the ribbon folding through
 itself; a 90° twist to enter the reel; and a long fight against shimmer and
 crawl on the thumbnails.
@@ -145,8 +148,15 @@ stamping. Colour beyond the destination brand marks.
 
 ## 6. Hard constraints — these came from the owner and still hold
 
-- **No glow.** No `createRadialGradient`, no `shadowBlur`. Light is shown by
-  geometry and value, not by bloom. (Currently clean — keep it that way.)
+- ~~**No glow.**~~ **REVERSED by the owner 2026-08-18.** The direction is now
+  film noir / kino: the frame is a dark stage, the machine its lit subject.
+  The acid-plate bed glows where footage dissolves, the lasers glow, the
+  projector's throw spreads like a prism to the destinations, and the great
+  reel goes *darker*, receding into the stage. Gradients/bloom are allowed —
+  with noir discipline: hard sources, controlled pools, darkness doing most of
+  the work. No web-glossy haze.
+- **The lamp sits halfway up the rig** (owner, 2026-08-18) — not in the bottom
+  third; balance the assembly around it.
 - **three.js must stay out of the homepage bundle.** This renderer is Canvas 2D
   with zero dependencies. Keep it that way.
 - **Render only while visible** (`IntersectionObserver`) and **paint a single
@@ -166,10 +176,15 @@ The only reliable loop is: **change → rebuild → look at a picture → decide
 Reasoning about this geometry without rendering it produces confident wrong
 answers; that is documented above in §4 twice over.
 
-- `bun run build && bunx serve .output/public -p <port>` — note `serve` takes
-  ~7s to bind. A screenshot taken before then is a blank page with **no error**.
-  Kill stale `serve` processes first; only the first one binds, so leftovers
-  mean you are screenshotting an old build.
+- Fast loop: `bun run dev --port 4180` (HMR; binds IPv6-only — browse
+  `localhost`, not `127.0.0.1`), then `node qa/iso-shot.mjs tmp/iso/<name>
+  <t>…` to screenshot frames frozen at exact times via the `window.__iso`
+  hook (`--clip x,y,w,h` in 1600×900 viewport px crops). Verify with a real
+  `bun run build` before committing.
+- Slow/verify loop: `bun run build && bunx serve .output/public -p <port>` —
+  note `serve` takes ~7s to bind. A screenshot taken before then is a blank
+  page with **no error**. Kill stale `serve` processes first; only the first
+  one binds, so leftovers mean you are screenshotting an old build.
 - Capture several moments, not one. Motion bugs (the strip vanishing at the
   bend, the reel spinning the wrong way) are invisible in a single frame.
 - Crop tight on the thing you changed *and* look at the whole frame. Local fixes
@@ -177,8 +192,10 @@ answers; that is documented above in §4 twice over.
 
 ## 8. Open questions for the owner
 
-- How far toward *detail* should this go — is the flat massing look the final
-  aesthetic, or is it scaffolding for a rendered pass?
+Two of the original three were answered 2026-08-18: the massing look is
+scaffolding — the destination is a detailed, noir-lit machine (captions etched
+into passing frames, instrument-grade turrets, particle dissolve at the bed);
+and the bed dissolve does eventually become particles, with a glow. See the
+workshop charter's phase ladder.
+
 - Does the strip show real thumbnails, or stay abstract?
-- The bed dissolve: particles, as originally described, or is the current fade
-  enough?

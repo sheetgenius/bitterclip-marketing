@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
  * Isometric massing study. Deliberately NOT wired into the homepage, the nav,
- * the sitemap or llms.txt. Sits alongside /lab/line so the two projections can
- * be compared before either is committed to.
+ * the sitemap or llms.txt. The perspective (/lab/line) and three.js
+ * (/lab/ribbon) studies it beat were retired 2026-08-18; this is the keeper.
  */
 useHead({
   title: 'Assembly line, isometric — blocking',
