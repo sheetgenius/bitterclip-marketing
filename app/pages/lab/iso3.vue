@@ -31,7 +31,7 @@ onBeforeUnmount(() => mq?.removeEventListener('change', onMq))
 </script>
 
 <template>
-  <main class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden pb-16">
+  <main class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[#08090a] pb-16">
     <div class="relative w-full md:h-[86vh] md:min-h-[560px]">
       <div v-if="!isMobile" class="absolute inset-0">
         <HeroIso3 />
@@ -57,8 +57,11 @@ onBeforeUnmount(() => mq?.removeEventListener('change', onMq))
           <a href="#" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <!-- mobile: the machine runs BETWEEN the CTA and the spec bullets -->
-        <div v-if="isMobile" class="-mx-6 mt-8 h-[52vh] min-h-[360px]">
+        <div v-if="isMobile" class="relative -mx-6 mt-8 h-[52vh] min-h-[360px]">
           <HeroIso3 />
+          <!-- bridge the band's edges into the page ground: seamless stage -->
+          <div class="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-[#08090a] to-transparent" aria-hidden="true" />
+          <div class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#08090a] to-transparent" aria-hidden="true" />
         </div>
         <p class="mt-6 max-w-[40ch] font-mono text-[0.66rem] leading-loose uppercase tracking-[0.18em] text-zinc-600 md:leading-relaxed">
           <span class="block whitespace-nowrap md:inline">knows who's talking</span><span class="hidden md:inline"> · </span>
