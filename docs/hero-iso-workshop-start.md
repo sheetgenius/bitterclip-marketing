@@ -18,8 +18,10 @@ three seconds and understands: **folders of raw recordings are dropped in at one
 end; the machine enhances the footage as it passes; a finished show winds onto
 the reel; and it is broadcast out to YouTube, Podcast, LinkedIn.** Every
 iteration is judged against that sentence before it is judged against taste.
-The hero line ("You still gotta record") is a punchline — the picture must have
-already made the argument or the line is just words.
+The hero line is the same idea in four words — "Footage in, episodes out"
+(owner, 2026-08-18; replaced "You still gotta record" and the subline) — so
+the picture must make the argument entirely on its own and the line confirms
+it.
 
 ## Order of work — fundamentals before bells and whistles
 

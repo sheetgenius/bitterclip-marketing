@@ -35,9 +35,11 @@ Every part of that sentence is load-bearing:
 
 The one idea the picture has to land: **raw recordings go in at one end,
 finished shows come out the other, and the work in between is done for you.**
-The hero line — *"You still gotta record"* — is the joke that lands *because*
-the picture already made the argument. If a first-time visitor doesn't get the
-argument from the picture, the line is just words.
+The hero line is now the same idea in four words — *"Footage in, episodes
+out"* (owner, 2026-08-18; it replaced the earlier punchline *"You still gotta
+record"* and its subline). Line and picture say one thing, so the legibility
+bar is unchanged: the picture must still make the argument entirely on its
+own, and the line confirms it rather than carrying it.
 
 ## 2. The metaphor, station by station
 

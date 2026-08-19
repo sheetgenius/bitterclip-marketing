@@ -51,6 +51,15 @@ zoom/measure first. Append, date, never rewrite history.
 - Bed/deck butt seam (grok, solo — minor).
 - Thumbnails in frames: OWNER QUESTION, still open.
 
+### Rulings after the block
+
+- Hero copy simplified to the four words "Footage in, episodes out" (owner);
+  old punchline + subline removed from the lab page.
+- The machine's ending stays FULL (prism fan + destination badges). A
+  misreading of the ruling briefly built a no-destinations `?v=simple`
+  variant (`a45c935`); reverted same day. If "drop the destinations" ever
+  comes up for real, that commit is the working prototype.
+
 ### End-of-block cold verdict (agy, uncontaminated, on `final-t5.80`)
 
 Craft 8.5/10; full pipeline narrated correctly. Its residual confusions, for

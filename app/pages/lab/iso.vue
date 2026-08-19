@@ -20,12 +20,12 @@ useHead({
       <!-- Placeholder only. The machine is fitted to the right of the stage so
            this column stays clear; type here is how the composition gets judged. -->
       <div class="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-6 sm:px-8">
+        <!-- The whole argument in four words (owner, 2026-08-18 — replaced
+             "You still gotta record" + subline). The picture and the line now
+             say the same thing, so there is no subline to carry. -->
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
-          You still gotta record
+          Footage in, <span class="text-[#f28f84]">episodes out</span>
         </h1>
-        <p class="mt-5 max-w-[30ch] text-base leading-relaxed text-zinc-400">
-          Raw footage in. Finished shows out.
-        </p>
         <a
           href="#"
           class="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-[#f28f84]/60 px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#ffd0c7]"
