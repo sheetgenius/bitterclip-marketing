@@ -14,6 +14,12 @@
  * order used to. The camera transform stays identity, so world space IS view
  * space and lights/normals behave normally.
  *
+ * THE FILM IS ONE STATIC RIBBON WITH A LIVE TEXTURE. The ribbon's UV.u is
+ * arclength along the path; every tick a small offscreen 2D canvas redraws
+ * the strip IN WORLD-S SPACE — frame tones, sprocket perforations, caption
+ * bars stamping in at the turret plane — so all of the study's transport
+ * logic survives verbatim and the geometry never moves.
+ *
  * This module is only ever loaded via dynamic import from a lab route —
  * three.js must never enter the homepage bundle.
  */
@@ -46,7 +52,18 @@ const coilR = REEL.r * COIL_F
 const reelX = ROLL.x - coilR
 const reelY = gateY
 const lampY = beltY + ROLL.r + RISE * 0.47
+// THE HEAD lives at the climb (owner: "it all happens in between the
+// girders") — masts straddle the film, the housing's muzzle nearly kisses it.
+const MAST = { x0: 9.32, x1: 9.85, top: 8.35, z: 1.545, t: 0.24 }
+const LAMP_CX = 8.98
+const LAMP_LEN = 0.62 // half-length of the housing along x
 const STILL_T = 1.35
+
+// drop cycle
+const FALL_S = 1.05
+const SOAK_S = 1.9
+const GAP_S = 3.4
+const LIFE = FALL_S + SOAK_S + GAP_S
 
 const AX = (12 * Math.PI) / 180
 const AZ = (30 * Math.PI) / 180
@@ -55,9 +72,18 @@ const SX = Math.sin(AX)
 const CZ = Math.cos(AZ)
 const SZ = Math.sin(AZ)
 
+// film path arclengths
+const START = BED.x1 - 0.25
+const runFlat = ROLL.x - ROLL.r - START
+const ARC = (ROLL.r * Math.PI) / 2
+const runVert = runFlat + ARC
+const totalPath = runVert + RISE
+
 export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  renderer.toneMappingExposure = 1.18
   const scene = new THREE.Scene()
   const camera = new THREE.Camera()
 
@@ -88,19 +114,18 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const ox = W * 0.6 - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
     const oy = H * 0.52 - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
 
-    // depth axis: the study's view direction, normalized
     const v = new THREE.Vector3(0.886, -0.684, -1).normalize()
     const corners: [number, number, number][] = [
       [BED.x0 - 2, -3, -4], [DEST.x + 3, gateY + REEL.r + 3, 4],
       [BED.x0 - 2, gateY + REEL.r + 3, 4], [DEST.x + 3, -3, -4],
     ]
     const ds = corners.map((c) => v.x * c[0] + v.y * c[1] + v.z * c[2])
-    const dMin = Math.min(...ds) - 2
-    const dMax = Math.max(...ds) + 2
+    // wide enough that the vast stage floor never crosses the clip planes —
+    // a tight window sliced it with a razor-straight diagonal seam
+    const dMin = Math.min(...ds) - 60
+    const dMax = Math.max(...ds) + 60
     const k = 2 / (dMax - dMin)
 
-    // ndcX = (2S·CX/W)x + (2S·CZ/W)z + (2ox/W − 1)
-    // ndcY = (2S·SX/H)x + (2S/H)y − (2S·SZ/H)z + (1 − 2oy/H)   (flip to y-up)
     camera.projectionMatrix.set(
       (2 * S * CX) / W, 0, (2 * S * CZ) / W, (2 * ox) / W - 1,
       (2 * S * SX) / H, (2 * S) / H, (-2 * S * SZ) / H, 1 - (2 * oy) / H,
@@ -110,78 +135,553 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert()
   }
 
-  // ---- palette (from the study) ------------------------------------------
+  // ---- palette ------------------------------------------------------------
   const M = {
-    deck: new THREE.MeshStandardMaterial({ color: 0x2e2e36, roughness: 0.85, flatShading: true }),
-    bed: new THREE.MeshStandardMaterial({ color: 0x35353e, roughness: 0.85, flatShading: true }),
-    steel: new THREE.MeshStandardMaterial({ color: 0x3a3a45, roughness: 0.6, metalness: 0.35, flatShading: true }),
-    flange: new THREE.MeshStandardMaterial({ color: 0x2b2b33, roughness: 0.55, metalness: 0.4, flatShading: true }),
-    coil: new THREE.MeshStandardMaterial({ color: 0x4a4437, roughness: 0.9 }),
-    lap: new THREE.MeshStandardMaterial({ color: 0x6b6558, roughness: 0.9 }),
-    stock: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.95 }),
+    deck: new THREE.MeshStandardMaterial({ color: 0x30303a, roughness: 0.88 }),
+    deckDark: new THREE.MeshStandardMaterial({ color: 0x24242c, roughness: 0.9 }),
+    bed: new THREE.MeshStandardMaterial({ color: 0x363640, roughness: 0.88 }),
+    well: new THREE.MeshStandardMaterial({ color: 0x1c0e0c, roughness: 1 }),
+    steel: new THREE.MeshStandardMaterial({ color: 0x4a4a58, roughness: 0.45, metalness: 0.55 }),
+    steelDark: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.5, metalness: 0.5 }),
+    flange: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.42, metalness: 0.6, side: THREE.DoubleSide }),
+    coil: new THREE.MeshStandardMaterial({ color: 0x554e3f, roughness: 0.92 }),
+    lap: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.92 }),
+    // The floor lives on layer 1 and only the PRACTICAL lights reach it (see
+    // the light rig): its unlit base renders page-black, so no seam against
+    // the site background, while the pools still bloom on a real albedo.
+    floor: new THREE.MeshStandardMaterial({ color: 0x2c2c33, roughness: 0.97, envMapIntensity: 0 }),
   }
 
-  // box helper mirroring the study's API: extents, not center+size
-  const box = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, mat: THREE.Material) => {
-    const g = new THREE.BoxGeometry(Math.abs(x1 - x0), Math.abs(y1 - y0), Math.abs(z1 - z0))
-    const m = new THREE.Mesh(g, mat)
+  const box = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, mat: THREE.Material, parent: THREE.Object3D = scene) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(x1 - x0), Math.abs(y1 - y0), Math.abs(z1 - z0)), mat)
     m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)
-    scene.add(m)
+    parent.add(m)
+    return m
+  }
+  const cyl = (r: number, len: number, mat: THREE.Material, axis: 'x' | 'y' | 'z', parent: THREE.Object3D = scene, seg = 40) => {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat)
+    if (axis === 'x') m.rotation.z = Math.PI / 2
+    if (axis === 'z') m.rotation.x = Math.PI / 2
+    parent.add(m)
     return m
   }
 
-  // ---- parity primitives (camera proof stage) ----------------------------
+  // ---- the stage floor ----------------------------------------------------
+  {
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(900, 700), M.floor)
+    floor.rotation.x = -Math.PI / 2
+    floor.position.y = -TABLE.deep - 0.02
+    floor.layers.set(1)
+    camera.layers.enable(1)
+    scene.add(floor)
+  }
+
+  // ---- deck + bed + die gate ---------------------------------------------
   box(TABLE.x0, TABLE.x1, -TABLE.deep, TABLE.top, -TABLE.z, TABLE.z, M.deck)
+  box(BED.x0 - 0.14, BED.x1 + 0.1, -TABLE.deep, -TABLE.deep + 0.34, -BED.z - 0.1, BED.z + 0.1, M.deckDark)
   box(BED.x0, BED.x1, -TABLE.deep, BED.top, -BED.z, BED.z, M.bed)
-  // the climb, as a placeholder plane
-  box(ROLL.x - 0.02, ROLL.x + 0.02, beltY + ROLL.r, gateY, -FILM_W / 2, FILM_W / 2, M.stock)
-  // roller
-  {
-    const g = new THREE.CylinderGeometry(ROLL.r * 1.03, ROLL.r * 1.03, FILM_W + 0.52, 40)
-    const m = new THREE.Mesh(g, M.steel)
-    m.rotation.x = Math.PI / 2
-    m.position.set(ROLL.x - ROLL.r, beltY + ROLL.r, 0)
-    scene.add(m)
+  // the basin: a dark well sunk into the bed's top
+  box(BED.x0 + 0.55, BED.x1 - 0.55, BED.top - 0.14, BED.top + 0.005, -BED.z + 0.55, BED.z - 0.55, M.well)
+  // die gate: two cheeks and a lintel the strip extrudes beneath
+  box(BED.x1, BED.x1 + 0.26, 0.36, 0.68, -1.38, 1.38, M.steelDark)
+  box(BED.x1, BED.x1 + 0.26, 0, 0.36, 1.06, 1.38, M.steelDark)
+  box(BED.x1, BED.x1 + 0.26, 0, 0.36, -1.38, -1.06, M.steelDark)
+
+  // ---- the film: static ribbon, live texture ------------------------------
+  const FILM_TEX_W = 2048
+  const FILM_TEX_H = 96
+  const filmCanvas = document.createElement('canvas')
+  filmCanvas.width = FILM_TEX_W
+  filmCanvas.height = FILM_TEX_H
+  const fctx = filmCanvas.getContext('2d')!
+  const filmTex = new THREE.CanvasTexture(filmCanvas)
+  filmTex.colorSpace = THREE.SRGBColorSpace
+  filmTex.anisotropy = 4
+
+  function drawFilm(dist: number) {
+    const sToPx = FILM_TEX_W / totalPath
+    fctx.clearRect(0, 0, FILM_TEX_W, FILM_TEX_H)
+    const off = dist % PITCH
+    const capS = TURRET.x - START
+    for (let i = -1; i * PITCH < totalPath + PITCH; i++) {
+      const s0 = i * PITCH + off
+      const s1 = Math.min(s0 + PITCH * 0.94, totalPath)
+      if (s1 <= 0 || s0 >= totalPath) continue
+      const alt = ((Math.round((i * PITCH + off - dist) / PITCH) % 2) + 2) % 2 === 0
+      fctx.fillStyle = alt ? '#77715f' : '#6b6558'
+      const x0 = Math.max(0, s0) * sToPx
+      fctx.fillRect(x0, 0, s1 * sToPx - x0, FILM_TEX_H)
+      // sprocket perforations, both edges
+      fctx.fillStyle = '#17150f'
+      for (let kk = 0; kk < 4; kk++) {
+        const sp = s0 + PITCH * 0.94 * ((kk + 0.5) / 4)
+        if (sp < 0 || sp >= s1) continue
+        for (const vv of [0.09, 0.91]) {
+          fctx.fillRect(sp * sToPx - 3, vv * FILM_TEX_H - 3, 6, 6)
+        }
+      }
+      // captions stamp in at the turret plane
+      const fc = s0 + PITCH * 0.47
+      if (fc > capS) {
+        fctx.fillStyle = 'rgba(255,242,228,0.9)'
+        const b0 = (s0 + PITCH * 0.16) * sToPx
+        fctx.fillRect(b0, FILM_TEX_H * 0.6, PITCH * 0.5 * sToPx, FILM_TEX_H * 0.07)
+        fctx.fillRect(b0 + PITCH * 0.08 * sToPx, FILM_TEX_H * 0.72, PITCH * 0.31 * sToPx, FILM_TEX_H * 0.07)
+      }
+    }
+    filmTex.needsUpdate = true
   }
-  // reel: two flange discs + coil + fresh lap (parity placeholder, no windows yet)
+
+  {
+    // ribbon geometry: N segments along the flat→arc→climb path, width in z
+    const SEGS = 96
+    const pos: number[] = []
+    const uv: number[] = []
+    const idx: number[] = []
+    const pt = (s: number): [number, number] => {
+      if (s <= runFlat) return [START + s, beltY]
+      if (s <= runVert) {
+        const a = -Math.PI / 2 + ((s - runFlat) / ARC) * (Math.PI / 2)
+        return [ROLL.x - ROLL.r + Math.cos(a) * ROLL.r, beltY + ROLL.r + Math.sin(a) * ROLL.r]
+      }
+      return [ROLL.x, beltY + ROLL.r + (s - runVert)]
+    }
+    for (let i = 0; i <= SEGS; i++) {
+      const s = (i / SEGS) * totalPath
+      const [x, y] = pt(s)
+      pos.push(x, y, -FILM_W / 2, x, y, FILM_W / 2)
+      uv.push(s / totalPath, 0, s / totalPath, 1)
+      if (i < SEGS) {
+        const a = i * 2
+        idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+      }
+    }
+    const g = new THREE.BufferGeometry()
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3))
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2))
+    g.setIndex(idx)
+    g.computeVertexNormals()
+    const filmMat = new THREE.MeshStandardMaterial({ map: filmTex, roughness: 0.9, side: THREE.DoubleSide })
+    scene.add(new THREE.Mesh(g, filmMat))
+  }
+
+  // ---- the head: masts straddling the climb -------------------------------
+  // (owner: "it all happens in between the girders" — the projection event
+  // lives inside the stand: roller journalled at the bottom, lamp on the
+  // cross-shaft, gate bars at the film, reel carried on arms from the tops.)
+  const bossGroup = new THREE.Group()
+  for (const sgn of [-1, 1]) {
+    const zc = sgn * MAST.z
+    box(MAST.x0, MAST.x1, 0, MAST.top, zc - MAST.t / 2, zc + MAST.t / 2, M.steelDark)
+    box(MAST.x0 - 0.08, MAST.x1 + 0.08, 0, 0.12, zc - MAST.t / 2 - 0.06, zc + MAST.t / 2 + 0.06, M.steel)
+    // arm from mast top to the axle
+    {
+      const ax0 = new THREE.Vector2((MAST.x0 + MAST.x1) / 2, MAST.top - 0.1)
+      const ax1 = new THREE.Vector2(reelX, reelY)
+      const d = ax1.clone().sub(ax0)
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(d.length() + 0.5, 0.36, 0.2), M.steelDark)
+      arm.position.set((ax0.x + ax1.x) / 2, (ax0.y + ax1.y) / 2, zc)
+      arm.rotation.z = Math.atan2(d.y, d.x)
+      scene.add(arm)
+    }
+  }
+  // roller journalled between the masts
+  {
+    const roller = cyl(ROLL.r * 1.03, FILM_W + 0.52, M.steel, 'z')
+    roller.position.set(ROLL.x - ROLL.r, beltY + ROLL.r, 0)
+    cyl(0.09, MAST.z * 2, M.steelDark, 'z').position.set(ROLL.x - ROLL.r, beltY + ROLL.r, 0)
+  }
+  // cross-shaft + lamp housing
+  cyl(0.09, MAST.z * 2 + MAST.t, M.steel, 'z').position.set(LAMP_CX, lampY, 0)
+  {
+    const housing = cyl(0.78, LAMP_LEN * 2, M.steelDark, 'x')
+    housing.position.set(LAMP_CX, lampY, 0)
+    // muzzle lip: an emissive ring at the firing end
+    const lip = new THREE.Mesh(
+      new THREE.TorusGeometry(0.72, 0.05, 12, 40),
+      new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xfff2dc, emissiveIntensity: 2.2 }),
+    )
+    lip.rotation.y = Math.PI / 2
+    lip.position.set(LAMP_CX + LAMP_LEN, lampY, 0)
+    scene.add(lip)
+  }
+  // gate clamp bars across the film
+  for (const sgn of [-1, 1]) {
+    box(ROLL.x - 0.14, ROLL.x + 0.08, lampY + sgn * 0.73 - 0.11, lampY + sgn * 0.73 + 0.11,
+      -FILM_W / 2 - 0.16, FILM_W / 2 + 0.16, M.steel)
+  }
+  scene.add(bossGroup)
+
+  // ---- the reel: windowed flanges spinning in sync ------------------------
   const reel = new THREE.Group()
-  for (const zc of [-REEL.w / 2, REEL.w / 2]) {
-    const g = new THREE.CylinderGeometry(REEL.r, REEL.r, 0.1, 64)
-    const m = new THREE.Mesh(g, M.flange)
-    m.rotation.x = Math.PI / 2
-    m.position.z = zc
-    reel.add(m)
-  }
   {
-    const coil = new THREE.Mesh(new THREE.CylinderGeometry(coilR * 0.86, coilR * 0.86, REEL.w - 0.12, 48), M.coil)
-    coil.rotation.x = Math.PI / 2
-    reel.add(coil)
-    const lap = new THREE.Mesh(new THREE.CylinderGeometry(coilR, coilR, REEL.w - 0.16, 48), M.lap)
-    lap.rotation.x = Math.PI / 2
-    reel.add(lap)
+    const shape = new THREE.Shape()
+    shape.absarc(0, 0, REEL.r, 0, Math.PI * 2, false)
+    const hub = new THREE.Path()
+    hub.absarc(0, 0, 0.42, 0, Math.PI * 2, true)
+    shape.holes.push(hub)
+    for (let h = 0; h < 5; h++) {
+      const a = (h / 5) * Math.PI * 2
+      const w = new THREE.Path()
+      w.absarc(Math.cos(a) * REEL.r * 0.58, Math.sin(a) * REEL.r * 0.58, REEL.r * 0.235, 0, Math.PI * 2, true)
+      shape.holes.push(w)
+    }
+    const fg = new THREE.ExtrudeGeometry(shape, { depth: 0.09, bevelEnabled: false, curveSegments: 48 })
+    for (const zc of [-REEL.w / 2, REEL.w / 2 - 0.09]) {
+      const f = new THREE.Mesh(fg, M.flange)
+      f.position.z = zc
+      reel.add(f)
+    }
+    // wound film: core + the fresh outer lap in the strip's own stock
+    cyl(coilR * 0.9, REEL.w - 0.14, M.coil, 'z', reel)
+    cyl(coilR, REEL.w - 0.2, M.lap, 'z', reel)
+    // hub + axle out to the near arm
+    cyl(0.34, REEL.w + 0.7, M.steel, 'z', reel)
   }
   reel.position.set(reelX, reelY, 0)
   scene.add(reel)
 
-  // ---- light rig (first pass) --------------------------------------------
-  scene.add(new THREE.AmbientLight(0x8890a8, 0.32))
-  const key = new THREE.DirectionalLight(0xbfc4d8, 0.55)
-  key.position.set(-4, 12, 6)
-  scene.add(key)
-  const gateGlow = new THREE.PointLight(0xfff4e0, 26, 9)
-  gateGlow.position.set(ROLL.x - 0.6, lampY, 0)
+  // ---- turrets + beams ----------------------------------------------------
+  const hitP = new THREE.Vector3(TURRET.x, beltY + 0.02, 0)
+  for (const sgn of [-1, 1]) {
+    const zc = sgn * TURRET.z
+    box(TURRET.x - 0.34, TURRET.x + 0.34, 0, 0.34, zc - 0.34, zc + 0.34, M.steelDark)
+    box(TURRET.x - 0.1, TURRET.x + 0.1, 0.34, TURRET.y * 0.64, zc - 0.1, zc + 0.1, M.steelDark)
+    box(TURRET.x - 0.24, TURRET.x + 0.24, TURRET.y * 0.64, TURRET.y + 0.08, zc - sgn * 0.3, zc + sgn * 0.2, M.steel)
+    // nose barrel aimed at the hit, beam leaving its tip
+    const head = new THREE.Vector3(TURRET.x, TURRET.y * 0.88, sgn * (TURRET.z - 0.05))
+    const dir = hitP.clone().sub(head).normalize()
+    const tip = head.clone().add(dir.clone().multiplyScalar(0.42))
+    const nose = cyl(0.09, 0.44, M.steel, 'y', scene, 16)
+    nose.position.copy(head.clone().add(dir.clone().multiplyScalar(0.22)))
+    nose.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir)
+    // the beam: hot core + soft halo, additive
+    const bLen = tip.distanceTo(hitP)
+    const mid = tip.clone().add(hitP).multiplyScalar(0.5)
+    const core = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.022, 0.022, bLen, 8),
+      new THREE.MeshBasicMaterial({ color: 0xffc8bc, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }),
+    )
+    core.position.copy(mid)
+    core.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir)
+    scene.add(core)
+    const halo = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.07, bLen, 8),
+      new THREE.MeshBasicMaterial({ color: 0xf28f84, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false }),
+    )
+    halo.position.copy(mid)
+    halo.quaternion.copy(core.quaternion)
+    scene.add(halo)
+  }
+
+  // ---- the throw: a shadow play on the back wall --------------------------
+  // (owner: the projection lands ON A WALL — three tinted versions of the
+  // same frame, like theater. The wall is page-black and lit only by what
+  // falls on it, so the projections ARE the architecture.) Each shows the
+  // gate's frame tinted by its destination and wears that channel's
+  // watermark bug in the corner, like an ident.
+  const lens = new THREE.Vector3(ROLL.x + 0.02, lampY, 0)
+  const WALL_X = 16.8
+  const FAN = [
+    { name: 'YouTube', color: '#ff0033', icon: 'yt' },
+    { name: 'Podcast', color: '#872ec4', icon: 'pod' },
+    { name: 'LinkedIn', color: '#0a66c2', icon: 'in' },
+  ]
+  // (There is deliberately NO wall mesh. A real plane betrayed its edges and
+  // built a lit room-corner; the wall is IMPLIED — the projected frames carry
+  // their own baked spill halos and the darkness does the architecture.)
+  // THEATER BEAMS (owner: "a little bit of smoke in the air, just like
+  // theater lighting"). Three round volumetric shafts from the prism to the
+  // destinations: open cones with a shader doing axial falloff from the
+  // source, a soft silhouette via the facing angle, drifting value-noise
+  // smoke inside, and a white core melting into each brand colour.
+  const beamMats: THREE.ShaderMaterial[] = []
+  {
+    const vert = /* glsl */ `
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      void main() {
+        vUv = uv;
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }`
+    const frag = /* glsl */ `
+      uniform vec3 uColor;
+      uniform float uTime;
+      uniform float uSeed;
+      uniform float uAlpha;
+      uniform vec3 uView;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float vnoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u2 = f * f * (3.0 - 2.0 * f);
+        return mix(
+          mix(hash(i), hash(i + vec2(1.0, 0.0)), u2.x),
+          mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u2.x),
+          u2.y);
+      }
+      void main() {
+        float t = vUv.y; // 0 at the source end
+        float axial = (0.30 + 0.70 * pow(1.0 - t, 1.4)) * smoothstep(0.0, 0.05, t);
+        float face = pow(abs(dot(normalize(vNormal), normalize(uView))), 1.35);
+        float smoke = 0.5
+          + 0.32 * vnoise(vec2(t * 7.0 - uTime * 0.30, vUv.x * 3.0 + uSeed * 7.31))
+          + 0.18 * vnoise(vec2(t * 17.0 - uTime * 0.55, vUv.x * 6.0 + uSeed * 3.7));
+        vec3 col = mix(vec3(1.0), uColor, smoothstep(0.0, 0.26, t));
+        gl_FragColor = vec4(col, axial * face * smoke * uAlpha);
+      }`
+    FAN.forEach((d, i) => {
+      const target = new THREE.Vector3(WALL_X - 0.05, lampY + 2.4 - i * 2.4, 0)
+      const dir = target.clone().sub(lens)
+      const len = dir.length()
+      const mat = new THREE.ShaderMaterial({
+        vertexShader: vert,
+        fragmentShader: frag,
+        uniforms: {
+          uColor: { value: new THREE.Color(d.color) },
+          uTime: { value: 0 },
+          uSeed: { value: i + 1 },
+          uAlpha: { value: 0.48 },
+          uView: { value: new THREE.Vector3(-0.886, 0.684, 1).normalize() },
+        },
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+      })
+      beamMats.push(mat)
+      const g = new THREE.CylinderGeometry(1.02, 0.09, len, 28, 24, true)
+      const m = new THREE.Mesh(g, mat)
+      m.position.copy(lens.clone().add(target).multiplyScalar(0.5))
+      m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize())
+      scene.add(m)
+    })
+  }
+  // A quad that renders UNSHEARED: spanned by the two world directions that
+  // project to exactly screen-horizontal and screen-vertical in this camera
+  // (H picks up a -sin12° drop in y to cancel the travel axis's climb). An
+  // x-y plane quad sheared visibly — the badge labels leaned.
+  const SCREEN_H = new THREE.Vector3(1, -SX, 0)
+  const SCREEN_V = new THREE.Vector3(0, 1, 0)
+  function screenQuad(center: THREE.Vector3, w: number, h: number, mat: THREE.Material) {
+    const g = new THREE.BufferGeometry()
+    const pts = [
+      center.clone().addScaledVector(SCREEN_H, -w / 2).addScaledVector(SCREEN_V, h / 2),
+      center.clone().addScaledVector(SCREEN_H, w / 2).addScaledVector(SCREEN_V, h / 2),
+      center.clone().addScaledVector(SCREEN_H, w / 2).addScaledVector(SCREEN_V, -h / 2),
+      center.clone().addScaledVector(SCREEN_H, -w / 2).addScaledVector(SCREEN_V, -h / 2),
+    ]
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pts.flatMap((p) => [p.x, p.y, p.z]), 3))
+    g.setAttribute('uv', new THREE.Float32BufferAttribute([0, 1, 1, 1, 1, 0, 0, 0], 2))
+    g.setIndex([0, 2, 1, 0, 3, 2])
+    const m = new THREE.Mesh(g, mat)
+    scene.add(m)
+    return m
+  }
+
+  // the projected frames on the wall: the gate's image tinted per channel,
+  // soft-edged like real throw spill, wearing the channel's watermark bug
+  function screenTexture(d: { name: string; color: string; icon: string }): THREE.CanvasTexture {
+    const c = document.createElement('canvas')
+    c.width = 640
+    c.height = 360
+    const x = c.getContext('2d')!
+    // the throw's spill, baked: a wide soft halo of the channel colour, then
+    // the harder projected field inside it
+    x.save()
+    x.filter = 'blur(38px)'
+    x.fillStyle = d.color
+    x.globalAlpha = 0.5
+    x.fillRect(96, 74, 448, 212)
+    x.restore()
+    x.save()
+    x.filter = 'blur(10px)'
+    x.fillStyle = d.color
+    x.globalAlpha = 0.9
+    x.fillRect(76, 58, 488, 244)
+    x.restore()
+    // the frame's "image": a lighter wash, hotter toward the middle
+    const g = x.createLinearGradient(0, 70, 0, 300)
+    g.addColorStop(0, 'rgba(255,255,255,0.5)')
+    g.addColorStop(0.55, 'rgba(255,255,255,0.28)')
+    g.addColorStop(1, 'rgba(255,255,255,0.08)')
+    x.fillStyle = g
+    x.fillRect(88, 68, 464, 224)
+    // caption bars, same motif as the film's lower third
+    x.fillStyle = 'rgba(255,252,246,0.94)'
+    x.fillRect(206, 226, 228, 17)
+    x.fillRect(240, 256, 160, 17)
+    // watermark bug: icon + name, top-right like a channel ident — the one
+    // thing on the screen that MUST read at page scale
+    x.fillStyle = 'rgba(255,255,255,0.95)'
+    x.strokeStyle = 'rgba(255,255,255,0.95)'
+    const bx = 508
+    const by = 110
+    if (d.icon === 'yt') {
+      x.beginPath()
+      x.moveTo(bx - 20, by - 18)
+      x.lineTo(bx + 12, by)
+      x.lineTo(bx - 20, by + 18)
+      x.closePath()
+      x.fill()
+    } else if (d.icon === 'pod') {
+      x.beginPath()
+      x.arc(bx, by - 3, 7, 0, Math.PI * 2)
+      x.fill()
+      x.lineWidth = 4
+      x.beginPath()
+      x.moveTo(bx, by + 6)
+      x.lineTo(bx, by + 19)
+      x.stroke()
+      for (const rr of [15, 24]) {
+        x.beginPath()
+        x.arc(bx, by - 3, rr, -0.4 * Math.PI, 0.4 * Math.PI)
+        x.stroke()
+        x.beginPath()
+        x.arc(bx, by - 3, rr, 0.6 * Math.PI, 1.4 * Math.PI)
+        x.stroke()
+      }
+    } else {
+      x.font = 'bold 46px system-ui, sans-serif'
+      x.textAlign = 'center'
+      x.textBaseline = 'middle'
+      x.fillText('in', bx, by + 1)
+    }
+    x.font = '600 40px ui-monospace, monospace'
+    x.textAlign = 'right'
+    x.textBaseline = 'middle'
+    x.fillText(d.name, bx - 32, by)
+    const tex = new THREE.CanvasTexture(c)
+    tex.colorSpace = THREE.SRGBColorSpace
+    return tex
+  }
+  FAN.forEach((d, i) => {
+    const sy = lampY + 2.4 - i * 2.4
+    const m = new THREE.Mesh(
+      new THREE.PlaneGeometry(4.35, 2.45),
+      new THREE.MeshBasicMaterial({ map: screenTexture(d), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),
+    )
+    m.rotation.y = -Math.PI / 2
+    m.position.set(WALL_X - 0.03, sy, 0)
+    scene.add(m)
+  })
+  // the prism's hot origin: a soft radial core where the fan leaves the gate
+  {
+    const c = document.createElement('canvas')
+    c.width = c.height = 128
+    const x = c.getContext('2d')!
+    const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64)
+    gr.addColorStop(0, 'rgba(255,255,255,0.85)')
+    gr.addColorStop(0.4, 'rgba(255,244,224,0.32)')
+    gr.addColorStop(1, 'rgba(255,244,224,0)')
+    x.fillStyle = gr
+    x.fillRect(0, 0, 128, 128)
+    const tex = new THREE.CanvasTexture(c)
+    tex.colorSpace = THREE.SRGBColorSpace
+    screenQuad(lens.clone(), 2.2, 2.2, new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))
+  }
+
+  // ---- the falling folder -------------------------------------------------
+  const folderMat = new THREE.MeshStandardMaterial({ color: 0xd6d1c8, roughness: 0.85, transparent: true })
+  const folder = new THREE.Group()
+  {
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.16, 2.3), folderMat)
+    folder.add(body)
+    const tab = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.16, 0.3), folderMat)
+    tab.position.set(-0.45, 0, -1.3)
+    folder.add(tab)
+  }
+  folder.position.set((BED.x0 + BED.x1) / 2, BED.top + 3, 0)
+  scene.add(folder)
+
+  // ---- lights: the noir rig ----------------------------------------------
+  // Image-based fill so materials have a world to reflect, kept very dim —
+  // the practicals carry the frame; the environment keeps darks from dying.
+  {
+    const pmrem = new THREE.PMREMGenerator(renderer)
+    const env = new THREE.Scene()
+    env.background = new THREE.Color(0x1a1c24)
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(8, 4), new THREE.MeshBasicMaterial({ color: 0x8890a8 }))
+    panel.position.set(-4, 6, 4)
+    panel.lookAt(0, 0, 0)
+    env.add(panel)
+    const warm = new THREE.Mesh(new THREE.PlaneGeometry(5, 2), new THREE.MeshBasicMaterial({ color: 0xffd9b8 }))
+    warm.position.set(6, 3, 2)
+    warm.lookAt(0, 2, 0)
+    env.add(warm)
+    scene.environment = pmrem.fromScene(env, 0.08).texture
+    scene.environmentIntensity = 0.35
+  }
+  scene.add(new THREE.HemisphereLight(0x252a3c, 0x0a0a0c, 0.6))
+  {
+    const fill = new THREE.DirectionalLight(0xb8bdd4, 0.55)
+    fill.position.set(-6, 14, 9)
+    scene.add(fill)
+    // the rim: cool edge from behind, so the dark masses hold their silhouette
+    const rim = new THREE.DirectionalLight(0x91a2cc, 0.95)
+    rim.position.set(3, 11, -9)
+    scene.add(rim)
+  }
+  const gateGlow = new THREE.PointLight(0xfff2dc, 24, 9)
+  gateGlow.position.set(ROLL.x - 0.55, lampY, 0)
+  gateGlow.layers.enable(1)
   scene.add(gateGlow)
-  const bedGlow = new THREE.PointLight(0xf28f84, 14, 7)
-  bedGlow.position.set((BED.x0 + BED.x1) / 2, BED.top + 0.4, 0)
+  // a small glint where the film arrives on the coil — the handoff reads
+  const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
+  coilGlint.position.set(ROLL.x - 0.3, reelY - 0.4, 0)
+  scene.add(coilGlint)
+  // inside the head, so the housing, shaft and mast inner faces read as a
+  // lamp room rather than a black pocket
+  const headGlow = new THREE.PointLight(0xffe4c4, 7, 4.5)
+  headGlow.position.set(8.45, lampY - 0.7, 0)
+  scene.add(headGlow)
+  const bedGlow = new THREE.PointLight(0xf28f84, 16, 8)
+  bedGlow.position.set((BED.x0 + BED.x1) / 2, BED.top + 0.5, 0)
+  bedGlow.layers.enable(1)
   scene.add(bedGlow)
-  const hitGlow = new THREE.PointLight(0xffb4a0, 8, 5)
-  hitGlow.position.set(TURRET.x, beltY + 0.4, 0)
+  const hitGlow = new THREE.PointLight(0xffb4a0, 9, 6)
+  hitGlow.position.set(TURRET.x, beltY + 0.45, 0)
+  hitGlow.layers.enable(1)
   scene.add(hitGlow)
 
-  // ---- loop ---------------------------------------------------------------
-  function draw(t: number) {
+  // ---- per-frame state ----------------------------------------------------
+  function update(t: number) {
     const dist = t * FILM_SPEED
-    reel.rotation.z = -dist / coilR
+    for (const m of beamMats) m.uniforms.uTime!.value = t
+    // The film arrives at the coil's RIGHT tangent moving UP, so the surface
+    // there must move up too: omega = +dist/coilR about +z (world CCW). The
+    // first cut copied the 2D study's minus sign — but that sign was a
+    // SCREEN-space appearance note (the study's projection has negative
+    // determinant), not the physics. Owner caught it live: winding backwards.
+    reel.rotation.z = dist / coilR
+    drawFilm(dist)
+
+    // the drop cycle: fall under gravity, land, dissolve; acid breathes
+    const age = t % LIFE
+    let acid = 0.28
+    if (age < FALL_S) {
+      const u = age / FALL_S
+      folder.visible = true
+      folder.position.y = BED.top + 0.06 + 4.6 * (1 - u * u)
+      folderMat.opacity = 1
+      acid = 0.28 + 0.4 * u
+    } else if (age < FALL_S + SOAK_S) {
+      folder.visible = true
+      folder.position.y = BED.top + 0.06
+      folderMat.opacity = Math.max(0, Math.pow(1 - (age - FALL_S) / SOAK_S, 1.5))
+      acid = 1
+    } else {
+      folder.visible = false
+      acid = Math.max(0.28, 1 - (age - FALL_S - SOAK_S) / 1.7)
+    }
+    bedGlow.intensity = 4 + 18 * acid
+  }
+
+  function draw(t: number) {
+    update(t)
     renderer.render(scene, camera)
   }
 

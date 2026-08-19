@@ -12,8 +12,7 @@ useHead({
 
 <template>
   <main class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden pb-16">
-    <p class="telemetry-label px-6 pt-6">Workshop study · real 3D · geometry, story, light</p>
-    <div class="relative h-[78vh] min-h-[520px] w-full">
+    <div class="relative h-[86vh] min-h-[560px] w-full">
       <div class="absolute inset-0">
         <HeroIso3 />
       </div>
