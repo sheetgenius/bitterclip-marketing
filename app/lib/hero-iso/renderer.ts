@@ -125,7 +125,17 @@ const BOX = { r: 0.78, len: 0.85 }
 const TURRET = { x: 4.1, z: 1.78, y: 1.15 }
 const DEST = { x: 17.6, r: 1.5 }
 
-export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
+/**
+ * Two variants while the ending is workshopped (owner, 2026-08-18: "simplify
+ * the hero to just footage in, episodes out"):
+ * - 'full' (default): prism fan splitting to YouTube / Podcast / LinkedIn.
+ * - 'simple': no destinations — one white throw leaving the gate and
+ *   dissolving off-stage; the wound reel IS the episodes-out. The machine
+ *   fits larger because the layout no longer reserves room for badges.
+ * Compare at /lab/iso vs /lab/iso?v=simple. One of these dies once ruled.
+ */
+export function createIsoRenderer(canvas: HTMLCanvasElement, opts: { variant?: 'full' | 'simple' } = {}): IsoRenderer {
+  const simple = opts.variant === 'simple'
   const ctx = canvas.getContext('2d', { alpha: true })
   if (!ctx) throw new Error('no 2d context')
 
@@ -270,9 +280,16 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     S = 1
     ox = 0
     oy = 0
+    // In the simple variant the frame no longer reserves room for badges, so
+    // the machine itself gets the stage — only the throw's fading cone extends
+    // past the gate.
     const probe: V3[] = [
       [BED.x0, BED.top + 4.6, 0], [BED.x0, -TABLE.deep, TABLE.z],
-      [DEST.x + DEST.r, lampY() + 3.0, 0], [DEST.x, lampY() - 3.0, 0],
+      // the cone's faint tail may crop off-frame — light leaving the stage —
+      // so the probe only reserves room for its visible two-thirds
+      ...(simple
+        ? [[15.4, lampY() + 2.7, 0], [15.4, lampY() - 2.7, 0]] as V3[]
+        : [[DEST.x + DEST.r, lampY() + 3.0, 0], [DEST.x, lampY() - 3.0, 0]] as V3[]),
       [reelX() + REEL.r, reelY() + REEL.r, REEL.z - REEL.w / 2], [reelX(), TABLE.top, YOKE.z],
       [TABLE.x1, 0, -TABLE.z], [ROLL.x, beltY(), TABLE.z],
     ]
@@ -1011,6 +1028,39 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // The throw starts AT the film, because what continues past this point has
     // been through the frame standing in the gate — that is the whole idea.
     const lens = iso(ROLL.x, lampY(), 0)
+
+    if (simple) {
+      // FOOTAGE IN, EPISODES OUT (owner variant, 2026-08-18): no destination
+      // badges, no prism split. The finished show winds onto the reel — that
+      // IS the out — and one white throw leaves the gate and dissolves into
+      // the dark off stage right, because a projector projects.
+      const coneEnd = 16.8
+      const cTop = iso(coneEnd, lampY() + 3.1, 0)
+      const cBot = iso(coneEnd, lampY() - 3.1, 0)
+      const cMid = iso(coneEnd, lampY(), 0)
+      const cg = ctx.createLinearGradient(lens[0], lens[1], cMid[0], cMid[1])
+      cg.addColorStop(0, 'rgba(255,255,255,0.34)')
+      cg.addColorStop(0.35, 'rgba(240,240,250,0.13)')
+      cg.addColorStop(1, 'rgba(240,240,250,0)')
+      poly([lens, cTop, cBot], cg as unknown as string)
+      // faint edge rays give the cone its cut — projection, not fog
+      ctx.strokeStyle = 'rgba(255,255,255,0.07)'
+      ctx.lineWidth = 1
+      for (const pe of [cTop, cBot]) {
+        ctx.beginPath()
+        ctx.moveTo(lens[0], lens[1])
+        ctx.lineTo(pe[0], pe[1])
+        ctx.stroke()
+      }
+      const fg = ctx.createRadialGradient(lens[0], lens[1], 0, lens[0], lens[1], 0.55 * S)
+      fg.addColorStop(0, 'rgba(255,255,255,0.6)')
+      fg.addColorStop(1, 'rgba(255,255,255,0)')
+      ctx.fillStyle = fg
+      ctx.beginPath()
+      ctx.arc(lens[0], lens[1], 0.55 * S, 0, Math.PI * 2)
+      ctx.fill()
+      return
+    }
 
     const DESTINATIONS = [
       {
