@@ -194,3 +194,19 @@ teaser); mobile stack; bake-to-video endgame.
 
 - Category correction (owner): the eyebrow is AGENTIC VIDEO EDITING — deep
   video memory is a pillar (the wheel, the recall screen), not the category.
+
+## 2026-08-19 — lights, camera, action (the boot narrative)
+
+Owner: constant loops read as noise; we want DRAMA. The hero becomes a staged
+opening — Act 1: one labeled RAW FOOTAGE file falls into a breathing drop-zone
+pool and the acetate takes it (the recurring folder rite is gone; the pool
+itself reads as the drop target); Act 2: the transport ramps up from rest
+(quadratic ease — an accelerating belt); Act 3: the single near laser wakes
+and INSCRIBES — the beam tracks each frame as it slides past, the nib writing
+the caption bars onto it left-to-right, then rests (~50% duty after the first
+window proved 89%-constant by arithmetic); Act 4: the projector strikes with
+a real lamp flicker; Act 5: the three screens ignite one-two-three. Steady
+state keeps only the work: transport, periodic inscription, breathing pool.
+Far laser pod deleted. Reduced-motion still pinned mid-inscription (t=11.9).
+Also this pass: aspect-aware machine fit (tall viewports get clearance),
+lifted type column, phrase-wrapped spec line.

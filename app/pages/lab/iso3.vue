@@ -36,7 +36,7 @@ useHead({
           <a href="#" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <p class="mt-6 max-w-[40ch] font-mono text-[0.66rem] leading-relaxed uppercase tracking-[0.18em] text-zinc-600">
-          knows who's talking · finds any moment · cuts you'd ship
+          <span class="whitespace-nowrap">knows who's talking</span> · <span class="whitespace-nowrap">finds any moment</span> · <span class="whitespace-nowrap">cuts you'd ship</span>
         </p>
       </div>
     </div>
