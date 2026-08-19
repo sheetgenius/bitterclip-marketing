@@ -51,6 +51,16 @@ zoom/measure first. Append, date, never rewrite history.
 - Bed/deck butt seam (grok, solo — minor).
 - Thumbnails in frames: OWNER QUESTION, still open.
 
+### End-of-block cold verdict (agy, uncontaminated, on `final-t5.80`)
+
+Craft 8.5/10; full pipeline narrated correctly. Its residual confusions, for
+the next block: (a) a gap-phase STILL can't tell input tray from discard bin —
+the falling file resolves it in motion and the reduced-motion still is chosen
+at a with-file moment, but a stronger static intake cue is worth exploring;
+(b) reel in-vs-out is likewise motion-resolved; (c) the destination badges
+read as flat sticker overlays against the volumetric machine — consider a
+badge integration pass (dim backplates, a kiss of beam light on each disc).
+
 ### Known-wrong outside claims, kept for the record
 
 - "Reel is a camera-facing circle collaged onto an isometric deck" (grok) —
