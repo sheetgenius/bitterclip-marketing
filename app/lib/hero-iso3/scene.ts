@@ -52,7 +52,11 @@ const TABLE = { x0: 0.4, x1: 9.85, top: 0, z: 2.05, deep: 1.05 }
 const BED = { x0: -3.3, x1: 0.5, z: 2.05, top: 0.55 }
 const ROLL = { x: 9.75, r: 0.5 }
 const RISE = 9.4
-const REEL = { r: 3.75, w: FILM_W }
+// COLOSSAL, BY RULING (owner 2026-08-19): the reel is the ARCHIVE — deep
+// video memory, wound and searchable. Doubled diameter: it looms over the
+// whole line, and the coil tangency drags the axle to mid-bench, which is
+// where the big gantry now stands.
+const REEL = { r: 7.5, w: FILM_W }
 const COIL_F = 0.58
 const TURRET = { x: 4.1, z: 1.78, y: 1.15 }
 const DEST = { x: 17.6, r: 1.5 }
@@ -66,7 +70,7 @@ const reelY = gateY
 const lampY = beltY + ROLL.r + RISE * 0.47
 // THE HEAD lives at the climb (owner: "it all happens in between the
 // girders") — masts straddle the film, the housing's muzzle nearly kisses it.
-const MAST = { x0: 9.32, x1: 9.85, top: 8.35, z: 1.545, t: 0.24 }
+const MAST = { x0: 9.32, x1: 9.85, top: 6.15, z: 1.545, t: 0.24 }
 const LAMP_CX = 8.98
 const LAMP_LEN = 0.62 // half-length of the housing along x
 const STILL_T = 1.35
@@ -379,17 +383,36 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const zc = sgn * MAST.z
     box(MAST.x0, MAST.x1, 0, MAST.top, zc - MAST.t / 2, zc + MAST.t / 2, M.steelDark)
     box(MAST.x0 - 0.08, MAST.x1 + 0.08, 0, 0.12, zc - MAST.t / 2 - 0.06, zc + MAST.t / 2 + 0.06, M.steel)
-    // arm from mast top to the axle
-    {
-      const ax0 = new THREE.Vector2((MAST.x0 + MAST.x1) / 2, MAST.top - 0.1)
-      const ax1 = new THREE.Vector2(reelX, reelY)
-      const d = ax1.clone().sub(ax0)
-      const arm = new THREE.Mesh(new THREE.BoxGeometry(d.length() + 0.5, 0.36, 0.2), M.steelDark)
-      arm.position.set((ax0.x + ax1.x) / 2, (ax0.y + ax1.y) / 2, zc)
-      arm.rotation.z = Math.atan2(d.y, d.x)
-      scene.add(arm)
-    }
   }
+  // ---- the GANTRY under the archive ---------------------------------------
+  // The colossal wheel hangs from its own rigging at mid-bench: plumb posts
+  // under the axle, raked braces up-line, and the laser pods HANGING off the
+  // posts' arms (owner: the rigging starts where the lasers are; the lasers
+  // hang from the harness).
+  for (const sgn of [-1, 1]) {
+    const zc = sgn * MAST.z
+    box(reelX - 0.32, reelX + 0.32, 0, reelY + 0.15, zc - 0.15, zc + 0.15, M.steelDark) // post
+    box(reelX - 0.52, reelX + 0.52, 0, 0.14, zc - 0.22, zc + 0.22, M.steel) // pad
+    // raked brace, foot up-line
+    {
+      const f = new THREE.Vector2(reelX - 2.7, 0.1)
+      const tp = new THREE.Vector2(reelX - 0.18, 6.4)
+      const d = tp.clone().sub(f)
+      const brace = new THREE.Mesh(new THREE.BoxGeometry(d.length() + 0.3, 0.22, 0.16), M.steelDark)
+      brace.position.set((f.x + tp.x) / 2, (f.y + tp.y) / 2, zc)
+      brace.rotation.z = Math.atan2(d.y, d.x)
+      brace.castShadow = true
+      brace.receiveShadow = true
+      scene.add(brace)
+    }
+    // the hanging-laser arm: post out to above the beam plane
+    box(TURRET.x - 0.14, reelX - 0.28, 2.62, 2.86, zc - 0.11, zc + 0.11, M.steelDark)
+    // bearing boss at the axle
+    const boss = cyl(0.42, 0.3, M.steel, 'z')
+    boss.position.set(reelX, reelY, zc)
+  }
+  // the axle itself, post to post through the wheel
+  cyl(0.24, MAST.z * 2 + 0.5, M.steel, 'z').position.set(reelX, reelY, 0)
   // roller journalled between the masts
   {
     const roller = cyl(ROLL.r * 1.03, FILM_W + 0.52, M.steel, 'z')
@@ -423,7 +446,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const shape = new THREE.Shape()
     shape.absarc(0, 0, REEL.r, 0, Math.PI * 2, false)
     const hub = new THREE.Path()
-    hub.absarc(0, 0, 0.42, 0, Math.PI * 2, true)
+    hub.absarc(0, 0, 0.7, 0, Math.PI * 2, true)
     shape.holes.push(hub)
     for (let h = 0; h < 5; h++) {
       const a = (h / 5) * Math.PI * 2
@@ -431,8 +454,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       w.absarc(Math.cos(a) * REEL.r * 0.58, Math.sin(a) * REEL.r * 0.58, REEL.r * 0.235, 0, Math.PI * 2, true)
       shape.holes.push(w)
     }
-    const fg = new THREE.ExtrudeGeometry(shape, { depth: 0.09, bevelEnabled: false, curveSegments: 48 })
-    for (const zc of [-REEL.w / 2, REEL.w / 2 - 0.09]) {
+    const fg = new THREE.ExtrudeGeometry(shape, { depth: 0.16, bevelEnabled: false, curveSegments: 64 })
+    for (const zc of [-REEL.w / 2, REEL.w / 2 - 0.16]) {
       const f = new THREE.Mesh(fg, M.flange)
       f.position.z = zc
       f.castShadow = true
@@ -442,8 +465,17 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     // wound film: core + the fresh outer lap in the strip's own stock
     cyl(coilR * 0.9, REEL.w - 0.14, M.coil, 'z', reel)
     cyl(coilR, REEL.w - 0.2, M.lap, 'z', reel)
-    // hub + axle out to the near arm
-    cyl(0.34, REEL.w + 0.7, M.steel, 'z', reel)
+    // the archive's depth: winding laps on the coil's near face
+    for (const wr of [0.38, 0.52, 0.66, 0.8]) {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(coilR * wr, 0.02, 6, 64),
+        new THREE.MeshStandardMaterial({ color: 0x2e2a20, roughness: 1 }),
+      )
+      ring.position.z = REEL.w / 2 - 0.19
+      reel.add(ring)
+    }
+    // hub sleeve around the axle
+    cyl(0.55, REEL.w + 0.5, M.steel, 'z', reel)
   }
   reel.position.set(reelX, reelY, 0)
   scene.add(reel)
@@ -451,12 +483,12 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // ---- turrets + beams ----------------------------------------------------
   const hitP = new THREE.Vector3(TURRET.x, beltY + 0.02, 0)
   for (const sgn of [-1, 1]) {
-    const zc = sgn * TURRET.z
-    box(TURRET.x - 0.34, TURRET.x + 0.34, 0, 0.34, zc - 0.34, zc + 0.34, M.steelDark)
-    box(TURRET.x - 0.1, TURRET.x + 0.1, 0.34, TURRET.y * 0.64, zc - 0.1, zc + 0.1, M.steelDark)
-    box(TURRET.x - 0.24, TURRET.x + 0.24, TURRET.y * 0.64, TURRET.y + 0.08, zc - sgn * 0.3, zc + sgn * 0.2, M.steel)
+    const zc = sgn * MAST.z
+    // the pod HANGS: drop link from the gantry arm, then the canted head
+    box(TURRET.x - 0.09, TURRET.x + 0.09, 2.06, 2.64, zc - 0.09, zc + 0.09, M.steelDark)
+    box(TURRET.x - 0.26, TURRET.x + 0.26, 1.6, 2.06, zc - sgn * 0.34, zc + sgn * 0.18, M.steel)
     // nose barrel aimed at the hit, beam leaving its tip
-    const head = new THREE.Vector3(TURRET.x, TURRET.y * 0.88, sgn * (TURRET.z - 0.05))
+    const head = new THREE.Vector3(TURRET.x, 1.68, sgn * (MAST.z - 0.28))
     const dir = hitP.clone().sub(head).normalize()
     const tip = head.clone().add(dir.clone().multiplyScalar(0.42))
     const nose = cyl(0.09, 0.44, M.steel, 'y', scene, 16)
@@ -780,9 +812,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   gateGlow.shadow.bias = -0.004
   scene.add(gateGlow)
   // a small glint where the film arrives on the coil — the handoff reads
-  const wheelKiss = new THREE.PointLight(0xa8b4d8, 26, 16)
-  wheelKiss.position.set(reelX - 3, reelY + 2.5, 4.5)
+  const wheelKiss = new THREE.PointLight(0xa8b4d8, 95, 30)
+  wheelKiss.position.set(reelX - 6.5, reelY + 5, 7)
   scene.add(wheelKiss)
+  // THE ARCHIVE IS ALIVE: a warm ember inside the drum, between the flanges —
+  // the wound memory glows out through the windows as they turn
+  const archiveGlow = new THREE.PointLight(0xffd9a8, 11, 9)
+  archiveGlow.position.set(reelX, reelY + 1.2, 0)
+  scene.add(archiveGlow)
   const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
   coilGlint.position.set(ROLL.x - 0.3, reelY - 0.4, 0)
   scene.add(coilGlint)
