@@ -114,3 +114,19 @@ Open queue: ident text crispness under bloom, wheel face still very dark at
 gap phase, perf audit on low-end GPUs (bloom + shadow cubemap + per-frame
 canvas texture), reduced-motion still parity, mobile fit, the folder's
 tab/mass read at speed, docs/brief section for iso3.
+
+## 2026-08-19 — the machine starts making sense (owner big-picture session)
+
+Four coherence fixes in one pass, all owner-ruled:
+1. Frames now printed ACROSS the strip like real film (16:9 between the perf
+   rows) — kills "the footage is sideways": upright landscape in the gate,
+   filmstrip-true on the bench, captions on the frame's bottom edge.
+2. The wall screens project THE SAME image standing in the gate (one shared
+   abstract frame renderer feeds film and screens; screens re-render each
+   time a new frame arrives) — the lamp stops being a flashlight.
+3. A bracket-mounted glass prism with a hot split-line explains one white
+   throw becoming three channel beams; beams now originate at its output.
+4. Abstract per-frame content (speaker / two-shot / title-card variants,
+   hash-stable per physical frame) with a raw-vs-enhanced state: frames run
+   dim and low-contrast until the turret beams lift them — before/after ON
+   the strip.

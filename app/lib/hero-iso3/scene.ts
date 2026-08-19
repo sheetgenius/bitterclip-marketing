@@ -39,7 +39,15 @@ export interface Iso3Scene {
 
 // ---- the world, in film-widths — same numbers as the 2D study ------------
 const FILM_W = 2.05
-const PITCH = 2.62
+// FRAMES ARE PRINTED ACROSS THE STRIP, like real film: the image's horizontal
+// axis spans the film's width between the perf rows, so a frame standing in
+// the gate is upright 16:9 — the old along-strip printing rotated everything
+// 90° at the climb ("the footage is sideways" — owner). Pitch is the image
+// height along the strip plus the frame line.
+const PERF_MARGIN = 0.24
+const IMG_W = FILM_W - 2 * PERF_MARGIN // 1.57, the image width across
+const IMG_H = (IMG_W * 9) / 16 // 0.883, 16:9
+const PITCH = IMG_H + 0.18
 const TABLE = { x0: 0.4, x1: 9.85, top: 0, z: 2.05, deep: 1.05 }
 const BED = { x0: -3.3, x1: 0.5, z: 2.05, top: 0.55 }
 const ROLL = { x: 9.75, r: 0.5 }
@@ -82,6 +90,8 @@ const runFlat = ROLL.x - ROLL.r - START
 const ARC = (ROLL.r * Math.PI) / 2
 const runVert = runFlat + ARC
 const totalPath = runVert + RISE
+// the arclength of the frame standing in the gate
+const S_GATE = runVert + (lampY - beltY - ROLL.r)
 
 export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
@@ -212,8 +222,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   box(BED.x1, BED.x1 + 0.26, 0, 0.36, -1.38, -1.06, M.steelDark)
 
   // ---- the film: static ribbon, live texture ------------------------------
-  const FILM_TEX_W = 2048
-  const FILM_TEX_H = 96
+  const FILM_TEX_W = 2560
+  const FILM_TEX_H = 128
   const filmCanvas = document.createElement('canvas')
   filmCanvas.width = FILM_TEX_W
   filmCanvas.height = FILM_TEX_H
@@ -222,35 +232,104 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   filmTex.colorSpace = THREE.SRGBColorSpace
   filmTex.anisotropy = 4
 
+  // ---- the shared frame renderer -----------------------------------------
+  // One function draws a frame's "content" — an abstract episode image, never
+  // a photo — and BOTH the filmstrip and the wall screens call it, so what
+  // stands in the gate and what the machine projects are visibly the same
+  // picture. Landscape orientation in, callers handle rotation/tint.
+  function renderFrameContent(g2: CanvasRenderingContext2D, w: number, h: number, id: number, captioned: boolean) {
+    const hsh = Math.abs(Math.imul(id | 0, 2654435761)) >>> 0
+    const variant = hsh % 3
+    const j1 = ((hsh >> 3) % 100) / 100
+    const j2 = ((hsh >> 9) % 100) / 100
+    // field: warm stock, a touch of per-frame drift
+    const g = g2.createLinearGradient(0, 0, 0, h)
+    g.addColorStop(0, `hsl(${44 + j1 * 10} 12% ${40 + j2 * 6}%)`)
+    g.addColorStop(1, `hsl(${40 + j1 * 8} 14% ${28 + j1 * 5}%)`)
+    g2.fillStyle = g
+    g2.fillRect(0, 0, w, h)
+    g2.fillStyle = 'rgba(38,34,26,0.9)'
+    if (variant === 0) {
+      // speaker: head and shoulders, off-centre
+      const cx2 = w * (0.34 + j1 * 0.3)
+      const cy2 = h * 0.42
+      const r2 = h * 0.17
+      g2.beginPath()
+      g2.arc(cx2, cy2, r2, 0, Math.PI * 2)
+      g2.fill()
+      g2.beginPath()
+      g2.ellipse(cx2, h * 0.86, r2 * 2.1, h * 0.3, 0, Math.PI, 0, true)
+      g2.fill()
+    } else if (variant === 1) {
+      // two-shot
+      for (const [fx, fy] of [[0.3 + j1 * 0.1, 0.48], [0.66 + j2 * 0.08, 0.44]] as const) {
+        const r2 = h * 0.13
+        g2.beginPath()
+        g2.arc(w * fx, h * fy, r2, 0, Math.PI * 2)
+        g2.fill()
+        g2.beginPath()
+        g2.ellipse(w * fx, h * 0.88, r2 * 1.9, h * 0.24, 0, Math.PI, 0, true)
+        g2.fill()
+      }
+    } else {
+      // title card: block + subline
+      g2.fillStyle = 'rgba(252,250,244,0.85)'
+      g2.fillRect(w * 0.12, h * 0.3, w * (0.34 + j1 * 0.2), h * 0.13)
+      g2.fillStyle = 'rgba(252,250,244,0.5)'
+      g2.fillRect(w * 0.12, h * 0.5, w * 0.26, h * 0.07)
+    }
+    if (captioned) {
+      g2.fillStyle = 'rgba(255,252,246,0.95)'
+      const cw = w * (0.4 + j2 * 0.14)
+      g2.fillRect((w - cw) / 2, h * 0.78, cw, h * 0.065)
+      const cw2 = cw * 0.7
+      g2.fillRect((w - cw2) / 2, h * 0.885, cw2, h * 0.065)
+    } else {
+      // RAW footage: dim, low contrast — the turrets' pass visibly lifts it.
+      // Without this, pre-turret title cards read as already enhanced.
+      g2.fillStyle = 'rgba(22,20,16,0.45)'
+      g2.fillRect(0, 0, w, h)
+    }
+  }
+
+  const stableId = (i: number, off: number, dist: number) => Math.round((i * PITCH + off - dist) / PITCH)
+
   function drawFilm(dist: number) {
     const sToPx = FILM_TEX_W / totalPath
-    fctx.clearRect(0, 0, FILM_TEX_W, FILM_TEX_H)
     const off = dist % PITCH
     const capS = TURRET.x - START
+    // stock base + frame lines
+    fctx.fillStyle = '#26231c'
+    fctx.fillRect(0, 0, FILM_TEX_W, FILM_TEX_H)
+    // image field per frame, printed ACROSS the strip: rotate the shared
+    // renderer 90° so its horizontal axis runs across the film's width
+    const vTop = (PERF_MARGIN / FILM_W) * FILM_TEX_H
+    const vH = (IMG_W / FILM_W) * FILM_TEX_H
     for (let i = -1; i * PITCH < totalPath + PITCH; i++) {
       const s0 = i * PITCH + off
-      const s1 = Math.min(s0 + PITCH * 0.94, totalPath)
-      if (s1 <= 0 || s0 >= totalPath) continue
-      const alt = ((Math.round((i * PITCH + off - dist) / PITCH) % 2) + 2) % 2 === 0
-      fctx.fillStyle = alt ? '#77715f' : '#6b6558'
-      const x0 = Math.max(0, s0) * sToPx
-      fctx.fillRect(x0, 0, s1 * sToPx - x0, FILM_TEX_H)
-      // sprocket perforations, both edges
-      fctx.fillStyle = '#17150f'
-      for (let kk = 0; kk < 4; kk++) {
-        const sp = s0 + PITCH * 0.94 * ((kk + 0.5) / 4)
-        if (sp < 0 || sp >= s1) continue
-        for (const vv of [0.09, 0.91]) {
-          fctx.fillRect(sp * sToPx - 3, vv * FILM_TEX_H - 3, 6, 6)
-        }
-      }
-      // captions stamp in at the turret plane
-      const fc = s0 + PITCH * 0.47
-      if (fc > capS) {
-        fctx.fillStyle = 'rgba(255,242,228,0.9)'
-        const b0 = (s0 + PITCH * 0.16) * sToPx
-        fctx.fillRect(b0, FILM_TEX_H * 0.6, PITCH * 0.5 * sToPx, FILM_TEX_H * 0.07)
-        fctx.fillRect(b0 + PITCH * 0.08 * sToPx, FILM_TEX_H * 0.72, PITCH * 0.31 * sToPx, FILM_TEX_H * 0.07)
+      if (s0 + PITCH <= 0 || s0 >= totalPath) continue
+      const id = stableId(i, off, dist)
+      const captioned = s0 + PITCH * 0.5 > capS
+      const u0 = (s0 + 0.09) * sToPx
+      const uH = (IMG_H) * sToPx
+      fctx.save()
+      // image top edge = higher s; canvas y-down maps to decreasing s
+      fctx.translate(u0 + uH, vTop)
+      fctx.rotate(Math.PI / 2)
+      fctx.beginPath()
+      fctx.rect(0, 0, vH, uH)
+      fctx.clip()
+      renderFrameContent(fctx, vH, uH, id, captioned)
+      fctx.restore()
+    }
+    // perf rows over everything, both edges, four per frame
+    fctx.fillStyle = '#100e0a'
+    const perfPitch = PITCH / 4
+    for (let sp = off % perfPitch; sp < totalPath; sp += perfPitch) {
+      for (const vv of [0.075, 0.925]) {
+        fctx.beginPath()
+        fctx.roundRect(sp * sToPx - 3.4, vv * FILM_TEX_H - 4.4, 6.8, 8.8, 2)
+        fctx.fill()
       }
     }
     filmTex.needsUpdate = true
@@ -408,13 +487,52 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // falls on it, so the projections ARE the architecture.) Each shows the
   // gate's frame tinted by its destination and wears that channel's
   // watermark bug in the corner, like an ident.
-  const lens = new THREE.Vector3(ROLL.x + 0.02, lampY, 0)
+  // THE PRISM explains the trinity: one white throw leaves the gate, enters a
+  // glass wedge on a bracket arm, and leaves as three coloured shafts. The
+  // beams' origin (lens) is the prism's output face.
+  const lens = new THREE.Vector3(10.42, lampY, 0)
   const WALL_X = 16.8
   const FAN = [
     { name: 'YouTube', color: '#ff0033', icon: 'yt' },
     { name: 'Podcast', color: '#872ec4', icon: 'pod' },
     { name: 'LinkedIn', color: '#0a66c2', icon: 'in' },
   ]
+  {
+    // bracket: an arm off the lower gate bar, a stem, and the wedge on top
+    box(ROLL.x + 0.08, 10.32, lampY - 0.84, lampY - 0.64, -0.12, 0.12, M.steelDark)
+    box(9.98, 10.26, lampY - 0.64, lampY - 0.3, -0.1, 0.1, M.steelDark)
+    const tri = new THREE.Shape()
+    tri.moveTo(-0.3, -0.3)
+    tri.lineTo(0.36, 0)
+    tri.lineTo(-0.3, 0.3)
+    tri.closePath()
+    const prism = new THREE.Mesh(
+      new THREE.ExtrudeGeometry(tri, { depth: 0.52, bevelEnabled: false }),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xf4f6ff,
+        transmission: 0.88,
+        roughness: 0.14,
+        ior: 1.45,
+        thickness: 0.4,
+        transparent: true,
+      }),
+    )
+    prism.position.set(10.06, lampY, -0.26)
+    scene.add(prism)
+    // the split line: a hot slit on the output face where white becomes three
+    box(10.4, 10.46, lampY - 0.22, lampY + 0.22, -0.045, 0.045,
+      new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xffffff, emissiveIntensity: 2.6 }))
+    // the white link: gate frame -> prism input, the beam's birthplace made
+    // visible (lamp -> film -> prism -> fan)
+    const linkLen = 9.94 - (ROLL.x + 0.1)
+    const link = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.42, 0.34, linkLen, 20, 1, true),
+      new THREE.MeshBasicMaterial({ color: 0xfffaf0, transparent: true, opacity: 0.34, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
+    )
+    link.rotation.z = -Math.PI / 2
+    link.position.set(ROLL.x + 0.1 + linkLen / 2, lampY, 0)
+    scene.add(link)
+  }
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
   // built a lit room-corner; the wall is IMPLIED — the projected frames carry
   // their own baked spill halos and the darkness does the architecture.)
@@ -510,13 +628,13 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     return m
   }
 
-  // the projected frames on the wall: the gate's image tinted per channel,
-  // soft-edged like real throw spill, wearing the channel's watermark bug
-  function screenTexture(d: { name: string; color: string; icon: string }): THREE.CanvasTexture {
-    const c = document.createElement('canvas')
-    c.width = 640
-    c.height = 360
-    const x = c.getContext('2d')!
+  // the projected frames on the wall: THE SAME IMAGE that stands in the gate
+  // (shared renderer), tinted per channel, redrawn each time a new frame
+  // arrives — the machine is visibly projecting the film, not just glowing
+  const screenCtxs: { c: HTMLCanvasElement; x: CanvasRenderingContext2D; tex: THREE.CanvasTexture; d: (typeof FAN)[number] }[] = []
+  function drawScreen(sc: (typeof screenCtxs)[number], id: number) {
+    const { x, d } = sc
+    x.clearRect(0, 0, 640, 360)
     // the throw's spill, baked: a wide soft halo of the channel colour, then
     // the harder projected field inside it
     x.save()
@@ -531,17 +649,13 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     x.globalAlpha = 0.9
     x.fillRect(76, 58, 488, 244)
     x.restore()
-    // the frame's "image": a lighter wash, hotter toward the middle
-    const g = x.createLinearGradient(0, 70, 0, 300)
-    g.addColorStop(0, 'rgba(255,255,255,0.5)')
-    g.addColorStop(0.55, 'rgba(255,255,255,0.28)')
-    g.addColorStop(1, 'rgba(255,255,255,0.08)')
-    x.fillStyle = g
-    x.fillRect(88, 68, 464, 224)
-    // caption bars, same motif as the film's lower third
-    x.fillStyle = 'rgba(255,252,246,0.94)'
-    x.fillRect(206, 226, 228, 17)
-    x.fillRect(240, 256, 160, 17)
+    // the gate's frame, projected: same content, lightening the tint
+    x.save()
+    x.translate(88, 68)
+    x.globalCompositeOperation = 'screen'
+    x.globalAlpha = 0.82
+    renderFrameContent(x, 464, 224, id, true)
+    x.restore()
     // watermark bug: icon + name, top-right like a channel ident — the one
     // thing on the screen that MUST read at page scale
     x.fillStyle = 'rgba(255,255,255,0.95)'
@@ -582,15 +696,21 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     x.textAlign = 'right'
     x.textBaseline = 'middle'
     x.fillText(d.name, bx - 32, by)
-    const tex = new THREE.CanvasTexture(c)
-    tex.colorSpace = THREE.SRGBColorSpace
-    return tex
+    sc.tex.needsUpdate = true
   }
   FAN.forEach((d, i) => {
+    const c = document.createElement('canvas')
+    c.width = 640
+    c.height = 360
+    const tex = new THREE.CanvasTexture(c)
+    tex.colorSpace = THREE.SRGBColorSpace
+    const sc = { c, x: c.getContext('2d')!, tex, d }
+    screenCtxs.push(sc)
+    drawScreen(sc, 0)
     const sy = lampY + 2.4 - i * 2.4
     const m = new THREE.Mesh(
       new THREE.PlaneGeometry(4.35, 2.45),
-      new THREE.MeshBasicMaterial({ map: screenTexture(d), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     m.rotation.y = -Math.PI / 2
     m.position.set(WALL_X - 0.03, sy, 0)
@@ -679,9 +799,21 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   scene.add(hitGlow)
 
   // ---- per-frame state ----------------------------------------------------
+  let lastGateId = Number.NaN
   function update(t: number) {
     const dist = t * FILM_SPEED
     for (const m of beamMats) m.uniforms.uTime!.value = t
+    // whatever frame stands in the gate is what the machine projects: when a
+    // new frame arrives, all three screens change picture in step
+    {
+      const off = dist % PITCH
+      const occ = Math.floor((S_GATE - off) / PITCH)
+      const id = stableId(occ, off, dist)
+      if (id !== lastGateId) {
+        lastGateId = id
+        for (const sc of screenCtxs) drawScreen(sc, id)
+      }
+    }
     // The film arrives at the coil's RIGHT tangent moving UP, so the surface
     // there must move up too: omega = +dist/coilR about +z (world CCW). The
     // first cut copied the 2D study's minus sign — but that sign was a
