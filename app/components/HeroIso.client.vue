@@ -32,7 +32,7 @@ onMounted(async () => {
   // is the whole animation here, so honouring the preference in CSS alone (as
   // the beacon does) would leave the largest moving thing on the page moving.
   calm = window.matchMedia('(prefers-reduced-motion: reduce)')
-  if (calm.matches) renderer.still(2.35)
+  if (calm.matches) renderer.still()
   else renderer.start()
 
   ro = new ResizeObserver(() => renderer?.resize())

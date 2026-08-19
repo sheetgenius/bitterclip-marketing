@@ -22,8 +22,9 @@
 export interface IsoRenderer {
   start(): void
   stop(): void
-  /** Paint one frame at a chosen time and stay there. For reduced motion. */
-  still(t: number): void
+  /** Paint one frame at a chosen time (default: the curated still) and stay
+   * there. For reduced motion and the screenshot harness. */
+  still(t?: number): void
   resize(): void
   destroy(): void
 }
@@ -103,11 +104,21 @@ const COIL_F = 0.58 // coil radius as a fraction of the flange
 // ceiling stem earned. Two raked legs meeting at the axle carry the same load,
 // open a triangle of daylight through the middle of the stand, and put the feet
 // out where the table can actually take them.
-const YOKE = { t: 0.27, z: FILM_W / 2 + 0.52, foot: 0.58, apex: 0.28, rake: 1.95, splay: 1.15 }
+// ASYMMETRIC STANCE. The right leg is nearly vertical under the axle and the
+// left leg does the raking. Symmetric splay put both frames' right legs on a
+// long diagonal sweep straight across the film's climb — the one vertical in
+// the composition that must stay clean (the standing frame lives on it). With
+// the splay pulled in, the legs cross only the strip's far edge, briefly.
+// Thinner sections throughout: the old rig read as scaffolding, not machine.
+const YOKE = { t: 0.22, z: FILM_W / 2 + 0.52, foot: 0.44, apex: 0.24, rake: 1.95 }
 // The light box fires out its END, not its side: axis along x, aiming up the
 // line at the film and the reel beyond it. Along z it was broadside to the
 // throw, which is a lamp pointing across its own beam.
-const BOX = { r: 0.78, len: 1.2 }
+// Shorter than it was, and slid up-line: at mid-rig height the A-frames'
+// daylight gap is narrower, and the old 2.4-long barrel poked out through the
+// left leg. The shorter barrel sits inside the gap — and the longer muzzle-to-
+// gate distance gives the throw a visible run, which is the drama.
+const BOX = { r: 0.78, len: 0.85 }
 const TURRET = { x: 4.1, z: 1.78, y: 1.15 }
 const DEST = { x: 17.6, r: 1.5 }
 
@@ -171,10 +182,15 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
    * barrel empty and you see straight through the solid. One quad per segment
    * has no such problem.
    */
-  function sweep(a2: P2[], b2: P2[], fill: string) {
+  function sweep(a2: P2[], b2: P2[], fill: string, seal = true) {
+    // seal: stroke each quad with its own fill. Adjacent quads drawn as bare
+    // fills leave hairline antialiasing seams that read as a hatched moire
+    // across the whole barrel (this is what put a dot-grid on the lamp's
+    // muzzle and diagonal scratches on the wound roll). Translucent fills
+    // must pass false — the stroke would double their alpha at every seam.
     for (let i = 0; i < a2.length; i++) {
       const j = (i + 1) % a2.length
-      poly([a2[i], a2[j], b2[j], b2[i]], fill)
+      poly([a2[i], a2[j], b2[j], b2[i]], fill, seal ? fill : undefined)
     }
   }
 
@@ -222,7 +238,20 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
   // column, and a lamp set back in z is lifted up-left by |z|*sin(AZ), so the
   // two kept landing on the same pixels however the numbers were nudged. Down
   // near the roller there is nothing above it and the whole assembly reads.
-  const lampY = () => beltY() + ROLL.r + RISE * 0.13
+  // MID-RIG, BY RULING (owner, 2026-08-18): the lamp hangs halfway up the
+  // climb, not in the bottom third — the assembly balances around it. The old
+  // low position was cover for a wheel-overlap problem; at half height the
+  // barrel's top still clears the near flange's bottom edge (verified by
+  // render, not by faith — see tmp/iso/ iter1 stills).
+  const lampY = () => beltY() + ROLL.r + RISE * 0.47
+  // The housing centres on the yoke's own axis line. Two hanging schemes died
+  // in render before this: straps from tie bars at the girder planes project a
+  // full diagonal step AWAY from a z=0 barrel in this camera (posts beside it,
+  // not a sling over it), and a bar above the barrel can never pass over it on
+  // screen for the same reason. What does read: posts at reelX, a cross-shaft
+  // journalled between them at lamp height, housing on the shaft — the load
+  // path is visible end to end.
+  const lampX = () => reelX()
 
   function layout() {
     const r = canvas.getBoundingClientRect()
@@ -383,6 +412,13 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
 
     // ---- the bed, and the files falling into it ----------------------------
     box(BED.x0, BED.x1, -TABLE.deep, BED.top, -BED.z, BED.z, 18)
+    // THE DIE GATE. The slit the film extrudes through lives on the bed's +x
+    // face, which this camera can never see (§4a) — so the mouth is shown as a
+    // bridge instead: two cheeks and a lintel the strip passes beneath. One
+    // recording sinks into the box; a strip of frames runs out under the gate.
+    box(BED.x1, BED.x1 + 0.26, 0.36, 0.68, -1.38, 1.38, 25) // lintel over the strip
+    box(BED.x1, BED.x1 + 0.26, 0, 0.36, 1.06, 1.38, 22) // near cheek
+    box(BED.x1, BED.x1 + 0.26, 0, 0.36, -1.38, -1.06, 22) // far cheek
     // A dashed rim on the lip: still the drop target, just no longer floating.
     const lip = slab(BED.x0 + 0.25, BED.x1 - 0.25, -BED.z + 0.25, BED.z - 0.25, BED.top + 0.01)
     poly(lip, 'rgba(242,143,132,0.07)')
@@ -447,12 +483,25 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       box(TURRET.x - 0.26, TURRET.x + 0.26, TURRET.y * 0.62, TURRET.y,
         Math.min(hz - sgn * 0.34, hz + sgn * 0.26), Math.max(hz - sgn * 0.34, hz + sgn * 0.26), 38)
     }
-    // one of them is firing at the frame standing in the middle of the table
+    // Both firing at the frame passing between them — and the work is VISIBLE:
+    // a hot spot where the beams land. A beam that hits nothing is decoration;
+    // a beam with a weld pool is an instrument doing something to the film.
     const tgt = iso(TURRET.x, y, 0)
-    ctx.strokeStyle = 'rgba(255,176,166,0.9)'
-    ctx.lineWidth = 1.15
+    // the pool: a faint warm spill on the film around the hit, then the hot core
+    poly(slab(TURRET.x - 0.5, TURRET.x + 0.5, -0.5, 0.5, y + 0.004), 'rgba(255,150,140,0.16)')
+    poly(slab(TURRET.x - 0.2, TURRET.x + 0.2, -0.2, 0.2, y + 0.006), 'rgba(255,224,214,0.95)')
     for (const sgn of [-1, 1]) {
       const src = iso(TURRET.x, TURRET.y, sgn * (TURRET.z - 0.4))
+      // halo under core: two strokes, wide-faint then thin-hot, read as a beam
+      // with energy rather than a bent wire
+      ctx.strokeStyle = 'rgba(255,150,140,0.22)'
+      ctx.lineWidth = 3.2
+      ctx.beginPath()
+      ctx.moveTo(src[0], src[1])
+      ctx.lineTo(tgt[0], tgt[1])
+      ctx.stroke()
+      ctx.strokeStyle = 'rgba(255,196,186,0.95)'
+      ctx.lineWidth = 1.2
       ctx.beginPath()
       ctx.moveTo(src[0], src[1])
       ctx.lineTo(tgt[0], tgt[1])
@@ -474,7 +523,12 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // land ON the legs rather than near them.
     const legAt = (bx: number, tx: number, h: number) => bx + (h / reelY()) * (tx - bx)
     const LEG_L: [number, number] = [reelX() - YOKE.rake, reelX() - YOKE.apex * 0.55]
-    const LEG_R: [number, number] = [reelX() + YOKE.splay, reelX() + YOKE.apex * 0.55]
+    // The right leg is a PLUMB POST under the axle. Any splay at all sends it
+    // on a diagonal sweep across the film's climb — the one vertical that has
+    // to stay clean. A vertical post at reelX projects entirely up-line of the
+    // climb's screen band (checked: foot sx 8.6S vs band 8.65S+). Post plus
+    // raked brace is also a more machined stance than a symmetric A.
+    const LEG_R: [number, number] = [reelX() - 0.02, reelX()]
 
     const girder = (sgn: number, near: boolean) => {
       const z0 = sgn * YOKE.z - YOKE.t / 2
@@ -496,19 +550,13 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         sweep(a, b, side)
         poly(b, lit)
         // A base plate, so the frame STANDS on the table instead of growing out
-        // of it. Legs that simply intersect the top look like they were pushed
-        // through it.
-        box(bx - YOKE.foot * 0.9, bx + YOKE.foot * 0.9, TABLE.top, TABLE.top + 0.16,
-          z0 - 0.13, z1 + 0.13, near ? 26 : 15)
+        // of it. Slimmed to a machined pad — the old chunky plates plus four
+        // legs plus bars were most of the "over-articulated" complaint.
+        box(bx - YOKE.foot * 0.7, bx + YOKE.foot * 0.7, TABLE.top, TABLE.top + 0.09,
+          z0 - 0.05, z1 + 0.05, near ? 26 : 15)
       }
       leg(LEG_L)
       leg(LEG_R)
-      // The tie bar, spanning leg to leg at lamp height. It braces the frame and
-      // it is what the light box actually hangs from — the pair of cradle bars
-      // it replaces floated at the reel's own x, which at this height is between
-      // the legs and touching neither of them.
-      box(legAt(LEG_L[0], LEG_L[1], lampY()) - YOKE.apex, legAt(LEG_R[0], LEG_R[1], lampY()) + YOKE.apex,
-        lampY() - 0.14, lampY() + 0.14, z0, z1, near ? 24 : 14)
       if (near) {
         // the bearing the axle turns in, so the wheel is visibly HELD
         const boss: P2[] = []
@@ -535,13 +583,15 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       }
       return out
     }
-    // The trunnion the barrel is journalled on: one shaft in z, landing on the
-    // tie bar of each frame at exactly (reelX(), lampY()). Drawn before the
-    // barrel, so it shows at both ends and is swallowed in the middle.
-    box(reelX() - 0.11, reelX() + 0.11, lampY() - 0.11, lampY() + 0.11,
-      -YOKE.z - YOKE.t / 2, YOKE.z + YOKE.t / 2, 30)
-    const bMuzzle = barrel(reelX() + BOX.len)
-    const bBack = barrel(reelX() - BOX.len)
+    // The cross-shaft the housing is journalled on: post to post through the
+    // barrel. Split at z=0 around the housing paint: the far stub is genuinely
+    // behind the barrel, but the near stub is NEARER in z while the muzzle's
+    // screen silhouette still covers its band — drawn whole-before, the shaft
+    // simply vanished and the housing floated again.
+    box(lampX() - 0.1, lampX() + 0.1, lampY() - 0.1, lampY() + 0.1,
+      -YOKE.z - YOKE.t / 2, 0, 32) // far half, behind the housing
+    const bMuzzle = barrel(lampX() + BOX.len)
+    const bBack = barrel(lampX() - BOX.len)
     // The throw, emitted at the muzzle so it emerges from behind the housing
     // rather than starting in mid-air beside it.
     {
@@ -549,13 +599,16 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         iso(cx, lampY() - r, -r), iso(cx, lampY() + r, -r),
         iso(cx, lampY() + r, r), iso(cx, lampY() - r, r),
       ]
-      sweep(sq(reelX() + BOX.len * 0.4, 0.3), sq(ROLL.x, 0.46), 'rgba(226,226,240,0.085)')
+      sweep(sq(lampX() + BOX.len * 0.55, 0.3), sq(ROLL.x, 0.46), 'rgba(226,226,240,0.085)', false)
     }
     // Muzzle first and bright: the barrel covers all of it but the crescent
     // that forms the silhouette, which is exactly where spill would show.
     poly(bMuzzle, 'rgba(236,236,246,0.85)')
     sweep(bMuzzle, bBack, '#2c2c35')
     poly(bBack, '#3a3a45')
+    // near half of the cross-shaft, emerging from the housing to the near post
+    box(lampX() - 0.1, lampX() + 0.1, lampY() - 0.1, lampY() + 0.1,
+      0, YOKE.z + YOKE.t / 2, 32)
 
 
     const ring = (cz: number, rad: number): P2[] => {
@@ -574,9 +627,42 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // film column that is supposed to be tangent to it.
     const rr = coilR()
 
-    poly(ring(zF, REEL.r), '#15151a') // far flange
+    // Far flange: dark — the reel recedes into the stage by ruling — but never
+    // a void. A hairline rim is what separates "big dark disc" from "hole in
+    // the canvas"; the value sits just above the page ground.
+    poly(ring(zF, REEL.r), '#1c1c22')
+    {
+      const rf = ring(zF, REEL.r)
+      ctx.beginPath()
+      ctx.moveTo(rf[0][0], rf[0][1])
+      for (let i = 1; i < rf.length; i++) ctx.lineTo(rf[i][0], rf[i][1])
+      ctx.closePath()
+      ctx.strokeStyle = 'rgba(150,150,170,0.20)'
+      ctx.lineWidth = 1
+      ctx.stroke()
+    }
     // the roll, as a band swept between the two flanges
     sweep(ring(zF, rr), ring(zN, rr), '#3c3c47')
+    // THE COIL HAS A FACE. Through the near flange's window you used to see
+    // the far flange's inner blackness — an empty reel with spokes floating in
+    // a pit. What a loaded reel shows through its window is the flat side of
+    // the wound film itself: one warm disc, same stock family as the strip,
+    // shaded down because it sits in the wheel's shadow. First cut of this was
+    // #4a4437 and popped like a brass medallion; the wind is quieter than that.
+    poly(ring(zN, rr), '#3f392e')
+    // faint winding lines — the one cue that says LAYERS of film, not a lid
+    ctx.save()
+    ctx.strokeStyle = 'rgba(0,0,0,0.22)'
+    ctx.lineWidth = 1
+    for (const wr of [0.45, 0.62, 0.8]) {
+      const wpts = ring(zN, rr * wr)
+      ctx.beginPath()
+      ctx.moveTo(wpts[0][0], wpts[0][1])
+      for (let i = 1; i < wpts.length; i++) ctx.lineTo(wpts[i][0], wpts[i][1])
+      ctx.closePath()
+      ctx.stroke()
+    }
+    ctx.restore()
     // near flange, as a RING so the roll shows through the middle
     ctx.beginPath()
     const of2 = ring(zN, REEL.r)
@@ -587,10 +673,17 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.moveTo(inr[0][0], inr[0][1])
     for (let i = inr.length - 1; i >= 1; i--) ctx.lineTo(inr[i][0], inr[i][1])
     ctx.closePath()
-    ctx.fillStyle = '#2e2e37'
+    // Darker than it was: the reel recedes into the stage (owner, 2026-08-18) —
+    // the wound film in the window and the rim line do the reading, not the
+    // plate's own value.
+    ctx.fillStyle = '#26262d'
     ctx.fill('evenodd')
-    // the hub, and the axle running back into the projector behind it
+    // the hub, and the axle actually RUNNING to the near girder's bearing —
+    // hub circle and bearing boss used to be two unconnected discs a half-unit
+    // apart on screen, which read as a drawing mistake rather than a shaft
+    // coming toward the viewer.
     poly(ring(zN, REEL.r * 0.2), '#454551')
+    sweep(ring(zN, 0.3), ring(YOKE.z + YOKE.t / 2, 0.3), '#3a3a45')
     // The near flange's outer edge sat against the far flange with nothing to
     // separate them, so the silhouette read as one blob at the top left.
     ctx.beginPath()
@@ -801,9 +894,11 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.restore()
   }
 
-  // The one frame the study is judged on when it cannot move: a file soaking in
-  // the bed, the strip mid-run, a cut frame on the table.
-  const STILL_T = 2.35
+  // The one frame the study is judged on when it cannot move: a file JUST
+  // landed in the bed (still near full presence), the strip mid-run, a cut
+  // frame on the table. 2.35 was too late — the soak fade had the file at ~11%
+  // alpha, so the reduced-motion still showed an empty intake.
+  const STILL_T = 1.35
   let raf = 0
   let running = false
   function loop(now: number) {
@@ -822,7 +917,7 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       if (raf) cancelAnimationFrame(raf)
       raf = 0
     },
-    still(t: number) {
+    still(t: number = STILL_T) {
       this.stop()
       layout()
       draw(t)
