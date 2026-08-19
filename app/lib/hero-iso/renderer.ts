@@ -444,9 +444,33 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // A darker well inside the rim, so the bed reads as a basin with depth
     // rather than a rectangle painted on the bench top.
     poly(slab(BED.x0 + 0.55, BED.x1 - 0.55, -BED.z + 0.55, BED.z - 0.55, BED.top - 0.02), 'rgba(30,14,12,0.85)')
+    // THE ACID GLOW (owner, 2026-08-18: the plate where footage dissolves has
+    // light). The well flares while a recording is being eaten and falls back
+    // to embers through the gap — the glow is the dissolve's own light, so it
+    // breathes on the drop cycle, never a constant lamp.
+    const FALL_S = 1.05
+    const SOAK_S = 1.9
+    const GAP_S = 3.4
+    const LIFE = FALL_S + SOAK_S + GAP_S
+    const bx = (BED.x0 + BED.x1) / 2
+    const bedAge = t % LIFE
+    let acid = 0.28 // embers between drops
+    if (bedAge < FALL_S) acid = 0.28 + 0.4 * (bedAge / FALL_S)
+    else if (bedAge < FALL_S + SOAK_S) acid = 1
+    else acid = Math.max(0.28, 1 - (bedAge - FALL_S - SOAK_S) / 1.7)
+    {
+      const wc = iso(bx, BED.top, 0)
+      const wr = (BED.x1 - BED.x0 - 1.1) * 0.62 * S
+      const ag = ctx.createRadialGradient(wc[0], wc[1], 0, wc[0], wc[1], wr)
+      ag.addColorStop(0, `rgba(250,162,146,${(0.36 * acid).toFixed(3)})`)
+      ag.addColorStop(0.55, `rgba(242,143,132,${(0.17 * acid).toFixed(3)})`)
+      ag.addColorStop(1, 'rgba(242,143,132,0)')
+      poly(slab(BED.x0 + 0.55, BED.x1 - 0.55, -BED.z + 0.55, BED.z - 0.55, BED.top - 0.015), ag as unknown as string)
+    }
     ctx.save()
     ctx.setLineDash([5, 6])
-    ctx.strokeStyle = 'rgba(242,143,132,0.34)'
+    // the rim breathes with the acid
+    ctx.strokeStyle = `rgba(242,143,132,${(0.2 + 0.26 * acid).toFixed(3)})`
     ctx.lineWidth = 1.4
     ctx.beginPath()
     ctx.moveTo(lip[0][0], lip[0][1])
@@ -470,25 +494,17 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // pause before the next. What it becomes in the meantime is a LOT of film —
     // the belt keeps producing frames the whole time it is absent, which is the
     // actual claim: one recording in, a great many frames out.
-    const FALL_S = 1.05
-    const SOAK_S = 1.9
-    const GAP_S = 3.4
-    const LIFE = FALL_S + SOAK_S + GAP_S
-    const bx = (BED.x0 + BED.x1) / 2
-    {
-      const age = t % LIFE
-      if (age < FALL_S + SOAK_S) {
-        let fy: number
-        let a2 = 0.6
-        if (age < FALL_S) {
-          const u = age / FALL_S
-          fy = BED.top - 0.06 + 4.6 * (1 - u * u) // constant acceleration downward
-        } else {
-          fy = BED.top - 0.06
-          a2 = 0.6 * Math.pow(1 - (age - FALL_S) / SOAK_S, 1.5)
-        }
-        poly(slab(bx - 1.15, bx + 1.15, -1.15, 1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
+    if (bedAge < FALL_S + SOAK_S) {
+      let fy: number
+      let a2 = 0.6
+      if (bedAge < FALL_S) {
+        const u = bedAge / FALL_S
+        fy = BED.top - 0.06 + 4.6 * (1 - u * u) // constant acceleration downward
+      } else {
+        fy = BED.top - 0.06
+        a2 = 0.6 * Math.pow(1 - (bedAge - FALL_S) / SOAK_S, 1.5)
       }
+      poly(slab(bx - 1.15, bx + 1.15, -1.15, 1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
     }
 
     // ---- two laser turrets, one either side of the table -------------------
@@ -525,6 +541,22 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       ctx.moveTo(src[0], src[1])
       ctx.lineTo(tgt[0], tgt[1])
       ctx.stroke()
+      // the emitter glint: a hot pixel at the aperture, so the beam has a source
+      ctx.fillStyle = 'rgba(255,226,216,0.95)'
+      ctx.beginPath()
+      ctx.arc(src[0], src[1], 2.2, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    // the hit's halo — lasers glow (owner, 2026-08-18); one restrained pool
+    // of light around the point of work, over everything local to it
+    {
+      const hg = ctx.createRadialGradient(tgt[0], tgt[1], 0, tgt[0], tgt[1], 0.95 * S)
+      hg.addColorStop(0, 'rgba(255,180,164,0.38)')
+      hg.addColorStop(1, 'rgba(255,180,164,0)')
+      ctx.fillStyle = hg
+      ctx.beginPath()
+      ctx.arc(tgt[0], tgt[1], 0.95 * S, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     // ---- the projector, and the reel mounted to it -------------------------
@@ -618,7 +650,15 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         iso(cx, lampY() - r, -r), iso(cx, lampY() + r, -r),
         iso(cx, lampY() + r, r), iso(cx, lampY() - r, r),
       ]
-      sweep(sq(lampX() + BOX.len * 0.55, 0.3), sq(ROLL.x, 0.46), 'rgba(226,226,240,0.085)', false)
+      // A shaft with falloff: hottest right off the muzzle, dimming toward the
+      // gate — projector light, not fog. Screen-anchored gradient, so the
+      // per-quad sweep still fills seamlessly.
+      const m0 = iso(lampX() + BOX.len, lampY(), 0)
+      const g0 = iso(ROLL.x, lampY(), 0)
+      const tg = ctx.createLinearGradient(m0[0], m0[1], g0[0], g0[1])
+      tg.addColorStop(0, 'rgba(240,240,252,0.30)')
+      tg.addColorStop(1, 'rgba(240,240,252,0.10)')
+      sweep(sq(lampX() + BOX.len * 0.55, 0.3), sq(ROLL.x, 0.46), tg as unknown as string, false)
     }
     // Muzzle first and bright: the barrel covers all of it but the crescent
     // that forms the silhouette, which is exactly where spill would show.
@@ -728,6 +768,17 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.strokeStyle = 'rgba(150,150,170,0.30)'
     ctx.lineWidth = 1.1
     ctx.stroke()
+    // a warm kiss on the lower-right arc — the gate's light licking the rim.
+    // The wheel recedes into the dark; this is the one place the stage's light
+    // is allowed to find its edge.
+    ctx.beginPath()
+    for (let i = 44; i <= 55; i++) {
+      const p = of2[i % of2.length]
+      i === 44 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])
+    }
+    ctx.strokeStyle = 'rgba(238,214,192,0.28)'
+    ctx.lineWidth = 1.8
+    ctx.stroke()
 
     // and the near girder, over the wheel: the reel hangs INSIDE the yoke
     girder(1, true)
@@ -741,9 +792,28 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // climb. What reads instead: two slim pressure bars clamped ACROSS the
     // film just above and below the lit frame — the same slant as the strip's
     // own top edge, so they sit IN its plane rather than fighting it.
+    // the standing frame itself, lit: the single brightest surface on the
+    // machine — the projected image is the star of this stage
+    poly([
+      iso(ROLL.x, lampY() - 0.58, -FILM_W / 2), iso(ROLL.x, lampY() + 0.58, -FILM_W / 2),
+      iso(ROLL.x, lampY() + 0.58, FILM_W / 2), iso(ROLL.x, lampY() - 0.58, FILM_W / 2),
+    ], 'rgba(250,248,240,0.26)')
     for (const sgn of [-1, 1]) {
       box(ROLL.x - 0.14, ROLL.x + 0.08, lampY() + sgn * 0.73 - 0.11, lampY() + sgn * 0.73 + 0.11,
         -FILM_W / 2 - 0.16, FILM_W / 2 + 0.16, 30)
+    }
+    // the muzzle's own glow, painted over the hardware — the projector is a
+    // light source, and in this camera its bright face is turned away; the
+    // halo is how we know. (Painted earlier it vanished under the near mast.)
+    {
+      const mp = iso(lampX() + BOX.len, lampY(), 0)
+      const mh = ctx.createRadialGradient(mp[0], mp[1], 0, mp[0], mp[1], 1.0 * S)
+      mh.addColorStop(0, 'rgba(240,240,252,0.28)')
+      mh.addColorStop(1, 'rgba(240,240,252,0)')
+      ctx.fillStyle = mh
+      ctx.beginPath()
+      ctx.arc(mp[0], mp[1], 1.0 * S, 0, Math.PI * 2)
+      ctx.fill()
     }
 
     // ---- three destinations & chromatic prism beam ------------------------
@@ -757,22 +827,22 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       {
         name: 'YouTube',
         color: '#ff0033',
-        beamMid: 'rgba(255, 0, 51, 0.11)',
-        beamEnd: 'rgba(255, 0, 51, 0.04)',
+        beamMid: 'rgba(255, 0, 51, 0.17)',
+        beamEnd: 'rgba(255, 0, 51, 0.055)',
         rim: 'rgba(255, 0, 51, 0.9)',
       },
       {
         name: 'Podcast',
         color: '#872ec4',
-        beamMid: 'rgba(155, 81, 224, 0.12)',
-        beamEnd: 'rgba(135, 46, 196, 0.04)',
+        beamMid: 'rgba(155, 81, 224, 0.17)',
+        beamEnd: 'rgba(135, 46, 196, 0.055)',
         rim: 'rgba(155, 81, 224, 0.9)',
       },
       {
         name: 'LinkedIn',
         color: '#0a66c2',
-        beamMid: 'rgba(10, 102, 194, 0.12)',
-        beamEnd: 'rgba(10, 102, 194, 0.04)',
+        beamMid: 'rgba(10, 102, 194, 0.17)',
+        beamEnd: 'rgba(10, 102, 194, 0.055)',
         rim: 'rgba(10, 102, 194, 0.9)',
       },
     ]
@@ -788,7 +858,7 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       const pMid = iso(DEST.x, lampY() + 2.4 - i * 2.4, 0)
 
       const grad = ctx.createLinearGradient(lens[0], lens[1], pMid[0], pMid[1])
-      grad.addColorStop(0, 'rgba(255, 255, 255, 0.16)')
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.26)')
       grad.addColorStop(0.18, dest.beamMid)
       grad.addColorStop(1, dest.beamEnd)
 
