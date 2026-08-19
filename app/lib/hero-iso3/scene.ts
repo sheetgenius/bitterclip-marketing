@@ -149,7 +149,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const xs = pts.map((p) => p[0])
     const ys = pts.map((p) => p[1])
     const S = Math.min((W * 0.82) / (Math.max(...xs) - Math.min(...xs)), (H * 0.9) / (Math.max(...ys) - Math.min(...ys)))
-    const ox = W * 0.565 - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
+    const ox = W * 0.545 - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
     const oy = H * 0.52 - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
 
     const v = new THREE.Vector3(0.886, -0.684, -1).normalize()
@@ -570,9 +570,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const lens = new THREE.Vector3(10.9, lampY, 0)
   const WALL_X = 16.8
   const FAN = [
-    { name: 'YouTube', color: '#ff0033', icon: 'yt' },
-    { name: 'Podcast', color: '#872ec4', icon: 'pod' },
-    { name: 'LinkedIn', color: '#0a66c2', icon: 'in' },
+    { name: 'YouTube', color: '#d63d47', icon: 'yt' },
+    { name: 'Podcast', color: '#8355b8', icon: 'pod' },
+    { name: 'LinkedIn', color: '#3d78ae', icon: 'in' },
   ]
 
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
@@ -866,7 +866,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     rim.position.set(3, 11, -9)
     scene.add(rim)
   }
-  const gateGlow = new THREE.PointLight(0xfff2dc, 17, 9)
+  const gateGlow = new THREE.PointLight(0xfff2dc, 19, 9)
   gateGlow.position.set(ROLL.x - 0.55, lampY, 0)
   gateGlow.castShadow = true
   gateGlow.shadow.mapSize.set(1024, 1024)
@@ -878,7 +878,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   scene.add(wheelKiss)
   // THE ARCHIVE IS ALIVE: a warm ember inside the drum, between the flanges —
   // the wound memory glows out through the windows as they turn
-  const archiveGlow = new THREE.PointLight(0xffd9a8, 15, 7.5)
+  const archiveGlow = new THREE.PointLight(0xffd9a8, 21, 8.5)
   archiveGlow.position.set(reelX, reelY + 1.2, 0)
   scene.add(archiveGlow)
   const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
