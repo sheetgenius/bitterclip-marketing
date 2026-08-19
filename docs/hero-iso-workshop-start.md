@@ -69,6 +69,15 @@ answers (documented twice in the brief). Mechanics:
 - `bun run dev --port 4180` for fast HMR iteration (binds IPv6-only — use
   `localhost`, never `127.0.0.1`). Verify with a production build
   (`bun run build`) before committing.
+- **Node is pinned to 25** (`.nvmrc` + `engines`): `better-sqlite3` is a
+  native module compiled per node ABI, and this machine has two nodes
+  (Homebrew 25 = the shell default, nvm 22 = some agent harnesses). Whoever
+  rebuilds it under the wrong node breaks the other side. The canonical node
+  is Homebrew's; from a harness whose PATH resolves nvm first, prefix
+  commands with `PATH=/opt/homebrew/bin:$PATH`. If a build dies with
+  `NODE_MODULE_VERSION` mismatch, run
+  `PATH=/opt/homebrew/bin:$PATH npm rebuild better-sqlite3` — never rebuild
+  it for the nvm node.
 - `node qa/iso-shot.mjs tmp/iso/<name> <t> <t> …` screenshots the page frozen
   at exact renderer times via the `window.__iso.still(t)` hook; `--clip
   x,y,w,h` (viewport px, 1600×900) crops. Compare builds at the SAME t.
