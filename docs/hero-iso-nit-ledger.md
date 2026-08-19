@@ -150,3 +150,22 @@ feet gussets + base tie close the triangles.
 Queue: pod instrument anatomy + cables, far-triangle value lift, muzzle/gate/
 prism intensity ladder (three distinct points), wheel upper-face presence,
 motion review, perf audit, reduced-motion parity, mobile fit.
+
+## 2026-08-19 — holistic block: "is this a stunning homepage?"
+
+grok verdict arc: "almost" → applied its five leverage points (one stage for
+type+machine, motivated metal on the archive, muted film-stock trinity,
+brighter product belt, primary CTA + machine-light under the type, beacon
+removed) → second review re-demanded killing the trinity (owner story —
+retained, recolored to dusty cinema hues) and deeper overlap (done: rim
+behind the headline band) and a non-hole archive (interior ember up).
+The folder rite (label RAW FOOTAGE, face the audience, 180° drawbridge flop,
+files burning into the acetate) became the hero's best still (t≈2.1, now the
+reduced-motion frame). Perf: headless 5fps was SwiftShader; after an art
+cache for frame content, half-rate shadow updates and a smaller shadow map,
+REAL GPU measures ~120fps. Narrow (900px) composition verified; agy was
+erroring repeatedly this block (outage) — cold reads owed next session.
+
+Open: idents legibility vs mute balance (hover/motion may resolve), wheel
+top-arc whisper, mobile (<640) layout (type above canvas), bake-to-video
+endgame, homepage integration decision.

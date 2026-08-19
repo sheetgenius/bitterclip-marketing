@@ -104,6 +104,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.shadowMap.enabled = true
+  renderer.shadowMap.autoUpdate = false
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.toneMappingExposure = 1.18
@@ -230,8 +231,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   box(BED.x1, BED.x1 + 0.26, 0, 0.36, -1.38, -1.06, M.steelDark)
 
   // ---- the film: static ribbon, live texture ------------------------------
-  const FILM_TEX_W = 2560
-  const FILM_TEX_H = 128
+  const FILM_TEX_W = 1792
+  const FILM_TEX_H = 112
   const filmCanvas = document.createElement('canvas')
   filmCanvas.width = FILM_TEX_W
   filmCanvas.height = FILM_TEX_H
@@ -302,6 +303,27 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
 
   const stableId = (i: number, off: number, dist: number) => Math.round((i * PITCH + off - dist) / PITCH)
 
+  // artwork cache: a frame's content is a pure function of (id, captioned) —
+  // paint it once at fixed resolution, blit forever (the per-frame gradient
+  // and blob path-work was a real CPU cost at 60fps)
+  const artCache = new Map<string, HTMLCanvasElement>()
+  function frameArt(id: number, captioned: boolean): HTMLCanvasElement {
+    const key = id + (captioned ? 'c' : 'r')
+    let c = artCache.get(key)
+    if (!c) {
+      c = document.createElement('canvas')
+      c.width = 240
+      c.height = 136
+      renderFrameContent(c.getContext('2d')!, 240, 136, id, captioned)
+      artCache.set(key, c)
+      if (artCache.size > 48) {
+        const first = artCache.keys().next().value as string
+        artCache.delete(first)
+      }
+    }
+    return c
+  }
+
   function drawFilm(dist: number) {
     const sToPx = FILM_TEX_W / totalPath
     const off = dist % PITCH
@@ -324,10 +346,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       // image top edge = higher s; canvas y-down maps to decreasing s
       fctx.translate(u0 + uH, vTop)
       fctx.rotate(Math.PI / 2)
-      fctx.beginPath()
-      fctx.rect(0, 0, vH, uH)
-      fctx.clip()
-      renderFrameContent(fctx, vH, uH, id, captioned)
+      fctx.drawImage(frameArt(id, captioned), 0, 0, vH, uH)
       fctx.restore()
     }
     // perf rows over everything, both edges, four per frame
@@ -869,7 +888,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const gateGlow = new THREE.PointLight(0xfff2dc, 19, 9)
   gateGlow.position.set(ROLL.x - 0.55, lampY, 0)
   gateGlow.castShadow = true
-  gateGlow.shadow.mapSize.set(1024, 1024)
+  gateGlow.shadow.mapSize.set(512, 512)
   gateGlow.shadow.bias = -0.004
   scene.add(gateGlow)
   // a small glint where the film arrives on the coil — the handoff reads
@@ -968,8 +987,10 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     bedGlow.intensity = 3 + 12 * acid
   }
 
+  let shadowTick = 0
   function draw(t: number) {
     update(t)
+    if ((shadowTick++ & 1) === 0) renderer.shadowMap.needsUpdate = true
     composer.render()
   }
 
