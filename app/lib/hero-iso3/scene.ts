@@ -56,7 +56,7 @@ const RISE = 9.4
 // video memory, wound and searchable. Doubled diameter: it looms over the
 // whole line, and the coil tangency drags the axle to mid-bench, which is
 // where the big gantry now stands.
-const REEL = { r: 7.5, w: FILM_W }
+const REEL = { r: 5.8, w: FILM_W }
 const COIL_F = 0.58
 const TURRET = { x: 4.1, z: 1.78, y: 1.15 }
 const DEST = { x: 17.6, r: 1.5 }
@@ -522,7 +522,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // THE PRISM explains the trinity: one white throw leaves the gate, enters a
   // glass wedge on a bracket arm, and leaves as three coloured shafts. The
   // beams' origin (lens) is the prism's output face.
-  const lens = new THREE.Vector3(10.42, lampY, 0)
+  const lens = new THREE.Vector3(11.48, lampY, 0)
   const WALL_X = 16.8
   const FAN = [
     { name: 'YouTube', color: '#ff0033', icon: 'yt' },
@@ -531,8 +531,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   ]
   {
     // bracket: an arm off the lower gate bar, a stem, and the wedge on top
-    box(ROLL.x + 0.08, 10.32, lampY - 0.84, lampY - 0.64, -0.12, 0.12, M.steelDark)
-    box(9.98, 10.26, lampY - 0.64, lampY - 0.3, -0.1, 0.1, M.steelDark)
+    box(ROLL.x + 0.08, 11.36, lampY - 0.84, lampY - 0.64, -0.12, 0.12, M.steelDark)
+    box(11.02, 11.3, lampY - 0.64, lampY - 0.3, -0.1, 0.1, M.steelDark)
     const tri = new THREE.Shape()
     tri.moveTo(-0.3, -0.3)
     tri.lineTo(0.36, 0)
@@ -549,14 +549,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
         transparent: true,
       }),
     )
-    prism.position.set(10.06, lampY, -0.26)
+    prism.position.set(11.1, lampY, -0.26)
     scene.add(prism)
     // the split line: a hot slit on the output face where white becomes three
-    box(10.4, 10.46, lampY - 0.22, lampY + 0.22, -0.045, 0.045,
+    box(11.44, 11.5, lampY - 0.22, lampY + 0.22, -0.045, 0.045,
       new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xffffff, emissiveIntensity: 2.6 }))
     // the white link: gate frame -> prism input, the beam's birthplace made
     // visible (lamp -> film -> prism -> fan)
-    const linkLen = 9.94 - (ROLL.x + 0.1)
+    const linkLen = 10.98 - (ROLL.x + 0.1)
     const link = new THREE.Mesh(
       new THREE.CylinderGeometry(0.42, 0.34, linkLen, 20, 1, true),
       new THREE.MeshBasicMaterial({ color: 0xfffaf0, transparent: true, opacity: 0.34, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
