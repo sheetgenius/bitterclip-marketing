@@ -130,3 +130,23 @@ Four coherence fixes in one pass, all owner-ruled:
    hash-stable per physical frame) with a raw-vs-enhanced state: frames run
    dim and low-contrast until the turret beams lift them — before/after ON
    the strip.
+
+## 2026-08-19 — the two triangles (owner vision + panel-driven unification)
+
+Owner: "triangular girders, one at each track edge, converging to the center
+which houses the wheel; the light rigging hangs between them like a letter A;
+clean, intentional machinery." Built, then grok's review drove the full
+unification: the A-frames are now the ONLY stand (old gate masts deleted —
+"charcoal thicket"), the roller sits in deck pillow blocks, and the whole
+optical line — lamp on drop rods, hung gate frame, prism on its bracket —
+hangs from a bridge-and-boom rig between the triangles. The colossal flange
+swallowed the lamp room at first; fixed by dropping the optical line into the
+clear air beneath the rim (lampY fraction 0.47 → 0.32), so the drop rods
+emerge from behind the archive. Intake ambiguity from agy's cold read (reel
+mistaken for the SOURCE; bed for an exit tray) answered with a queue of
+folders waiting beside the bed. Materials split (legs vs flange vs steel),
+feet gussets + base tie close the triangles.
+
+Queue: pod instrument anatomy + cables, far-triangle value lift, muzzle/gate/
+prism intensity ladder (three distinct points), wheel upper-face presence,
+motion review, perf audit, reduced-motion parity, mobile fit.
