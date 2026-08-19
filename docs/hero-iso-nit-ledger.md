@@ -76,3 +76,15 @@ badge integration pass (dim backplates, a kiss of beam light on each disc).
   false as geometry (a z-axis circle projects near-circular in this camera:
   conjugate semi-diameters equal, ~78° between them), but it correctly smelled
   the missing depth cues; fixed via windows/rim, not by re-projecting.
+
+## 2026-08-18 — PIVOT: real 3D
+
+Owner ruling after the Canvas study reached its noir pass: the fake-3D tax
+(painter-order bugs, projected-shear, seam moire — roughly half the block's
+effort) ends here. /lab/iso3 is the successor: three.js via dynamic import
+(never in the homepage bundle), a CUSTOM projection matrix reproducing the
+study's oblique axonometric exactly (its rows are not orthonormal, so no
+stock OrthographicCamera can do it), z-buffer occlusion, real lights as the
+practicals. The canvas study stays as reference until parity, then retires
+like /lab/line before it. Endgame under discussion: bake to looped video for
+the homepage; possibly built through BitterClip's own artifact system.
