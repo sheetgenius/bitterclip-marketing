@@ -687,7 +687,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
         gl_FragColor = vec4(col, axial * face * smoke * uAlpha);
       }`
     FAN.forEach((d, i) => {
-      const target = new THREE.Vector3(WALL_X - 0.05, lampY + 2.4 - i * 2.4, 0)
+      const target = new THREE.Vector3(WALL_X - 0.05, lampY + 2.95 - i * 2.95, 0)
       const dir = target.clone().sub(lens)
       const len = dir.length()
       const mat = new THREE.ShaderMaterial({
@@ -854,7 +854,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const sc = { c, x: c.getContext('2d')!, tex, d }
     screenCtxs.push(sc)
     drawScreen(sc, 0)
-    const sy = lampY + 2.4 - i * 2.4
+    const sy = lampY + 2.95 - i * 2.95
     const m = new THREE.Mesh(
       new THREE.PlaneGeometry(4.9, 2.76),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),

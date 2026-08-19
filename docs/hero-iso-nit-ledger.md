@@ -169,3 +169,25 @@ erroring repeatedly this block (outage) — cold reads owed next session.
 Open: idents legibility vs mute balance (hover/motion may resolve), wheel
 top-arc whisper, mobile (<640) layout (type above canvas), bake-to-video
 endgame, homepage integration decision.
+
+## 2026-08-19 — the wall becomes the thesis (Andrew realignment)
+
+Owner surfaced that the most enthusiastic real customer (Andrew) is not a
+podcaster but a personal trainer using BitterClip as deep video memory:
+recall sessions, prep the next one, send clients highlight reels. The
+creator-only wall (three platform logos) would have told him the product
+wasn't for him. Ruling: the projections become EXAMPLES of what you can do —
+PUBLISHED (episode with player chrome, YouTube ident kept for recognition),
+CLIENT REEL (delivered in a message thread), FOUND IN YOUR ARCHIVE (a query
+answered with timestamped moments across sessions). Publish/send/recall in
+red/salmon/amber; beams follow. Copy tier landed in creator voice with
+deep-tech carried by the scene (edge-code timecodes, scan brackets that
+measure each frame before the beam cuts): DEEP VIDEO MEMORY eyebrow,
+watch/remember/cut subhead, Start free + Watch it work, spec line "knows
+who's talking · finds any moment · cuts you'd ship" ("source-linked" ruled
+meaningless to outsiders). No fake social proof anywhere — craft carries the
+hero; real artifacts belong below the fold.
+
+Next: owner shows the page to the real Andrew; below-fold sections (real
+episode gallery as case files, how-it-cuts, archive/search feature, pricing
+teaser); mobile stack; bake-to-video endgame.
