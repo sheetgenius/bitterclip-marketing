@@ -349,6 +349,48 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       fctx.drawImage(frameArt(id, captioned), 0, 0, vH, uH)
       fctx.restore()
     }
+    // edge-code timecodes in the top margin — frame-accurate data texture
+    fctx.fillStyle = 'rgba(220,214,198,0.5)'
+    fctx.font = '600 9px ui-monospace, monospace'
+    for (let i = 0; i * PITCH < totalPath + PITCH; i++) {
+      const s0 = i * PITCH + off
+      if (s0 < 0 || s0 >= totalPath) continue
+      const id = stableId(i, off, dist)
+      const tc = 'TC ' + String(14 + ((id * 7) % 45)).padStart(2, '0') + ':' + String((id * 13) % 60).padStart(2, '0') + ':' + String((id * 29) % 24).padStart(2, '0')
+      fctx.fillText(tc, (s0 + 0.12) * sToPx, FILM_TEX_H * 0.052)
+    }
+    // the measurement moment: frames approaching the beam wear scan brackets —
+    // the machine looks BEFORE it cuts
+    {
+      const capPx = capS * sToPx
+      for (let i = 0; i * PITCH < totalPath + PITCH; i++) {
+        const s0 = i * PITCH + off
+        const fc = s0 + PITCH * 0.5
+        if (fc < capS - PITCH * 1.7 || fc > capS) continue
+        const u0 = (s0 + 0.09) * sToPx
+        const uH = IMG_H * sToPx
+        const v0 = vTop
+        const v1 = vTop + vH
+        const appr = 1 - (capS - fc) / (PITCH * 1.7)
+        fctx.strokeStyle = `rgba(255,210,190,${(0.35 + 0.55 * appr).toFixed(2)})`
+        fctx.lineWidth = 2
+        const L = 9
+        for (const [cx2, cy2, dx2, dy2] of [[u0, v0, 1, 1], [u0 + uH, v0, -1, 1], [u0, v1, 1, -1], [u0 + uH, v1, -1, -1]] as const) {
+          fctx.beginPath()
+          fctx.moveTo(cx2 + dx2 * L, cy2)
+          fctx.lineTo(cx2, cy2)
+          fctx.lineTo(cx2, cy2 + dy2 * L)
+          fctx.stroke()
+        }
+        // the sweep line crossing the frame as it closes on the beam
+        const sw = u0 + uH * appr
+        fctx.strokeStyle = 'rgba(255,220,200,0.5)'
+        fctx.beginPath()
+        fctx.moveTo(sw, v0 + 3)
+        fctx.lineTo(sw, v1 - 3)
+        fctx.stroke()
+      }
+    }
     // perf rows over everything, both edges, four per frame
     fctx.fillStyle = '#100e0a'
     const perfPitch = PITCH / 4
@@ -588,10 +630,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // beams' origin (lens) is the prism's output face.
   const lens = new THREE.Vector3(10.9, lampY, 0)
   const WALL_X = 16.8
+  // Three kinds of OUT (owner: "the projections become examples of what you
+  // can do"): a published episode, a client reel arriving in a thread, and
+  // the archive answering a question. Red = publish, brand salmon = share,
+  // archive amber = recall.
   const FAN = [
-    { name: 'YouTube', color: '#d63d47', icon: 'yt' },
-    { name: 'Podcast', color: '#8355b8', icon: 'pod' },
-    { name: 'LinkedIn', color: '#3d78ae', icon: 'in' },
+    { name: 'PUBLISH', color: '#d63d47', icon: 'publish' },
+    { name: 'SEND', color: '#e8836f', icon: 'share' },
+    { name: 'RECALL', color: '#d9a25c', icon: 'recall' },
   ]
 
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
@@ -696,8 +742,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   function drawScreen(sc: (typeof screenCtxs)[number], id: number) {
     const { x, d } = sc
     x.clearRect(0, 0, 640, 360)
-    // the throw's spill, baked: a wide soft halo of the channel colour, then
-    // the harder projected field inside it
+    // the throw's spill, baked
     x.save()
     x.filter = 'blur(38px)'
     x.fillStyle = d.color
@@ -707,56 +752,97 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     x.save()
     x.filter = 'blur(10px)'
     x.fillStyle = d.color
-    x.globalAlpha = 0.6
+    x.globalAlpha = 0.5
     x.fillRect(76, 58, 488, 244)
     x.restore()
-    // the gate's frame, projected: same content, lightening the tint
-    x.save()
-    x.translate(88, 68)
-    x.globalCompositeOperation = 'screen'
-    x.globalAlpha = 0.82
-    renderFrameContent(x, 464, 224, id, true)
-    x.restore()
-    // watermark bug: icon + name, top-right like a channel ident — the one
-    // thing on the screen that MUST read at page scale
-    x.fillStyle = 'rgba(255,255,255,0.95)'
-    x.strokeStyle = 'rgba(255,255,255,0.95)'
-    const bx = 508
-    const by = 110
-    if (d.icon === 'yt') {
+    x.font = '600 24px ui-monospace, monospace'
+    x.textBaseline = 'middle'
+    if (d.icon === 'publish') {
+      // a published episode: the gate's frame, player chrome, YouTube bug
+      x.save()
+      x.translate(88, 68)
+      x.globalCompositeOperation = 'screen'
+      x.globalAlpha = 0.85
+      x.drawImage(frameArt(id, true), 0, 0, 464, 200)
+      x.restore()
+      x.fillStyle = 'rgba(255,255,255,0.35)'
+      x.fillRect(88, 278, 464, 6)
+      x.fillStyle = 'rgba(255,255,255,0.95)'
+      x.fillRect(88, 278, 300, 6)
       x.beginPath()
-      x.moveTo(bx - 20, by - 18)
-      x.lineTo(bx + 12, by)
-      x.lineTo(bx - 20, by + 18)
+      x.arc(388, 281, 9, 0, Math.PI * 2)
+      x.fill()
+      // play triangle + name, top-right ident
+      x.beginPath()
+      x.moveTo(486, 96)
+      x.lineTo(512, 110)
+      x.lineTo(486, 124)
       x.closePath()
       x.fill()
-    } else if (d.icon === 'pod') {
+      x.textAlign = 'right'
+      x.fillText('YouTube', 478, 110)
+      x.textAlign = 'left'
+      x.font = '500 21px ui-monospace, monospace'
+      x.fillStyle = 'rgba(255,252,246,0.8)'
+      x.fillText('PUBLISHED', 88, 318)
+    } else if (d.icon === 'share') {
+      // a client reel landing in a message thread
+      x.fillStyle = 'rgba(255,255,255,0.16)'
       x.beginPath()
-      x.arc(bx, by - 3, 7, 0, Math.PI * 2)
+      x.roundRect(88, 70, 380, 224, 22)
       x.fill()
-      x.lineWidth = 4
+      x.save()
+      x.translate(106, 88)
+      x.globalCompositeOperation = 'screen'
+      x.globalAlpha = 0.9
+      x.drawImage(frameArt(id, true), 0, 0, 232, 130)
+      x.restore()
+      // play badge on the reel thumb
+      x.fillStyle = 'rgba(255,255,255,0.92)'
       x.beginPath()
-      x.moveTo(bx, by + 6)
-      x.lineTo(bx, by + 19)
-      x.stroke()
-      for (const rr of [15, 24]) {
-        x.beginPath()
-        x.arc(bx, by - 3, rr, -0.4 * Math.PI, 0.4 * Math.PI)
-        x.stroke()
-        x.beginPath()
-        x.arc(bx, by - 3, rr, 0.6 * Math.PI, 1.4 * Math.PI)
-        x.stroke()
-      }
+      x.arc(222, 153, 26, 0, Math.PI * 2)
+      x.fill()
+      x.fillStyle = 'rgba(40,20,16,0.9)'
+      x.beginPath()
+      x.moveTo(214, 139)
+      x.lineTo(238, 153)
+      x.lineTo(214, 167)
+      x.closePath()
+      x.fill()
+      x.fillStyle = 'rgba(255,252,246,0.95)'
+      x.font = '500 23px ui-monospace, monospace'
+      x.fillText('Session highlights', 106, 246)
+      x.fillStyle = 'rgba(255,252,246,0.6)'
+      x.font = '500 20px ui-monospace, monospace'
+      x.fillText('Delivered ✓✓', 106, 276)
+      x.fillStyle = 'rgba(255,252,246,0.8)'
+      x.font = '500 21px ui-monospace, monospace'
+      x.fillText('CLIENT REEL', 88, 318)
     } else {
-      x.font = 'bold 46px system-ui, sans-serif'
-      x.textAlign = 'center'
-      x.textBaseline = 'middle'
-      x.fillText('in', bx, by + 1)
+      // the archive answers: a query and the moments it found
+      x.fillStyle = 'rgba(255,255,255,0.18)'
+      x.beginPath()
+      x.roundRect(88, 70, 464, 44, 22)
+      x.fill()
+      x.fillStyle = 'rgba(255,252,246,0.92)'
+      x.font = '500 24px ui-monospace, monospace'
+      x.fillText('⌕  every squat PR — March', 106, 92)
+      for (let k = 0; k < 3; k++) {
+        const rx = 88 + k * 160
+        x.save()
+        x.translate(rx, 132)
+        x.globalCompositeOperation = 'screen'
+        x.globalAlpha = 0.85
+        x.drawImage(frameArt(id - 3 - k * 4, true), 0, 0, 144, 82)
+        x.restore()
+        x.fillStyle = 'rgba(255,252,246,0.6)'
+        x.font = '500 17px ui-monospace, monospace'
+        x.fillText('S' + (9 - k * 2) + ' · 0' + (k + 1) + ':1' + (k * 3) + ':0' + (k * 2), rx, 232)
+      }
+      x.fillStyle = 'rgba(255,252,246,0.8)'
+      x.font = '500 21px ui-monospace, monospace'
+      x.fillText('FOUND IN YOUR ARCHIVE', 88, 318)
     }
-    x.font = '600 40px ui-monospace, monospace'
-    x.textAlign = 'right'
-    x.textBaseline = 'middle'
-    x.fillText(d.name, bx - 32, by)
     sc.tex.needsUpdate = true
   }
   FAN.forEach((d, i) => {
@@ -770,7 +856,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     drawScreen(sc, 0)
     const sy = lampY + 2.4 - i * 2.4
     const m = new THREE.Mesh(
-      new THREE.PlaneGeometry(4.35, 2.45),
+      new THREE.PlaneGeometry(4.9, 2.76),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),
     )
     m.rotation.y = -Math.PI / 2
