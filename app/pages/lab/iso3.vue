@@ -19,20 +19,15 @@ useHead({
       <!-- Placeholder only. The machine is fitted to the right of the stage so
            this column stays clear; type here is how the composition gets judged. -->
       <div class="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-6 sm:px-8">
+        <!-- the machine's warmth pooling under the words: type and stage share light -->
+        <div class="pointer-events-none absolute left-0 top-1/2 h-[26rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(242,143,132,0.10),transparent_70%)] blur-2xl" aria-hidden="true" />
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <a
           href="#"
-          class="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-[#f28f84]/60 px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#ffd0c7]"
+          class="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
         >Get started <span aria-hidden="true">→</span></a>
-
-        <!-- The beacon: the one thing still being asked of you, sitting where
-             the files come from. It is the source the machine is fed by. -->
-        <p class="mt-9 flex items-center gap-2.5 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-zinc-500">
-          <span class="beacon" aria-hidden="true" />
-          Recording
-        </p>
       </div>
     </div>
   </main>

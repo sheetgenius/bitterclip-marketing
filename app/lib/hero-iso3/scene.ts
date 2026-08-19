@@ -148,8 +148,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const pts = probe.map((p) => px(p[0], p[1], p[2]))
     const xs = pts.map((p) => p[0])
     const ys = pts.map((p) => p[1])
-    const S = Math.min((W * 0.72) / (Math.max(...xs) - Math.min(...xs)), (H * 0.86) / (Math.max(...ys) - Math.min(...ys)))
-    const ox = W * 0.6 - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
+    const S = Math.min((W * 0.82) / (Math.max(...xs) - Math.min(...xs)), (H * 0.9) / (Math.max(...ys) - Math.min(...ys)))
+    const ox = W * 0.565 - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
     const oy = H * 0.52 - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
 
     const v = new THREE.Vector3(0.886, -0.684, -1).normalize()
@@ -182,7 +182,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     steel: new THREE.MeshStandardMaterial({ color: 0x4a4a58, roughness: 0.45, metalness: 0.55 }),
     steelDark: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.5, metalness: 0.5 }),
     legs: new THREE.MeshStandardMaterial({ color: 0x434250, roughness: 0.52, metalness: 0.4, envMapIntensity: 1.2 }),
-    flange: new THREE.MeshStandardMaterial({ color: 0x383844, roughness: 0.62, metalness: 0.3, envMapIntensity: 0.7, side: THREE.DoubleSide }),
+    flange: new THREE.MeshStandardMaterial({ color: 0x3a3a46, roughness: 0.45, metalness: 0.45, envMapIntensity: 1.0, side: THREE.DoubleSide }),
     coil: new THREE.MeshStandardMaterial({ color: 0x665c48, roughness: 0.9 }),
     lap: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.92 }),
     // The stage floor is honestly lit (three's light layers can't mask
@@ -252,8 +252,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const j2 = ((hsh >> 9) % 100) / 100
     // field: warm stock, a touch of per-frame drift
     const g = g2.createLinearGradient(0, 0, 0, h)
-    g.addColorStop(0, `hsl(${44 + j1 * 10} 12% ${40 + j2 * 6}%)`)
-    g.addColorStop(1, `hsl(${40 + j1 * 8} 14% ${28 + j1 * 5}%)`)
+    g.addColorStop(0, `hsl(${44 + j1 * 10} 13% ${47 + j2 * 6}%)`)
+    g.addColorStop(1, `hsl(${40 + j1 * 8} 15% ${33 + j1 * 5}%)`)
     g2.fillStyle = g
     g2.fillRect(0, 0, w, h)
     g2.fillStyle = 'rgba(38,34,26,0.9)'
@@ -307,7 +307,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const off = dist % PITCH
     const capS = TURRET.x - START
     // stock base + frame lines
-    fctx.fillStyle = '#26231c'
+    fctx.fillStyle = '#2b2820'
     fctx.fillRect(0, 0, FILM_TEX_W, FILM_TEX_H)
     // image field per frame, printed ACROSS the strip: rotate the shared
     // renderer 90° so its horizontal axis runs across the film's width
@@ -632,7 +632,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
           uColor: { value: new THREE.Color(d.color) },
           uTime: { value: 0 },
           uSeed: { value: i + 1 },
-          uAlpha: { value: 0.48 },
+          uAlpha: { value: 0.34 },
           uView: { value: new THREE.Vector3(-0.886, 0.684, 1).normalize() },
         },
         transparent: true,
@@ -682,13 +682,13 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     x.save()
     x.filter = 'blur(38px)'
     x.fillStyle = d.color
-    x.globalAlpha = 0.5
+    x.globalAlpha = 0.34
     x.fillRect(96, 74, 448, 212)
     x.restore()
     x.save()
     x.filter = 'blur(10px)'
     x.fillStyle = d.color
-    x.globalAlpha = 0.9
+    x.globalAlpha = 0.6
     x.fillRect(76, 58, 488, 244)
     x.restore()
     // the gate's frame, projected: same content, lightening the tint
@@ -873,8 +873,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   gateGlow.shadow.bias = -0.004
   scene.add(gateGlow)
   // a small glint where the film arrives on the coil — the handoff reads
-  const wheelKiss = new THREE.PointLight(0xa8b4d8, 40, 26)
-  wheelKiss.position.set(reelX - 6.5, reelY + 5, 7)
+  const wheelKiss = new THREE.PointLight(0xa8b4d8, 72, 26)
+  wheelKiss.position.set(reelX - 7, reelY + 2, 6)
   scene.add(wheelKiss)
   // THE ARCHIVE IS ALIVE: a warm ember inside the drum, between the flanges —
   // the wound memory glows out through the windows as they turn
