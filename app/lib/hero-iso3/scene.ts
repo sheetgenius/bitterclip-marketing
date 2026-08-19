@@ -70,19 +70,19 @@ const reelY = gateY
 // The optical line lives in the CLEAR AIR under the wheel's rim (at 0.47 the
 // colossal flange swallowed lamp and rigging whole); the drop rods emerge
 // from behind the archive, which reads as hung — source above, work below.
-const lampY = beltY + ROLL.r + RISE * 0.32
+// The optical line sits ON the A-bars: the crossbeams run slightly below
+// the wheel's lowest rim edge (owner: no collision with the reel), complete
+// each girder into a letter A, and their cantilevered ends carry the head.
+const lampY = beltY + ROLL.r + RISE * 0.347
 // THE HEAD lives at the climb (owner: "it all happens in between the
 // girders") — masts straddle the film, the housing's muzzle nearly kisses it.
 const MAST = { x0: 9.44, x1: 9.85, top: 6.15, z: 1.545, t: 0.2 }
 const LAMP_CX = 8.9
 const LAMP_LEN = 0.62 // half-length of the housing along x
-const STILL_T = 1.35
+const STILL_T = 2.05
 
-// drop cycle
-const FALL_S = 1.05
-const SOAK_S = 1.9
-const GAP_S = 3.4
-const LIFE = FALL_S + SOAK_S + GAP_S
+// intake cycle: materialize -> fold open -> spill -> away -> embers
+const LIFE = 6.4
 
 const AX = (12 * Math.PI) / 180
 const AZ = (30 * Math.PI) / 180
@@ -415,7 +415,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       box(f.x - 0.5, f.x + 0.5, 0, 0.13, zc - 0.24, zc + 0.24, M.steel)
       box(f.x - 0.3, f.x + 0.3, 0.13, 0.52, zc - 0.07, zc + 0.07, M.legs)
     }
-    box(FOOT_L.x + 0.3, FOOT_R.x - 0.3, 0.34, 0.5, zc - 0.08, zc + 0.08, M.legs)
+
     // bearing cap at the apex
     const boss = cyl(0.34, 0.18, M.steel, 'z')
     boss.position.set(reelX, reelY, zc)
@@ -423,20 +423,20 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // the axle, housed between the apexes
   cyl(0.17, MAST.z * 2 + 0.4, M.steel, 'z').position.set(reelX, reelY, 0)
 
-  // THE LIGHT RIG hangs between the triangles: a bridge spanning the frames
-  // on the down-line legs, a boom running out over the lamp, and two drop
-  // rods carrying the shaft the housing is journalled on.
+  // THE A-BARS: one crossbeam per girder, leg to leg — the bar that makes
+  // each triangle a letter A — cantilevering down-line to carry the head
+  // bolted between their ends. The bars run just below the wheel's lowest
+  // edge, so structure and archive never collide on screen.
   {
-    const RIG_Y = 4.75
-    const bridgeX = legXAt(FOOT_R, RIG_Y)
-    box(bridgeX - 0.11, bridgeX + 0.11, RIG_Y - 0.11, RIG_Y + 0.11, -MAST.z - 0.12, MAST.z + 0.12, M.steel)
-    box(bridgeX - 0.08, ROLL.x + 0.02, RIG_Y - 0.09, RIG_Y + 0.09, -0.09, 0.09, M.steelDark)
-    // one clean drop from the boom's end carries the whole projector head
-    box(9.78, 9.94, lampY + 0.86, RIG_Y, -0.07, 0.07, M.steelDark)
-    for (const rz of [-0.45, 0.45]) {
-      box(LAMP_CX - 0.075, LAMP_CX + 0.075, lampY, RIG_Y, rz - 0.075, rz + 0.075, M.steelDark)
+    const CB_END = 10.32
+    for (const sgn of [-1, 1]) {
+      const zc = sgn * MAST.z
+      box(legXAt(FOOT_L, lampY) - 0.12, CB_END, lampY - 0.11, lampY + 0.11, zc - 0.09, zc + 0.09, M.legs)
+      // mounting boss: bar into the head's collar cheek
+      box(9.62, 10.08, lampY - 0.09, lampY + 0.09, sgn * 1.3, sgn * (MAST.z - 0.09), M.steel)
     }
-    cyl(0.09, 1.24, M.steel, 'z').position.set(LAMP_CX, lampY, 0)
+    // the lamp's shaft rides between the collar cheeks
+    cyl(0.09, 2.6, M.steel, 'z').position.set(LAMP_CX, lampY, 0)
   }
   // roller in pillow blocks on the deck, like real transport hardware
   {
@@ -774,35 +774,68 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     screenQuad(new THREE.Vector3(11.02, lampY, 0), 1.15, 1.15, new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))
   }
 
-  // ---- the falling folder -------------------------------------------------
-  const folderMat = new THREE.MeshStandardMaterial({ color: 0xd6d1c8, roughness: 0.85, transparent: true })
+  // ---- the intake: a folder materializes, folds open, and spills ----------
+  // (owner, 2026-08-19: "a folder should materialize and fold open and a
+  // bunch of files fall out of it into the acetate." The files are what the
+  // acid takes; the folder is the vessel — one folder, many files, many
+  // frames. The waiting pile is gone.)
+  const folderMat = new THREE.MeshStandardMaterial({ color: 0xc9c3b8, roughness: 0.88, transparent: true, opacity: 0 })
+  // The folder rides in UPRIGHT AND FACING US, wearing its label; the cover
+  // flops open a full 180 like a drawbridge and the footage cascades out.
   const folder = new THREE.Group()
   {
-    const body = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.16, 2.3), folderMat)
-    folder.add(body)
-    const tab = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.16, 0.3), folderMat)
-    tab.position.set(-0.45, 0, -1.3)
+    const back = new THREE.Mesh(new THREE.BoxGeometry(2.3, 2.3, 0.08), folderMat)
+    back.position.set(0, 1.15, 0)
+    back.castShadow = true
+    folder.add(back)
+    const tab = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.26, 0.08), folderMat)
+    tab.position.set(-0.55, 2.4, 0)
     folder.add(tab)
   }
-  folder.position.set((BED.x0 + BED.x1) / 2, BED.top + 3, 0)
-  scene.add(folder)
+  const coverHinge = new THREE.Group()
+  coverHinge.position.set(0, 0, 0.09)
+  const coverGroup = new THREE.Group()
   {
-    const queueMat = new THREE.MeshStandardMaterial({ color: 0xcfc9bf, roughness: 0.85 })
-    const parked = (px2: number, py2: number, pz2: number, rot: number) => {
-      const g2 = new THREE.Group()
-      const b = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.16, 2.3), queueMat)
-      b.castShadow = true
-      b.receiveShadow = true
-      g2.add(b)
-      const tb = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.16, 0.3), queueMat)
-      tb.position.set(-0.45, 0, -1.3)
-      g2.add(tb)
-      g2.position.set(px2, py2, pz2)
-      g2.rotation.y = rot
-      scene.add(g2)
-    }
-    parked(-4.75, -TABLE.deep + 0.1, 0.3, 0.14)
-    parked(-4.55, -TABLE.deep + 0.27, -0.25, -0.1)
+    const cover = new THREE.Mesh(new THREE.BoxGeometry(2.3, 2.3, 0.05), folderMat)
+    cover.position.set(0, 1.15, 0)
+    cover.castShadow = true
+    coverGroup.add(cover)
+    // the label: RAW FOOTAGE, read while the folder is closed
+    const lc = document.createElement('canvas')
+    lc.width = 512
+    lc.height = 192
+    const lx = lc.getContext('2d')!
+    lx.fillStyle = 'rgba(250,247,240,0.96)'
+    lx.beginPath()
+    lx.roundRect(56, 48, 400, 96, 10)
+    lx.fill()
+    lx.fillStyle = '#31302c'
+    lx.font = '600 44px ui-monospace, monospace'
+    lx.textAlign = 'center'
+    lx.textBaseline = 'middle'
+    lx.fillText('RAW FOOTAGE', 256, 98)
+    const ltex = new THREE.CanvasTexture(lc)
+    ltex.colorSpace = THREE.SRGBColorSpace
+    const label = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.5, 0.56),
+      new THREE.MeshStandardMaterial({ map: ltex, transparent: true, roughness: 0.85, side: THREE.DoubleSide }),
+    )
+    label.position.set(0, 1.35, 0.04)
+    coverGroup.add(label)
+  }
+  coverHinge.add(coverGroup)
+  folder.add(coverHinge)
+  // face the audience: the folder's front turns toward the camera side
+  folder.rotation.y = -0.42
+  scene.add(folder)
+  const files: { m: THREE.Mesh; fm: THREE.MeshStandardMaterial; delay: number; jx: number; jz: number; spin: number }[] = []
+  for (let i = 0; i < 6; i++) {
+    const fm = new THREE.MeshStandardMaterial({ color: 0xe6e1d6, roughness: 0.8, transparent: true, opacity: 0, emissive: 0xff9d7a, emissiveIntensity: 0 })
+    const f = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.05, 1.0), fm)
+    f.castShadow = true
+    f.visible = false
+    scene.add(f)
+    files.push({ m: f, fm, delay: i * 0.17, jx: (((i * 73) % 10) / 10 - 0.5) * 1.1, jz: (((i * 37) % 10) / 10 - 0.5) * 1.6, spin: 0.9 + ((i * 29) % 10) / 11 })
   }
 
   // ---- lights: the noir rig ----------------------------------------------
@@ -887,24 +920,51 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     reel.rotation.z = dist / coilR
     drawFilm(dist)
 
-    // the drop cycle: fall under gravity, land, dissolve; acid breathes
+    // THE INTAKE CYCLE: the folder materializes hovering over the acetate,
+    // tips and folds open, its files tumble out, and each one the acid takes
+    // makes the bath flare a little brighter.
     const age = t % LIFE
+    const bx = (BED.x0 + BED.x1) / 2
+    // slide down, stop, flop open 180, spill, fold away
+    const slide01 = THREE.MathUtils.smoothstep(age, 0, 0.9)
+    const open01 = THREE.MathUtils.smoothstep(age, 1.15, 1.8)
+    const away01 = THREE.MathUtils.smoothstep(age, 3.1, 3.6)
+    folder.visible = age < 3.65
+    folderMat.opacity = Math.min(1, age / 0.45) * (1 - away01)
+    folder.position.set(bx - 0.25, BED.top + 2.42 + 1.0 * (1 - slide01) + 0.9 * away01, 0.25)
+    coverHinge.rotation.x = 2.8 * open01
     let acid = 0.28
-    if (age < FALL_S) {
-      const u = age / FALL_S
-      folder.visible = true
-      folder.position.y = BED.top + 0.06 + 4.6 * (1 - u * u)
-      folderMat.opacity = 1
-      acid = 0.28 + 0.4 * u
-    } else if (age < FALL_S + SOAK_S) {
-      folder.visible = true
-      folder.position.y = BED.top + 0.06
-      folderMat.opacity = Math.max(0, Math.pow(1 - (age - FALL_S) / SOAK_S, 1.5))
-      acid = 1
-    } else {
-      folder.visible = false
-      acid = Math.max(0.28, 1 - (age - FALL_S - SOAK_S) / 1.7)
+    for (const f of files) {
+      const tau = age - (1.55 + f.delay)
+      if (tau < 0 || age > 5.6) {
+        f.m.visible = false
+        continue
+      }
+      const y0 = BED.top + 2.5
+      const yLand = BED.top - 0.03
+      const tLand = Math.sqrt((y0 - yLand) / 4.6)
+      if (tau < tLand) {
+        f.m.visible = true
+        f.fm.opacity = Math.min(1, tau / 0.1)
+        f.m.position.set(bx - 0.25 + f.jx * 0.7, y0 - 4.6 * tau * tau, 0.62 + f.jz * 0.45)
+        f.m.rotation.x = f.spin * tau * 2.4
+        f.m.rotation.z = 0.3 * f.spin * tau
+      } else {
+        const dwell = tau - tLand
+        if (dwell < 0.55) {
+          f.m.visible = true
+          f.fm.opacity = Math.max(0, 1 - dwell / 0.5)
+          // the acid takes it burning: brightest just before it is gone
+          f.fm.emissiveIntensity = 3.2 * Math.min(1, dwell / 0.3)
+          f.m.position.set(bx - 0.25 + f.jx * 0.7, yLand - dwell * 0.22, 0.62 + f.jz * 0.45)
+        } else {
+          f.m.visible = false
+        }
+        acid += 0.16 * Math.max(0, 1 - dwell / 1.5)
+      }
     }
+    acid = Math.min(1, acid)
+    if (age > 4.2) acid = Math.max(0.28, acid - (age - 4.2) * 0.3)
     bedGlow.intensity = 3 + 12 * acid
   }
 
