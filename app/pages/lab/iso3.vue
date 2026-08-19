@@ -21,7 +21,7 @@ useHead({
       <div class="relative mx-auto flex h-full max-w-6xl flex-col justify-center px-6 sm:px-8">
         <!-- the machine's warmth pooling under the words: type and stage share light -->
         <div class="pointer-events-none absolute left-0 top-1/2 h-[26rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(242,143,132,0.10),transparent_70%)] blur-2xl" aria-hidden="true" />
-        <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Deep video memory</p>
+        <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>

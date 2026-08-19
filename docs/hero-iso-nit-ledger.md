@@ -191,3 +191,6 @@ hero; real artifacts belong below the fold.
 Next: owner shows the page to the real Andrew; below-fold sections (real
 episode gallery as case files, how-it-cuts, archive/search feature, pricing
 teaser); mobile stack; bake-to-video endgame.
+
+- Category correction (owner): the eyebrow is AGENTIC VIDEO EDITING — deep
+  video memory is a pillar (the wheel, the recall screen), not the category.
