@@ -161,11 +161,12 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     // shared stage; at taller viewports it yields ground so the column and
     // the rite never collide ("room to breathe").
     const wide = W / H
-    const widthBudget = wide > 1.55 ? 0.78 : wide > 1.25 ? 0.7 : 0.88
+    const widthBudget = wide > 1.55 ? 0.78 : wide > 1.25 ? 0.7 : 0.97
     const centerX = wide > 1.55 ? 0.585 : wide > 1.25 ? 0.63 : 0.5
+    const centerY = wide > 1.25 ? 0.52 : 0.63
     const S = Math.min((W * widthBudget) / (Math.max(...xs) - Math.min(...xs)), (H * 0.9) / (Math.max(...ys) - Math.min(...ys)))
     const ox = W * centerX - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
-    const oy = H * 0.52 - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
+    const oy = H * centerY - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
 
     const v = new THREE.Vector3(0.886, -0.684, -1).normalize()
     const corners: [number, number, number][] = [
