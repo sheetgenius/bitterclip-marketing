@@ -62,7 +62,6 @@ useHead(() => {
 
 <template>
   <main class="relative mx-auto max-w-5xl px-4 pt-12 pb-24 sm:px-6">
-    <div class="absolute top-0 left-1/4 -z-10 h-[360px] w-[360px] rounded-full bg-[#f28f84]/5 blur-[100px] pointer-events-none" />
 
     <header class="mb-10 border-b border-zinc-900 pb-8">
       <div class="flex items-start justify-between gap-4">

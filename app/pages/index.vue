@@ -94,23 +94,31 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Create the free account and upload a recording in your browser. Open it there, or connect Claude or a ChatGPT workspace where custom apps are enabled and ask for the strongest moment. Check the cut, trim it, export.',
+    a: 'Create the free account, then upload a recording or record one in the browser. BitterClip transcribes it, separates the speakers, and opens the editor with the agent already in it. Ask for what you want, check it against the recording, adjust it, export.',
   },
   {
-    q: 'Do I need ChatGPT, or does Claude work too?',
-    a: 'You can always use BitterClip in your browser. Claude supports custom connectors on every Claude plan. In ChatGPT, custom-app access and available actions depend on your plan and workspace policy.',
+    q: 'I have tried AI clippers. Why would this be different?',
+    a: 'Because it is not picking moments out of a transcript search. It works from the whole session — who is speaking, what came before and after, what is on screen — and commits to a cut it can explain and show you the source for. When it is wrong, you say what is wrong and it revises that same cut instead of handing you ten more options.',
   },
   {
-    q: 'Can the AI post something without me?',
-    a: 'Approval is the default. Nothing posts until you connect a channel and approve the clip. If you later turn on automatic publishing for a project, ready clips can post to the channels you chose.',
+    q: 'Do I need ChatGPT or Claude?',
+    a: 'No. The agent is built into the editor, and that is the shortest path. If you would rather work where you already are, Claude supports custom connectors on every Claude plan; in ChatGPT, custom-app access and available actions depend on your plan and workspace policy.',
+  },
+  {
+    q: 'Can it post something without me?',
+    a: 'No. Every send is bound to one exact export, one destination, one account, and a final confirmation from you. Connecting a channel does not hand over the keys.',
+  },
+  {
+    q: 'Does BitterClip record for me?',
+    a: 'It can record. It cannot have the conversation for you — that part stays yours. Every project has a recorder in the browser: camera and mic on a laptop or phone, or your screen in desktop Chrome, up to 1080p, uploading while you record so transcription starts the moment you stop. It captures one signed-in person on one device — no remote guests, no guest recording links, no separate track per person. Most people bring footage they already shot on a phone, a camera, Zoom, or Riverside, and that stays completely normal.',
   },
   {
     q: 'What can I upload?',
-    a: 'Podcasts, interviews, calls, training sessions — audio or video, in files up to 4 GB (20 GB on Pro).',
+    a: 'Podcasts, interviews, calls, training sessions — audio or video, in files up to 4 GB (20 GB on Pro). Bring several angles of the same session and BitterClip keeps them in sync; the picture can cut between up to five at a time while the audio stays whole.',
   },
   {
     q: 'Do I have to learn a new editor?',
-    a: 'No. Drag across the words in the transcript and the cut follows the audio. It is the same focused editor in the browser and in supported assistant hosts.',
+    a: 'No. You edit by changing the transcript: select the words, delete them, and the video changes with them. Or say what you want changed and let the agent make the edit. Same editor in the browser and in supported assistant hosts.',
   },
   {
     q: 'What happens if I cancel?',
@@ -133,7 +141,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'Turn long podcasts, interviews, and founder calls into source-linked clips in your browser or a supported AI assistant.',
+    description: 'You record it. BitterClip handles the rest — the full-length episode and the short cuts from that same edit, made by changing the transcript, with an agent that watched the whole session.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -147,7 +155,7 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
-    description: 'Ask ChatGPT for the best moments in a recording, trim them in a real editor, and post finished clips.',
+    description: 'Record a session in the browser or bring footage you already shot, and BitterClip finishes it: the full-length episode and the short cuts from that same edit, made by changing the transcript, with an agent you can direct and revise.',
     offers: {
       '@type': 'AggregateOffer',
       lowPrice: '0',
@@ -378,7 +386,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="relative w-full">
-    <div class="absolute top-0 left-0 right-0 h-[680px] hero-backdrop-mask opacity-[0.08] -z-10 pointer-events-none" />
+    <!-- hero-backdrop-mask removed: the body vignette in main.css now owns the
+         frame falloff, and stacking two large radial gradients was compounding
+         the banding. -->
 
     <main class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 pb-24 relative">
 
@@ -388,14 +398,14 @@ onBeforeUnmount(() => {
         <!-- Left: the pitch -->
         <div class="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
           <h1 class="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.035em] text-white leading-[1.04] mb-6">
-            Cut your clips
+            You record it.
             <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">
-              inside ChatGPT.
+              BitterClip handles the rest.
             </span>
           </h1>
 
           <p class="text-zinc-400 text-lg sm:text-xl font-sans max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-            Upload a podcast, interview, or founder call and just ask. In a ChatGPT workspace with custom apps enabled, your assistant finds the moment and opens a real editor beside the conversation. Trim it, hear it in context, and export a finished clip. The same workspace works in your browser and Claude.
+            Have the real conversation and get it recorded — on your phone, on a camera, in Zoom, or with BitterClip's own browser recorder. From there it is BitterClip's job: the full-length episode with your opener and outro, captions, music, and camera changes, then the short vertical cuts from that same edit. You edit by changing the transcript, or say what's wrong and it revises that same cut instead of starting over.
           </p>
 
           <div class="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3">
@@ -403,7 +413,7 @@ onBeforeUnmount(() => {
               :href="signupUrl"
               class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              <span>Clip your first recording</span>
+              <span>Bring your footage</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -416,7 +426,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Browser and Claude are open to everyone; the full ChatGPT app currently needs an eligible workspace.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Everything runs in your browser; ChatGPT and Claude are optional, over the same work.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -427,7 +437,7 @@ onBeforeUnmount(() => {
                the top of the conversation. -->
           <div class="hidden lg:block absolute -top-8 -left-[22.5rem] z-30 w-[340px] text-right -rotate-[5deg] pointer-events-none select-none">
             <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8] block whitespace-nowrap">this is the real editor</span>
-            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8]/80 block whitespace-nowrap">your assistant opens</span>
+            <span class="font-hand text-[25px] leading-[1.12] text-[#ffb4a8]/80 block whitespace-nowrap">running right here</span>
           </div>
           <svg viewBox="0 0 130 210" fill="none" class="hidden lg:block absolute top-[2.8rem] -left-[6rem] w-[130px] h-[210px] z-30 text-[#ffb4a8]/85 pointer-events-none">
             <path d="M44 2 C 24 76, 30 152, 114 197" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
@@ -436,7 +446,8 @@ onBeforeUnmount(() => {
 
           <!-- the phone, tilted in 3D for depth -->
           <div class="relative mx-auto w-full max-w-[368px] lg:[transform:perspective(1800px)_rotateY(-9deg)_rotateX(2.5deg)_rotateZ(0.6deg)] transform-gpu">
-            <div class="absolute -inset-6 bg-[#f28f84]/8 rounded-[3.5rem] blur-3xl -z-10 pointer-events-none"></div>
+            <!-- The coral halo behind the phone is gone; the titanium frame's
+                 own drop shadow separates it from the field without ringing. -->
 
             <!-- phone: titanium frame -->
           <div class="relative rounded-[3rem] p-[3px] bg-gradient-to-br from-zinc-500 via-zinc-700 to-zinc-800 ring-1 ring-white/20 shadow-[0_45px_90px_-25px_rgba(0,0,0,0.85)]">
@@ -483,13 +494,13 @@ onBeforeUnmount(() => {
                     class="max-w-[88%] rounded-3xl px-3.5 py-2"
                     :class="heroTheme === 'light' ? 'bg-[#f4f4f4] border border-zinc-200/80 shadow-sm' : 'bg-[#f4f4f4]'"
                   >
-                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Pull the strongest moments from episode one and cut me clips.</p>
+                    <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-950' : 'text-zinc-900'">Turn this session into the episode, and pull a clip from it.</p>
                   </div>
                 </div>
 
                 <!-- assistant reply: no bubble, just text -->
                 <div class="px-0.5">
-                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">The strongest moment is where you explain why you started. I found three cuts — open one, tighten the range, and check it before you post.</p>
+                  <p class="text-[13px] leading-relaxed text-left" :class="heroTheme === 'light' ? 'text-zinc-800' : 'text-zinc-100'">I watched the whole session. The cold open is where you explain why you started. Open the episode and tell me what to change.</p>
                 </div>
 
                 <!-- The REAL recording-card component, embedded live from the product.
@@ -550,7 +561,7 @@ onBeforeUnmount(() => {
                 height="160"
                 loading="lazy"
                 decoding="async"
-                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-white/[0.04]"
               />
               <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Andrew Williams</span>
@@ -585,7 +596,7 @@ onBeforeUnmount(() => {
                 height="160"
                 loading="lazy"
                 decoding="async"
-                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-[#f28f84]/10 shadow-[0_0_60px_-12px_rgba(242,143,132,0.45)]"
+                class="w-40 h-40 rounded-full object-cover ring-1 ring-white/10 bg-white/[0.04]"
               />
               <div class="max-w-56 font-mono text-[10px] uppercase tracking-widest text-center leading-relaxed">
                 <span class="block text-zinc-200">Rohan Karunakaran</span>
@@ -601,27 +612,29 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <!-- SECTION 01 — Right in ChatGPT & Claude (copy LEFT, live editor RIGHT — the centerpiece) -->
-      <section id="demo" aria-label="Right in ChatGPT and Claude" class="mb-24 relative scroll-mt-28">
+      <!-- SECTION 01 — It watched the whole session (copy LEFT, live editor RIGHT — the centerpiece) -->
+      <section id="demo" aria-label="It watched the whole session" class="mb-24 relative scroll-mt-28">
         <div class="grid lg:grid-cols-[1fr_minmax(520px,1.1fr)] gap-8 lg:gap-12 items-center">
 
           <!-- LEFT: the copy -->
           <div class="max-w-xl">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — Right in ChatGPT &amp; Claude</p>
+            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">01 — It watched the whole thing</p>
             <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-              Other clippers guess. Yours knows the whole conversation.
+              It watched the whole session before it cut anything.
             </h2>
             <p class="text-zinc-400 text-base sm:text-lg leading-relaxed mb-6">
-              Drop in a podcast, a founder call, or a training session. BitterClip transcribes it and separates the speakers automatically. Confirm a name once and BitterClip can recognize that person when they return. Your assistant gets the whole conversation: who said what, and what came before and after. Ask for the sharpest exchange, then check the source yourself.
+              Drop in a podcast, a founder call, or a training session — or record one right in the browser. BitterClip transcribes it, separates the speakers, and looks at the picture as well as the words — confirm a name once and it recognizes that person when they return. So when it picks a moment, it can tell you why and show you exactly where it came from. Tell it what's wrong in ordinary language and it revises that same cut, with the version before it still there.
             </p>
 
-            <!-- motif row: it suggests → you approve → you post -->
+            <!-- motif row: the delegation-with-a-veto loop — it acts, you direct,
+                 it revises the SAME work. Replaces the old suggest→approve→post
+                 motif, which framed the agent as a suggestion engine. -->
             <div class="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-              <span class="text-[#f28f84]">your assistant suggests</span>
+              <span class="text-[#f28f84]">it makes a real cut</span>
               <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you approve</span>
+              <span class="text-[#f28f84]">you direct it</span>
               <span class="text-zinc-600">&rarr;</span>
-              <span class="text-[#f28f84]">you post</span>
+              <span class="text-[#f28f84]">it revises the same work</span>
             </div>
 
             <!-- mid-page CTA: the editor alongside is the peak-interest moment —
@@ -631,24 +644,27 @@ onBeforeUnmount(() => {
                 :href="signupUrl"
                 class="group inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] active:scale-98 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
-                <span>Try it with your recording</span>
+                <span>Bring your footage</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
               </a>
               <span class="text-[11px] text-zinc-500">Free — 60 minutes a month</span>
             </div>
+
+            <!-- ChatGPT/Claude, demoted out of the hero to here. Per the
+                 go-to-market ruling they are optional peer cockpits over the same
+                 Rails-owned work — a differentiator and a choice, never an
+                 onboarding prerequisite. Eligibility detail lives in the FAQ so
+                 the fold no longer walks its own headline back. -->
+            <p class="mt-8 pt-6 border-t border-zinc-900 text-sm text-zinc-500 leading-relaxed">
+              <span class="text-zinc-300">Prefer to work in ChatGPT or Claude?</span> Connect one and you are on the same episode, the same revisions, the same exports — the editor opens right in the conversation. It is a choice, not a setup step.
+            </p>
           </div>
 
           <!-- RIGHT: the live editor, bare. The speaker chips straddle its top edge like
                presence indicators — the same peach/emerald the embed color-codes speakers with. -->
           <div class="relative w-full">
-            <!-- speaker-colored atmosphere, one soft glow per speaker -->
-            <div class="absolute -inset-x-10 -inset-y-12 -z-10 pointer-events-none" aria-hidden="true">
-              <div class="absolute left-0 top-0 w-3/4 h-3/4 rounded-full bg-[#f28f84]/[0.06] blur-3xl"></div>
-              <div class="absolute right-0 bottom-0 w-3/4 h-3/4 rounded-full bg-emerald-400/[0.05] blur-3xl"></div>
-            </div>
-
             <!-- two little speaker bubbles — in-flow on mobile, straddling the embed's top edge from sm: up.
                  Andrew's chip uses his headshot, while Adrian's chip uses the product's no-photo fallback.
                  Speaking-share %s are placeholders until the embed points at the coaching recording. -->
@@ -677,13 +693,13 @@ onBeforeUnmount(() => {
               <!-- Mobile Activation Gate -->
               <div v-if="!demoActivated" class="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center p-6 text-center z-20">
                 <p class="font-mono text-[8px] text-[#f28f84] uppercase tracking-widest mb-3">The real editor</p>
-                <h3 class="font-display text-lg font-bold text-white mb-2">The same editor that opens in ChatGPT.</h3>
+                <h3 class="font-display text-lg font-bold text-white mb-2">The same editor you work in.</h3>
                 <p class="text-zinc-400 text-xs max-w-sm mb-6 leading-relaxed">
-                  Drag across the words to cut a clip, then check it against the recording. Tap to load it.
+                  Edit by changing the transcript — select the words, delete them, and the video changes with them. Tap to load it.
                 </p>
                 <button
                   @click="activateDemo"
-                  class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-lg shadow-lg shadow-[#f28f84]/10 hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  class="px-5 py-2.5 font-mono text-xs font-bold bg-[#f28f84] text-zinc-950 rounded-lg hover:bg-[#ffa89e] hover:scale-102 active:scale-98 transition duration-200 cursor-pointer min-h-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   Load the editor
                 </button>
@@ -728,10 +744,10 @@ onBeforeUnmount(() => {
         <div class="max-w-2xl mb-10">
           <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-4">02 — The handoff</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-5">
-            Finished clips — out the door, your way.
+            The episode, and everything that comes out of it.
           </h2>
           <p class="text-zinc-400 text-base sm:text-lg leading-relaxed">
-            Trim it, export, done. Publish directly to YouTube, X, or LinkedIn, or grab a shareable link. For Instagram, send the finished clip to your phone and post it from the Instagram app. Invite a client to the same recording and they can pull their own clips too — upload once, everyone clips.
+            Export the full-length episode, then pull the short vertical cuts from that same edit instead of starting a second production. Publish to YouTube, X, or LinkedIn, or grab a shareable link. For Instagram, send the finished clip to your phone and post it from the Instagram app. Nothing goes out until you confirm it. Invite a client to the same session and they can pull their own cuts too — upload once, everyone works from it.
           </p>
         </div>
 
@@ -757,7 +773,7 @@ onBeforeUnmount(() => {
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="flex items-center justify-center w-10 h-10 rounded-full bg-[#f28f84] shadow-[0_0_24px_rgba(242,143,132,0.45)]">
+                  <span class="flex items-center justify-center w-10 h-10 rounded-full bg-[#f28f84]">
                     <svg viewBox="0 0 24 24" fill="#1a1a1a" class="w-4 h-4 translate-x-px" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
                   </span>
                 </div>
@@ -866,14 +882,13 @@ onBeforeUnmount(() => {
 
       <!-- 7. Close -->
       <section id="pricing" class="relative scroll-mt-28">
-        <div class="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-[#f28f84]/10 to-transparent rounded-[3rem] blur-3xl -z-10 pointer-events-none" />
 
         <div class="max-w-2xl mx-auto text-center mb-8">
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
-            Bring one recording. Leave with clips.
+            Bring one recording. Leave with the episode.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Upload a podcast, interview, or founder call and leave with clips you've checked yourself. Work in the browser or bring the same editor into a supported assistant. Start free; upgrade when an hour a month stops being enough.
+            Upload a podcast, interview, or session and work it into something you would actually publish — with the agent in the editor, or from ChatGPT or Claude if you would rather. Start free; upgrade when an hour a month stops being enough.
           </p>
         </div>
 
@@ -905,7 +920,6 @@ onBeforeUnmount(() => {
                phone visitor sees. -->
           <div class="relative rounded-2xl glass-panel-accented glass-reflection corner-ticks p-6 flex flex-col overflow-hidden max-md:order-1">
             <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
-            <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#f28f84]/[0.07] to-transparent pointer-events-none"></div>
             <p class="absolute top-6 right-6 font-mono text-[10px] uppercase tracking-widest text-[#f28f84] border border-[#f28f84]/40 rounded-full px-2.5 py-1">Recommended</p>
             <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Clip</p>
             <p class="font-display text-3xl font-bold text-white">$9<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
@@ -1009,7 +1023,6 @@ onBeforeUnmount(() => {
   stroke-linecap: round;
   opacity: 0.75;
   vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--line-color, #f28f84) 45%, transparent));
   /* Draw-in: lines trace from the clip out to each destination on mount.
      Disabled automatically by the global prefers-reduced-motion block, which
      zeroes animation-duration on every element — the dasharray resting state

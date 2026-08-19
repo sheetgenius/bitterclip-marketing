@@ -140,7 +140,6 @@ useHead(() => {
 
 <template>
   <main v-if="post" class="relative mx-auto max-w-5xl px-4 pt-10 pb-24 sm:px-6">
-    <div class="absolute top-0 left-1/4 -z-10 h-[420px] w-[420px] rounded-full bg-[#f28f84]/5 blur-[110px] pointer-events-none" />
 
     <div class="mx-auto mb-8 max-w-3xl">
       <NuxtLink

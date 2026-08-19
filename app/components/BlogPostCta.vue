@@ -30,7 +30,6 @@ const signupUrl = computed(() => buildSignupUrl({
     class="relative mt-14 overflow-hidden rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-7 sm:p-9"
     aria-label="Get started with BitterClip"
   >
-    <div class="pointer-events-none absolute -top-24 right-0 h-56 w-56 rounded-full bg-[#f28f84]/10 blur-[90px]" />
     <p class="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[#f28f84]">Try it</p>
     <h2 class="max-w-xl text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
       {{ title }}

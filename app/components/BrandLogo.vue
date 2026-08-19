@@ -25,10 +25,10 @@ defineProps<{ tag?: string }>()
   width: 1.4rem;
   height: 1.4rem;
   color: #f28f84;
-  transition: filter 0.3s;
+  transition: color 0.3s;
 }
 .brand:hover .brand__icon {
-  filter: drop-shadow(0 0 8px rgba(242, 143, 132, 0.55));
+  color: #ffb9af;
 }
 .brand__word {
   font-family: var(--font-mono);

@@ -5,7 +5,6 @@ import { computed, ref, watch } from 'vue'
 // sticky top bar and a mobile drawer for the sidebar. The center content is the
 // page itself (rendered by pages/docs/[...slug].vue through the <slot/>).
 const route = useRoute()
-const signInUrl = 'https://app.bitterclip.com/sign_in'
 
 // The page is also queried in the catch-all page component under this exact key,
 // so useAsyncData dedupes — this read is free and gives us the TOC + title.
@@ -45,52 +44,22 @@ useHead({
 
 <template>
   <div class="docs-root">
-    <!-- Cinematic backdrops (match the marketing shell, dialed down). -->
-    <div class="docs-bg" aria-hidden="true">
-      <div class="absolute inset-0 bg-grid-pattern-dense opacity-[0.08]" />
-      <div class="docs-bg__glow" />
-    </div>
-
-    <!-- Sticky docs header -->
-    <header class="docs-header nav-glass">
-      <div class="docs-header__inner">
-        <div class="docs-header__left">
-          <button
-            type="button"
-            class="docs-header__menu"
-            :aria-expanded="drawerOpen"
-            aria-label="Toggle navigation"
-            @click="drawerOpen = !drawerOpen"
-          >
-            <svg v-if="!drawerOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-
-          <BrandLogo tag="Docs" />
-        </div>
-
-        <nav class="docs-header__nav" aria-label="Site">
-          <NuxtLink to="/docs" class="docs-header__navlink">Docs</NuxtLink>
-          <NuxtLink to="/blog" class="docs-header__navlink">Blog</NuxtLink>
-          <NuxtLink to="/docs/assistants/overview" class="docs-header__navlink">Assistants</NuxtLink>
-          <NuxtLink to="/#pricing" class="docs-header__navlink">Pricing</NuxtLink>
-          <NuxtLink to="/" class="docs-header__navlink">Main site →</NuxtLink>
-        </nav>
-
-        <a class="docs-header__cta" :href="signInUrl">Sign in</a>
-      </div>
-    </header>
+    <!-- The sitewide header, plus the two things only docs needs: the "Docs"
+         badge and the drawer toggle. -->
+    <SiteHeader
+      v-model:menu-open="drawerOpen"
+      brand-tag="Docs"
+      menu-controls="docs-sidebar-drawer"
+      menu-toggle
+      wide
+    />
 
     <!-- Mobile drawer scrim -->
     <div v-if="drawerOpen" class="docs-scrim" @click="drawerOpen = false" />
 
     <div class="docs-grid">
       <!-- Left sidebar (becomes a drawer under the lg breakpoint) -->
-      <aside class="docs-aside" :class="{ 'is-open': drawerOpen }">
+      <aside id="docs-sidebar-drawer" class="docs-aside" :class="{ 'is-open': drawerOpen }">
         <div class="docs-aside__inner">
           <DocsSidebar @navigate="drawerOpen = false" />
         </div>
@@ -123,139 +92,20 @@ useHead({
 .docs-root {
   position: relative;
   min-height: 100vh;
-  background-color: #080909;
+  background-color: var(--bitter-bg);
   color: #f4f4f5;
 }
 
-.docs-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.docs-bg__glow {
-  position: absolute;
-  top: -12%;
-  left: 12%;
-  width: 620px;
-  height: 620px;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(242, 143, 132, 0.05), transparent 70%);
-  filter: blur(120px);
-}
 
-/* ---- Sticky header ---- */
-.docs-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  border-left: none;
-  border-right: none;
-  border-top: none;
-}
-.docs-header__inner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: 90rem;
-  margin: 0 auto;
-  padding: 0.7rem 1.25rem;
-}
-.docs-header__left {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-right: auto;
-}
-.docs-header__menu {
-  display: none;
-  width: 2.1rem;
-  height: 2.1rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.55rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
-  color: #f4f4f5;
-  cursor: pointer;
-}
-.docs-header__menu svg {
-  width: 1.15rem;
-  height: 1.15rem;
-}
-.docs-header__brand {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-.docs-header__logo {
-  width: 1.35rem;
-  height: 1.35rem;
-  color: #f28f84;
-  transition: filter 0.3s;
-}
-.docs-header__brand:hover .docs-header__logo {
-  filter: drop-shadow(0 0 8px rgba(242, 143, 132, 0.55));
-}
-.docs-header__wordmark {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #f4f4f5;
-}
-.docs-header__docs-tag {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #f28f84;
-  border: 1px solid rgba(242, 143, 132, 0.3);
-  border-radius: 9999px;
-  padding: 0.1rem 0.45rem;
-}
-
-.docs-header__nav {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-.docs-header__navlink {
-  padding: 0.4rem 0.7rem;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: rgba(244, 244, 245, 0.72);
-  transition: color 0.18s, background 0.18s;
-}
-.docs-header__navlink:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.06);
-}
-.docs-header__navlink.router-link-active {
-  color: #f28f84;
-}
-
-.docs-header__cta {
-  padding: 0.4rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  background: #f28f84;
-  color: #0a0a0a;
-  box-shadow: 0 4px 16px rgba(242, 143, 132, 0.18);
-  transition: background 0.2s, box-shadow 0.2s;
-}
-.docs-header__cta:hover {
-  background: #ffa89e;
-  box-shadow: 0 8px 24px rgba(242, 143, 132, 0.32);
-}
+/* The header itself lives in components/SiteHeader.vue — shared with the
+   marketing layout, so nothing about the bar is styled here. */
 
 /* ---- Three-pane grid ---- */
+/* No z-index here: it would open a stacking context that traps .docs-aside's
+   drawer z-index inside it, leaving the open mobile drawer under its own scrim.
+   Tree order already paints this above the inert background, which is inert. */
 .docs-grid {
   position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: 16rem minmax(0, 1fr) 15rem;
   gap: 2.5rem;
@@ -327,21 +177,17 @@ useHead({
 }
 
 @media (max-width: 820px) {
-  .docs-header__nav {
-    display: none;
-  }
-  .docs-header__menu {
-    display: inline-flex;
-  }
   .docs-grid {
     grid-template-columns: minmax(0, 1fr);
     padding: 0 1.25rem;
   }
+  /* Above the header's z-50 so the open drawer and its scrim cover the bar,
+     as they did when the header sat at z-40. */
   .docs-aside {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 50;
+    z-index: 60;
     width: 18rem;
     max-width: 85vw;
     height: 100vh;
@@ -359,7 +205,7 @@ useHead({
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 45;
+    z-index: 55;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
   }

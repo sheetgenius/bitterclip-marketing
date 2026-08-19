@@ -28,6 +28,59 @@ Preferred categories:
 Use this section for changes that have been committed but not yet summarized
 under a dated entry.
 
+### Product Context
+
+- Reframed the homepage around the division of labor between the person and the
+  product. The hero now reads "You record it. BitterClip handles the
+  rest." The person shows up and has the real conversation; everything after
+  that — the cutting, captions, music, opener and outro, camera changes, the
+  vertical version, and the short cuts from the same edit — is BitterClip's
+  work. The hero, the lede beneath it, the FAQ, the homepage structured data,
+  the site title, and the social cards all carry that line, and the AI-readable
+  twin at `public/index.md` was reconciled onto it from the previous "Record the
+  conversation. Finish the show." framing.
+- Stated the recording facts plainly, because "you record it" can be
+  misread as "BitterClip cannot record". The page and the Markdown twin now say
+  that every project has a browser recorder — camera and mic on a laptop or
+  phone, or the screen in desktop Chrome, up to 1080p, uploading while you
+  record so transcription starts when you stop — that it captures one signed-in
+  person on one device with no remote guests, guest links, or separate
+  per-person tracks, and that bringing footage recorded elsewhere remains the
+  common path. A new FAQ answer carries the same facts.
+- Named the session length the product is built for: roughly twenty minutes to
+  two hours, covering podcasts, interviews, coaching sessions, founder calls,
+  and workshops.
+- Replaced the internal vocabulary that had leaked into the Markdown twin with
+  the plain meaning behind it, so the public explanation reads the way the page
+  does.
+- Reframed the public explanation of BitterClip from clipping inside ChatGPT to
+  finishing the recorded work. The homepage hero, section headings, FAQ, close,
+  structured data, site title, and social cards now lead with the full-length
+  episode as the primary result, with short cuts derived from that same edit
+  rather than presented as the product. The homepage previously led with a claim
+  it walked back twice in the same fold — the hero named ChatGPT, then the
+  subhead and the call-to-action footnote each qualified the workspace
+  eligibility.
+- Demoted ChatGPT and Claude from the hero to peer cockpits over the same work.
+  Connecting one is now described as a choice rather than an onboarding step,
+  and the workspace-eligibility detail moved from the fold into the FAQ, where
+  it no longer competes with the promise above it.
+- Described the working relationship rather than the generation step: BitterClip
+  watches the whole session, commits to an editorial choice it can explain and
+  source, and revises that same cut when directed, keeping the previous version.
+  The old "assistant suggests, you approve, you post" motif framed the agent as
+  a suggestion engine and was replaced.
+- Corrected the publishing answer. The FAQ and Markdown twin previously said a
+  project could opt into automatic publishing; public copy now states that every
+  send is bound to one exact export, destination, account, and a final human
+  confirmation.
+- Added an objection-handling answer for people who have tried AI clippers and
+  concluded the category does not work, since that skepticism is the acquisition
+  wedge rather than an education problem.
+- Left the offer layer untouched. Plans, prices, allowances, plan parameters, and
+  every pricing claim remain exactly as shipped; no part of the pending
+  commercial plan appears in public copy.
+
 ### Website
 
 - Reworked the Gemini 3.7 field report into a short user-facing update led by the
@@ -42,6 +95,18 @@ under a dated entry.
   boundary between restoring owned uploads and connecting YouTube for
   publishing. Added discovery links from the docs hub, first-clip guide, FAQ,
   and troubleshooting, and made canonical URLs explicit on every docs article.
+- Expanded the comparison surface into head-to-head pages: `/compare` is now a
+  hub linking twelve `BitterClip vs <competitor>` pages driven by a new
+  `compare` content collection (structured frontmatter for the table, verdicts,
+  fine-print callouts sourced from each competitor's own pricing and terms,
+  FAQ, and sources; bespoke Markdown prose per competitor). Each page ships
+  FAQPage and BreadcrumbList JSON-LD, a generated Markdown twin with canonical
+  Link headers, sitemap and `llms.txt`/`llms-full.txt` coverage, and Playwright
+  smoke tests.
+- Added `/compare`, a source-linked comparison page for BitterClip, Descript, and
+  OpusClip. It explains the different jobs each product optimizes for, links to
+  official competitor sources, adds navigation/footer discovery, and includes
+  the route in the generated sitemap and AI-readable surfaces.
 - Preserved original campaign UTMs and ad click IDs across every marketing,
   docs, blog, footer, and pricing signup link. BitterClip's own page and demo
   context now travels in separate `bc_*` fields, and sitewide signup clicks
@@ -164,6 +229,15 @@ under a dated entry.
 - Added `https://bitterclip.com/terms` and `https://bitterclip.com/terms.md`
   so provider app registration and public users have discoverable terms for the
   website, app, connector, billing, and publishing integrations.
+
+### Repository Metadata
+
+- Updated the README's semantic description and product model to match the
+  episode-first object chain: an Episode is the session workspace and its primary
+  full-length Program, a Clip is an editable derivative of an Episode, a Render is
+  a materialization attempt, and an Export is one completed exact rendered
+  version. The documented workflow now ends in a human-confirmed publish rather
+  than an approved-clip handoff.
 
 ### Public Hygiene
 

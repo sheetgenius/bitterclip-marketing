@@ -6,7 +6,6 @@ import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 // This is the homepage / legal-page shell. Docs use layouts/docs.vue instead.
 const route = useRoute()
 const signupBaseUrl = SIGNUP_BASE_URL
-const signInUrl = 'https://app.bitterclip.com/sign_in'
 const signupStage = ref('default')
 
 const signupUrl = computed(() => {
@@ -36,41 +35,23 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="relative min-h-screen bg-[#303030] selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden bg-grid-pattern flex flex-col justify-between">
+  <!-- No background colour here on purpose. This wrapper covers every page, so
+       painting it opaque (it was #303030) hides the body's #0d0d0d field and its
+       vignette entirely. The page background has one owner: body, in main.css. -->
+  <div class="relative min-h-screen selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden flex flex-col justify-between">
 
-    <!-- Cinematic Data Flow Backdrops -->
-    <div class="absolute inset-0 -z-20 bg-grid-pattern-dense opacity-[0.10] pointer-events-none" />
-    <div class="absolute inset-0 -z-20 animate-flow-horizon opacity-[0.12] pointer-events-none" />
+    <!-- The coordinate-grid and scrolling-line backdrops that used to sit here
+         read as engineering telemetry. Cinema texture is the body's vignette
+         plus film grain, both in main.css. -->
 
-    <!-- Top Decorative Glow Dots -->
-    <div class="absolute top-[-10%] left-[20%] -z-10 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-[#f28f84]/5 via-[#f8b36a]/5 to-[#d66f5f]/5 blur-[120px] animate-pulse-slow pointer-events-none" />
-    <div class="absolute top-[20%] right-[-10%] -z-10 w-[500px] h-[500px] rounded-full bg-gradient-to-l from-[#d66f5f]/5 via-[#f28f84]/5 to-[#f28f84]/5 blur-[100px] pointer-events-none" />
+    <!-- Two large warm glow blobs used to sit here (one of them pulsing). They
+         were invisible against the old #303030 wrapper, but on a near-black
+         field a 5%-opacity 600px blur reads as a blotchy halo and bands into
+         rings on 8-bit displays. Atmosphere now comes from the body vignette
+         and film grain, which don't blotch. -->
 
-    <!-- Global Header -->
-    <header class="sticky top-4 z-50 mx-auto w-full max-w-6xl px-4">
-      <nav aria-label="Primary" class="flex items-center justify-between px-5 py-2.5 rounded-full nav-glass">
-        <div class="m-0 p-0 font-display font-bold text-lg tracking-tight">
-          <BrandLogo />
-        </div>
-
-        <div class="hidden md:flex items-center gap-1 font-sans text-sm font-medium tracking-tight text-zinc-300">
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#demo">Demo</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs/assistants/overview">Assistants</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/docs">Docs</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/blog">Blog</NuxtLink>
-          <NuxtLink class="px-3 py-1.5 rounded-full hover:bg-white/[0.06] hover:text-white transition-colors duration-200 focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none" to="/#pricing">Pricing</NuxtLink>
-        </div>
-
-        <div class="flex items-center">
-          <a
-            class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] active:scale-[0.97] transition duration-200 shadow-lg shadow-[#f28f84]/20 hover:shadow-[#f28f84]/40"
-            :href="signInUrl"
-          >
-            Sign in
-          </a>
-        </div>
-      </nav>
-    </header>
+    <!-- Global Header — the same bar the docs shell mounts. -->
+    <SiteHeader />
 
     <!-- Page Content Viewport -->
     <div class="grow w-full">
@@ -93,7 +74,7 @@ onBeforeUnmount(() => {
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
             <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
-              Turn long podcasts, interviews, and founder calls into source-linked clips you can check before they leave your hands.
+              Turn long podcasts, interviews, and founder calls into clips you can check before they leave your hands.
             </p>
             <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
           </div>
@@ -105,6 +86,7 @@ onBeforeUnmount(() => {
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs">Docs</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/blog">Blog</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">Assistants</NuxtLink>
+              <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/compare">Compare tools</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/#pricing">Pricing</NuxtLink>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start clipping</a>
             </div>

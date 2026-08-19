@@ -1,14 +1,16 @@
 # BitterClip
 
 [BitterClip](https://bitterclip.com/) is a speaker-aware media workspace for
-turning long recordings into source-linked clips. It is designed for AI agents
-that can search transcript context and for human operators who need to verify
-the final cut before publishing.
+turning a recorded session into a finished full-length episode and the shorter
+cuts derived from it. It is designed for AI agents that can reason over
+transcript, speaker, and visual context, and for human operators who accept the
+result before it is published.
 
 It is built for podcasts, interviews, founder calls, demos, livestreams, expert
-conversations, and recurring shows where the strongest moments are buried inside
-long-form media. BitterClip keeps the recording, transcript, speaker identity,
-clip boundary, export, publishing state, and source history connected.
+conversations, coaching sessions, and recurring shows, where the recording is
+already the valuable event and the remaining work is production. BitterClip keeps
+the recording, transcript, speaker identity, editorial structure, render, export,
+publishing state, and source history connected.
 
 ## Place In Bitter
 
@@ -26,35 +28,45 @@ supporting repositories that share that operating model:
 
 BitterClip applies that model to recorded media. A long recording becomes
 structured source material. A transcript becomes an agent-operable workspace.
-A clip remains linked to who said what, where it happened, what came before and
-after, how it was exported, and what has already been clipped.
+Every editorial decision remains linked to who said what, where it happened, what
+came before and after, how it was rendered and exported, and what has already
+been produced from the same session.
 
 ## Product Model
 
 BitterClip is not a generic AI shorts generator. It is a media workbench built
-around source-linked verification.
+around source-linked verification, where the primary result is the full-length
+episode and short cuts are derivatives of that same edit.
 
 The core object chain is:
 
 ```text
-Recording -> Transcript -> Speakers -> Moments -> Clips -> Exports -> Publishing
+Recording -> Transcript -> Speakers -> Episode -> Program -> Clips
+          -> Renders -> Exports -> Publishing
 ```
+
+An Episode is the session workspace around one or more uploaded Recordings and
+its primary full-length Program. A Program holds committed editable structure. A
+Clip is an editable derivative of an Episode. A Render is a materialization
+attempt; an Export is one completed exact rendered version.
 
 The main workflow is:
 
-1. Upload a recording.
+1. Upload a session, including several synchronized angles when they exist.
 2. Build a time-aligned transcript.
 3. Identify and confirm speakers.
-4. Use an AI agent to identify candidate Moments.
-5. Open the Moment against the real media and surrounding transcript.
+4. Work the Episode into a full-length Program, editing through the transcript
+   and directing an AI agent that has the whole session in view.
+5. Open any decision against the real media and surrounding transcript.
 6. Verify the speaker, context, and boundaries.
-7. Save the approved Moment as a Clip and create Exports.
-8. Use Publishing connections for approved Clips when available.
+7. Derive Clips from the same Program and create Renders and Exports.
+8. Use Publishing connections once a person confirms the exact Export,
+   destination, and account.
 9. Preserve source links and project history for future recordings.
 
-This matters because useful clips are rarely just isolated quotes. They depend
-on speaker identity, setup, response, payoff, and the surrounding context that
-keeps the cut honest.
+This matters because useful editorial choices are rarely isolated quotes. They
+depend on speaker identity, setup, response, payoff, and the surrounding context
+that keeps the cut honest.
 
 ## Repository Role
 

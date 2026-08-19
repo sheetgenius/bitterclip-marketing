@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* One page-background value for the whole site. The marketing layout, the
+     docs layout, and the nav bar all read from this so /docs and / cannot
+     drift apart again. */
+  --bitter-bg: #0d0d0d;
   --bitter-accent-clip: #f28f84;
   --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -14,14 +18,29 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Dark-cinema field: a flat #0d0d0d, deliberately. Two things were tried here
+   and removed. A coordinate grid read as engineering telemetry rather than
+   cinema. A radial vignette banded into visible rings on 8-bit displays and its
+   bright centre pooled behind the hero phone as a halo. Large soft gradients
+   are simply not safe at this darkness — the texture is film grain instead. */
 body {
   margin: 0;
-  background-color: #080909;
+  background-color: var(--bitter-bg);
   color: #f4f4f5;
-  background-image:
-    linear-gradient(to right, rgba(242, 143, 132, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(242, 143, 132, 0.018) 1px, transparent 1px);
-  background-size: 64px 64px;
+}
+
+/* Film grain over the whole frame, as on a projected print — the only texture
+   on the page. Static, not animated: flickering grain is distracting and costs
+   a repaint every frame. pointer-events:none so it never intercepts a click. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }
 
 ::selection {
@@ -45,34 +64,34 @@ body {
   background: #2e2e33;
 }
 
-/* Cinematic Deep Glass Panel */
+/* Elevation: the page (#0d0d0d) is the deepest value in the room. Every raised
+   surface sits a little ABOVE it, never below — a card darker than its own page
+   reads as a hole punched in a grey field, which is what made this look washed. */
 .glass-panel {
-  background: rgba(9, 9, 13, 0.65);
-  backdrop-filter: blur(20px) saturate(130%);
-  -webkit-backdrop-filter: blur(20px) saturate(130%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.03),
-    0 12px 40px 0 rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.026);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.035),
+    0 16px 44px 0 rgba(0, 0, 0, 0.55);
 }
 
-/* Premium Anti-Reflective Highlight Edge (Round 20) */
 .glass-panel-accented {
   position: relative;
-  background: rgba(10, 10, 15, 0.7);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(242, 143, 132, 0.09);
-  box-shadow: 
+  background: rgba(255, 255, 255, 0.034);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
+  border: 1px solid rgba(242, 143, 132, 0.16);
+  box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
-    0 10px 28px 0 rgba(0, 0, 0, 0.30);
+    0 16px 40px 0 rgba(0, 0, 0, 0.5);
   transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-accented:hover {
   border-color: rgba(242, 143, 132, 0.24);
   box-shadow:
-    inset 0 0 24px rgba(242, 143, 132, 0.04),
     inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.08),
     0 16px 36px 0 rgba(0, 0, 0, 0.40);
   transform: translateY(-2px);
@@ -81,9 +100,11 @@ body {
 /* Top nav bar: same glass material as the accented panels, but it is a fixed,
    persistent bar — it must NOT lift, scale, or shift on hover. Feedback lives on
    the interactive children (links/button), never the bar itself. */
+/* The menu bar reads as the same material as the page it floats over, rather
+   than a lighter panel — the page colour at 88%, blurred. */
 .nav-glass {
   position: relative;
-  background: rgba(10, 10, 15, 0.7);
+  background: rgba(13, 13, 13, 0.88);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   border: 1px solid rgba(242, 143, 132, 0.10);
@@ -92,33 +113,14 @@ body {
     0 10px 28px 0 rgba(0, 0, 0, 0.30);
 }
 
-/* Diagonal Reflection Sheen on Interaction */
+/* Clipping wrapper. The diagonal sheen this was named for is gone; it now
+   only supplies the containing block + overflow clip the markup relies on. */
 .glass-reflection {
   position: relative;
   overflow: hidden;
 }
-/* Sheen sweep removed by request — keep .glass-reflection as a no-op so existing
-   class usages still resolve (relative + overflow only). */
-.glass-reflection::before {
-  content: none;
-}
 
-/* High-Density Telemetry Coordinate Grid Background */
-.bg-grid-pattern {
-  background-size: 50px 50px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-}
-
-.bg-grid-pattern-dense {
-  background-size: 20px 20px;
-  background-image: 
-    linear-gradient(to right, rgba(242, 143, 132, 0.007) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(242, 143, 132, 0.007) 1px, transparent 1px);
-}
-
-/* Sub-millisecond Timecode Rulers */
+/* Timecode ruler — a section divider, not a backdrop. */
 .telemetry-ruler {
   position: relative;
   height: 14px;
@@ -129,106 +131,19 @@ body {
   opacity: 0.4;
 }
 
-/* Flow-Scan Horizon Animation representing media indexing */
-@keyframes flow-horizontal {
-  0% {
-    background-position-x: 0px;
-  }
-  100% {
-    background-position-x: 1000px;
-  }
-}
-.animate-flow-horizon {
-  animation: flow-horizontal 25s linear infinite;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(242, 143, 132, 0.012) 0px,
-    rgba(242, 143, 132, 0.012) 1px,
-    transparent 1px,
-    transparent 40px
-  );
-}
 
-/* Glow hover effects */
-.logo-text:hover {
-  text-shadow: 0 0 12px rgba(242, 143, 132, 0.45);
-}
 
 .btn-glow {
-  box-shadow: 0 4px 16px 0 rgba(242, 143, 132, 0.12);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-glow:hover {
-  box-shadow: 0 8px 24px 0 rgba(242, 143, 132, 0.32);
   transform: translateY(-1px);
 }
 
-/* Accent borders */
-.active-border-pulse {
-  border-color: rgba(242, 143, 132, 0.5);
-  box-shadow: 0 0 10px rgba(242, 143, 132, 0.16);
-}
 
-/* Animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
 
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
 
-/* Product-loop rail: a peach pulse that travels upload -> posted (sign of life) */
-@keyframes loop-pulse {
-  0%   { left: 0%;   opacity: 0; }
-  12%  { opacity: 1; }
-  88%  { opacity: 1; }
-  100% { left: 100%; opacity: 0; }
-}
-.loop-pulse {
-  position: absolute;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  border-radius: 9999px;
-  background: #f28f84;
-  box-shadow: 0 0 9px 2px rgba(242, 143, 132, 0.55);
-  animation: loop-pulse 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
 
-/* Bottom mask: hides the source recordings' baked-in Zoom name watermark that
-   sits at the very bottom edge of the founder frames / gallery posters, so the
-   status pill (which floats just above it) reads cleanly. A short opaque band
-   only — does not darken the rest of the frame. Sits below the pills (z-index)
-   and is non-interactive. */
-.clip-watermark-mask::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 38px;
-  background: linear-gradient(to top, rgba(6, 6, 8, 0.99) 0%, rgba(6, 6, 8, 0.99) 55%, transparent 100%);
-  pointer-events: none;
-  z-index: 1;
-}
 
 /* Telemetry Corner Indicators */
 .corner-ticks {
@@ -257,12 +172,6 @@ body {
   pointer-events: none;
 }
 
-/* Smoked Glass Backdrops and Inset Reflections */
-.hero-backdrop-mask {
-  background-image: radial-gradient(circle at 50% 30%, rgba(6, 6, 8, 0.25) 10%, #080909 75%);
-  background-size: cover;
-  background-position: center 30%;
-}
 
 .telemetry-label {
   font-family: var(--font-mono);
@@ -272,49 +181,20 @@ body {
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* Warm-Peach Inset Shadow & Backdrop for CTA (Round 14) */
+/* CTA surface. (The warm-peach inset wash this once carried was removed
+   with the rest of the glow; it is now a plain raised panel.) */
 .cta-glass-panel {
   position: relative;
-  background: rgba(10, 10, 15, 0.7);
+  background: rgba(255, 255, 255, 0.035);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(242, 143, 132, 0.13);
+  border: 1px solid rgba(242, 143, 132, 0.2);
   box-shadow: 
-    inset 0 0 40px rgba(242, 143, 132, 0.06),
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.05),
     0 10px 28px 0 rgba(0, 0, 0, 0.30);
 }
 
-.cta-backdrop-mask {
-  background-image: radial-gradient(circle at 50% 50%, rgba(6, 6, 8, 0.4) 10%, rgba(6, 6, 8, 0.9) 90%);
-  background-size: cover;
-  background-position: center;
-}
 
-/* Animated Flowline Telemetry (Round 16) */
-.flow-line-vertical {
-  width: 1px;
-  height: 32px;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(242, 143, 132, 0.72) 0px,
-    rgba(242, 143, 132, 0.72) 6px,
-    transparent 6px,
-    transparent 12px
-  );
-  background-size: 100% 12px;
-  animation: flow-line-scroll-y 1.2s linear infinite;
-  margin: 0 auto;
-}
-
-@keyframes flow-line-scroll-y {
-  from {
-    background-position-y: 0px;
-  }
-  to {
-    background-position-y: 12px;
-  }
-}
 
 /* =====================================================================
    DOCS PROSE — hand-rolled typography for rendered Markdown.
@@ -597,20 +477,6 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
-  }
-
-  /* Our named looping animations: stop them outright (and hold their resting
-     state) rather than letting one near-instant cycle flicker through. */
-  .animate-float,
-  .animate-pulse-slow,
-  .animate-flow-horizon,
-  .flow-line-vertical {
-    animation: none !important;
-  }
-
-  /* The diagonal reflection sheen slides on hover — keep it parked off-screen. */
-  .glass-reflection:hover::before {
-    left: -150% !important;
   }
 
   /* The glass panels lift on hover — keep them flat (border/shadow still change). */

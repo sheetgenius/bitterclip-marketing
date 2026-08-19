@@ -26,7 +26,7 @@ const SITE_ORIGIN = 'https://bitterclip.com'
 
 // Marketing routes that live outside the docs collection (Vue pages in app/pages/).
 // Kept here as the one place the static, non-docs URLs are enumerated for the sitemap.
-const MARKETING_ROUTES = ['/', '/privacy', '/terms', '/data-deletion'] as const
+const MARKETING_ROUTES = ['/', '/privacy', '/terms', '/data-deletion', '/compare'] as const
 
 interface DocPage {
   /** Source path relative to content/, e.g. "getting-started/your-first-clip.md". */
@@ -76,6 +76,43 @@ interface BlogPost {
   }
 }
 
+interface ComparePage {
+  /** Source path relative to content/, e.g. "compare/descript.md". */
+  sourceRel: string
+  /** Slug without the compare/ prefix or .md extension. */
+  slug: string
+  /** Public URL path, e.g. "/compare/descript". */
+  urlPath: string
+  /** Public `.md` twin path, e.g. "/compare/descript.md". */
+  mdPath: string
+  /** Markdown body only (frontmatter stripped). */
+  body: string
+  frontmatter: {
+    title?: string
+    description?: string
+    competitor?: string
+    competitorUrl?: string
+    reviewed?: string
+    competitorStrength?: string
+    heroLede?: string
+    statusNote?: string
+    verdictBitterclip?: string
+    verdictCompetitor?: string
+    rows?: {
+      axis: string
+      bitterclip: { lead: string; detail: string }
+      competitor: { lead: string; detail: string }
+      edge?: string
+    }[]
+    chooseUs?: string[]
+    chooseThem?: string[]
+    gotchas?: { title: string; body: string; sourceLabel: string; sourceUrl: string }[]
+    faq?: { q: string; a: string }[]
+    sources?: { label: string; url: string }[]
+    [k: string]: unknown
+  }
+}
+
 const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n?/
 
 function splitFrontmatter(raw: string): { frontmatter: Record<string, unknown>; body: string } {
@@ -104,7 +141,7 @@ async function readDocs(contentDir: string): Promise<DocPage[]> {
   const pages: DocPage[] = []
   for await (const entry of glob('**/*.md', { cwd: contentDir })) {
     const sourceRel = entry.replace(/\\/g, '/')
-    if (sourceRel.startsWith('_data/') || sourceRel.startsWith('blog/')) continue
+    if (sourceRel.startsWith('_data/') || sourceRel.startsWith('blog/') || sourceRel.startsWith('compare/')) continue
     const raw = await fs.readFile(join(contentDir, sourceRel), 'utf8')
     const { frontmatter, body } = splitFrontmatter(raw)
     const urlPath = toUrlPath(sourceRel)
@@ -157,6 +194,131 @@ async function readBlogPosts(contentDir: string): Promise<BlogPost[]> {
   return posts
 }
 
+async function readComparePages(contentDir: string): Promise<ComparePage[]> {
+  const pages: ComparePage[] = []
+  for await (const entry of glob('compare/*.md', { cwd: contentDir })) {
+    const sourceRel = entry.replace(/\\/g, '/')
+    const slug = sourceRel.replace(/^compare\//, '').replace(/\.md$/, '')
+    const raw = await fs.readFile(join(contentDir, sourceRel), 'utf8')
+    const { frontmatter, body } = splitFrontmatter(raw)
+    pages.push({
+      sourceRel,
+      slug,
+      urlPath: `/compare/${slug}`,
+      mdPath: `/compare/${slug}.md`,
+      body,
+      frontmatter: frontmatter as ComparePage['frontmatter'],
+    })
+  }
+  pages.sort((a, b) => (a.frontmatter.competitor ?? a.slug).localeCompare(b.frontmatter.competitor ?? b.slug))
+  return pages
+}
+
+/**
+ * Render a comparison page's structured frontmatter + bespoke body into one
+ * self-contained Markdown document (the `.md` twin AI assistants read). The
+ * frontmatter carries the table/verdicts/FAQ, so a verbatim twin would be raw
+ * YAML — render it properly instead.
+ */
+function buildCompareMarkdown(page: ComparePage): string {
+  const fm = page.frontmatter
+  const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
+  const lines: string[] = []
+  lines.push(`# ${fm.title ?? `BitterClip vs ${fm.competitor ?? page.slug}`}`)
+  lines.push('')
+  lines.push(`Canonical HTML page: ${SITE_ORIGIN}${page.urlPath}`)
+  lines.push('')
+  if (fm.description) {
+    lines.push(fm.description)
+    lines.push('')
+  }
+  if (fm.statusNote) {
+    lines.push(`> ${fm.statusNote}`)
+    lines.push('')
+  }
+  if (fm.heroLede) {
+    lines.push(fm.heroLede)
+    lines.push('')
+  }
+  if (fm.competitorStrength) {
+    lines.push(`Where ${fm.competitor} wins: ${fm.competitorStrength}`)
+    lines.push('')
+  }
+  if (fm.verdictBitterclip || fm.verdictCompetitor) {
+    lines.push('## Quick verdict')
+    lines.push('')
+    if (fm.verdictBitterclip) lines.push(`**BitterClip:** ${fm.verdictBitterclip}`)
+    lines.push('')
+    if (fm.verdictCompetitor) lines.push(`**${fm.competitor}:** ${fm.verdictCompetitor}`)
+    lines.push('')
+  }
+  if (fm.rows && fm.rows.length > 0) {
+    lines.push('## Comparison')
+    lines.push('')
+    const edgeName = (edge?: string) => {
+      if (edge === 'bitterclip') return 'BitterClip'
+      if (edge === 'competitor') return fm.competitor ?? ''
+      return 'Even'
+    }
+    lines.push(`| What you're comparing | BitterClip | ${cell(fm.competitor ?? '')} | Edge |`)
+    lines.push('| --- | --- | --- | --- |')
+    for (const row of fm.rows) {
+      const ours = `**${cell(row.bitterclip.lead)}** ${cell(row.bitterclip.detail)}`
+      const theirs = `**${cell(row.competitor.lead)}** ${cell(row.competitor.detail)}`
+      lines.push(`| ${cell(row.axis)} | ${ours} | ${theirs} | ${cell(edgeName(row.edge))} |`)
+    }
+    lines.push('')
+  }
+  if (fm.chooseUs && fm.chooseUs.length > 0) {
+    lines.push('## Choose BitterClip when')
+    lines.push('')
+    for (const item of fm.chooseUs) lines.push(`- ${item}`)
+    lines.push('')
+  }
+  if (fm.chooseThem && fm.chooseThem.length > 0) {
+    lines.push(`## Choose ${fm.competitor} when`)
+    lines.push('')
+    for (const item of fm.chooseThem) lines.push(`- ${item}`)
+    lines.push('')
+  }
+  if (fm.gotchas && fm.gotchas.length > 0) {
+    lines.push(`## The fine print (from ${fm.competitor}'s own pricing and terms)`)
+    lines.push('')
+    for (const gotcha of fm.gotchas) {
+      lines.push(`### ${gotcha.title}`)
+      lines.push('')
+      lines.push(gotcha.body)
+      lines.push('')
+      lines.push(`Source: [${gotcha.sourceLabel}](${gotcha.sourceUrl})`)
+      lines.push('')
+    }
+  }
+  if (page.body.trim()) {
+    lines.push(page.body.trim())
+    lines.push('')
+  }
+  if (fm.faq && fm.faq.length > 0) {
+    lines.push('## FAQ')
+    lines.push('')
+    for (const item of fm.faq) {
+      lines.push(`### ${item.q}`)
+      lines.push('')
+      lines.push(item.a)
+      lines.push('')
+    }
+  }
+  if (fm.sources && fm.sources.length > 0) {
+    lines.push('## Sources')
+    lines.push('')
+    for (const source of fm.sources) lines.push(`- [${source.label}](${source.url})`)
+    lines.push('')
+  }
+  if (fm.reviewed) {
+    lines.push(`Facts about ${fm.competitor} were last reviewed ${fm.reviewed}.`)
+  }
+  return lines.join('\n').trimEnd() + '\n'
+}
+
 async function readSite(contentDir: string): Promise<Record<string, string>> {
   const raw = await fs.readFile(join(contentDir, '_data/site.yml'), 'utf8')
   return (parseYaml(raw) ?? {}) as Record<string, string>
@@ -164,7 +326,7 @@ async function readSite(contentDir: string): Promise<Record<string, string>> {
 
 // --- Surface builders -------------------------------------------------------
 
-function buildLlmsIndex(pages: DocPage[], posts: BlogPost[]): string {
+function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: ComparePage[]): string {
   const groups = new Map<string, DocPage[]>()
   for (const p of pages) {
     const section = p.frontmatter.section ?? 'docs'
@@ -218,10 +380,19 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[]): string {
     }
     lines.push('')
   }
+  lines.push('## Comparisons')
+  lines.push('')
+  lines.push('- [BitterClip vs Descript vs OpusClip](https://bitterclip.com/compare): A workflow comparison of source-linked understanding, full production control, and high-volume social clipping.')
+  for (const comparison of comparisons) {
+    const title = comparison.frontmatter.title ?? `BitterClip vs ${comparison.frontmatter.competitor ?? comparison.slug}`
+    const desc = comparison.frontmatter.description ?? ''
+    lines.push(`- [${title}](${SITE_ORIGIN}${comparison.urlPath}): ${desc}`.trimEnd())
+  }
+  lines.push('')
   return lines.join('\n').trimEnd() + '\n'
 }
 
-function buildLlmsFull(pages: DocPage[], posts: BlogPost[]): string {
+function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: ComparePage[]): string {
   const parts: string[] = []
   parts.push('# BitterClip — full documentation and blog corpus')
   parts.push('')
@@ -253,14 +424,38 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[]): string {
     parts.push(post.body.trim())
     parts.push('')
   }
+  parts.push('---')
+  parts.push('')
+  parts.push('# BitterClip vs Descript vs OpusClip')
+  parts.push('Source: https://bitterclip.com/compare')
+  parts.push('')
+  parts.push('A workflow comparison of source-linked understanding, full production control, and high-volume social clipping. See the canonical page for the current comparison and official sources.')
+  parts.push('')
+  for (const comparison of comparisons) {
+    parts.push('---')
+    parts.push('')
+    parts.push(`# ${comparison.frontmatter.title ?? `BitterClip vs ${comparison.frontmatter.competitor ?? comparison.slug}`}`)
+    parts.push(`Source: ${SITE_ORIGIN}${comparison.urlPath}`)
+    if (comparison.frontmatter.description) parts.push(`Description: ${comparison.frontmatter.description}`)
+    parts.push('')
+    // Skip the H1 line of the rendered twin — the header above already carries it.
+    parts.push(buildCompareMarkdown(comparison).split('\n').slice(1).join('\n').trim())
+    parts.push('')
+  }
   return parts.join('\n').trimEnd() + '\n'
 }
 
-function buildSitemap(pages: DocPage[], posts: BlogPost[]): string {
+function buildSitemap(pages: DocPage[], posts: BlogPost[], comparisons: ComparePage[]): string {
   const today = new Date().toISOString().slice(0, 10)
   const entries: { loc: string; lastmod: string }[] = []
   for (const route of MARKETING_ROUTES) {
     entries.push({ loc: `${SITE_ORIGIN}${route === '/' ? '/' : route}`, lastmod: today })
+  }
+  for (const comparison of comparisons) {
+    entries.push({
+      loc: `${SITE_ORIGIN}${comparison.urlPath}`,
+      lastmod: comparison.frontmatter.reviewed ?? today,
+    })
   }
   const latestPostDate = posts[0]?.frontmatter.updated ?? posts[0]?.frontmatter.date ?? today
   entries.push({ loc: `${SITE_ORIGIN}/blog`, lastmod: latestPostDate })
@@ -421,8 +616,9 @@ export default defineNuxtModule({
         const publicDir = nitro.options.output.publicDir
         const pages = await readDocs(contentDir)
         const posts = await readBlogPosts(contentDir)
+        const comparisons = await readComparePages(contentDir)
 
-        // 1. Per-page raw .md twins.
+        // 1. Per-page raw .md twins (comparisons render frontmatter → Markdown).
         let twinCount = 0
         for (const p of pages) {
           await writeFile(publicDir, p.mdPath, p.raw.endsWith('\n') ? p.raw : `${p.raw}\n`)
@@ -432,14 +628,18 @@ export default defineNuxtModule({
           await writeFile(publicDir, post.mdPath, post.raw.endsWith('\n') ? post.raw : `${post.raw}\n`)
           twinCount++
         }
+        for (const comparison of comparisons) {
+          await writeFile(publicDir, comparison.mdPath, buildCompareMarkdown(comparison))
+          twinCount++
+        }
         await writeFile(publicDir, '/blog.md', buildBlogIndexMarkdown(posts))
 
         // 2 + 3. llms.txt index + full corpus (replaces the stale hand-written ones).
-        await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages, posts))
-        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(pages, posts))
+        await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages, posts, comparisons))
+        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(pages, posts, comparisons))
 
-        // 4. sitemap.xml — marketing routes + every /docs page + blog.
-        await writeFile(publicDir, '/sitemap.xml', buildSitemap(pages, posts))
+        // 4. sitemap.xml — marketing routes + comparisons + every /docs page + blog.
+        await writeFile(publicDir, '/sitemap.xml', buildSitemap(pages, posts, comparisons))
 
         // 5. changelog RSS.
         await writeFile(publicDir, '/changelog.xml', buildChangelogRss(pages))

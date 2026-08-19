@@ -88,8 +88,7 @@ const sections = [
 </script>
 
 <template>
-  <div class="mx-auto max-w-4xl px-4 pt-12 pb-24 relative animate-fade-in">
-    <div class="absolute top-0 left-1/4 -z-10 w-[400px] h-[400px] rounded-full bg-[#f28f84]/5 blur-[100px] pointer-events-none" />
+  <div class="mx-auto max-w-4xl px-4 pt-12 pb-24 relative">
 
     <div class="mb-12 border-b border-zinc-900 pb-10">
       <p class="font-mono text-xs uppercase tracking-widest text-[#f28f84] mb-3">Privacy</p>

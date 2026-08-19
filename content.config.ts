@@ -34,6 +34,57 @@ const docsSchema = z.object({
   ogImage: z.string().optional(),
 })
 
+// Frontmatter schema for /compare/<competitor> head-to-head pages. The structured
+// comparison (table rows, verdicts, fine print, FAQ, sources) lives in frontmatter;
+// the markdown body carries the bespoke prose for that competitor.
+// A comparison cell: `lead` is the 2-6 word verdict the eye lands on when
+// skimming; `detail` is the sentence that backs it up.
+const compareCell = z.object({
+  lead: z.string(),
+  detail: z.string(),
+})
+
+const compareSchema = z.object({
+  title: z.string(), // SEO title, e.g. "BitterClip vs Descript: ..."
+  description: z.string(),
+  competitor: z.string(), // display name, e.g. "Descript"
+  competitorUrl: z.string(),
+  reviewed: z.string(), // ISO date the competitor facts were last verified
+  // One plain line on what the competitor is genuinely good at — used on the
+  // hub cards and as the honest concession in the hero.
+  competitorStrength: z.string(),
+  heroLede: z.string(),
+  // Optional one-line banner for unusual situations (e.g. a competitor sunsetting).
+  statusNote: z.string().optional(),
+  verdictBitterclip: z.string(),
+  verdictCompetitor: z.string(),
+  rows: z.array(
+    z.object({
+      axis: z.string(),
+      bitterclip: compareCell,
+      competitor: compareCell,
+      // Which product this row honestly favors. Rendered as a quiet label, never
+      // a checkmark. A page where every row favors BitterClip is not credible —
+      // the validator enforces at least two non-BitterClip rows.
+      edge: z.enum(['bitterclip', 'competitor', 'even']),
+    }),
+  ),
+  chooseUs: z.array(z.string()),
+  chooseThem: z.array(z.string()),
+  gotchas: z
+    .array(
+      z.object({
+        title: z.string(),
+        body: z.string(),
+        sourceLabel: z.string(),
+        sourceUrl: z.string(),
+      }),
+    )
+    .default([]),
+  faq: z.array(z.object({ q: z.string(), a: z.string() })),
+  sources: z.array(z.object({ label: z.string(), url: z.string() })),
+})
+
 const blogSchema = z.object({
   title: z.string(),
   description: z.string(),
@@ -53,7 +104,7 @@ export default defineContentConfig({
       type: 'page',
       source: {
         include: '**/*.md',
-        exclude: ['_data/**', 'blog/**'],
+        exclude: ['_data/**', 'blog/**', 'compare/**'],
         // Content lives at content/<section>/<page>.md and is served under /docs/...
         prefix: '/docs',
       },
@@ -66,6 +117,15 @@ export default defineContentConfig({
         include: 'blog/*.md',
       },
       schema: blogSchema,
+    }),
+
+    // Head-to-head competitor comparisons, served at /compare/<competitor>.
+    compare: defineCollection({
+      type: 'page',
+      source: {
+        include: 'compare/*.md',
+      },
+      schema: compareSchema,
     }),
 
     // --- Data collections (single-sourced volatile facts) ---

@@ -2,7 +2,11 @@ import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
-  'BitterClip turns podcasts, interviews, and founder calls into source-linked clips. Find the moment, check the source, and export a finished clip in your browser or supported AI assistant.'
+  'You record it. BitterClip handles the rest: the full-length episode and the short cuts from that same edit, made by changing the transcript.'
+// One title for the tab, the og card, and the twitter card. Keep them identical:
+// a share card that disagrees with the page it links to reads as a stale mirror.
+// The hero line carries the brand itself, so there is no separate name prefix.
+const siteTitle = 'You record it. BitterClip handles the rest.'
 const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({
@@ -43,7 +47,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'BitterClip — Clip your recordings inside ChatGPT',
+      title: siteTitle,
       htmlAttrs: {
         lang: 'en',
       },
@@ -52,14 +56,14 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'theme-color', content: '#111111' },
         { name: 'description', content: description },
-        { property: 'og:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
+        { property: 'og:title', content: siteTitle },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
         { property: 'og:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'BitterClip — Clip your recordings inside ChatGPT' },
+        { name: 'twitter:title', content: siteTitle },
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
       ],
