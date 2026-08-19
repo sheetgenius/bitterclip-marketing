@@ -889,7 +889,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   scene.add(bootFile)
   // THE SCAN PLANE: a dashed outline floating above the pool — the indexing
   // plane. The falling file shatters into a bitstream as it passes through.
-  const PLANE_Y = BED.top + 1.35
+  // raised to the same datum as the A-bars (owner): one horizontal line runs
+  // through the girders' crossbars and the scan plane
+  const PLANE_Y = lampY
   let planeMat: THREE.MeshBasicMaterial
   {
     const pc = document.createElement('canvas')
