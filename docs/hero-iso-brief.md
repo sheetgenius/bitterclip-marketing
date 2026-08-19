@@ -35,8 +35,7 @@ Every part of that sentence is load-bearing:
 
 The one idea the picture has to land: **raw recordings go in at one end,
 finished shows come out the other, and the work in between is done for you.**
-The hero line is now the same idea in four words — *"Footage in, episodes
-out"* (owner, 2026-08-18; it replaced the earlier punchline *"You still gotta
+The hero line is now the same idea in four words — *"Footage in / Episodes out"* (owner, 2026-08-18; it replaced the earlier punchline *"You still gotta
 record"* and its subline). Line and picture say one thing, so the legibility
 bar is unchanged: the picture must still make the argument entirely on its
 own, and the line confirms it rather than carrying it.

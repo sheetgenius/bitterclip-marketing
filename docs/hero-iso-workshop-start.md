@@ -18,7 +18,7 @@ three seconds and understands: **folders of raw recordings are dropped in at one
 end; the machine enhances the footage as it passes; a finished show winds onto
 the reel; and it is broadcast out to YouTube, Podcast, LinkedIn.** Every
 iteration is judged against that sentence before it is judged against taste.
-The hero line is the same idea in four words — "Footage in, episodes out"
+The hero line is the same idea in four words — "Footage in / Episodes out"
 (owner, 2026-08-18; replaced "You still gotta record" and the subline) — so
 the picture must make the argument entirely on its own and the line confirms
 it.
@@ -30,13 +30,11 @@ Work in this order, and never let a later layer break an earlier one:
 **1. Geometry and composition.** Silhouette, mass balance, scale relationships,
 believable load paths, correct occlusion, value separation between planes, the
 bottom-left→top-right diagonal, and how the machine sits against the type column
-(top-left is reserved for the hero line and CTA). Current standing problems: the
-rig is over-articulated (too many parallel bars; legs cross the film's climb);
-the lamp reads as resting on the tie bar instead of hanging; the bench's middle
-is empty; the reel's far flange reads as a void; the flange window shows empty
-blackness instead of wound film. Ruling (2026-08-18): **the projector lamp sits
-halfway up the rig**, not in the bottom third — balance the whole assembly
-around that.
+(top-left is reserved for the hero line and CTA). The current problem queue
+lives in `docs/hero-iso-brief.md` §5 and `docs/hero-iso-nit-ledger.md` — work
+from those, not from memory. Standing ruling (2026-08-18): **the projector
+lamp sits halfway up the rig**, not in the bottom third — balance the whole
+assembly around that.
 
 **2. Story legibility.** Each station must read without copy: the drop is
 obviously an intake (files/folders falling, landing, dissolving into the bed);

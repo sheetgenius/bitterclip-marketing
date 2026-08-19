@@ -832,12 +832,37 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // film column that is supposed to be tangent to it.
     const rr = coilR()
 
+    // Both flanges turn together and their windows are punched ALIGNED — one
+    // wheel, not a spinning lid on a stationary backplate (owner: the far
+    // side read solid and static while the front had holes and spun).
+    const spin = dist / coilR()
+    const flangePath = (cz: number): P2[] => {
+      ctx.beginPath()
+      const fo = ring(cz, REEL.r)
+      ctx.moveTo(fo[0][0], fo[0][1])
+      for (let i = 1; i < fo.length; i++) ctx.lineTo(fo[i][0], fo[i][1])
+      ctx.closePath()
+      for (let h = 0; h < 5; h++) {
+        const ha = spin + (h / 5) * Math.PI * 2
+        const hcx = reelX() + Math.cos(ha) * REEL.r * 0.58
+        const hcy = reelY() + Math.sin(ha) * REEL.r * 0.58
+        for (let i = 0; i < 22; i++) {
+          const wa = (i / 22) * Math.PI * 2
+          const p = iso(hcx + Math.cos(wa) * REEL.r * 0.235, hcy + Math.sin(wa) * REEL.r * 0.235, cz)
+          i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])
+        }
+        ctx.closePath()
+      }
+      return fo
+    }
+
     // Far flange: dark — the reel recedes into the stage by ruling — but never
     // a void. A hairline rim is what separates "big dark disc" from "hole in
     // the canvas"; the value sits just above the page ground.
-    poly(ring(zF, REEL.r), '#1c1c22')
     {
-      const rf = ring(zF, REEL.r)
+      const rf = flangePath(zF)
+      ctx.fillStyle = '#1c1c22'
+      ctx.fill('evenodd')
       ctx.beginPath()
       ctx.moveTo(rf[0][0], rf[0][1])
       for (let i = 1; i < rf.length; i++) ctx.lineTo(rf[i][0], rf[i][1])
@@ -882,35 +907,14 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       ctx.stroke()
     }
     ctx.restore()
-    // THE REEL IS TURNED BY THE FILM, not by a clock of its own. The strip
-    // winds onto the coil, so the angle is the distance travelled divided by
-    // the winding radius. Contact on the right, film travelling up: the wheel
-    // turns counterclockwise in world, which this projection (negative
-    // determinant) shows as clockwise.
-    const spin = dist / coilR()
     // Near flange: a plate pierced by FIVE round windows — a projection reel,
-    // not a lid. This replaced a plain ring-plus-spokes, which a cold outside
-    // eye read as a satellite dish: the windows turn with the wheel (same
-    // spin), show the wound film through their inner arcs, and on the right
-    // side the arriving strip flashes past behind them — the supply path a
-    // solid flange was hiding. Value stays dark: the reel recedes (owner,
-    // 2026-08-18); the load in the windows does the reading.
-    ctx.beginPath()
-    const of2 = ring(zN, REEL.r)
-    ctx.moveTo(of2[0][0], of2[0][1])
-    for (let i = 1; i < of2.length; i++) ctx.lineTo(of2[i][0], of2[i][1])
-    ctx.closePath()
-    for (let h = 0; h < 5; h++) {
-      const ha = spin + (h / 5) * Math.PI * 2
-      const hcx = reelX() + Math.cos(ha) * REEL.r * 0.58
-      const hcy = reelY() + Math.sin(ha) * REEL.r * 0.58
-      for (let i = 0; i < 22; i++) {
-        const wa = (i / 22) * Math.PI * 2
-        const p = iso(hcx + Math.cos(wa) * REEL.r * 0.235, hcy + Math.sin(wa) * REEL.r * 0.235, zN)
-        i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])
-      }
-      ctx.closePath()
-    }
+    // not a lid (a plain ring-plus-spokes read as a satellite dish to a cold
+    // eye). The windows show the wound film through their inner arcs, and on
+    // the right the arriving strip flashes past behind them — the supply path
+    // a solid flange was hiding. The wheel is turned BY the film: spin is
+    // distance over winding radius, and this projection's negative
+    // determinant shows the world-counterclockwise wind as clockwise.
+    const of2 = flangePath(zN)
     ctx.fillStyle = '#26262d'
     ctx.fill('evenodd')
     // the hub, and the axle actually RUNNING to the near girder's bearing —

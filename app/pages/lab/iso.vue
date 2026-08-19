@@ -24,7 +24,7 @@ useHead({
              "You still gotta record" + subline). The picture and the line now
              say the same thing, so there is no subline to carry. -->
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
-          Footage in, <span class="text-[#f28f84]">episodes out</span>
+          Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <a
           href="#"
