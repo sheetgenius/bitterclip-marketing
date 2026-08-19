@@ -328,11 +328,13 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // corner used to satisfy neither branch and simply vanished, which left a
     // hole in the strip at the bend — and anything past the tangent point used
     // to be drawn ABOVE the reel, which is the film poking out of the top.
-    const flatQuad = (s0: number, s1: number, tone: string) =>
-      poly(slab(START + s0, START + s1, -FILM_W / 2, FILM_W / 2, y), tone)
+    // All three take an optional z-band so the same clipping machinery can
+    // draw full-width stock AND narrow marks riding on it (captions).
+    const flatQuad = (s0: number, s1: number, tone: string, z0 = -FILM_W / 2, z1 = FILM_W / 2) =>
+      poly(slab(START + s0, START + s1, z0, z1, y), tone)
     // The quarter turn itself, as a fan of small quads around the barrel. One
     // straight quad across the corner cut the roller visibly flat.
-    const arcQuad = (s0: number, s1: number, tone: string) => {
+    const arcQuad = (s0: number, s1: number, tone: string, z0 = -FILM_W / 2, z1 = FILM_W / 2) => {
       const cx = ROLL.x - ROLL.r
       const cy = y + ROLL.r
       const at = (sv: number) => -Math.PI / 2 + ((sv - runFlat) / ARC) * (Math.PI / 2)
@@ -343,17 +345,17 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         const p0 = [cx + Math.cos(a0) * ROLL.r, cy + Math.sin(a0) * ROLL.r]
         const p1 = [cx + Math.cos(a1) * ROLL.r, cy + Math.sin(a1) * ROLL.r]
         poly([
-          iso(p0[0], p0[1], -FILM_W / 2), iso(p1[0], p1[1], -FILM_W / 2),
-          iso(p1[0], p1[1], FILM_W / 2), iso(p0[0], p0[1], FILM_W / 2),
+          iso(p0[0], p0[1], z0), iso(p1[0], p1[1], z0),
+          iso(p1[0], p1[1], z1), iso(p0[0], p0[1], z1),
         ], tone)
       }
     }
-    const riseQuad = (s0: number, s1: number, tone: string) => {
+    const riseQuad = (s0: number, s1: number, tone: string, z0 = -FILM_W / 2, z1 = FILM_W / 2) => {
       const y0 = y + ROLL.r + (s0 - runVert)
       const y1 = y + ROLL.r + (s1 - runVert)
       poly([
-        iso(ROLL.x, y0, -FILM_W / 2), iso(ROLL.x, y1, -FILM_W / 2),
-        iso(ROLL.x, y1, FILM_W / 2), iso(ROLL.x, y0, FILM_W / 2),
+        iso(ROLL.x, y0, z0), iso(ROLL.x, y1, z0),
+        iso(ROLL.x, y1, z1), iso(ROLL.x, y0, z1),
       ], tone)
     }
     for (let i = -1; i * PITCH < total + PITCH; i++) {
@@ -375,6 +377,30 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       if (lo < Math.min(s1, runFlat)) flatQuad(lo, Math.min(s1, runFlat), tone)
       if (Math.max(lo, runFlat) < Math.min(s1, runVert)) arcQuad(Math.max(lo, runFlat), Math.min(s1, runVert), tone)
       if (Math.max(lo, runVert) < s1) riseQuad(Math.max(lo, runVert), s1, tone)
+      // CAPTIONS, ETCHED (owner: "literally etching little words and
+      // subtitles into the footage"). Frames arrive bare and leave lettered:
+      // once a frame's centre has crossed the turrets' beam plane, it carries
+      // two subtitle bars burned into its lower third — the pop happens under
+      // the flash, so the beams visibly DO the enhancing. Abstract bars, not
+      // glyphs: at this scale text would be noise pretending to be signal.
+      {
+        const capS = TURRET.x - START
+        const fc = s0 + PITCH * 0.47
+        if (fc > capS) {
+          const capTone = 'rgba(255,242,228,0.8)'
+          const b0 = s0 + PITCH * 0.16
+          const capLine = (ss0: number, ss1: number, zz0: number, zz1: number) => {
+            const lo2 = Math.max(ss0, lo)
+            const hi2 = Math.min(ss1, s1)
+            if (lo2 >= hi2) return
+            if (lo2 < Math.min(hi2, runFlat)) flatQuad(lo2, Math.min(hi2, runFlat), capTone, zz0, zz1)
+            if (Math.max(lo2, runFlat) < Math.min(hi2, runVert)) arcQuad(Math.max(lo2, runFlat), Math.min(hi2, runVert), capTone, zz0, zz1)
+            if (Math.max(lo2, runVert) < hi2) riseQuad(Math.max(lo2, runVert), hi2, capTone, zz0, zz1)
+          }
+          capLine(b0, b0 + 1.35, 0.3, 0.44)
+          capLine(b0 + 0.2, b0 + 1.0, 0.54, 0.68)
+        }
+      }
       // Sprocket perforations, four per frame along each edge — the one mark
       // that says FILM at any size. Punched dark, skipped on the short arc.
       for (let k = 0; k < 4; k++) {
