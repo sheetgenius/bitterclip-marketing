@@ -74,7 +74,7 @@ const lampY = beltY + ROLL.r + RISE * 0.32
 // THE HEAD lives at the climb (owner: "it all happens in between the
 // girders") — masts straddle the film, the housing's muzzle nearly kisses it.
 const MAST = { x0: 9.44, x1: 9.85, top: 6.15, z: 1.545, t: 0.2 }
-const LAMP_CX = 8.55
+const LAMP_CX = 8.9
 const LAMP_LEN = 0.62 // half-length of the housing along x
 const STILL_T = 1.35
 
@@ -182,7 +182,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     steel: new THREE.MeshStandardMaterial({ color: 0x4a4a58, roughness: 0.45, metalness: 0.55 }),
     steelDark: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.5, metalness: 0.5 }),
     legs: new THREE.MeshStandardMaterial({ color: 0x434250, roughness: 0.52, metalness: 0.4, envMapIntensity: 1.2 }),
-    flange: new THREE.MeshStandardMaterial({ color: 0x3a3a46, roughness: 0.38, metalness: 0.55, envMapIntensity: 1.5, side: THREE.DoubleSide }),
+    flange: new THREE.MeshStandardMaterial({ color: 0x383844, roughness: 0.62, metalness: 0.3, envMapIntensity: 0.7, side: THREE.DoubleSide }),
     coil: new THREE.MeshStandardMaterial({ color: 0x665c48, roughness: 0.9 }),
     lap: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.92 }),
     // The stage floor is honestly lit (three's light layers can't mask
@@ -431,8 +431,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const bridgeX = legXAt(FOOT_R, RIG_Y)
     box(bridgeX - 0.11, bridgeX + 0.11, RIG_Y - 0.11, RIG_Y + 0.11, -MAST.z - 0.12, MAST.z + 0.12, M.steel)
     box(bridgeX - 0.08, ROLL.x + 0.02, RIG_Y - 0.09, RIG_Y + 0.09, -0.09, 0.09, M.steelDark)
-    // one clean drop from the boom's end carries the hung gate frame
-    box(ROLL.x - 0.1, ROLL.x + 0.02, lampY + 0.84, RIG_Y, -0.06, 0.06, M.steelDark)
+    // one clean drop from the boom's end carries the whole projector head
+    box(9.78, 9.94, lampY + 0.86, RIG_Y, -0.07, 0.07, M.steelDark)
     for (const rz of [-0.45, 0.45]) {
       box(LAMP_CX - 0.075, LAMP_CX + 0.075, lampY, RIG_Y, rz - 0.075, rz + 0.075, M.steelDark)
     }
@@ -450,21 +450,38 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   {
     const housing = cyl(0.78, LAMP_LEN * 2, M.steelDark, 'x')
     housing.position.set(LAMP_CX, lampY, 0)
-    // muzzle lip: an emissive ring at the firing end
-    const lip = new THREE.Mesh(
-      new THREE.TorusGeometry(0.72, 0.05, 12, 40),
-      new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xfff2dc, emissiveIntensity: 2.2 }),
-    )
-    lip.rotation.y = Math.PI / 2
-    lip.position.set(LAMP_CX + LAMP_LEN, lampY, 0)
-    scene.add(lip)
+
   }
-  // the gate: a hung frame around the standing film — bars plus side rails
-  for (const sgn of [-1, 1]) {
-    box(ROLL.x - 0.14, ROLL.x + 0.08, lampY + sgn * 0.73 - 0.11, lampY + sgn * 0.73 + 0.11,
-      -FILM_W / 2 - 0.16, FILM_W / 2 + 0.16, M.steel)
-    box(ROLL.x - 0.14, ROLL.x + 0.08, lampY - 0.84, lampY + 0.84,
-      sgn * (FILM_W / 2 + 0.16) - 0.1 + sgn * 0.1, sgn * (FILM_W / 2 + 0.16) + 0.1 + sgn * 0.1, M.steel)
+  // THE PROJECTOR HEAD: one instrument on one axis. A rigid collar hugs the
+  // standing film (the lit frame stays visible through its open front), the
+  // lamp housing docks into its up-line face, and a lens snout leaves its
+  // down-line face — the beams are born at the lens. This replaced a hung
+  // picture-frame, a milky floating prism, a glow ball and stick brackets
+  // (owner: "this whole rig is still pretty messy").
+  {
+    const cx0 = 9.55
+    const cx1 = 10.15
+    box(cx0, cx1, lampY + 0.62, lampY + 0.86, -1.32, 1.32, M.steel) // top plate
+    box(cx0, cx1, lampY - 0.86, lampY - 0.62, -1.32, 1.32, M.steel) // bottom plate
+    for (const sgn of [-1, 1]) {
+      box(cx0, cx1, lampY - 0.86, lampY + 0.86, sgn * 1.08 + sgn * 0.0 - (sgn < 0 ? 0.24 : 0), sgn * 1.08 + (sgn > 0 ? 0.24 : 0), M.steel) // cheeks
+    }
+    const snout = cyl(0.56, 0.72, M.steelDark, 'x')
+    snout.position.set(cx1 + 0.36, lampY, 0)
+    const lensRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.48, 0.055, 12, 40),
+      new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xfff2dc, emissiveIntensity: 1.4 }),
+    )
+    lensRing.rotation.y = Math.PI / 2
+    lensRing.position.set(cx1 + 0.73, lampY, 0)
+    scene.add(lensRing)
+    const lensDisc = new THREE.Mesh(
+      new THREE.CircleGeometry(0.45, 32),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 3.2 }),
+    )
+    lensDisc.rotation.y = Math.PI / 2
+    lensDisc.position.set(cx1 + 0.74, lampY, 0)
+    scene.add(lensDisc)
   }
   scene.add(bossGroup)
 
@@ -550,49 +567,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // THE PRISM explains the trinity: one white throw leaves the gate, enters a
   // glass wedge on a bracket arm, and leaves as three coloured shafts. The
   // beams' origin (lens) is the prism's output face.
-  const lens = new THREE.Vector3(11.94, lampY, 0)
+  const lens = new THREE.Vector3(10.9, lampY, 0)
   const WALL_X = 16.8
   const FAN = [
     { name: 'YouTube', color: '#ff0033', icon: 'yt' },
     { name: 'Podcast', color: '#872ec4', icon: 'pod' },
     { name: 'LinkedIn', color: '#0a66c2', icon: 'in' },
   ]
-  {
-    // bracket: an arm off the lower gate bar, a stem, and the wedge on top
-    box(ROLL.x + 0.08, 11.82, lampY - 0.84, lampY - 0.64, -0.12, 0.12, M.steelDark)
-    box(11.48, 11.76, lampY - 0.64, lampY - 0.3, -0.1, 0.1, M.steelDark)
-    const tri = new THREE.Shape()
-    tri.moveTo(-0.3, -0.3)
-    tri.lineTo(0.36, 0)
-    tri.lineTo(-0.3, 0.3)
-    tri.closePath()
-    const prism = new THREE.Mesh(
-      new THREE.ExtrudeGeometry(tri, { depth: 0.52, bevelEnabled: false }),
-      new THREE.MeshPhysicalMaterial({
-        color: 0xf4f6ff,
-        transmission: 0.88,
-        roughness: 0.14,
-        ior: 1.45,
-        thickness: 0.4,
-        transparent: true,
-      }),
-    )
-    prism.position.set(11.56, lampY, -0.26)
-    scene.add(prism)
-    // the split line: a hot slit on the output face where white becomes three
-    box(11.9, 11.96, lampY - 0.22, lampY + 0.22, -0.045, 0.045,
-      new THREE.MeshStandardMaterial({ color: 0x222228, emissive: 0xffffff, emissiveIntensity: 1.8 }))
-    // the white link: gate frame -> prism input, the beam's birthplace made
-    // visible (lamp -> film -> prism -> fan)
-    const linkLen = 11.44 - (ROLL.x + 0.1)
-    const link = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.42, 0.34, linkLen, 20, 1, true),
-      new THREE.MeshBasicMaterial({ color: 0xfffaf0, transparent: true, opacity: 0.34, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }),
-    )
-    link.rotation.z = -Math.PI / 2
-    link.position.set(ROLL.x + 0.1 + linkLen / 2, lampY, 0)
-    scene.add(link)
-  }
+
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
   // built a lit room-corner; the wall is IMPLIED — the projected frames carry
   // their own baked spill halos and the darkness does the architecture.)
@@ -789,7 +771,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     x.fillRect(0, 0, 128, 128)
     const tex = new THREE.CanvasTexture(c)
     tex.colorSpace = THREE.SRGBColorSpace
-    screenQuad(lens.clone(), 1.55, 1.55, new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))
+    screenQuad(new THREE.Vector3(11.02, lampY, 0), 1.15, 1.15, new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))
   }
 
   // ---- the falling folder -------------------------------------------------
@@ -851,19 +833,19 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     rim.position.set(3, 11, -9)
     scene.add(rim)
   }
-  const gateGlow = new THREE.PointLight(0xfff2dc, 20, 9)
+  const gateGlow = new THREE.PointLight(0xfff2dc, 17, 9)
   gateGlow.position.set(ROLL.x - 0.55, lampY, 0)
   gateGlow.castShadow = true
   gateGlow.shadow.mapSize.set(1024, 1024)
   gateGlow.shadow.bias = -0.004
   scene.add(gateGlow)
   // a small glint where the film arrives on the coil — the handoff reads
-  const wheelKiss = new THREE.PointLight(0xa8b4d8, 95, 30)
+  const wheelKiss = new THREE.PointLight(0xa8b4d8, 40, 26)
   wheelKiss.position.set(reelX - 6.5, reelY + 5, 7)
   scene.add(wheelKiss)
   // THE ARCHIVE IS ALIVE: a warm ember inside the drum, between the flanges —
   // the wound memory glows out through the windows as they turn
-  const archiveGlow = new THREE.PointLight(0xffd9a8, 26, 11)
+  const archiveGlow = new THREE.PointLight(0xffd9a8, 15, 7.5)
   archiveGlow.position.set(reelX, reelY + 1.2, 0)
   scene.add(archiveGlow)
   const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
@@ -874,10 +856,10 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const headGlow = new THREE.PointLight(0xffe4c4, 15, 7)
   headGlow.position.set(8.35, lampY + 0.35, 0)
   scene.add(headGlow)
-  const bedGlow = new THREE.PointLight(0xf28f84, 16, 8)
+  const bedGlow = new THREE.PointLight(0xf28f84, 16, 6.2)
   bedGlow.position.set((BED.x0 + BED.x1) / 2, BED.top + 0.5, 0)
   scene.add(bedGlow)
-  const hitGlow = new THREE.PointLight(0xffb4a0, 9, 6)
+  const hitGlow = new THREE.PointLight(0xffb4a0, 9, 5.2)
   hitGlow.position.set(TURRET.x, beltY + 0.45, 0)
   scene.add(hitGlow)
 
