@@ -297,6 +297,27 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.clearRect(0, 0, W, H)
     const dist = filmDist(t)
 
+    // The stage floor: one very faint pool of light under the machine, so the
+    // subject stands ON something instead of floating in the void. Elliptical
+    // via a scaled circular gradient; alpha low enough to read as atmosphere.
+    {
+      const fc = iso(3.6, -TABLE.deep - 0.1, 0)
+      const rx = 8.4 * S
+      const ry = 2.9 * S
+      ctx.save()
+      ctx.translate(fc[0], fc[1])
+      ctx.rotate(-12 * Math.PI / 180)
+      ctx.scale(1, ry / rx)
+      const fg = ctx.createRadialGradient(0, 0, 0, 0, 0, rx)
+      fg.addColorStop(0, 'rgba(142,146,162,0.075)')
+      fg.addColorStop(1, 'rgba(142,146,162,0)')
+      ctx.fillStyle = fg
+      ctx.beginPath()
+      ctx.arc(0, 0, rx, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.restore()
+    }
+
     // ---- painted BACK TO FRONT ---------------------------------------------
     // Occlusion here is painter's order and the order is depth in z: -z is
     // away from the viewer, +z toward. The lamp hangs behind the vertical run,
@@ -496,6 +517,9 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     }
 
     // ---- the bed, and the files falling into it ----------------------------
+    // a slightly proud plinth under the bed fuses it with the deck — two
+    // butted boxes read as separate props (outside eye)
+    box(BED.x0 - 0.14, BED.x1 + 0.1, -TABLE.deep, -TABLE.deep + 0.34, -BED.z - 0.1, BED.z + 0.1, 13)
     box(BED.x0, BED.x1, -TABLE.deep, BED.top, -BED.z, BED.z, 18)
     // THE DIE GATE. The slit the film extrudes through lives on the bed's +x
     // face, which this camera can never see (§4a) — so the mouth is shown as a
@@ -570,9 +594,22 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         fy = BED.top - 0.06
         a2 = 0.6 * Math.pow(1 - (bedAge - FALL_S) / SOAK_S, 1.5)
       }
-      poly(slab(bx - 1.15, bx + 1.15, -1.15, 1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
+      // A folder with THICKNESS: top face, plus the two visible side faces a
+      // step darker — a zero-thickness sheet read as paper, not a folder of
+      // files. The tab rides the top face.
+      const ft = 0.16
+      const sideTone = `rgba(158,152,142,${(a2 * 0.85).toFixed(3)})`
+      poly([
+        iso(bx - 1.15, fy + ft, 1.15), iso(bx + 1.15, fy + ft, 1.15),
+        iso(bx + 1.15, fy, 1.15), iso(bx - 1.15, fy, 1.15),
+      ], sideTone) // +z side
+      poly([
+        iso(bx - 1.15, fy + ft, -1.15), iso(bx - 1.15, fy + ft, 1.15),
+        iso(bx - 1.15, fy, 1.15), iso(bx - 1.15, fy, -1.15),
+      ], `rgba(140,134,124,${(a2 * 0.85).toFixed(3)})`) // -x side
+      poly(slab(bx - 1.15, bx + 1.15, -1.15, 1.15, fy + ft), `rgba(214,209,200,${a2.toFixed(3)})`)
       // the tab that makes it a FOLDER of files, not a sheet of paper
-      poly(slab(bx - 0.8, bx - 0.1, -1.45, -1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
+      poly(slab(bx - 0.8, bx - 0.1, -1.45, -1.15, fy + ft), `rgba(214,209,200,${a2.toFixed(3)})`)
     }
 
     // ---- two laser turrets, one either side of the table -------------------
@@ -1052,6 +1089,18 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       const dy = lampY() + 2.4 - i * 2.4
       const p = iso(DEST.x, dy, 0)
 
+      // The beam's light arriving ON the badge: a soft pool in the beam's own
+      // colour behind the disc, so the badges sit in the stage's light instead
+      // of floating as sticker overlays (cold-eye residual).
+      {
+        const bg = ctx.createRadialGradient(p[0], p[1], rad * 0.4, p[0], p[1], rad * 2.2)
+        bg.addColorStop(0, dest.beamMid)
+        bg.addColorStop(1, 'rgba(0,0,0,0)')
+        ctx.fillStyle = bg
+        ctx.beginPath()
+        ctx.arc(p[0], p[1], rad * 2.2, 0, Math.PI * 2)
+        ctx.fill()
+      }
       // Solid dark base
       ctx.beginPath()
       ctx.arc(p[0], p[1], rad, 0, Math.PI * 2)
