@@ -22,6 +22,8 @@
 export interface IsoRenderer {
   start(): void
   stop(): void
+  /** Paint one frame at a chosen time and stay there. For reduced motion. */
+  still(t: number): void
   resize(): void
   destroy(): void
 }
@@ -101,7 +103,7 @@ const COIL_F = 0.58 // coil radius as a fraction of the flange
 // ceiling stem earned. Two raked legs meeting at the axle carry the same load,
 // open a triangle of daylight through the middle of the stand, and put the feet
 // out where the table can actually take them.
-const YOKE = { t: 0.34, z: FILM_W / 2 + 0.52, foot: 0.72, apex: 0.34, rake: 1.95, splay: 1.15 }
+const YOKE = { t: 0.27, z: FILM_W / 2 + 0.52, foot: 0.58, apex: 0.28, rake: 1.95, splay: 1.15 }
 // The light box fires out its END, not its side: axis along x, aiming up the
 // line at the film and the reel beyond it. Along z it was broadside to the
 // throw, which is a lamp pointing across its own beam.
@@ -468,11 +470,20 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // the far one goes down before the wheel and the near one after — that is
     // what makes it read as a yoke the reel is held INSIDE rather than two
     // posts standing near it.
+    // Where a leg stands at a given height — needed by the tie bar, which has to
+    // land ON the legs rather than near them.
+    const legAt = (bx: number, tx: number, h: number) => bx + (h / reelY()) * (tx - bx)
+    const LEG_L: [number, number] = [reelX() - YOKE.rake, reelX() - YOKE.apex * 0.55]
+    const LEG_R: [number, number] = [reelX() + YOKE.splay, reelX() + YOKE.apex * 0.55]
+
     const girder = (sgn: number, near: boolean) => {
       const z0 = sgn * YOKE.z - YOKE.t / 2
       const z1 = sgn * YOKE.z + YOKE.t / 2
+      const face = near ? '#2b2b34' : '#141419'
+      const side = near ? '#35353f' : '#1c1c22'
+      const lit = near ? '#40404b' : '#212129'
       // One leg: a raked trapezoid from a foot on the table up to the axle.
-      const leg = (bx: number, tx: number) => {
+      const leg = ([bx, tx]: [number, number]) => {
         const prof = (cz: number): P2[] => [
           iso(bx - YOKE.foot / 2, TABLE.top, cz),
           iso(tx - YOKE.apex / 2, reelY(), cz),
@@ -481,12 +492,23 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         ]
         const a = prof(z0)
         const b = prof(z1)
-        poly(a, near ? '#2b2b34' : '#191920')
-        sweep(a, b, near ? '#35353f' : '#212128')
-        poly(b, near ? '#40404b' : '#26262e')
+        poly(a, face)
+        sweep(a, b, side)
+        poly(b, lit)
+        // A base plate, so the frame STANDS on the table instead of growing out
+        // of it. Legs that simply intersect the top look like they were pushed
+        // through it.
+        box(bx - YOKE.foot * 0.9, bx + YOKE.foot * 0.9, TABLE.top, TABLE.top + 0.16,
+          z0 - 0.13, z1 + 0.13, near ? 26 : 15)
       }
-      leg(reelX() - YOKE.rake, reelX() - YOKE.apex * 0.55)
-      leg(reelX() + YOKE.splay, reelX() + YOKE.apex * 0.55)
+      leg(LEG_L)
+      leg(LEG_R)
+      // The tie bar, spanning leg to leg at lamp height. It braces the frame and
+      // it is what the light box actually hangs from — the pair of cradle bars
+      // it replaces floated at the reel's own x, which at this height is between
+      // the legs and touching neither of them.
+      box(legAt(LEG_L[0], LEG_L[1], lampY()) - YOKE.apex, legAt(LEG_R[0], LEG_R[1], lampY()) + YOKE.apex,
+        lampY() - 0.14, lampY() + 0.14, z0, z1, near ? 24 : 14)
       if (near) {
         // the bearing the axle turns in, so the wheel is visibly HELD
         const boss: P2[] = []
@@ -513,6 +535,11 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       }
       return out
     }
+    // The trunnion the barrel is journalled on: one shaft in z, landing on the
+    // tie bar of each frame at exactly (reelX(), lampY()). Drawn before the
+    // barrel, so it shows at both ends and is swallowed in the middle.
+    box(reelX() - 0.11, reelX() + 0.11, lampY() - 0.11, lampY() + 0.11,
+      -YOKE.z - YOKE.t / 2, YOKE.z + YOKE.t / 2, 30)
     const bMuzzle = barrel(reelX() + BOX.len)
     const bBack = barrel(reelX() - BOX.len)
     // The throw, emitted at the muzzle so it emerges from behind the housing
@@ -529,14 +556,7 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     poly(bMuzzle, 'rgba(236,236,246,0.85)')
     sweep(bMuzzle, bBack, '#2c2c35')
     poly(bBack, '#3a3a45')
-    // Two cradle bars carrying the barrel, running the full width in z so they
-    // reach BOTH A-frames. The stubs they replace ran outward at the reel's own
-    // x — but at lamp height the legs are nowhere near that line, so they ended
-    // in mid-air holding nothing.
-    for (const bx of [reelX() - 0.95, reelX() + 0.95]) {
-      box(bx - 0.16, bx + 0.16, lampY() - BOX.r - 0.24, lampY() - BOX.r + 0.1,
-        -YOKE.z - YOKE.t / 2, YOKE.z + YOKE.t / 2, 21)
-    }
+
 
     const ring = (cz: number, rad: number): P2[] => {
       const out: P2[] = []
@@ -781,6 +801,9 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.restore()
   }
 
+  // The one frame the study is judged on when it cannot move: a file soaking in
+  // the bed, the strip mid-run, a cut frame on the table.
+  const STILL_T = 2.35
   let raf = 0
   let running = false
   function loop(now: number) {
@@ -799,9 +822,14 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       if (raf) cancelAnimationFrame(raf)
       raf = 0
     },
+    still(t: number) {
+      this.stop()
+      layout()
+      draw(t)
+    },
     resize() {
       layout()
-      if (!running) draw(0)
+      if (!running) draw(STILL_T)
     },
     destroy() {
       this.stop()

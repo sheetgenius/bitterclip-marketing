@@ -14,6 +14,7 @@ const canvas = ref<HTMLCanvasElement | null>(null)
 let renderer: IsoRenderer | null = null
 let ro: ResizeObserver | null = null
 let io: IntersectionObserver | null = null
+let calm: MediaQueryList | null = null
 
 onMounted(async () => {
   for (let i = 0; i < 12 && !(host.value && canvas.value); i++) await nextTick()
@@ -23,12 +24,21 @@ onMounted(async () => {
 
   renderer = createIsoRenderer(cv)
   renderer.resize()
-  renderer.start()
+
+  // Reduced motion gets ONE frame and no loop — not a slower loop. The canvas
+  // is the whole animation here, so honouring the preference in CSS alone (as
+  // the beacon does) would leave the largest moving thing on the page moving.
+  calm = window.matchMedia('(prefers-reduced-motion: reduce)')
+  if (calm.matches) renderer.still(2.35)
+  else renderer.start()
 
   ro = new ResizeObserver(() => renderer?.resize())
   ro.observe(el)
   io = new IntersectionObserver(
-    (entries) => (entries.some((e) => e.isIntersecting) ? renderer?.start() : renderer?.stop()),
+    (entries) => {
+      if (calm?.matches) return
+      entries.some((e) => e.isIntersecting) ? renderer?.start() : renderer?.stop()
+    },
     { threshold: 0.02 },
   )
   io.observe(el)
