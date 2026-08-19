@@ -224,3 +224,10 @@ The belt then wakes and the first assembled footage fades in. Also this pass:
 window bores got their own near-matte material (the interior ember was
 mirroring off them as they swept — the recurring glint's true cause) and the
 machine slid right so the drop corridor never crosses the hero text.
+
+- ISO4 direction (owner sketch): a projector FACING the viewer — lens as
+  watching eye and output, wood-chipper hopper as the drop zone on top,
+  three beams dealing the artifact cards toward the foreground near the CTA.
+  Standalone build brief for a fresh agent: docs/hero-iso4-brief.md
+  (perspective camera fork, 3/4 facing, all iso3 parts to reuse, acceptance
+  bar). iso3 stays untouched for comparison.
