@@ -1,6 +1,9 @@
 /**
- * The assembly line, blocked out in ISOMETRIC. Massing study only — shapes and
- * their positions, no detail, no photography, no lighting model.
+ * The assembly line, in ISOMETRIC. Started as a massing study; as of the
+ * 2026-08-18 workshop block it carries film language (windowed reel, sprocket
+ * perforations, gate hardware, etched captions) and a noir lighting pass (the
+ * machine lights its own stage — see docs/hero-iso-brief.md §5-6 and
+ * docs/hero-iso-nit-ledger.md).
  *
  * WHY ISOMETRIC, IN ONE PARAGRAPH. The perspective version had to bend the film
  * through a projection, which meant it could not be drawn as frames at all: it
@@ -573,15 +576,53 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     }
 
     // ---- two laser turrets, one either side of the table -------------------
+    // Instrument anatomy, not a toy cube (every eye on the panel flagged the
+    // old ones): pedestal → slender neck → canted head → nose barrel aimed
+    // down the beam line, with a service cable dropping off the back. The
+    // beam leaves the nose's tip, so source and optics agree.
+    const noseTip = (sgn: number): V3 => {
+      const hcy = TURRET.y * 0.86
+      const hcz = sgn * (TURRET.z - 0.06)
+      const dy = y - hcy
+      const dz = 0 - hcz
+      const dl = Math.hypot(dy, dz)
+      return [TURRET.x, hcy + (dy / dl) * 0.42, hcz + (dz / dl) * 0.42]
+    }
     for (const sgn of [-1, 1]) {
-      box(TURRET.x - 0.46, TURRET.x + 0.46, 0, TURRET.y * 0.62, sgn * TURRET.z - 0.46, sgn * TURRET.z + 0.46, 27)
-      // a head on a body, so it reads as an instrument aimed at the strip
+      const hz = sgn * TURRET.z
+      // service cable first, so the machine paints over its root
+      {
+        const c0 = iso(TURRET.x, TURRET.y * 0.7, sgn * (TURRET.z + 0.1))
+        const c1 = iso(TURRET.x - 0.25, 0.28, sgn * 1.92)
+        const c2 = iso(TURRET.x - 0.85, 0.02, sgn * 1.98)
+        ctx.strokeStyle = '#202027'
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(c0[0], c0[1])
+        ctx.quadraticCurveTo(c1[0], c1[1], c2[0], c2[1])
+        ctx.stroke()
+      }
+      box(TURRET.x - 0.34, TURRET.x + 0.34, 0, 0.34, hz - 0.34, hz + 0.34, 24) // pedestal
+      box(TURRET.x - 0.1, TURRET.x + 0.1, 0.34, TURRET.y * 0.64, hz - 0.1, hz + 0.1, 30) // neck
       // Cant the head toward the strip on BOTH sides. Writing the far edge as
       // sgn*(z-0.34) flipped the span on one side, so one turret was drawn with
       // z0 > z1 — an inside-out box whose faces shade backwards.
-      const hz = sgn * TURRET.z
-      box(TURRET.x - 0.26, TURRET.x + 0.26, TURRET.y * 0.62, TURRET.y,
-        Math.min(hz - sgn * 0.34, hz + sgn * 0.26), Math.max(hz - sgn * 0.34, hz + sgn * 0.26), 38)
+      box(TURRET.x - 0.24, TURRET.x + 0.24, TURRET.y * 0.64, TURRET.y + 0.08,
+        Math.min(hz - sgn * 0.32, hz + sgn * 0.24), Math.max(hz - sgn * 0.32, hz + sgn * 0.24), 40)
+      // the nose barrel, from the head's face toward the hit
+      {
+        const nb = iso(TURRET.x, TURRET.y * 0.86, sgn * (TURRET.z - 0.06))
+        const nt = noseTip(sgn)
+        const np = iso(nt[0], nt[1], nt[2])
+        ctx.strokeStyle = '#484853'
+        ctx.lineWidth = 5
+        ctx.lineCap = 'round'
+        ctx.beginPath()
+        ctx.moveTo(nb[0], nb[1])
+        ctx.lineTo(np[0], np[1])
+        ctx.stroke()
+        ctx.lineCap = 'butt'
+      }
     }
     // Both firing at the frame passing between them — and the work is VISIBLE:
     // a hot spot where the beams land. A beam that hits nothing is decoration;
@@ -591,7 +632,8 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     poly(slab(TURRET.x - 0.5, TURRET.x + 0.5, -0.5, 0.5, y + 0.004), 'rgba(255,150,140,0.16)')
     poly(slab(TURRET.x - 0.2, TURRET.x + 0.2, -0.2, 0.2, y + 0.006), 'rgba(255,224,214,0.95)')
     for (const sgn of [-1, 1]) {
-      const src = iso(TURRET.x, TURRET.y, sgn * (TURRET.z - 0.4))
+      const nt = noseTip(sgn)
+      const src = iso(nt[0], nt[1], nt[2])
       // halo under core: two strokes, wide-faint then thin-hot, read as a beam
       // with energy rather than a bent wire
       ctx.strokeStyle = 'rgba(255,150,140,0.22)'

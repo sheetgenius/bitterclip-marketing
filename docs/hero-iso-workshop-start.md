@@ -92,11 +92,11 @@ Your solo eyeball is not a sufficient gate. Three additional sets of eyes:
   they're uncontaminated (it read the reel crop as "a satellite dish" — that's
   a finding, not a failure).
 - **agy** (Google harness; historically the strongest visual eye — lead
-  external reviewer when available) — `agy --print "<prompt naming
-  repo-relative image paths>"`. NOTE: from inside a Claude session agy's
-  permission prompts can't be answered and its skip-permissions flag is
-  blocked by policy; if calls fail, ask Michael to add an allow rule for
-  `agy --print*` (or run one manually via `! agy …`).
+  external reviewer) — `agy --print "<prompt>"`, allowed by the
+  `Bash(agy --print:*)` rule in `~/.claude/settings.json` (added 2026-08-18).
+  Give it the ABSOLUTE image path and say "read that exact path directly, do
+  not search" — given a bare filename it goes hunting with shell commands it
+  has no permission to run, and dies.
 
 **Corroboration rules** (adapted from the identity-studio tri-model protocol):
 tag every finding with who saw it; two of three eyes agreeing = act on it; a

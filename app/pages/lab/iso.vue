@@ -5,14 +5,14 @@
  * (/lab/ribbon) studies it beat were retired 2026-08-18; this is the keeper.
  */
 useHead({
-  title: 'Assembly line, isometric — blocking',
+  title: 'Assembly line, isometric — workshop',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
 </script>
 
 <template>
   <main class="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden pb-16">
-    <p class="telemetry-label px-6 pt-6">Blocking study · shapes and positions only</p>
+    <p class="telemetry-label px-6 pt-6">Workshop study · geometry, story, light</p>
     <div class="relative h-[78vh] min-h-[520px] w-full">
       <div class="absolute inset-0">
         <HeroIso />

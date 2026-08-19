@@ -50,8 +50,8 @@ The line runs **bottom-left to top-right**, along +x. Read it in that order.
 | **The bench** | A long flat deck. The strip runs across it, frames alternating in tone so you can see it move. | The workshop. The cutting-room floor. |
 | **The turrets** | Two small instruments either side, firing a thin beam that converges on the passing strip. | Automated editing. Lasers, not blades — a blade has to strike something stationary, which forces a stop-and-go transport. A laser enhances film *as it passes*, so **the line never stops**. That was a deliberate reversal of an earlier indexed design. |
 | **The roller** | A flanged pulley. The film wraps it through 90° and climbs. | Nothing semantic — it's the mechanism that gets the film from the horizontal plane to the vertical one without a morph. |
-| **The rig** | Two A-frame girders on base plates, tie-barred, carrying the reel's axle. | Structure. It exists to make the reel's height *believable* and to give the lamp something to hang from. |
-| **The lamp** | A cylinder journalled on a trunnion between the tie bars, axis along the line, firing at the standing frame. | Publishing. It is a projector. |
+| **The rig** | Two stands, each a plumb mast under the axle with one raked brace (reworked 2026-08-18 from tie-barred A-frames — the vertical masts keep the climb's screen band clean). | Structure. It exists to make the reel's height *believable* and to carry the lamp. |
+| **The lamp** | A cylinder journalled on a cross-shaft spanning mast to mast at half the rig's height (owner ruling), axis along the line, firing at the standing frame. | Publishing. It is a projector. |
 | **The reel** | A large two-flange reel, film winding onto the coil from below. Turns at the film's own rate. | The finished show, accumulating. |
 | **The throw** | Three coloured beams leaving the gate. | Distribution. |
 | **The destinations** | YouTube, Podcast, LinkedIn. | Where it goes. |
@@ -114,37 +114,48 @@ separate debugging sessions. If a shape vanishes, check for NaN first.
 
 ## 5. Current state
 
-**Solid.** The blocking is done and coherent: 100+ verified geometry fixes, each
-rebuilt and eyeballed. Bed, extrusion, bench, strip, turrets, roller wrap, rig,
-lamp, reel, throw, destinations all present and correctly related. The reel's
-spin is driven off the transport (`spin = dist / coilR()`), not a clock of its
-own, so the wheel and the film read as one machine. Occlusion order is correct
-throughout. The composition is biased right, leaving the top-left for the hero
-line and CTA.
+**As of the 2026-08-18 workshop block (commits `2000c55…f633974`), the study
+has moved well past massing.** Blocking remains coherent (occlusion verified,
+reel spin still driven off the transport, composition biased right for the
+type column) and on top of it:
 
-**Crude, and knowingly so.** This is a *massing study* — shapes and positions.
-There is no lighting model, no material, no texture, no photography in the
-frames. Values are flat fills chosen by hand. The strip's frames are solid
-tones, not thumbnails.
+- **Film language.** The near flange is a plate pierced by five rotating round
+  windows (a projection reel — this killed a cold-eye "satellite dish" read);
+  the wound coil shows its face, winding rings, and a fresh outer lap in the
+  strip's own khaki so the feed visibly accumulates. Sprocket perforations run
+  both edges of the strip; frame gaps read as separators.
+- **Geometry rework.** Masts are plumb under the axle with one raked brace each
+  (the old A-frame splay swept across the climb); the lamp sits at mid-rig on
+  a visible cross-shaft (owner ruling); slim base pads; die-gate bridge at the
+  bed's mouth; two clamp bars at the gate.
+- **Noir lighting (owner reversal of the old no-glow rule).** The machine
+  lights its own stage: acid glow breathing on the drop cycle in the bed, laser
+  hit pool + emitter glints, gradient throw shaft with a muzzle halo painted
+  over hardware, a near-clipping hot core in the gate, density falloff along
+  the climb, hard rims keeping the dark wheel's edge against the void, machined
+  speculars on roller and hub, stronger prism fan with a hot origin.
+- **Captions etched.** Frames arrive bare and leave lettered: two abstract
+  subtitle bars burn into a frame's lower third the moment its centre crosses
+  the turret beam plane.
 
-**Known rough edges, in rough priority order:**
+Naive cold reads (agy) now narrate the full pipeline unprompted: ingest →
+laser-processed filmstrip → take-up reel → gate splits to YouTube/Podcast/
+LinkedIn.
 
-1. The rig is over-articulated — four legs plus tie bars plus base plates is a
-   lot of parallel bars in a small area, and the near frame's legs cross the
-   film's climb.
-2. The lamp reads as *resting on* the tie bar more than *hanging from* the
-   trunnion.
-3. The bench's middle is empty now that the old lamp house is gone.
-4. The turret beams converge on the strip but the turrets themselves are small
-   dark boxes that don't read as instruments.
-5. The bed's dissolve is an alpha fade; the concept called for particles
-   swooping and rematerialising *at the plane of the table*.
-6. Nothing is stamped, lasered or cut *visibly* — the turrets fire but the film
-   they hit is unchanged. The strip should visibly gain something (captions
-   stamped in) as it passes.
+**Remaining queue, in priority order** (see `docs/hero-iso-nit-ledger.md` for
+who saw what):
 
-**Not started:** any of the detail pass. Thumbnails in the frames. Subtitle
-stamping. Colour beyond the destination brand marks.
+1. The turret bodies are still toy cubes — they need instrument-grade detail
+   (nose optics, a yoke, a cable) to match the rest.
+2. The falling folder is a flat slab with a tab; the drop would read better
+   with mass (thickness, a face seam) and the bed dissolve is still an alpha
+   fade, not particles at the table's plane.
+3. Box-shading is a fixed top-lit convention that no scene light motivates —
+   good enough under the noir rims, but a targeted relight of key faces (mast
+   inner faces toward the gate, deck near the pools) would finish the "lit by
+   its own practicals" claim.
+4. The bed/deck butt seam could use a fused plinth.
+5. Open owner question: thumbnails in the frames, or stay abstract?
 
 ## 6. Hard constraints — these came from the owner and still hold
 
