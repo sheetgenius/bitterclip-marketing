@@ -58,7 +58,6 @@ const RISE = 9.4
 // where the big gantry now stands.
 const REEL = { r: 5.8, w: FILM_W }
 const COIL_F = 0.58
-const TURRET = { x: 4.1, z: 1.78, y: 1.15 }
 const DEST = { x: 17.6, r: 1.5 }
 
 const FILM_SPEED = 1.05
@@ -85,15 +84,13 @@ const STILL_T = 11.9
 // the acetate; the pool flares; the line starts moving; the laser wakes and
 // inscribes; the projector strikes; the three screens ignite one-two-three;
 // then steady state. Nothing loops except the work itself.
-const BOOT = { drop: 0.7, run: 2.3, runRamp: 1.2, laser: 3.6, proj: 5.1, beam0: 6.0, beamGap: 0.55 }
+const BOOT = { plane: 0.45, drop: 0.85, run: 3.05, runRamp: 1.2, proj: 4.7, beam0: 5.5, beamGap: 0.55 }
 const transportDist = (t: number) => {
   if (t <= BOOT.run) return 0
   const u = t - BOOT.run
   return FILM_SPEED * (u < BOOT.runRamp ? (u * u) / (2 * BOOT.runRamp) : u - BOOT.runRamp / 2)
 }
-// the inscription pass window, in arclength around the beam plane
-const PASS_LO = 0.28
-const PASS_HI = 0.24
+
 
 const AX = (12 * Math.PI) / 180
 const AZ = (30 * Math.PI) / 180
@@ -152,7 +149,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       -x * SX + z * SZ - y,
     ]
     const probe: [number, number, number][] = [
-      [BED.x0, BED.top + 4.6, 0], [BED.x0, -TABLE.deep, TABLE.z],
+      [BED.x0, BED.top + 2.6, 0], [BED.x0, -TABLE.deep, TABLE.z],
       [DEST.x + DEST.r, lampY + 3.0, 0], [DEST.x, lampY - 3.0, 0],
       [reelX + REEL.r, reelY + REEL.r, -REEL.w / 2], [reelX, TABLE.top, FILM_W / 2 + 0.52],
       [TABLE.x1, 0, -TABLE.z], [ROLL.x, beltY, TABLE.z],
@@ -164,8 +161,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     // shared stage; at taller viewports it yields ground so the column and
     // the rite never collide ("room to breathe").
     const wide = W / H
-    const widthBudget = wide > 1.55 ? 0.82 : wide > 1.25 ? 0.74 : 0.9
-    const centerX = wide > 1.55 ? 0.545 : wide > 1.25 ? 0.6 : 0.5
+    const widthBudget = wide > 1.55 ? 0.78 : wide > 1.25 ? 0.7 : 0.88
+    const centerX = wide > 1.55 ? 0.585 : wide > 1.25 ? 0.63 : 0.5
     const S = Math.min((W * widthBudget) / (Math.max(...xs) - Math.min(...xs)), (H * 0.9) / (Math.max(...ys) - Math.min(...ys)))
     const ox = W * centerX - ((Math.min(...xs) + Math.max(...xs)) / 2) * S
     const oy = H * 0.52 - ((Math.min(...ys) + Math.max(...ys)) / 2) * S
@@ -201,6 +198,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     steelDark: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.5, metalness: 0.5 }),
     legs: new THREE.MeshStandardMaterial({ color: 0x434250, roughness: 0.52, metalness: 0.4, envMapIntensity: 1.2 }),
     flange: new THREE.MeshStandardMaterial({ color: 0x3a3a46, roughness: 0.45, metalness: 0.45, envMapIntensity: 1.0, side: THREE.DoubleSide }),
+    // the window bores and rim edge: near-matte so the interior ember can't
+    // mirror off a bore as it sweeps past (owner caught the flash twice)
+    flangeSide: new THREE.MeshStandardMaterial({ color: 0x232329, roughness: 0.82, metalness: 0.12, envMapIntensity: 0.4, side: THREE.DoubleSide }),
     coil: new THREE.MeshStandardMaterial({ color: 0x665c48, roughness: 0.9 }),
     lap: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.92 }),
     // The stage floor is honestly lit (three's light layers can't mask
@@ -247,6 +247,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   box(BED.x1, BED.x1 + 0.26, 0, 0.36, 1.06, 1.38, M.steelDark)
   box(BED.x1, BED.x1 + 0.26, 0, 0.36, -1.38, -1.06, M.steelDark)
 
+  let filmMatRef: THREE.MeshStandardMaterial
   // ---- the film: static ribbon, live texture ------------------------------
   const FILM_TEX_W = 1792
   const FILM_TEX_H = 112
@@ -354,7 +355,6 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   function drawFilm(dist: number) {
     const sToPx = FILM_TEX_W / totalPath
     const off = dist % PITCH
-    const capS = TURRET.x - START
     // stock base + frame lines
     fctx.fillStyle = '#2b2820'
     fctx.fillRect(0, 0, FILM_TEX_W, FILM_TEX_H)
@@ -366,16 +366,15 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       const s0 = i * PITCH + off
       if (s0 + PITCH <= 0 || s0 >= totalPath) continue
       const id = stableId(i, off, dist)
-      const fc = s0 + 0.09 + IMG_H / 2
-      const prog = fc >= capS + PASS_HI ? 1 : fc <= capS - PASS_LO ? 0 : (fc - (capS - PASS_LO)) / (PASS_LO + PASS_HI)
       const u0 = (s0 + 0.09) * sToPx
       const uH = (IMG_H) * sToPx
       fctx.save()
       // image top edge = higher s; canvas y-down maps to decreasing s
       fctx.translate(u0 + uH, vTop)
       fctx.rotate(Math.PI / 2)
-      fctx.drawImage(frameArt(id, prog >= 1), 0, 0, vH, uH)
-      if (prog > 0 && prog < 1) drawCaptionBars(fctx, vH, uH, id, prog)
+      // frames come out of the acetate already assembled — the pool is the
+      // transformation, not any single visible tool (owner: keep it abstract)
+      fctx.drawImage(frameArt(id, true), 0, 0, vH, uH)
       fctx.restore()
     }
     // edge-code timecodes in the top margin — frame-accurate data texture
@@ -387,38 +386,6 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       const id = stableId(i, off, dist)
       const tc = 'TC ' + String(14 + ((id * 7) % 45)).padStart(2, '0') + ':' + String((id * 13) % 60).padStart(2, '0') + ':' + String((id * 29) % 24).padStart(2, '0')
       fctx.fillText(tc, (s0 + 0.12) * sToPx, FILM_TEX_H * 0.052)
-    }
-    // the measurement moment: frames approaching the beam wear scan brackets —
-    // the machine looks BEFORE it cuts
-    {
-      const capPx = capS * sToPx
-      for (let i = 0; i * PITCH < totalPath + PITCH; i++) {
-        const s0 = i * PITCH + off
-        const fc = s0 + PITCH * 0.5
-        if (fc < capS - PITCH * 1.7 || fc > capS) continue
-        const u0 = (s0 + 0.09) * sToPx
-        const uH = IMG_H * sToPx
-        const v0 = vTop
-        const v1 = vTop + vH
-        const appr = 1 - (capS - fc) / (PITCH * 1.7)
-        fctx.strokeStyle = `rgba(255,210,190,${(0.35 + 0.55 * appr).toFixed(2)})`
-        fctx.lineWidth = 2
-        const L = 9
-        for (const [cx2, cy2, dx2, dy2] of [[u0, v0, 1, 1], [u0 + uH, v0, -1, 1], [u0, v1, 1, -1], [u0 + uH, v1, -1, -1]] as const) {
-          fctx.beginPath()
-          fctx.moveTo(cx2 + dx2 * L, cy2)
-          fctx.lineTo(cx2, cy2)
-          fctx.lineTo(cx2, cy2 + dy2 * L)
-          fctx.stroke()
-        }
-        // the sweep line crossing the frame as it closes on the beam
-        const sw = u0 + uH * appr
-        fctx.strokeStyle = 'rgba(255,220,200,0.5)'
-        fctx.beginPath()
-        fctx.moveTo(sw, v0 + 3)
-        fctx.lineTo(sw, v1 - 3)
-        fctx.stroke()
-      }
     }
     // perf rows over everything, both edges, four per frame
     fctx.fillStyle = '#100e0a'
@@ -462,7 +429,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2))
     g.setIndex(idx)
     g.computeVertexNormals()
-    const filmMat = new THREE.MeshStandardMaterial({ map: filmTex, roughness: 0.9, side: THREE.DoubleSide })
+    const filmMat = new THREE.MeshStandardMaterial({ map: filmTex, roughness: 0.9, side: THREE.DoubleSide, transparent: true, opacity: 0 })
+    filmMatRef = filmMat
     const filmMesh = new THREE.Mesh(g, filmMat)
     filmMesh.receiveShadow = true
     scene.add(filmMesh)
@@ -589,7 +557,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     }
     const fg = new THREE.ExtrudeGeometry(shape, { depth: 0.16, bevelEnabled: false, curveSegments: 64 })
     for (const zc of [-REEL.w / 2, REEL.w / 2 - 0.16]) {
-      const f = new THREE.Mesh(fg, M.flange)
+      const f = new THREE.Mesh(fg, [M.flange, M.flangeSide])
       f.position.z = zc
       f.castShadow = true
       f.receiveShadow = true
@@ -612,40 +580,6 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   }
   reel.position.set(reelX, reelY, 0)
   scene.add(reel)
-
-  // ---- the inscriber: ONE laser, ours, that writes -------------------------
-  // (owner: constant blasting was noise. The near pod wakes with the boot,
-  // then periodically inscribes — the beam tracks each frame as it slides
-  // past, writing the caption onto it, and rests between frames.)
-  const laserTip = new THREE.Vector3(TURRET.x, 1.68, MAST.z - 0.28)
-  {
-    const zc = MAST.z
-    box(TURRET.x - 0.09, TURRET.x + 0.09, 2.06, 3.12, zc - 0.09, zc + 0.09, M.steelDark)
-    box(TURRET.x - 0.26, TURRET.x + 0.26, 1.6, 2.06, zc - 0.34, zc + 0.18, M.steel)
-    const dir0 = new THREE.Vector3(0, -1, -0.7).normalize()
-    const nose = cyl(0.09, 0.44, M.steel, 'y', scene, 16)
-    nose.position.copy(laserTip.clone().add(dir0.clone().multiplyScalar(-0.2)))
-    nose.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir0)
-  }
-  const beamCore = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.022, 0.022, 1, 8),
-    new THREE.MeshBasicMaterial({ color: 0xffc8bc, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }),
-  )
-  const beamHalo = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.07, 0.07, 1, 8),
-    new THREE.MeshBasicMaterial({ color: 0xf28f84, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false }),
-  )
-  beamCore.visible = false
-  beamHalo.visible = false
-  scene.add(beamCore)
-  scene.add(beamHalo)
-  const nib = new THREE.Mesh(
-    new THREE.CircleGeometry(0.16, 20),
-    new THREE.MeshBasicMaterial({ color: 0xffe8dc, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }),
-  )
-  nib.rotation.x = -Math.PI / 2
-  nib.visible = false
-  scene.add(nib)
 
   // ---- the throw: a shadow play on the back wall --------------------------
   // (owner: the projection lands ON A WALL — three tinted versions of the
@@ -953,6 +887,43 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   }
   bootFile.visible = false
   scene.add(bootFile)
+  // THE SCAN PLANE: a dashed outline floating above the pool — the indexing
+  // plane. The falling file shatters into a bitstream as it passes through.
+  const PLANE_Y = BED.top + 1.35
+  let planeMat: THREE.MeshBasicMaterial
+  {
+    const pc = document.createElement('canvas')
+    pc.width = 460
+    pc.height = 340
+    const px2 = pc.getContext('2d')!
+    px2.strokeStyle = '#ff9d8a'
+    px2.lineWidth = 7
+    px2.setLineDash([26, 18])
+    px2.strokeRect(10, 10, 440, 320)
+    const ptex = new THREE.CanvasTexture(pc)
+    ptex.colorSpace = THREE.SRGBColorSpace
+    planeMat = new THREE.MeshBasicMaterial({ map: ptex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(BED.x1 - BED.x0 - 1.1, BED.z * 2 - 1.1), planeMat)
+    plane.rotation.x = -Math.PI / 2
+    plane.position.set((BED.x0 + BED.x1) / 2, PLANE_Y, 0)
+    scene.add(plane)
+  }
+  // the bitstream: the file's substance, raining into the acetate
+  const BITS_N = 170
+  const bitsPos = new Float32Array(BITS_N * 3)
+  const bitsSeed: { x: number; z: number; delay: number; v: number }[] = []
+  for (let k = 0; k < BITS_N; k++) {
+    const hx = ((k * 137) % 100) / 100 - 0.5
+    const hz = ((k * 71) % 100) / 100 - 0.5
+    bitsSeed.push({ x: hx * 1.6, z: hz * 1.9, delay: ((k * 29) % 100) / 100 * 0.5, v: 2.6 + (((k * 53) % 100) / 100) * 2.2 })
+    bitsPos[k * 3 + 1] = -999
+  }
+  const bitsGeo = new THREE.BufferGeometry()
+  bitsGeo.setAttribute('position', new THREE.BufferAttribute(bitsPos, 3))
+  const bitsMat = new THREE.PointsMaterial({ color: 0xffb4a0, size: 4.5, sizeAttenuation: false, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false })
+  const bits = new THREE.Points(bitsGeo, bitsMat)
+  bits.frustumCulled = false
+  scene.add(bits)
 
   // ---- lights: the noir rig ----------------------------------------------
   // Image-based fill so materials have a world to reflect, kept very dim —
@@ -994,7 +965,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   scene.add(wheelKiss)
   // THE ARCHIVE IS ALIVE: a warm ember inside the drum, between the flanges —
   // the wound memory glows out through the windows as they turn
-  const archiveGlow = new THREE.PointLight(0xffd9a8, 21, 8.5)
+  const archiveGlow = new THREE.PointLight(0xffd9a8, 13, 7.5)
   archiveGlow.position.set(reelX, reelY + 1.2, 0)
   scene.add(archiveGlow)
   const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
@@ -1008,9 +979,6 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const bedGlow = new THREE.PointLight(0xf28f84, 16, 6.2)
   bedGlow.position.set((BED.x0 + BED.x1) / 2, BED.top + 0.5, 0)
   scene.add(bedGlow)
-  const hitGlow = new THREE.PointLight(0xffb4a0, 9, 5.2)
-  hitGlow.position.set(TURRET.x, beltY + 0.45, 0)
-  scene.add(hitGlow)
 
   // ---- per-frame state ----------------------------------------------------
   let lastGateId = Number.NaN
@@ -1020,84 +988,70 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     const off = dist % PITCH
     for (const m of beamMats) m.uniforms.uTime!.value = t
 
-    // ACT 1 — the drop: one labeled file falls into the pool and is taken
+    // ACT 1 — the rite of indexing: the scan plane wakes; a file materializes
+    // high in the clear lane, accelerates through the plane, and shatters
+    // into a bitstream the acetate drinks. Abstract on purpose: the pool is
+    // ALL of the work (framing, cutting, editing, music), not one tool.
     const bx = (BED.x0 + BED.x1) / 2
     let splash = 0
     {
+      const y0 = BED.top + 9.6
       const tau = t - BOOT.drop
-      const y0 = BED.top + 2.7
-      const yLand = BED.top - 0.02
-      const tLand = Math.sqrt((y0 - yLand) / 4.6)
-      if (tau > 0 && tau < tLand + 0.75) {
+      const tPlane = Math.sqrt((y0 - PLANE_Y) / 4.6)
+      // the plane: fades in, breathes, FLASHES at the crossing
+      const wake = THREE.MathUtils.smoothstep(t, BOOT.plane, BOOT.plane + 0.6)
+      const crossFlash = tau > tPlane ? Math.max(0, 1 - (tau - tPlane) / 0.45) : 0
+      planeMat.opacity = wake * (0.34 + 0.1 * Math.sin(t * 1.9) + 0.66 * crossFlash)
+      // the card: materialize, fall, vanish INTO the plane
+      if (tau > 0 && tau < tPlane) {
         bootFile.visible = true
-        if (tau < tLand) {
-          bootFileMat.opacity = Math.min(1, tau / 0.12)
-          bootFileMat.emissiveIntensity = 0
-          bootFile.position.set(bx - 0.1, y0 - 4.6 * tau * tau, 0.1)
-          bootFile.rotation.z = 0.12 * tau
-        } else {
-          const dwell = tau - tLand
-          bootFileMat.opacity = Math.max(0, 1 - dwell / 0.6)
-          bootFileMat.emissiveIntensity = 3.4 * Math.min(1, dwell / 0.25)
-          bootFile.position.set(bx - 0.1, yLand - dwell * 0.18, 0.1)
-        }
+        bootFileMat.opacity = Math.min(1, tau / 0.35)
+        bootFileMat.emissiveIntensity = tau > tPlane - 0.18 ? 2.2 : 0
+        bootFile.position.set(bx - 0.1, y0 - 4.6 * tau * tau, 0.1)
+        bootFile.rotation.z = 0.1 * Math.sin(tau * 2.1)
       } else {
         bootFile.visible = false
       }
-      if (tau > tLand) splash = Math.max(0, 1 - (tau - tLand) / 1.6)
+      // the bitstream: born at the crossing, raining to the pool
+      if (tau > tPlane && tau < tPlane + 1.6) {
+        for (let k = 0; k < BITS_N; k++) {
+          const sd = bitsSeed[k]!
+          const bt = tau - tPlane - sd.delay
+          const i3 = k * 3
+          if (bt > 0) {
+            const y = PLANE_Y - sd.v * bt - 2.3 * bt * bt
+            if (y > BED.top - 0.05) {
+              bitsPos[i3] = bx - 0.1 + sd.x
+              bitsPos[i3 + 1] = y
+              bitsPos[i3 + 2] = 0.1 + sd.z
+            } else {
+              bitsPos[i3 + 1] = -999
+            }
+          } else {
+            bitsPos[i3 + 1] = -999
+          }
+        }
+        bitsGeo.attributes.position!.needsUpdate = true
+        bits.visible = true
+      } else {
+        bits.visible = false
+      }
+      // the pool absorbs: splash follows the bits' arrival
+      if (tau > tPlane + 0.25) splash = Math.max(0, 1 - (tau - tPlane - 0.25) / 1.7)
     }
-    // the pool breathes as a drop zone; the splash makes it flare
+    // the pool breathes as a drop zone; absorption makes it flare
     const breathe = 0.2 + 0.07 * Math.sin(t * 1.4)
-    const acid = Math.min(1, breathe + splash * 0.85)
+    const acid = Math.min(1, breathe + splash * 0.9)
     bedGlow.intensity = 2.5 + 12 * acid
     rimMat.emissiveIntensity = 0.45 + 1.15 * acid
 
     // ACT 2 — the line starts (transportDist handles the ramp); the wheel
-    // turns with it. Winding physics: surface at the right tangent moves up.
+    // turns with it, and the first ASSEMBLED footage fades in on the belt.
     reel.rotation.z = dist / coilR
+    filmMatRef.opacity = THREE.MathUtils.smoothstep(t, BOOT.run - 0.35, BOOT.run + 0.9)
     drawFilm(dist)
 
-    // ACT 3 — the inscriber wakes and writes: the beam tracks the frame
-    // sliding past, drawing its caption across it, then rests
-    {
-      let active = false
-      if (t > BOOT.laser && dist > 0) {
-        const capS = TURRET.x - START
-        for (let i = Math.floor((capS - PASS_LO - off) / PITCH) - 1; i <= Math.ceil((capS + PASS_HI - off) / PITCH) + 1; i++) {
-          const s0 = i * PITCH + off
-          const fc = s0 + 0.09 + IMG_H / 2
-          if (fc <= capS - PASS_LO || fc >= capS + PASS_HI) continue
-          const prog = (fc - (capS - PASS_LO)) / (PASS_LO + PASS_HI)
-          // nib rides the caption row of THIS frame as it slides
-          const nx = START + s0 + 0.09 + IMG_H * 0.14
-          const nz = -IMG_W * 0.24 + IMG_W * 0.48 * Math.min(1, prog * 1.6)
-          const end = new THREE.Vector3(nx, beltY + 0.015, nz)
-          const dir = end.clone().sub(laserTip)
-          const len = dir.length()
-          const mid = laserTip.clone().add(end).multiplyScalar(0.5)
-          for (const bm of [beamCore, beamHalo]) {
-            bm.visible = true
-            bm.position.copy(mid)
-            bm.scale.set(1, len, 1)
-            bm.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize())
-          }
-          nib.visible = true
-          nib.position.set(nx, beltY + 0.02, nz)
-          hitGlow.position.set(nx, beltY + 0.4, nz)
-          hitGlow.intensity = 9
-          active = true
-          break
-        }
-      }
-      if (!active) {
-        beamCore.visible = false
-        beamHalo.visible = false
-        nib.visible = false
-        hitGlow.intensity = 0
-      }
-    }
-
-    // ACT 4 — the projector strikes (a real lamp strike: flicker, then hold)
+    // ACT 3 — the projector strikes (a real lamp strike: flicker, then hold)
     {
       const ig = t < BOOT.proj ? 0 : Math.min(1, (t - BOOT.proj) / 0.6)
       const igf = ig >= 1 ? 1 : ig * flick(t)
@@ -1107,7 +1061,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       if (lensRingMat) lensRingMat.emissiveIntensity = 1.4 * igf
     }
 
-    // ACT 5 — one, two, three: each beam and its screen ignite in turn
+    // ACT 4 — one, two, three: each beam and its screen ignite in turn
     for (let i = 0; i < 3; i++) {
       const t0 = BOOT.beam0 + i * BOOT.beamGap
       const on = t < t0 ? 0 : Math.min(1, (t - t0) / 0.45)

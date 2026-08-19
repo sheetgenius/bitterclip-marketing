@@ -210,3 +210,17 @@ state keeps only the work: transport, periodic inscription, breathing pool.
 Far laser pod deleted. Reduced-motion still pinned mid-inscription (t=11.9).
 Also this pass: aspect-aware machine fit (tall viewports get clearance),
 lifted type column, phrase-wrapped spec line.
+
+## 2026-08-19 — the rite of indexing (laser retired)
+
+Owner: the laser implied captions-only when BitterClip does framing, cutting,
+clipping, editing, music — keep the transformation ABSTRACT. The laser, its
+pod, arm and lights are gone; frames now leave the acetate already assembled
+(the pool is all of the work). In its place, the intake becomes the drama: a
+dashed scan-plane floats above the pool; the file materializes high in the
+clear left lane, accelerates through the plane, and shatters into a salmon
+bitstream that rains into the flaring acetate — the indexing phase, visible.
+The belt then wakes and the first assembled footage fades in. Also this pass:
+window bores got their own near-matte material (the interior ember was
+mirroring off them as they swept — the recurring glint's true cause) and the
+machine slid right so the drop corridor never crosses the hero text.
