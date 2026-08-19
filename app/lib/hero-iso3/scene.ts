@@ -24,6 +24,10 @@
  * three.js must never enter the homepage bundle.
  */
 import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 
 export interface Iso3Scene {
   start(): void
@@ -82,10 +86,24 @@ const totalPath = runVert + RISE
 export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
   renderer.outputColorSpace = THREE.SRGBColorSpace
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
   renderer.toneMapping = THREE.ACESFilmicToneMapping
   renderer.toneMappingExposure = 1.18
   const scene = new THREE.Scene()
+  // Opaque, matched to the page ground: the composer path can't composite
+  // over the DOM, and nothing of the page pattern was visible behind the
+  // stage anyway.
+  scene.background = new THREE.Color(0x08090a)
   const camera = new THREE.Camera()
+
+  // restrained bloom pulls the practicals, screens and beams into one glow
+  // family — the finishing move the noir pass asked for
+  const composer = new EffectComposer(renderer)
+  composer.addPass(new RenderPass(scene, camera))
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.32, 0.55, 0.72)
+  composer.addPass(bloom)
+  composer.addPass(new OutputPass())
 
   // ---- fit + projection ---------------------------------------------------
   function layout() {
@@ -93,8 +111,11 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     if (!r.width || !r.height) return
     const W = Math.round(r.width)
     const H = Math.round(r.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    const pr = Math.min(window.devicePixelRatio || 1, 2)
+    renderer.setPixelRatio(pr)
     renderer.setSize(W, H, false)
+    composer.setPixelRatio(pr)
+    composer.setSize(W, H)
 
     // the same probe/fit as the study, so both routes compose identically
     const px = (x: number, y: number, z: number): [number, number] => [
@@ -143,23 +164,27 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     well: new THREE.MeshStandardMaterial({ color: 0x1c0e0c, roughness: 1 }),
     steel: new THREE.MeshStandardMaterial({ color: 0x4a4a58, roughness: 0.45, metalness: 0.55 }),
     steelDark: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.5, metalness: 0.5 }),
-    flange: new THREE.MeshStandardMaterial({ color: 0x34343e, roughness: 0.42, metalness: 0.6, side: THREE.DoubleSide }),
+    flange: new THREE.MeshStandardMaterial({ color: 0x3a3a46, roughness: 0.42, metalness: 0.6, side: THREE.DoubleSide }),
     coil: new THREE.MeshStandardMaterial({ color: 0x554e3f, roughness: 0.92 }),
     lap: new THREE.MeshStandardMaterial({ color: 0x77715f, roughness: 0.92 }),
-    // The floor lives on layer 1 and only the PRACTICAL lights reach it (see
-    // the light rig): its unlit base renders page-black, so no seam against
-    // the site background, while the pools still bloom on a real albedo.
-    floor: new THREE.MeshStandardMaterial({ color: 0x2c2c33, roughness: 0.97, envMapIntensity: 0 }),
+    // The stage floor is honestly lit (three's light layers can't mask
+    // per-object — learned the hard way): a neutral dark sweep that the
+    // practicals pool on, reading as the cyc behind a stage.
+    floor: new THREE.MeshStandardMaterial({ color: 0x232327, roughness: 0.97, envMapIntensity: 0 }),
   }
 
   const box = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, mat: THREE.Material, parent: THREE.Object3D = scene) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(Math.abs(x1 - x0), Math.abs(y1 - y0), Math.abs(z1 - z0)), mat)
     m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)
+    m.castShadow = true
+    m.receiveShadow = true
     parent.add(m)
     return m
   }
   const cyl = (r: number, len: number, mat: THREE.Material, axis: 'x' | 'y' | 'z', parent: THREE.Object3D = scene, seg = 40) => {
     const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat)
+    m.castShadow = true
+    m.receiveShadow = true
     if (axis === 'x') m.rotation.z = Math.PI / 2
     if (axis === 'z') m.rotation.x = Math.PI / 2
     parent.add(m)
@@ -169,10 +194,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // ---- the stage floor ----------------------------------------------------
   {
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(900, 700), M.floor)
+    floor.receiveShadow = true
     floor.rotation.x = -Math.PI / 2
     floor.position.y = -TABLE.deep - 0.02
-    floor.layers.set(1)
-    camera.layers.enable(1)
     scene.add(floor)
   }
 
@@ -262,7 +286,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     g.setIndex(idx)
     g.computeVertexNormals()
     const filmMat = new THREE.MeshStandardMaterial({ map: filmTex, roughness: 0.9, side: THREE.DoubleSide })
-    scene.add(new THREE.Mesh(g, filmMat))
+    const filmMesh = new THREE.Mesh(g, filmMat)
+    filmMesh.receiveShadow = true
+    scene.add(filmMesh)
   }
 
   // ---- the head: masts straddling the climb -------------------------------
@@ -330,6 +356,8 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     for (const zc of [-REEL.w / 2, REEL.w / 2 - 0.09]) {
       const f = new THREE.Mesh(fg, M.flange)
       f.position.z = zc
+      f.castShadow = true
+      f.receiveShadow = true
       reel.add(f)
     }
     // wound film: core + the fresh outer lap in the strip's own stock
@@ -615,9 +643,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     scene.environment = pmrem.fromScene(env, 0.08).texture
     scene.environmentIntensity = 0.35
   }
-  scene.add(new THREE.HemisphereLight(0x252a3c, 0x0a0a0c, 0.6))
+  scene.add(new THREE.HemisphereLight(0x22242e, 0x0a0a0c, 0.5))
   {
-    const fill = new THREE.DirectionalLight(0xb8bdd4, 0.55)
+    const fill = new THREE.DirectionalLight(0xb8bdd4, 0.42)
     fill.position.set(-6, 14, 9)
     scene.add(fill)
     // the rim: cool edge from behind, so the dark masses hold their silhouette
@@ -627,9 +655,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   }
   const gateGlow = new THREE.PointLight(0xfff2dc, 24, 9)
   gateGlow.position.set(ROLL.x - 0.55, lampY, 0)
-  gateGlow.layers.enable(1)
+  gateGlow.castShadow = true
+  gateGlow.shadow.mapSize.set(1024, 1024)
+  gateGlow.shadow.bias = -0.004
   scene.add(gateGlow)
   // a small glint where the film arrives on the coil — the handoff reads
+  const wheelKiss = new THREE.PointLight(0xa8b4d8, 26, 16)
+  wheelKiss.position.set(reelX - 3, reelY + 2.5, 4.5)
+  scene.add(wheelKiss)
   const coilGlint = new THREE.PointLight(0xffe8cc, 3.2, 3.2)
   coilGlint.position.set(ROLL.x - 0.3, reelY - 0.4, 0)
   scene.add(coilGlint)
@@ -640,11 +673,9 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   scene.add(headGlow)
   const bedGlow = new THREE.PointLight(0xf28f84, 16, 8)
   bedGlow.position.set((BED.x0 + BED.x1) / 2, BED.top + 0.5, 0)
-  bedGlow.layers.enable(1)
   scene.add(bedGlow)
   const hitGlow = new THREE.PointLight(0xffb4a0, 9, 6)
   hitGlow.position.set(TURRET.x, beltY + 0.45, 0)
-  hitGlow.layers.enable(1)
   scene.add(hitGlow)
 
   // ---- per-frame state ----------------------------------------------------
@@ -677,12 +708,12 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
       folder.visible = false
       acid = Math.max(0.28, 1 - (age - FALL_S - SOAK_S) / 1.7)
     }
-    bedGlow.intensity = 4 + 18 * acid
+    bedGlow.intensity = 3 + 12 * acid
   }
 
   function draw(t: number) {
     update(t)
-    renderer.render(scene, camera)
+    composer.render()
   }
 
   let raf = 0

@@ -88,3 +88,29 @@ stock OrthographicCamera can do it), z-buffer occlusion, real lights as the
 practicals. The canvas study stays as reference until parity, then retires
 like /lab/line before it. Endgame under discussion: bake to looped video for
 the homepage; possibly built through BitterClip's own artifact system.
+
+## 2026-08-18 — 3D workshop block 1 (`8f39166` → tip)
+
+Built to visual parity-plus in one block: live-texture film ribbon, windowed
+sync flanges, between-the-girders head, turrets/beams, breathing bed + folder
+drop, theater beams with noise smoke, wall-of-idents shadow play, bloom
+composer, real shadow mapping from the gate lamp. Lessons that cost renders:
+
+- Spin sign: the 2D study's "counterclockwise shows as clockwise" note is a
+  SCREEN-space artifact of its negative-determinant projection; in 3D the
+  physics decides (surface at the tangent moves up) — owner caught the
+  reversed wheel live.
+- three.js light `layers` gate against the CAMERA only — per-object light
+  masking silently does nothing. The floor/wall "lit only by practicals"
+  scheme was an illusion; solved by tuning honest values instead.
+- A custom projection needs its depth window sized for EVERYTHING, including
+  a 900-unit stage floor — a tight near plane sliced it with a razor seam.
+- A literal wall mesh betrays its edges on an implied-void stage; bake the
+  spill into the screen textures and let darkness be the architecture.
+- Under the composer, `scene.background` must match the page ground and an
+  OutputPass must close the chain or ACES/sRGB silently drop.
+
+Open queue: ident text crispness under bloom, wheel face still very dark at
+gap phase, perf audit on low-end GPUs (bloom + shadow cubemap + per-frame
+canvas texture), reduced-motion still parity, mobile fit, the folder's
+tab/mass read at speed, docs/brief section for iso3.
