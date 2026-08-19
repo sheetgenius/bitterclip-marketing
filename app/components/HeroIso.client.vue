@@ -22,10 +22,7 @@ onMounted(async () => {
   const cv = canvas.value
   if (!el || !cv) return
 
-  // ?v=simple renders the footage-in-episodes-out variant (no destinations);
-  // default is the full prism fan. Both live until the owner rules.
-  const variant = new URLSearchParams(window.location.search).get('v') === 'simple' ? 'simple' as const : 'full' as const
-  renderer = createIsoRenderer(cv, { variant })
+  renderer = createIsoRenderer(cv)
   renderer.resize()
   // Workshop hook: lets a screenshot harness freeze the machine at an exact t,
   // so two builds can be compared at the same instant. Harmless in prod.

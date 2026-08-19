@@ -24,7 +24,7 @@ useHead({
           You still gotta record
         </h1>
         <p class="mt-5 max-w-[30ch] text-base leading-relaxed text-zinc-400">
-          {{ $route.query.v === 'simple' ? 'Footage in. Episodes out.' : 'Raw footage in. Finished shows out.' }}
+          Raw footage in. Finished shows out.
         </p>
         <a
           href="#"
