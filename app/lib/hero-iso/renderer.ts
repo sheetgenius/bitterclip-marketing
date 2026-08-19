@@ -361,11 +361,13 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       if (s0 >= total) continue // past the tangent point: it is on the roll now
       const s1 = Math.min(s0 + PITCH * 0.94, total)
       if (s1 <= 0) continue
-      const cut = ((Math.round((i * PITCH + off - dist) / PITCH) % 9) + 9) % 9 === 0
       // Alternating stock values give the strip a beat, so a viewer can see it
       // MOVE. A single flat tone slides past looking like a static ribbon.
+      // (There used to be a dark every-ninth "cut" frame here; it read as a
+      // HOLE in the strip, and when the laser's hit landed on it the beams
+      // appeared to strike nothing — outside eye, corroborated.)
       const alt = ((Math.round((i * PITCH + off - dist) / PITCH) % 2) + 2) % 2 === 0
-      const tone = cut ? '#41302f' : alt ? '#77715f' : '#6b6558'
+      const tone = alt ? '#77715f' : '#6b6558'
       const lo = Math.max(s0, 0)
       // A frame can straddle any two of the three runs, so clip it against all
       // three rather than branching on a single boundary — the old two-way test
@@ -373,6 +375,23 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       if (lo < Math.min(s1, runFlat)) flatQuad(lo, Math.min(s1, runFlat), tone)
       if (Math.max(lo, runFlat) < Math.min(s1, runVert)) arcQuad(Math.max(lo, runFlat), Math.min(s1, runVert), tone)
       if (Math.max(lo, runVert) < s1) riseQuad(Math.max(lo, runVert), s1, tone)
+      // Sprocket perforations, four per frame along each edge — the one mark
+      // that says FILM at any size. Punched dark, skipped on the short arc.
+      for (let k = 0; k < 4; k++) {
+        const sp = s0 + PITCH * 0.94 * ((k + 0.5) / 4)
+        if (sp < lo || sp >= s1) continue
+        for (const zz of [-0.85, 0.85]) {
+          if (sp < runFlat) {
+            poly(slab(START + sp - 0.075, START + sp + 0.075, zz - 0.06, zz + 0.06, y + 0.004), '#17150f')
+          } else if (sp >= runVert) {
+            const py = y + ROLL.r + (sp - runVert)
+            poly([
+              iso(ROLL.x, py - 0.075, zz - 0.06), iso(ROLL.x, py + 0.075, zz - 0.06),
+              iso(ROLL.x, py + 0.075, zz + 0.06), iso(ROLL.x, py - 0.075, zz + 0.06),
+            ], '#17150f')
+          }
+        }
+      }
     }
 
     // ---- the roller the film bends around ---------------------------------
@@ -663,19 +682,35 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       ctx.stroke()
     }
     ctx.restore()
-    // near flange, as a RING so the roll shows through the middle
+    // THE REEL IS TURNED BY THE FILM, not by a clock of its own. The strip
+    // winds onto the coil, so the angle is the distance travelled divided by
+    // the winding radius. Contact on the right, film travelling up: the wheel
+    // turns counterclockwise in world, which this projection (negative
+    // determinant) shows as clockwise.
+    const spin = dist / coilR()
+    // Near flange: a plate pierced by FIVE round windows — a projection reel,
+    // not a lid. This replaced a plain ring-plus-spokes, which a cold outside
+    // eye read as a satellite dish: the windows turn with the wheel (same
+    // spin), show the wound film through their inner arcs, and on the right
+    // side the arriving strip flashes past behind them — the supply path a
+    // solid flange was hiding. Value stays dark: the reel recedes (owner,
+    // 2026-08-18); the load in the windows does the reading.
     ctx.beginPath()
     const of2 = ring(zN, REEL.r)
     ctx.moveTo(of2[0][0], of2[0][1])
     for (let i = 1; i < of2.length; i++) ctx.lineTo(of2[i][0], of2[i][1])
     ctx.closePath()
-    const inr = ring(zN, rr * 0.72)
-    ctx.moveTo(inr[0][0], inr[0][1])
-    for (let i = inr.length - 1; i >= 1; i--) ctx.lineTo(inr[i][0], inr[i][1])
-    ctx.closePath()
-    // Darker than it was: the reel recedes into the stage (owner, 2026-08-18) —
-    // the wound film in the window and the rim line do the reading, not the
-    // plate's own value.
+    for (let h = 0; h < 5; h++) {
+      const ha = spin + (h / 5) * Math.PI * 2
+      const hcx = reelX() + Math.cos(ha) * REEL.r * 0.58
+      const hcy = reelY() + Math.sin(ha) * REEL.r * 0.58
+      for (let i = 0; i < 22; i++) {
+        const wa = (i / 22) * Math.PI * 2
+        const p = iso(hcx + Math.cos(wa) * REEL.r * 0.235, hcy + Math.sin(wa) * REEL.r * 0.235, zN)
+        i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])
+      }
+      ctx.closePath()
+    }
     ctx.fillStyle = '#26262d'
     ctx.fill('evenodd')
     // the hub, and the axle actually RUNNING to the near girder's bearing —
@@ -694,30 +729,22 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.lineWidth = 1.1
     ctx.stroke()
 
-    // THE REEL IS TURNED BY THE FILM, not by a clock of its own. The strip winds
-    // onto the coil, so the angle is simply the distance travelled divided by
-    // the radius it is winding at — set it by hand and a viewer reads two
-    // animations; drive it off the transport and they read one machine.
-    // Contact on the right of the coil, film travelling up: the wheel turns
-    // counterclockwise in world, which this projection (negative determinant,
-    // world y up against screen y down) shows as clockwise.
-    const spin = dist / coilR()
-    ctx.save()
-    ctx.strokeStyle = 'rgba(150,152,172,0.55)'
-    ctx.lineWidth = 2.2
-    ctx.lineCap = 'round'
-    for (let i = 0; i < 6; i++) {
-      const a2 = spin + (i / 6) * Math.PI * 2
-      const p0 = iso(reelX() + Math.cos(a2) * REEL.r * 0.22, reelY() + Math.sin(a2) * REEL.r * 0.22, zN)
-      const p1 = iso(reelX() + Math.cos(a2) * rr * 0.99, reelY() + Math.sin(a2) * rr * 0.99, zN)
-      ctx.beginPath()
-      ctx.moveTo(p0[0], p0[1])
-      ctx.lineTo(p1[0], p1[1])
-      ctx.stroke()
-    }
-    ctx.restore()
     // and the near girder, over the wheel: the reel hangs INSIDE the yoke
     girder(1, true)
+
+    // ---- the gate ----------------------------------------------------------
+    // A hard aperture at the standing frame. Without it the conversion point
+    // was a bare patch of film with light coming off it — "the wedge blooms
+    // out of a foggy rectangle" (outside eye). First cut was a four-member
+    // picture frame around the lit square; a rectangle in the y-z plane shears
+    // hard in this camera and it read as a big askew frame leaning on the
+    // climb. What reads instead: two slim pressure bars clamped ACROSS the
+    // film just above and below the lit frame — the same slant as the strip's
+    // own top edge, so they sit IN its plane rather than fighting it.
+    for (const sgn of [-1, 1]) {
+      box(ROLL.x - 0.14, ROLL.x + 0.08, lampY() + sgn * 0.73 - 0.11, lampY() + sgn * 0.73 + 0.11,
+        -FILM_W / 2 - 0.16, FILM_W / 2 + 0.16, 30)
+    }
 
     // ---- three destinations & chromatic prism beam ------------------------
     // The throw leaves the lens and splits through a prism into three equal colored
