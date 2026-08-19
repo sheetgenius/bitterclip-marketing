@@ -394,6 +394,30 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       }
     }
 
+    // Density falls off along the climb away from the gate: hot where the lamp
+    // strikes, sinking toward the top and the foot. One washed beige card was
+    // the complaint; this is the lamp owning its path.
+    {
+      const pTop0 = iso(ROLL.x, lampY() + 0.95, 0)
+      const pTop1 = iso(ROLL.x, gateY(), 0)
+      const gt = ctx.createLinearGradient(pTop0[0], pTop0[1], pTop1[0], pTop1[1])
+      gt.addColorStop(0, 'rgba(7,7,9,0)')
+      gt.addColorStop(1, 'rgba(7,7,9,0.48)')
+      poly([
+        iso(ROLL.x, lampY() + 0.95, -FILM_W / 2), iso(ROLL.x, gateY(), -FILM_W / 2),
+        iso(ROLL.x, gateY(), FILM_W / 2), iso(ROLL.x, lampY() + 0.95, FILM_W / 2),
+      ], gt as unknown as string)
+      const pBot0 = iso(ROLL.x, lampY() - 0.95, 0)
+      const pBot1 = iso(ROLL.x, beltY() + ROLL.r, 0)
+      const gb = ctx.createLinearGradient(pBot0[0], pBot0[1], pBot1[0], pBot1[1])
+      gb.addColorStop(0, 'rgba(7,7,9,0)')
+      gb.addColorStop(1, 'rgba(7,7,9,0.38)')
+      poly([
+        iso(ROLL.x, lampY() - 0.95, -FILM_W / 2), iso(ROLL.x, beltY() + ROLL.r, -FILM_W / 2),
+        iso(ROLL.x, beltY() + ROLL.r, FILM_W / 2), iso(ROLL.x, lampY() - 0.95, FILM_W / 2),
+      ], gb as unknown as string)
+    }
+
     // ---- the roller the film bends around ---------------------------------
     // Painted AFTER the film, and this is a fact about the CAMERA, not about
     // pulleys. The projection's view direction is (-0.886, 0.684, 1): we look at
@@ -427,6 +451,19 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       poly(rFar, '#24242b')
       sweep(rFar, rNear, '#31313a')
       poly(rNear, '#474751')
+      // a machined highlight along the barrel — the tight specular streak that
+      // turns a matte gray tube into a turned part
+      const hlA = (135 * Math.PI) / 180
+      const hx = ROLL.x - ROLL.r + Math.cos(hlA) * rrad
+      const hy = ry + ROLL.r + Math.sin(hlA) * rrad
+      const h0 = iso(hx, hy, -rw)
+      const h1 = iso(hx, hy, rw)
+      ctx.strokeStyle = 'rgba(198,203,218,0.42)'
+      ctx.lineWidth = 1.6
+      ctx.beginPath()
+      ctx.moveTo(h0[0], h0[1])
+      ctx.lineTo(h1[0], h1[1])
+      ctx.stroke()
     }
 
     // ---- the bed, and the files falling into it ----------------------------
@@ -505,6 +542,8 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
         a2 = 0.6 * Math.pow(1 - (bedAge - FALL_S) / SOAK_S, 1.5)
       }
       poly(slab(bx - 1.15, bx + 1.15, -1.15, 1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
+      // the tab that makes it a FOLDER of files, not a sheet of paper
+      poly(slab(bx - 0.8, bx - 0.1, -1.45, -1.15, fy), `rgba(214,209,200,${a2.toFixed(3)})`)
     }
 
     // ---- two laser turrets, one either side of the table -------------------
@@ -550,12 +589,14 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // the hit's halo — lasers glow (owner, 2026-08-18); one restrained pool
     // of light around the point of work, over everything local to it
     {
-      const hg = ctx.createRadialGradient(tgt[0], tgt[1], 0, tgt[0], tgt[1], 0.95 * S)
-      hg.addColorStop(0, 'rgba(255,180,164,0.38)')
+      // wide enough to lap the neighbouring frames and the turret bases — a
+      // practical that stops dead at its own square is a UI pip, not a light
+      const hg = ctx.createRadialGradient(tgt[0], tgt[1], 0, tgt[0], tgt[1], 1.35 * S)
+      hg.addColorStop(0, 'rgba(255,180,164,0.32)')
       hg.addColorStop(1, 'rgba(255,180,164,0)')
       ctx.fillStyle = hg
       ctx.beginPath()
-      ctx.arc(tgt[0], tgt[1], 0.95 * S, 0, Math.PI * 2)
+      ctx.arc(tgt[0], tgt[1], 1.35 * S, 0, Math.PI * 2)
       ctx.fill()
     }
 
@@ -696,8 +737,8 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
       ctx.moveTo(rf[0][0], rf[0][1])
       for (let i = 1; i < rf.length; i++) ctx.lineTo(rf[i][0], rf[i][1])
       ctx.closePath()
-      ctx.strokeStyle = 'rgba(150,150,170,0.20)'
-      ctx.lineWidth = 1
+      ctx.strokeStyle = 'rgba(150,150,170,0.32)'
+      ctx.lineWidth = 1.2
       ctx.stroke()
     }
     // the roll, as a band swept between the two flanges
@@ -709,6 +750,20 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // shaded down because it sits in the wheel's shadow. First cut of this was
     // #4a4437 and popped like a brass medallion; the wind is quieter than that.
     poly(ring(zN, rr), '#3f392e')
+    // the freshest lap, still strip-colored: the one cue that ties the wound
+    // roll to the film arriving up the climb — same stock, just wound. Without
+    // it a cold eye called the reel "mostly decorative" (no visible feed).
+    ctx.beginPath()
+    const lapO = ring(zN, rr * 0.995)
+    ctx.moveTo(lapO[0][0], lapO[0][1])
+    for (let i = 1; i < lapO.length; i++) ctx.lineTo(lapO[i][0], lapO[i][1])
+    ctx.closePath()
+    const lapI = ring(zN, rr * 0.86)
+    ctx.moveTo(lapI[0][0], lapI[0][1])
+    for (let i = lapI.length - 1; i >= 1; i--) ctx.lineTo(lapI[i][0], lapI[i][1])
+    ctx.closePath()
+    ctx.fillStyle = '#5d5747'
+    ctx.fill('evenodd')
     // faint winding lines — the one cue that says LAYERS of film, not a lid
     ctx.save()
     ctx.strokeStyle = 'rgba(0,0,0,0.22)'
@@ -758,6 +813,18 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // apart on screen, which read as a drawing mistake rather than a shaft
     // coming toward the viewer.
     poly(ring(zN, REEL.r * 0.2), '#454551')
+    // edge catch on the hub's upper lip — machined, not matte
+    {
+      const hubPts = ring(zN, REEL.r * 0.2)
+      ctx.beginPath()
+      for (let i = 14; i <= 31; i++) {
+        const p = hubPts[i]
+        i === 14 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1])
+      }
+      ctx.strokeStyle = 'rgba(192,198,218,0.45)'
+      ctx.lineWidth = 1.3
+      ctx.stroke()
+    }
     sweep(ring(zN, 0.3), ring(YOKE.z + YOKE.t / 2, 0.3), '#3a3a45')
     // The near flange's outer edge sat against the far flange with nothing to
     // separate them, so the silhouette read as one blob at the top left.
@@ -765,8 +832,11 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.moveTo(of2[0][0], of2[0][1])
     for (let i = 1; i < of2.length; i++) ctx.lineTo(of2[i][0], of2[i][1])
     ctx.closePath()
-    ctx.strokeStyle = 'rgba(150,150,170,0.30)'
-    ctx.lineWidth = 1.1
+    // A hard thin rim the whole way round: on a black stage the wheel's own
+    // value is allowed to sink, but its EDGE is not — lose the edge and the
+    // star dissolves into the void (cinematographer eye, corroborated).
+    ctx.strokeStyle = 'rgba(158,158,178,0.5)'
+    ctx.lineWidth = 1.4
     ctx.stroke()
     // a warm kiss on the lower-right arc — the gate's light licking the rim.
     // The wheel recedes into the dark; this is the one place the stage's light
@@ -793,14 +863,28 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     // film just above and below the lit frame — the same slant as the strip's
     // own top edge, so they sit IN its plane rather than fighting it.
     // the standing frame itself, lit: the single brightest surface on the
-    // machine — the projected image is the star of this stage
+    // machine — the projected image is the star of this stage. Two layers:
+    // the full frame washed, and a hot core that nearly clips — a lamp with
+    // direction, not a timid gray bloom (cinematographer eye).
     poly([
       iso(ROLL.x, lampY() - 0.58, -FILM_W / 2), iso(ROLL.x, lampY() + 0.58, -FILM_W / 2),
       iso(ROLL.x, lampY() + 0.58, FILM_W / 2), iso(ROLL.x, lampY() - 0.58, FILM_W / 2),
     ], 'rgba(250,248,240,0.26)')
+    poly([
+      iso(ROLL.x, lampY() - 0.34, -FILM_W / 2 + 0.28), iso(ROLL.x, lampY() + 0.34, -FILM_W / 2 + 0.28),
+      iso(ROLL.x, lampY() + 0.34, FILM_W / 2 - 0.28), iso(ROLL.x, lampY() - 0.34, FILM_W / 2 - 0.28),
+    ], 'rgba(255,253,247,0.5)')
     for (const sgn of [-1, 1]) {
       box(ROLL.x - 0.14, ROLL.x + 0.08, lampY() + sgn * 0.73 - 0.11, lampY() + sgn * 0.73 + 0.11,
         -FILM_W / 2 - 0.16, FILM_W / 2 + 0.16, 30)
+      // the bar's lamp-side face catches the throw — the only motivated key on
+      // this set has to actually light the hardware in its path
+      poly([
+        iso(ROLL.x - 0.14, lampY() + sgn * 0.73 + 0.11, -FILM_W / 2 - 0.16),
+        iso(ROLL.x - 0.14, lampY() + sgn * 0.73 + 0.11, FILM_W / 2 + 0.16),
+        iso(ROLL.x - 0.14, lampY() + sgn * 0.73 - 0.11, FILM_W / 2 + 0.16),
+        iso(ROLL.x - 0.14, lampY() + sgn * 0.73 - 0.11, -FILM_W / 2 - 0.16),
+      ], 'rgba(238,234,226,0.16)')
     }
     // the muzzle's own glow, painted over the hardware — the projector is a
     // light source, and in this camera its bright face is turned away; the
@@ -878,6 +962,17 @@ export function createIsoRenderer(canvas: HTMLCanvasElement): IsoRenderer {
     ctx.moveTo(lens[0], lens[1])
     ctx.lineTo(pLowest[0], pLowest[1])
     ctx.stroke()
+    // the prism's hot core: the split has an origin that nearly clips, so the
+    // fan leaves a LENS, not a pasted wedge (both outside eyes)
+    {
+      const fg = ctx.createRadialGradient(lens[0], lens[1], 0, lens[0], lens[1], 0.55 * S)
+      fg.addColorStop(0, 'rgba(255,255,255,0.6)')
+      fg.addColorStop(1, 'rgba(255,255,255,0)')
+      ctx.fillStyle = fg
+      ctx.beginPath()
+      ctx.arc(lens[0], lens[1], 0.55 * S, 0, Math.PI * 2)
+      ctx.fill()
+    }
     ctx.restore()
 
     // Draw destination badges, icons, and labels
