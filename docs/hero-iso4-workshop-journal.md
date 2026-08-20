@@ -543,3 +543,61 @@ the final line carrying the restrained salmon accent. YouTube stays clean
 source footage and Podcast/RSS keeps transcript bars because those belong to
 the artifact itself. Evidence is `tmp/iso/sleeve-r1-mobile-*` and
 `tmp/iso/sleeve-r1-desktop-*`.
+
+## Round 13 — lower-pair separation and the blue optical path
+
+The owner rejected the final lower grouping because LinkedIn and Podcast/RSS
+still read as one crowded unit. Their card corners, baked halos, and channel
+labels occupied nearly the same diagonal band. The responsive fan now opens a
+true negative-space channel: the phone moves farther outboard/left and slightly
+higher, while Podcast/RSS moves outboard/right without sacrificing its bottom
+margin. The correction exists in all three camera families rather than as a
+phone-only nudge.
+
+The LinkedIn beam also disappeared despite having the largest raw beam alpha.
+Its round cylinder was nearly edge-on to the camera, so the view-normal
+extinction correctly reduced it to zero. Raising opacity produced a graphic
+triangular wedge and was rejected. The accepted solution preserves the physical
+cylinder and adds one low-opacity camera-facing optical veil on the same exact
+gate-to-phone centerline. The veil has a sine-feathered lateral profile, fades
+at both endpoints, carries restrained drifting density, remains depth-tested
+behind the apparatus, and follows the projector's actualization yaw and every
+responsive output target.
+
+Evidence is `tmp/iso/fan-r3-mobile-*`, `tmp/iso/fan-r3-wide-*`, and
+`tmp/iso/fan-r3-tall-*`. Preserve the dark lower-pair gap, the higher-left /
+lower-right rhythm, and the blue veil's current softness. Do not recombine the
+cards or replace the veil with a filled cone.
+
+## Round 14 — below the fold begins: the Bring-your-agent section
+
+The page grew its first below-the-fold section (owner directive after the
+Palmier competitive read: position clearly around the external-cockpit story).
+Layout: two-column agent-grid — copy left (eyebrow WORKS WITH CLAUDE · CHATGPT
+· MCP, H2 "Bring your agent", two paragraphs, CONNECT YOUR AGENT → to /docs),
+and a Claude-transcript figure right. The transcript is the argument: one
+conversational ask (Sarah's trainer), a real `transcript_search` tool-chrome
+line, quote-grounded moment retrieval (timestamps + what was actually said —
+never CV claims like judging squat depth; the quotes ARE the transcript
+intelligence), a rendered-artifact chip, and a closer that implies memory and
+scale ("Ready to send. Want the same cut for Thursday's clients?").
+
+Outside-eye round (agy + grok cold reads) drove the wave: staged-transcript
+fixes (tool chrome, spoken ask, "Sent." → "Ready to send"), bubble contrast,
+card elevation via inset highlight + drop shadow, green connected-dot (coral
+read as recording/error), thesis line promoted to zinc-200, quote-grounding.
+A stage-foot-fade div now eases the canvas→CSS handoff at the stage bottom
+(tone mapping never matches page black — nit-ledger).
+
+HARNESS/ENV LESSONS: (1) the dev server's Tailwind watcher misses NEW
+arbitrary/rare utility classes (md:grid-cols-[…], max-w-[44ch], gap-14
+silently absent while old ones work) — load-bearing section layout lives in
+scoped CSS on this page until that's understood; production builds are fine.
+(2) qa/iso-shot.mjs has --scroll Y; it must scroll with behavior:'instant'
+because the site's smooth-scroll stalls in headless (no rAF while frozen) and
+shots catch mid-scroll black.
+
+Open (owner-level): grok+agy both flag audience whiplash — trainer demo,
+MCP-dev headline, and the footer's "podcasts, interviews, founder calls" all
+in one viewport. Also the void below this section reads unfinished until the
+next sections exist. Evidence: tmp/iso4-agent/r8-*.

@@ -21,11 +21,14 @@ const prefix = args[0]
 let clip = null
 let viewport = { width: 1600, height: 900 }
 let metrics = false
+let scrollY = 0
 const times = []
 for (let i = 1; i < args.length; i++) {
   if (args[i] === '--clip') {
     const [x, y, w, h] = args[++i].split(',').map(Number)
     clip = { x, y, width: w, height: h }
+  } else if (args[i] === '--scroll') {
+    scrollY = Number(args[++i])
   } else if (args[i] === '--viewport') {
     const [width, height] = args[++i].split('x').map(Number)
     if (!(width > 0 && height > 0)) throw new Error('viewport must be WIDTHxHEIGHT')
@@ -41,6 +44,12 @@ const page = await browser.newPage({ viewport, deviceScaleFactor: 2 })
 page.on('pageerror', (e) => console.error('PAGEERROR', e.message))
 await page.goto(process.env.ISO_URL || 'http://localhost:4180/lab/iso', { waitUntil: 'networkidle' })
 await page.waitForFunction(() => !!window.__iso, null, { timeout: 15000 })
+if (scrollY) {
+  // behavior:'instant' overrides the page's scroll-behavior:smooth — in
+  // headless the smooth animation stalls (no rAF) and shots catch mid-scroll.
+  await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), scrollY)
+  await page.waitForTimeout(120)
+}
 for (const t of times) {
   await page.evaluate((tt) => window.__iso.still(tt), t)
   await page.waitForTimeout(80)
