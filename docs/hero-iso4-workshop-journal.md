@@ -601,3 +601,99 @@ Open (owner-level): grok+agy both flag audience whiplash — trainer demo,
 MCP-dev headline, and the footer's "podcasts, interviews, founder calls" all
 in one viewport. Also the void below this section reads unfinished until the
 next sections exist. Evidence: tmp/iso4-agent/r8-*.
+
+## Round 15 — temporal conservation and native-frame projection
+
+The owner correctly perceived the YouTube output as roughly three frames per
+second. The defect was deterministic: each editorial variant lasted twenty
+16fps gate ticks, but only the first of four variants used the video element.
+The result was 1.25 seconds of sampled motion followed by 3.75 seconds of JPEG
+holds—only twenty moving updates across each five-second variant cycle, or an
+effective 4fps. LinkedIn used the live source, but it was still redrawn only
+when the 16fps gate ID changed. The media elements and scene timeline also had
+no common epoch or drift measurement.
+
+The correction deliberately separates mechanical and digital cadence without
+breaking causality. The physical ribbon and gate remain intermittent 16fps.
+The real Episode 1 source is 24fps, so a second phase-locked playback head runs
+at native cadence with a two-second delay (`32 writer-to-gate cells / 16fps`).
+YouTube and LinkedIn now share that delayed head. At each mechanical pull their
+source-time agrees with the gate; between pulls the finished digital artifacts
+continue at 24fps. Podcast waveform motion uses the same delayed time instead
+of choosing unrelated random heights per frame. A media-timestamp fallback can
+still update the outputs if an off-DOM video-frame callback is deprioritized.
+
+The film loop also gained a real conservation model. Thirty-six persistent
+physical slot canvases replace absolute render IDs that changed at the loop
+seam. The writer overwrites one slot, the same image rides both reels, and the
+gate reads that slot thirty-two pulls later. A pure integer audit across 72
+steady-state ticks reports zero slot mismatches and zero 24→16 phase errors;
+source-frame steps alternate one/two as required by the exact 3:2 ratio.
+
+Mechanical motion is quieter without becoming fake. Reel flanges remain
+continuous flywheels. The film holds for 58% of each interval and completes
+one zero-end-velocity UV pull-down over the remainder, so the texture upload
+still occurs only on the logical tick. The card surfaces now reveal with a
+monotone minimum-jerk envelope; only the lamp and haze retain a shallow damped
+flutter. The blue optical veil's old stepped hash became two continuous slow
+sinusoids.
+
+`window.__iso.temporal()` and `qa/iso4-temporal.mjs` now expose native video
+presentation fps, output texture fps, render fps, longest output hold, both
+clock drifts, missed projection frames, missed 16fps pulls, physical gate slot,
+and gate/output phase error. An isolated Chromium decoder check presented the
+108-frame asset at 24.07fps with the delayed head within 11ms; the dual-head
+clock correction model held both loops within one source frame. The full
+headless WebGL harness correctly identifies SwiftShader as software-bound and
+defers strict cadence approval there—the existing brief already records that
+it renders this scene at only about 5fps. Exact-time composition evidence is
+`tmp/iso/temporal-r1-mobile-*`; the responsive fan and all safe margins remain
+unchanged.
+
+The final resilience audit closed two less-visible failure modes. Readiness is
+no longer inferred from `readyState`: both muted heads must resolve `play()`
+and remain unpaused before any frame is treated as moving. Rejection or an
+unexpected pause invalidates the physical slots, gate, and output textures as
+one transaction, then redraws the entire causal chain from the deterministic
+16fps fallback. The temporal harness also begins sampling immediately at 50ms
+intervals through the first 1.2 seconds instead of sleeping past ignition. It
+now records the nearest output-texture update to `BOOT.beam0` and rejects a
+first visible strike older or later than 100ms on a hardware-rendered run.
+
+## Round 15 — fold spacing & composition: the strip finds its home
+
+Owner directive: deep workshop on spacing/composition/typographic rhythm at
+16:9, 4:3-tall, and phone. The deliverables strip was the round's center of
+gravity. It began as a ragged 3-line stack crowding the CTAs; I moved it to a
+bottom-anchored credits line (film idiom) — and BOTH outside eyes (agy harsh
+pass + grok measured pass) independently ruled that placement the worst
+spacing problem on every viewport: "never finds a home", a measured 30-34% of
+canvas stranding void between CTA and strip, a cornered leftover pocket on
+mobile. 2-of-3 protocol: credits-line experiment killed.
+
+Final architecture: the strip CLOSES THE COPY COLUMN, one labeled line
+directly under the CTAs (mt-8/9), with an `OUT:` label in dim coral (echoes
+the H1's "out"; answers the "accidental leftover" read; margin-right on the
+label because Vue whitespace-condense eats inter-span spaces). Desktop: one
+uncapped line. Mobile: three tight lines (leading-relaxed, label inline with
+the first item), machine owns everything below the closed column. Also this
+round: eyebrow bound tighter to H1 (mb-3), tall-viewport copy rides lower
+(pt clamp 20vh/15rem), scoped .deliverables-strip/.strip-label CSS (Tailwind
+watcher unreliable for new arbitrary classes).
+
+Scene-side findings journaled for the scene agent, NOT acted on (scene.ts is
+the other agent's live file): (1) mobile LinkedIn phone breaches the ~24px
+left content margin, drifting within ~12px of the bezel (agy+grok); (2) the
+phone's on-screen caption text "THE CLIP ONLY WORKS IF THE SOURCE IS STILL
+ATTACHED" reads cryptic/internal as hero copy — cold viewers can't parse it
+(owner may want different caption frames); (3) YouTube card's top edge makes a
+false horizon between headline and subhead on 16:9 (agy); (4) mobile machine
+top chokes near the CTA row — wants a staging buffer under the closed column;
+(5) 4:3-tall leaves a large empty top-left above the eyebrow. Evidence:
+tmp/iso4-comp/r4-*.
+
+NEXT (owner directive, 2026-08-20 late): first below-the-fold section becomes
+"turns video into agent-native substrate" — explain video made tractable for
+agents, introduce the editor with a REAL screenshot, framed as the thing you
+typically DON'T use (you ask an agent instead). Bring-your-agent section
+follows it as the demonstration.

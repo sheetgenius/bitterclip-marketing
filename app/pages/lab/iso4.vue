@@ -47,7 +47,7 @@ const signupUrl = computed(() => buildSignupUrl({
              giant machine present without allowing footage contrast to fight
              the words; it fades before the transformation stage begins. -->
         <div class="mobile-copy-shroud pointer-events-none absolute" aria-hidden="true" />
-        <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
+        <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
@@ -62,10 +62,14 @@ const signupUrl = computed(() => buildSignupUrl({
           <a href="/#demo" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <!-- deliverables strip: outputs, not features (owner draft 2026-08-20).
-             mobile pb clears the in-flow header so the last line stays above
-             the fold; the machine owns the gap between CTA and strip -->
-        <p class="mt-auto max-w-[40ch] pb-16 font-mono text-[0.66rem] leading-loose uppercase tracking-[0.18em] text-zinc-600 md:mt-6 md:pb-0 md:leading-relaxed">
-          <span class="block whitespace-nowrap md:inline">highlight reels</span><span class="hidden md:inline"> · </span>
+             Closes the copy column directly under the CTAs — both outside eyes
+             ruled a bottom-anchored credits line "never finds a home" (30%+
+             stranding void on desktop, leftover pocket on mobile). One labeled
+             line on desktop; a tight three-line labeled readout on mobile. The
+             machine owns everything below. -->
+        <p class="deliverables-strip mt-8 font-mono text-[0.66rem] leading-relaxed uppercase tracking-[0.18em] text-zinc-500 md:mt-9">
+          <span class="strip-label">Out:</span>
+          <span class="whitespace-nowrap">highlight reels</span><span class="hidden md:inline"> · </span>
           <span class="block whitespace-nowrap md:inline">full episodes</span><span class="hidden md:inline"> · </span>
           <span class="block whitespace-nowrap md:inline">deep video Q&amp;A with our agent</span>
         </p>
@@ -162,6 +166,24 @@ const signupUrl = computed(() => buildSignupUrl({
   gap: 3.5rem;
 }
 
+/* Mobile: stacked list, capped measure. Desktop: one uncapped credits line. */
+.deliverables-strip {
+  max-width: 40ch;
+}
+
+/* the readout's label — echoes the H1's "out" in the machine's warm light.
+   Explicit margin: Vue's whitespace condensing eats inter-span spaces. */
+.strip-label {
+  color: rgb(242 143 132 / 0.6);
+  margin-right: 0.6em;
+}
+
+@media (min-width: 48rem) {
+  .deliverables-strip {
+    max-width: none;
+  }
+}
+
 /* Warm, dim card chrome — the machine's light, not a wireframe. Scoped CSS
    because the dev server's Tailwind watcher misses new arbitrary classes. */
 .agent-card {
@@ -206,7 +228,9 @@ const signupUrl = computed(() => buildSignupUrl({
 
   .iso4-copy {
     justify-content: flex-start;
-    padding-top: clamp(7rem, 18vh, 14rem);
+    /* 20vh (was 18) — on tall viewports the machine cascades low-right, so
+       the copy block rides a touch lower to hold the diagonal balance */
+    padding-top: clamp(7rem, 20vh, 15rem);
   }
 
   .mobile-copy-shroud {
