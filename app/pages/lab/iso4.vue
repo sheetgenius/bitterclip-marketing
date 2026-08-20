@@ -67,11 +67,13 @@ const signupUrl = computed(() => buildSignupUrl({
              stranding void on desktop, leftover pocket on mobile). One labeled
              line on desktop; a tight three-line labeled readout on mobile. The
              machine owns everything below. -->
+        <!-- Stacked at every size (owner 2026-08-20: a horizontal line bleeds
+             into the machine at narrower windows) — a tight labeled readout
+             that stays inside the copy column's lane. -->
         <p class="deliverables-strip mt-8 font-mono text-[0.66rem] leading-relaxed uppercase tracking-[0.18em] text-zinc-500 md:mt-9">
-          <span class="strip-label">Out:</span>
-          <span class="whitespace-nowrap">highlight reels</span><span class="hidden md:inline"> · </span>
-          <span class="block whitespace-nowrap md:inline">full episodes</span><span class="hidden md:inline"> · </span>
-          <span class="block whitespace-nowrap md:inline">deep video Q&amp;A with our agent</span>
+          <span class="strip-label">Out:</span><span class="whitespace-nowrap">highlight reels</span>
+          <span class="block whitespace-nowrap">full episodes</span>
+          <span class="block whitespace-nowrap">deep video Q&amp;A with our agent</span>
         </p>
       </div>
     </div>
@@ -207,7 +209,7 @@ const signupUrl = computed(() => buildSignupUrl({
   }
 }
 
-/* Mobile: stacked list, capped measure. Desktop: one uncapped credits line. */
+/* Stacked labeled readout at every size, capped to the copy column's lane. */
 .deliverables-strip {
   max-width: 40ch;
 }
@@ -217,12 +219,6 @@ const signupUrl = computed(() => buildSignupUrl({
 .strip-label {
   color: rgb(242 143 132 / 0.6);
   margin-right: 0.6em;
-}
-
-@media (min-width: 48rem) {
-  .deliverables-strip {
-    max-width: none;
-  }
 }
 
 /* Warm, dim card chrome — the machine's light, not a wireframe. Scoped CSS
