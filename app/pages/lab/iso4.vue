@@ -77,6 +77,32 @@ const signupUrl = computed(() => buildSignupUrl({
       </div>
     </div>
 
+    <!-- ================= BELOW THE FOLD · 0: THE THREE PILLARS ================
+         Owner draft 2026-08-20: the page's thesis in three beats, each
+         previewing a deeper section (intelligence → substrate, craft → the
+         wedge vs gen-first competitors, programmable → bring-your-agent).
+         Pillar 1 carries the second-brain line so it doesn't repeat the fold
+         subhead's "finds any moment". -->
+    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
+      <div class="pillar-grid grid">
+        <div>
+          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">01</p>
+          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Deep Video Intelligence</h2>
+          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">A second brain for your footage. It finds the choicest moments.</p>
+        </div>
+        <div>
+          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">02</p>
+          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Classical editing excellence</h2>
+          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">No video gen here. Just masterful cuts and transitions.</p>
+        </div>
+        <div>
+          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">03</p>
+          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Highly programmable</h2>
+          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">Operable by any agent — ours, or the one you bring.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ============== BELOW THE FOLD · 1: AGENT-NATIVE SUBSTRATE ==============
          Owner directive 2026-08-20: explain how BitterClip makes video
          tractable for agents, and introduce the editor with a REAL screenshot
@@ -186,6 +212,17 @@ const signupUrl = computed(() => buildSignupUrl({
 
 .agent-grid {
   gap: 3.5rem;
+}
+
+.pillar-grid {
+  gap: 2.5rem;
+}
+
+@media (min-width: 48rem) {
+  .pillar-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+  }
 }
 
 /* Below-the-fold section rhythm in scoped CSS — the dev Tailwind watcher
