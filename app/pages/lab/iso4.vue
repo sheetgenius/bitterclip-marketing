@@ -91,14 +91,14 @@ const signupUrl = computed(() => buildSignupUrl({
             <p class="agent-bubble ml-auto w-fit max-w-[36ch] rounded-2xl rounded-br-md px-4 py-2.5 text-zinc-200">
               Can you cut Tuesday's session with Sarah into a highlight reel? Best lifts, under a minute, captions on.
             </p>
-            <p class="font-mono text-[0.66rem] tracking-[0.08em] text-zinc-600">▸ transcript_search · speaker: sarah · range: tuesday</p>
+            <p class="font-mono text-[0.66rem] tracking-[0.08em] text-zinc-500">▸ transcript_search · speaker: sarah · range: tuesday</p>
             <div class="max-w-[46ch] text-zinc-400">
               <p>Found it — Tuesday, 47 minutes, you and Sarah. Her strongest moments:</p>
               <p class="mt-2 font-mono text-[0.72rem] leading-loose text-zinc-400">
                 12:40 · deadlift — "that's a PR"<br>31:22 · squat — "best depth all month"<br>44:05 · sled finisher
               </p>
-              <p class="mt-2">Cutting a 58-second reel with captions.</p>
             </div>
+            <p class="font-mono text-[0.66rem] tracking-[0.08em] text-zinc-500">▸ render · 9:16 · captions burned</p>
             <div class="agent-artifact flex items-center gap-3.5 rounded-xl border px-4 py-3">
               <span class="text-[#f28f84]" aria-hidden="true">▶</span>
               <div>
@@ -106,7 +106,7 @@ const signupUrl = computed(() => buildSignupUrl({
                 <p class="mt-0.5 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-zinc-500">0:58 · captions · ready</p>
               </div>
             </div>
-            <p class="max-w-[46ch] text-zinc-400">Ready to send. Want the same cut for Thursday's clients?</p>
+            <p class="max-w-[46ch] text-zinc-400">Want the same cut for Thursday's clients?</p>
           </div>
         </figure>
       </div>
