@@ -52,7 +52,7 @@ const signupUrl = computed(() => buildSignupUrl({
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-zinc-400">
-          BitterClip deeply understands your footage and edits it with classical craft — the cleanest cuts you can ship.
+          <span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — it watches everything, remembers every session, and edits with classical craft.
         </p>
         <div class="mt-7 flex items-center gap-5">
           <a
@@ -61,6 +61,14 @@ const signupUrl = computed(() => buildSignupUrl({
           >Start free <span aria-hidden="true">→</span></a>
           <a href="/#demo" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
+        <!-- deliverables strip: outputs, not features (owner draft 2026-08-20).
+             mobile pb clears the in-flow header so the last line stays above
+             the fold; the machine owns the gap between CTA and strip -->
+        <p class="mt-auto max-w-[40ch] pb-16 font-mono text-[0.66rem] leading-loose uppercase tracking-[0.18em] text-zinc-600 md:mt-6 md:pb-0 md:leading-relaxed">
+          <span class="block whitespace-nowrap md:inline">highlight reels</span><span class="hidden md:inline"> · </span>
+          <span class="block whitespace-nowrap md:inline">full episodes</span><span class="hidden md:inline"> · </span>
+          <span class="block whitespace-nowrap md:inline">deep video Q&amp;A with our agent</span>
+        </p>
       </div>
     </div>
 
@@ -76,7 +84,7 @@ const signupUrl = computed(() => buildSignupUrl({
           <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
           <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Bring your agent</h2>
           <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-            BitterClip plugs into Claude, ChatGPT, or anything that speaks MCP. Your agent shows up to footage that's already understood — every speaker named, every moment findable.
+            BitterClip ships with its agent built in — but it also plugs into Claude, ChatGPT, or anything that speaks MCP. Your agent shows up to footage that's already understood: every speaker named, every moment findable.
           </p>
           <p class="agent-measure mt-4 text-base leading-relaxed text-zinc-200">
             You don't operate a timeline. You ask for the finished cut.
