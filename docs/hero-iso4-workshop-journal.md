@@ -714,3 +714,72 @@ mostly never open it… the substrate makes the answer computable."
 Watcher strike #3: new pt-24/md:pt-36 split-padding utilities never
 generated — sections crashed together. All below-the-fold section rhythm now
 lives in scoped .btf/.btf-last classes.
+
+## Round 17 — optical separation and lens resolve
+
+The temporal correction exposed the next material defect: motion was now
+fluid, but YouTube and LinkedIn still looked pale and additive because their
+colored blur was painted into the same canvas before live footage was drawn
+with `screen`. Projection bloom and image exposure were inseparable. Podcast/
+RSS suffered the inverse problem at payoff scale: its entire amber panel read
+as emitted light instead of a finished artifact receiving light.
+
+The accepted system separates each output into two planes. The front plane is
+a NormalBlending deliverable with real footage composited `source-over`, true
+black level, channel chrome, captions, progress, waveform, and transcript. A
+second additive plane sits slightly behind it and carries only a soft radial
+landing field. The three cores are now photographic and distinct; the red,
+blue, and amber energy survives only around their perimeters. Podcast/RSS is
+intentionally the quietest core and keeps a near-black surface with an amber
+hairline rather than returning to a flat orange slab.
+
+The beam shader now computes optical depth from the real perspective view
+vector instead of assuming `(0,0,1)` everywhere. Beer–Lambert extinction,
+calm continuous density noise, feathered cross-sections, endpoint falloff, and
+one white source waist produce three related shafts without reviving the old
+laser wedges. The accepted responsive optical-depth bases remain deliberately
+small; composition, destinations, radii, and the camera-facing blue veil did
+not move.
+
+The physical gate received presentation—not geometry—corrections. Its 16fps
+real frame is recessed behind the optical face, faded at all four edges, and
+held by low-energy warm inner lips. The image remains visible enough to prove
+`film cell → light → outputs`, but it no longer competes as a fourth artifact.
+Only hairline outer and axle catches were added to the two reels at payoff;
+their faces stay in shadow. The lower charge warmth now releases as projection
+begins instead of leaving a furnace-like orange coil behind the cards.
+
+Ignition resolves within the existing 480ms channel handoff: beam at `t0`,
+landing field at `t0+40ms`, solid core at `t0+80ms`. A five-tap GPU focus pull
+begins while the core is still nearly invisible and reaches the exact original
+texture at the same 480ms boundary. It changes shader sampling only—never the
+24fps CanvasTexture cadence—and settled r3/r4 frames compare pixel-identical
+at both 440×956 and 1600×900. The effect survived the forced outside-eye test:
+it reads as projector acquisition because it is coupled to beam energy, not as
+a freestanding UI blur.
+
+Evidence: `tmp/iso/optics-r3-*` (accepted split-material baseline),
+`tmp/iso/optics-r4-focus-mobile-*`, `tmp/iso/optics-r4-focus-wide-*`, and
+`tmp/iso/optics-r4-focus-tall-*`. Independent perception and VFX reviews found
+no remaining P0/P1 composition or material issue and explicitly locked the
+gate energy, halo strengths, beam hierarchy, reel catches, fan geometry, and
+one-two-three timing. The motion-math and external visual passes supported the
+small focus acquisition. Do not further brighten the beams, refill Podcast/
+RSS with amber, dim the gate, relight reel faces, or add focus jitter,
+chromatic aberration, lens flare, walls, or more channel UI.
+
+## Round 17 — the owner's fan sketch
+
+Owner sketched target positions over a live screenshot (~5:4 window): the
+three projections pull into a tighter triangle. Implemented as a
+sketch-shift layer in updateOutputLayout (sketchZ/sketchRise, desktop
+families only — the mobile fan stays): YouTube steps up-left toward the beam
+origin, the phone tucks inboard and gets a real lift off the 16:9 viewport
+floor (the old lowerLift never quite cleared it), and Podcast/RSS leaves the
+bottom-right corner entirely, rising to the mid-right band. Calibration
+notes: the pose system is visibly nonlinear (px-per-world varies with z and
+aspect) — fitted by iteration against the sketch, stopped at sketch
+roughness rather than over-fitting. Verified at 16:9, 4:3, the owner's
+aspect, and mobile; evidence tmp/iso4-fan/f2-*, f3-*. NOTE: the scene's
+phase timing moved during the day (fan deploys later than t=14 at some
+aspects) — use t=24 for deployed-fan stills.

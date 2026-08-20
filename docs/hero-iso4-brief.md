@@ -58,7 +58,13 @@ language later in this lineage document. It also supersedes the faster
 - The **first completed thumbnail starts both reels**. They are stationary at
   that instant, turn slowly, then join the accelerating film transport without
   an angular jump. Once joined, reel tangent speed and film speed are the same;
-  the gate alone retains the intermittent 16fps cadence.
+  the physical film and gate retain the intermittent 16fps cadence. The strip
+  holds for most of each interval and completes one minimum-jerk pull-down near
+  the end; the reels remain continuous flywheels rather than stepping with it.
+- Treat the 36 images as **physical film slots**, not disposable render IDs.
+  The writer overwrites one slot, that same thumbnail survives the loop seam,
+  and the gate reads it 32 pulls later. A cell may not silently repaint as it
+  crosses the top or bottom reel.
 - The complete apparatus begins in a slightly more sculptural profile—8.5°
   farther off its final pose on mobile and 11° on desktop—and holds absolutely
   still through the whole charging act. The projector strike begins one
@@ -76,6 +82,44 @@ language later in this lineage document. It also supersedes the faster
   descends through the optical gate on the right, and returns around the lower
   reel. The exposed descending thumbnails must read upright. Wheel rotation,
   film motion, and the 16fps gate cadence must agree mechanically.
+- The real Episode 1 source is 24fps. In live motion, every written film cell
+  samples that moving source—never alternate long JPEG holds with a moving
+  angle. Finished YouTube and LinkedIn artifacts share one native-24fps
+  projection playback head delayed by the exact writer-to-gate travel
+  (`32 / 16 = 2s`). At every 16fps pull boundary the gate and digital playback
+  resolve to the same source timeline; between pulls the finished digital
+  outputs remain fluid. Podcast/RSS motion uses that same delayed clock.
+- Moving footage is live only after both muted playback heads have confirmed
+  `play()`. If autoplay is rejected or either head pauses unexpectedly, the
+  whole writer → gate → output chain invalidates together and falls back to
+  deterministic 16fps editorial frames; a merely decoded but frozen video
+  must never masquerade as live motion.
+- Projection surfaces resolve monotonically in a three-stage optical handoff:
+  the beam establishes the route, a separate low-energy landing halo follows,
+  and the solid deliverable appears last. A short GPU focus acquisition may
+  soften the complete deliverable during that handoff, but it must reach the
+  exact unfiltered texture before the next channel lands. A small damped
+  flutter may live in the lamp, beam, and halo during ignition; opacity,
+  focus, and the actual footage remain monotone so they can never masquerade
+  as dropped frames.
+- Treat every output as two materials. The footage, channel badge, captions,
+  progress, waveform, and transcript live on a crisp NormalBlending core with
+  real blacks and undistorted skin. Colored projection spill lives on a
+  separate additive plane behind it. Never paint a colored blur underneath
+  the media and then composite the media with `screen`: that contaminates the
+  image core, erases black level, and turns projected deliverables into
+  luminous slabs.
+- All three throws leave one restrained white aperture before separating into
+  red, blue, and amber. Beam extinction uses the true per-fragment view vector
+  and optical depth rather than a fixed orthographic view assumption. Preserve
+  broad haze, feathered edges, endpoint falloff, and quiet continuous smoke;
+  do not promote the shafts into opaque wedges or lasers. The steep LinkedIn
+  throw may retain its camera-facing veil because the physical round shaft is
+  nearly edge-on.
+- The 16fps thumbnail in the gate remains visible as conservation evidence,
+  but it is recessed behind warm inner lips, edge-vignetted, and materially
+  dimmer than the final artifacts. It must read as film observed through an
+  aperture—not a fourth screen or a monitor attached to the mechanism.
 - The drop membrane stays present while the file is dissolving. The final
   three-particle hit completes the last thumbnail; only then does the dashed
   boundary and liquid-film plane dissolve. That withdrawal hands directly to
@@ -112,6 +156,15 @@ language later in this lineage document. It also supersedes the faster
   depth staggering. They should balance the machine as a group, avoid muddy
   overlap, preserve three distinct silhouettes, and appear suspended in one
   volumetric field rather than pasted to a wall.
+- The LinkedIn and Podcast/RSS artifacts must never collapse into one lower
+  cluster. Preserve an obvious dark channel between both their physical cards
+  and their separate landing halos: LinkedIn occupies the higher/left
+  foreground branch;
+  Podcast/RSS occupies the lower/right counterweight. The steep blue throw
+  must remain visibly traceable from the shared rectangular gate. If the round
+  volumetric shaft turns edge-on to the camera, supplement it with a very soft
+  camera-facing optical veil; do not compensate with a hard filled wedge or a
+  globally brighter laser beam.
 - Caption bars belong only to the **portrait clip**. Reel thumbnails, the
   writer, the optical gate, and the landscape episode show clean source
   footage. The waveform/transcript panel retains transcript lines because the
@@ -324,6 +377,12 @@ composition without rendering it.
   tmp/iso/<name> <t> <t> …` (freezes exact times via `window.__iso.still(t)`;
   `--clip x,y,w,h` in 1600×900 viewport px). Capture several boot beats AND
   steady state; crop tight on what you changed AND check the full frame.
+- Live cadence: `ISO_URL='http://localhost:4180/lab/iso4' node
+  qa/iso4-temporal.mjs --viewport 440x956`. The report measures source and
+  output fps, first-visible-strike latency, maximum output hold, clock drift,
+  missed logical pulls, fallback state, and gate/output source-frame phase.
+  Software-rendered SwiftShader runs are
+  diagnostic only; pass `--strict` only in a real-GPU browser session.
 - Outside eyes (corroboration: 2-of-3 agree = act; solo finding = zoom
   first): `grok -p "<prompt with absolute image paths>" --permission-mode
   acceptEdits` and `agy --print "<prompt>"` (give agy the ABSOLUTE path and

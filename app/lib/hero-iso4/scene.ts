@@ -27,6 +27,7 @@ export interface Iso4Scene {
   stop(): void
   still(t?: number): void
   inspect(t: number): Iso4MotionDiagnostics
+  temporal(): Iso4TemporalDiagnostics
   resize(): void
   destroy(): void
 }
@@ -47,6 +48,34 @@ export interface Iso4MotionDiagnostics {
   apparatusYawSpeedDegreesPerSecond: number
   finalWriteAt: number
   projectorStrikeAt: number
+}
+
+export interface Iso4TemporalDiagnostics {
+  timelineSeconds: number
+  sourceVideoTimeSeconds: number
+  projectionVideoTimeSeconds: number
+  expectedProjectionVideoTimeSeconds: number
+  sourceClockDriftMs: number
+  projectionClockDriftMs: number
+  presentedVideoFramesPerSecond: number
+  presentedVideoFrameRevision: number
+  presentedVideoMediaTimeSeconds: number
+  outputTextureFramesPerSecond: number
+  renderFramesPerSecond: number
+  firstOutputTextureLatencyMs: number
+  longestOutputHoldMs: number
+  outputTextureRevision: number
+  missedProjectionFrames: number
+  mechanicalGateTick: number
+  mechanicalGateFramesPerSecond: number
+  missedMechanicalTicks: number
+  sourceFramesPerSecond: number
+  projectionDelaySeconds: number
+  gateSourceFrame: number
+  projectionSourceFrame: number
+  gateProjectionPhaseErrorFrames: number
+  movingMediaPlaying: boolean
+  usingDeterministicFallback: boolean
 }
 
 // ---- the world, in film-widths — same numbers as the 2D study ------------
@@ -79,6 +108,8 @@ const machineFloorY = BOTTOM_REEL.y - REEL.r
 const COIL_F = 0.58
 const FILM_FPS = 16
 const FILM_SPEED = PITCH * FILM_FPS
+const SOURCE_FPS = 24
+const SOURCE_DURATION = 108 / SOURCE_FPS
 const coilR = REEL.r * COIL_F
 const reelX = TOP_REEL.x
 const reelY = TOP_REEL.y
@@ -181,6 +212,13 @@ const CHARGE_POINT = new THREE.Vector3(
   TOP_REEL.y - (CHARGE_S - sAfterTopReel),
   0,
 )
+// Once transport reaches its steady 16fps cadence, a written frame needs
+// exactly 32 frame intervals to reach the optical gate. The digital output
+// playback head follows that same source timeline at the source's native
+// 24fps, delayed by the physical writer-to-gate travel. At every 16fps gate
+// boundary the two representations therefore rendezvous on the same source
+// frame, while the finished channel artifacts remain fluid between pulls.
+const PROJECTION_DELAY_SECONDS = WRITER_TO_GATE_FRAMES / FILM_FPS
 
 export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
@@ -374,6 +412,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const filmTex = new THREE.CanvasTexture(filmCanvas)
   filmTex.colorSpace = THREE.SRGBColorSpace
   filmTex.anisotropy = 4
+  filmTex.wrapS = THREE.RepeatWrapping
 
   // The public homepage already carries the real Mike & John Episode 1
   // coverage. Reuse it here instead of manufacturing look-alike faces. The
@@ -381,6 +420,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // replaces it on the next 16fps gate tick as each small JPEG arrives.
   let episodeMediaRevision = 0
   let useMovingMedia = true
+  let movingMediaPlaying = false
+  let mediaPlayAttempt = 0
+  let temporalMediaResetRequested = true
   let refreshBootFileLabel: (() => void) | undefined
   const episodeFrames = EPISODE_FRAME_URLS.map((src) => {
     const image = new Image()
@@ -392,15 +434,140 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     image.src = src
     return image
   })
-  const episodeVideo = document.createElement('video')
-  episodeVideo.src = '/clips/ep1-loop.mp4'
-  episodeVideo.muted = true
-  episodeVideo.loop = true
-  episodeVideo.playsInline = true
-  episodeVideo.preload = 'auto'
+  const createEpisodeVideo = () => {
+    const video = document.createElement('video')
+    video.src = '/clips/ep1-loop.mp4'
+    video.muted = true
+    video.loop = true
+    video.playsInline = true
+    video.preload = 'auto'
+    video.playbackRate = 1
+    return video
+  }
+  // Two phase-locked playback heads serve different physical jobs. The source
+  // head is sampled by the 16fps writer; the projection head is delayed by the
+  // writer-to-gate travel and presents the finished digital outputs at the
+  // native 24fps. Keeping separate decoders avoids seeking one video back and
+  // forth on every frame, which was both expensive and temporally unstable.
+  const episodeVideo = createEpisodeVideo()
+  const projectionVideo = createEpisodeVideo()
+  const wrapMediaTime = (seconds: number) => {
+    const duration = Number.isFinite(episodeVideo.duration) && episodeVideo.duration > 0
+      ? episodeVideo.duration
+      : SOURCE_DURATION
+    return ((seconds % duration) + duration) % duration
+  }
+  const mediaFrameIndex = (seconds: number) => {
+    const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
+    return ((Math.floor(wrapMediaTime(seconds) * SOURCE_FPS + 1e-4) % frameCount) + frameCount) % frameCount
+  }
+  const presentedMediaFrameIndex = (seconds: number) => {
+    const duration = Number.isFinite(projectionVideo.duration) && projectionVideo.duration > 0
+      ? projectionVideo.duration
+      : SOURCE_DURATION
+    const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
+    // Some engines expose currentTime === duration for one RAF before loop
+    // reset. That instant still displays the final decoded frame, not frame 0.
+    if (seconds >= duration - 0.5 / SOURCE_FPS) return frameCount - 1
+    return mediaFrameIndex(seconds)
+  }
+  const circularMediaDelta = (actual: number, expected: number) => {
+    const duration = Number.isFinite(episodeVideo.duration) && episodeVideo.duration > 0
+      ? episodeVideo.duration
+      : SOURCE_DURATION
+    let delta = actual - expected
+    if (delta > duration / 2) delta -= duration
+    if (delta < -duration / 2) delta += duration
+    return delta
+  }
+  let sourceClockDrift = 0
+  let projectionClockDrift = 0
+  let lastMediaClockCorrection = -Infinity
+  const syncMediaClocks = (t: number, force = false) => {
+    let corrected = false
+    const sourceExpected = wrapMediaTime(t)
+    const projectionExpected = wrapMediaTime(t - PROJECTION_DELAY_SECONDS)
+    if (episodeVideo.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      sourceClockDrift = circularMediaDelta(episodeVideo.currentTime, sourceExpected)
+      if (force || (Math.abs(sourceClockDrift) > 0.09 && t - lastMediaClockCorrection > 0.5)) {
+        episodeVideo.currentTime = sourceExpected
+        sourceClockDrift = 0
+        corrected = true
+      }
+    }
+    if (projectionVideo.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      projectionClockDrift = circularMediaDelta(projectionVideo.currentTime, projectionExpected)
+      if (force || (Math.abs(projectionClockDrift) > 0.09 && t - lastMediaClockCorrection > 0.5)) {
+        projectionVideo.currentTime = projectionExpected
+        projectionClockDrift = 0
+        corrected = true
+      }
+    }
+    if (corrected) lastMediaClockCorrection = t
+  }
   episodeVideo.addEventListener('loadeddata', () => {
     episodeMediaRevision += 1
   })
+  type FrameCallbackVideo = HTMLVideoElement & {
+    requestVideoFrameCallback?: (callback: (now: number, metadata: { mediaTime: number }) => void) => number
+    cancelVideoFrameCallback?: (handle: number) => void
+  }
+  const callbackProjectionVideo = projectionVideo as FrameCallbackVideo
+  let projectionFrameCallback = 0
+  let projectionPresentedRevision = 0
+  let projectionPresentedMediaTime = 0
+  const projectionPresentationTimes: number[] = []
+  const scheduleProjectionFrame = () => {
+    if (projectionFrameCallback || !callbackProjectionVideo.requestVideoFrameCallback) return
+    projectionFrameCallback = callbackProjectionVideo.requestVideoFrameCallback((now, metadata) => {
+      projectionFrameCallback = 0
+      projectionPresentedRevision += 1
+      projectionPresentedMediaTime = metadata.mediaTime
+      projectionPresentationTimes.push(now / 1000)
+      while (projectionPresentationTimes.length > 2 && now / 1000 - projectionPresentationTimes[0]! > 1.25) {
+        projectionPresentationTimes.shift()
+      }
+      if (running) scheduleProjectionFrame()
+    })
+  }
+  const cancelProjectionFrame = () => {
+    if (projectionFrameCallback && callbackProjectionVideo.cancelVideoFrameCallback) {
+      callbackProjectionVideo.cancelVideoFrameCallback(projectionFrameCallback)
+    }
+    projectionFrameCallback = 0
+  }
+  const movingMediaIsActive = () => useMovingMedia && movingMediaPlaying
+  const enterDeterministicMediaFallback = () => {
+    useMovingMedia = false
+    movingMediaPlaying = false
+    temporalMediaResetRequested = true
+    mediaPlayAttempt += 1
+    episodeVideo.pause()
+    projectionVideo.pause()
+    cancelProjectionFrame()
+  }
+  const resumeEpisodeMedia = (t: number) => {
+    const attempt = ++mediaPlayAttempt
+    movingMediaPlaying = false
+    syncMediaClocks(t, true)
+    void Promise.all([episodeVideo.play(), projectionVideo.play()]).then(() => {
+      if (attempt !== mediaPlayAttempt || !running || !useMovingMedia) return
+      if (episodeVideo.paused || projectionVideo.paused) {
+        enterDeterministicMediaFallback()
+        return
+      }
+      movingMediaPlaying = true
+      temporalMediaResetRequested = true
+      scheduleProjectionFrame()
+    }).catch(() => {
+      if (attempt === mediaPlayAttempt) enterDeterministicMediaFallback()
+    })
+  }
+  for (const video of [episodeVideo, projectionVideo]) {
+    video.addEventListener('loadedmetadata', () => {
+      if (running && useMovingMedia) resumeEpisodeMedia(elapsed)
+    })
+  }
   const imageReady = (image: HTMLImageElement) => image.complete && image.naturalWidth > 0
   const drawImageCover = (
     ctx: CanvasRenderingContext2D,
@@ -439,18 +606,24 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   function renderFrameContent(g2: CanvasRenderingContext2D, w: number, h: number, id: number, captioned: boolean) {
     const hsh = Math.abs(Math.imul(id | 0, 2654435761)) >>> 0
     const j1 = ((hsh >> 3) % 100) / 100
-    // Hold each editorial angle for roughly 1.25 seconds at 16fps. Cycling
-    // angle every individual film frame looked like flashing stills, not an
-    // edited conversation.
+    // Deterministic stills retain the three editorial angles used throughout
+    // the workshop. Live playback never substitutes JPEG holds for decoded
+    // frames: doing so produced 1.25 seconds of motion followed by 3.75
+    // seconds of apparent freezing, an effective four moving frames/second.
     const variant = ((Math.floor(id / 20) % 4) + 4) % 4
     const mike = episodeFrames[0]!
     const john = episodeFrames[1]!
     const johnAlt = episodeFrames[2]!
-    const movingMikeReady = useMovingMedia && episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
-    const selected = variant === 0
-      ? (movingMikeReady ? episodeVideo : mike)
-      : variant === 1 ? john : johnAlt
-    const canDrawReal = variant === 3
+    const movingMikeReady = movingMediaIsActive()
+      && episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+    const selected = movingMikeReady
+      ? episodeVideo
+      : variant === 0
+        ? mike
+        : variant === 1
+          ? john
+          : johnAlt
+    const canDrawReal = !movingMikeReady && variant === 3
       ? imageReady(mike) && imageReady(john)
       : selected instanceof HTMLVideoElement ? movingMikeReady : imageReady(selected)
     if (canDrawReal) {
@@ -460,7 +633,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // A restrained archival grade seats webcam footage in the metal and
       // amber practicals without hiding that these are real people.
       g2.filter = 'sepia(0.16) saturate(0.72) contrast(1.08) brightness(0.82)'
-      if (variant === 3) {
+      if (!movingMikeReady && variant === 3) {
         drawImageCover(g2, mike, 0, 0, w / 2, h)
         drawImageCover(g2, john, w / 2, 0, w / 2, h)
       } else {
@@ -539,7 +712,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // and blob path-work was a real CPU cost at 60fps)
   const artCache = new Map<string, HTMLCanvasElement>()
   function frameArt(id: number, captioned: boolean): HTMLCanvasElement {
-    const key = `${episodeMediaRevision}:${useMovingMedia ? 'm' : 's'}:${id}${captioned ? 'c' : 'r'}`
+    const key = `${episodeMediaRevision}:${movingMediaIsActive() ? 'm' : 's'}:${id}${captioned ? 'c' : 'r'}`
     let c = artCache.get(key)
     if (!c) {
       c = document.createElement('canvas')
@@ -553,6 +726,36 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       }
     }
     return c
+  }
+
+  // The ribbon contains 36 physical cells. Keying imagery by an ever-changing
+  // absolute frame id made a cell silently change content when it crossed the
+  // loop seam. These slots are the actual conservation model: the writer
+  // overwrites one slot, that same canvas rides the full loop, and the gate
+  // reads it 32 pulls later.
+  const filmSlotArt = Array.from({ length: FRAME_GROUPS }, () => {
+    const c = document.createElement('canvas')
+    c.width = 240
+    c.height = 136
+    return c
+  })
+  const filmSlotReady = new Array<boolean>(FRAME_GROUPS).fill(false)
+  const filmSlotSourceFrames = new Int16Array(FRAME_GROUPS)
+  filmSlotSourceFrames.fill(-1)
+  const filmSlot = (pathCell: number, transportFrame: number) => (
+    (pathCell - transportFrame) % FRAME_GROUPS + FRAME_GROUPS
+  ) % FRAME_GROUPS
+  const writerPathCell = Math.floor(CHARGE_S / PITCH)
+  const gatePathCell = Math.floor(S_GATE / PITCH)
+  const stampFilmSlot = (transportFrame: number) => {
+    const slot = filmSlot(writerPathCell, transportFrame)
+    const c = filmSlotArt[slot]!
+    renderFrameContent(c.getContext('2d')!, c.width, c.height, writerPathCell - transportFrame, false)
+    filmSlotReady[slot] = true
+    filmSlotSourceFrames[slot] = episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+      ? presentedMediaFrameIndex(episodeVideo.currentTime)
+      : -1
+    return slot
   }
 
   function drawFilm(dist: number, chargedDistance: number) {
@@ -571,6 +774,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       const s0 = i * PITCH + off
       if (s0 + PITCH <= 0 || s0 >= totalPath) continue
       const id = stableId(i, off, dist)
+      const slot = filmSlot(i, Math.round(dist / PITCH))
       const u0 = (s0 + 0.09) * sToPx
       const uH = (IMG_H) * sToPx
       const frameS = (s0 + 0.09 + IMG_H / 2 + totalPath) % totalPath
@@ -583,7 +787,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       fctx.translate(u0, vTop + vH)
       fctx.rotate(-Math.PI / 2)
       if (charged) {
-        fctx.drawImage(frameArt(id, false), 0, 0, vH, uH)
+        const art = movingMediaIsActive() && filmSlotReady[slot]
+          ? filmSlotArt[slot]!
+          : frameArt(id, false)
+        fctx.drawImage(art, 0, 0, vH, uH)
       } else {
         fctx.fillStyle = '#171713'
         fctx.fillRect(0, 0, vH, uH)
@@ -716,6 +923,33 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   let gateFrameMat: THREE.MeshBasicMaterial | null = null
   let gateFrameCtx: CanvasRenderingContext2D | null = null
   let gateFrameTex: THREE.CanvasTexture | null = null
+  const gateLipMat = new THREE.MeshStandardMaterial({
+    color: 0x29282d,
+    roughness: 0.58,
+    metalness: 0.38,
+    emissive: 0xffc996,
+    emissiveIntensity: 0,
+  })
+  const maskGateFrame = () => {
+    if (!gateFrameCtx) return
+    gateFrameCtx.save()
+    gateFrameCtx.globalCompositeOperation = 'destination-in'
+    const gx = gateFrameCtx.createLinearGradient(0, 0, 320, 0)
+    gx.addColorStop(0, 'rgba(255,255,255,0)')
+    gx.addColorStop(0.14, 'rgba(255,255,255,1)')
+    gx.addColorStop(0.86, 'rgba(255,255,255,1)')
+    gx.addColorStop(1, 'rgba(255,255,255,0)')
+    gateFrameCtx.fillStyle = gx
+    gateFrameCtx.fillRect(0, 0, 320, 180)
+    const gy = gateFrameCtx.createLinearGradient(0, 0, 0, 180)
+    gy.addColorStop(0, 'rgba(255,255,255,0)')
+    gy.addColorStop(0.16, 'rgba(255,255,255,1)')
+    gy.addColorStop(0.84, 'rgba(255,255,255,1)')
+    gy.addColorStop(1, 'rgba(255,255,255,0)')
+    gateFrameCtx.fillStyle = gy
+    gateFrameCtx.fillRect(0, 0, 320, 180)
+    gateFrameCtx.restore()
+  }
   // THE PROJECTOR HEAD: the causal order is visible. A concealed lamp sits on
   // the machine side of the strip; the real thumbnail is held in a shallow
   // rectangular gate; the beams begin just beyond it. There is deliberately
@@ -732,10 +966,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const gateHalfH = IMG_H / 2 + 0.14
     const lipX0 = cx1 - 0.03
     const lipX1 = LENS_X + 0.06
-    box(lipX0, lipX1, lampY + gateHalfH, lampY + gateHalfH + 0.15, -gateHalfW, gateHalfW, M.steelDark)
-    box(lipX0, lipX1, lampY - gateHalfH - 0.15, lampY - gateHalfH, -gateHalfW, gateHalfW, M.steelDark)
-    box(lipX0, lipX1, lampY - gateHalfH, lampY + gateHalfH, gateHalfW, gateHalfW + 0.15, M.steelDark)
-    box(lipX0, lipX1, lampY - gateHalfH, lampY + gateHalfH, -gateHalfW - 0.15, -gateHalfW, M.steelDark)
+    box(lipX0, lipX1, lampY + gateHalfH, lampY + gateHalfH + 0.15, -gateHalfW, gateHalfW, gateLipMat)
+    box(lipX0, lipX1, lampY - gateHalfH - 0.15, lampY - gateHalfH, -gateHalfW, gateHalfW, gateLipMat)
+    box(lipX0, lipX1, lampY - gateHalfH, lampY + gateHalfH, gateHalfW, gateHalfW + 0.15, gateLipMat)
+    box(lipX0, lipX1, lampY - gateHalfH, lampY + gateHalfH, -gateHalfW - 0.15, -gateHalfW, gateLipMat)
 
     const gc = document.createElement('canvas')
     gc.width = 320
@@ -748,7 +982,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     gateFrameMat = new THREE.MeshBasicMaterial({ map: gateFrameTex, transparent: true, opacity: 0, depthWrite: false })
     const gateFrame = new THREE.Mesh(new THREE.PlaneGeometry(IMG_W, IMG_H), gateFrameMat)
     gateFrame.rotation.y = Math.PI / 2
-    gateFrame.position.set(LENS_X + 0.065, lampY, 0)
+    gateFrame.position.set(LENS_X - 0.03, lampY, 0)
     machineRoot.add(gateFrame)
   }
 
@@ -809,6 +1043,30 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     lowerChargeMats.push(mat)
   })
   machineRoot.add(lowerReel)
+  // Projection light catches only the machined outer edge and axle. These
+  // payoff rims restore the classical dual-reel silhouette without filling
+  // either dark flange face or competing with the output cards.
+  const payoffTopRimMat = new THREE.MeshBasicMaterial({
+    color: 0x687186,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  })
+  const payoffLowerRimMat = payoffTopRimMat.clone()
+  const addPayoffRim = (parent: THREE.Group, mat: THREE.MeshBasicMaterial) => {
+    for (const radius of [REEL.r * 0.992, 0.72]) {
+      const catchRing = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, radius > 1 ? 0.026 : 0.018, 5, 96),
+        mat,
+      )
+      catchRing.position.z = REEL.w / 2 + 0.018
+      catchRing.renderOrder = 2
+      parent.add(catchRing)
+    }
+  }
+  addPayoffRim(reel, payoffTopRimMat)
+  addPayoffRim(lowerReel, payoffLowerRimMat)
 
   // A shallow rectangular writer aperture hugs the descending strip. Three
   // particles register across the actual frame footprint; the completed real
@@ -854,6 +1112,62 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const chargeThumbTex = new THREE.CanvasTexture(chargeThumbCanvas)
   chargeThumbTex.colorSpace = THREE.SRGBColorSpace
   const chargeThumbMat = new THREE.MeshBasicMaterial({ map: chargeThumbTex, transparent: true, opacity: 0, depthWrite: false })
+  const chargeThumbUniforms = {
+    uWriterBuild: { value: 0 },
+    uWriterImpact: { value: 0 },
+    uWriterCharge: { value: 0 },
+  }
+  chargeThumbMat.onBeforeCompile = (shader) => {
+    shader.uniforms.uWriterBuild = chargeThumbUniforms.uWriterBuild
+    shader.uniforms.uWriterImpact = chargeThumbUniforms.uWriterImpact
+    shader.uniforms.uWriterCharge = chargeThumbUniforms.uWriterCharge
+    shader.fragmentShader = `
+      uniform float uWriterBuild;
+      uniform float uWriterImpact;
+      uniform float uWriterCharge;
+    ${shader.fragmentShader}`
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <map_fragment>',
+      /* glsl */ `
+        #ifdef USE_MAP
+          vec4 sampledDiffuseColor = texture2D(map, vMapUv);
+          // Three particles fund one film cell. Their world-space registration
+          // sites correspond to these three thumbnail anchors; expanding
+          // reconstruction fronts make the information visibly accumulate
+          // instead of letting the points disappear behind an opaque strip.
+          vec2 writerUv = vec2(vMapUv.x, vMapUv.y);
+          vec2 a0 = vec2(0.18, 0.56);
+          vec2 a1 = vec2(0.50, 0.44);
+          vec2 a2 = vec2(0.82, 0.56);
+          vec2 aspect = vec2(1.0, 0.72);
+          float d0 = length((writerUv - a0) * aspect);
+          float d1 = length((writerUv - a1) * aspect);
+          float d2 = length((writerUv - a2) * aspect);
+          float radius = mix(0.018, 0.82, uWriterBuild);
+          float m0 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d0);
+          float m1 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d1);
+          float m2 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d2);
+          float assembled = clamp(max(m0, max(m1, m2)), 0.0, 1.0);
+          float front0 = 1.0 - smoothstep(0.0, 0.05, abs(d0 - radius));
+          float front1 = 1.0 - smoothstep(0.0, 0.05, abs(d1 - radius));
+          float front2 = 1.0 - smoothstep(0.0, 0.05, abs(d2 - radius));
+          float reconstructionFront = clamp(max(front0, max(front1, front2)), 0.0, 1.0)
+            * (1.0 - 0.72 * uWriterBuild);
+          float anchorGlow = exp(-d0 * 18.0) + exp(-d1 * 18.0) + exp(-d2 * 18.0);
+          vec3 writerWarm = vec3(1.0, 0.39, 0.24);
+          sampledDiffuseColor.rgb *= 0.055 + 0.945 * assembled;
+          sampledDiffuseColor.rgb += writerWarm * (
+            reconstructionFront * 0.28
+            + anchorGlow * uWriterImpact * 0.18
+            + uWriterCharge * assembled * 0.025
+          );
+          sampledDiffuseColor.a *= 0.08 + 0.92 * assembled;
+          diffuseColor *= sampledDiffuseColor;
+        #endif
+      `,
+    )
+  }
+  chargeThumbMat.customProgramCacheKey = () => 'iso4-writer-reconstruction-v1'
   const chargeThumb = new THREE.Mesh(new THREE.PlaneGeometry(IMG_W, IMG_H), chargeThumbMat)
   chargeThumb.rotation.y = Math.PI / 2
   chargeThumb.position.copy(CHARGE_POINT).add(new THREE.Vector3(0.045, 0, 0))
@@ -877,8 +1191,8 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   ]
 
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
-  // built a lit room-corner; the wall is IMPLIED — the projected frames carry
-  // their own baked spill halos and the darkness does the architecture.)
+  // built a lit room-corner; the wall is IMPLIED — separate landing-field
+  // planes carry the restrained spill and the darkness does the architecture.)
   // THEATER BEAMS (owner: "a little bit of smoke in the air, just like
   // theater lighting"). Three round volumetric shafts from the prism to the
   // destinations: open cones with a shader doing axial falloff from the
@@ -886,14 +1200,19 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // smoke inside, and a white core melting into each brand colour.
   const beamMats: THREE.ShaderMaterial[] = []
   const beamMeshes: THREE.Mesh[] = []
+  const outputGlowMats: THREE.ShaderMaterial[] = []
+  const outputGlowMeshes: THREE.Mesh[] = []
   {
     const vert = /* glsl */ `
       varying vec2 vUv;
       varying vec3 vNormal;
+      varying vec3 vView;
       void main() {
         vUv = uv;
         vNormal = normalize(normalMatrix * normal);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        vView = -mvPosition.xyz;
+        gl_Position = projectionMatrix * mvPosition;
       }`
     const frag = /* glsl */ `
       uniform vec3 uColor;
@@ -901,9 +1220,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       uniform float uSeed;
       uniform float uAlpha;
       uniform float uOn;
-      uniform vec3 uView;
       varying vec2 vUv;
       varying vec3 vNormal;
+      varying vec3 vView;
       float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
       float vnoise(vec2 p) {
         vec2 i = floor(p);
@@ -916,17 +1235,24 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       }
       void main() {
         float t = vUv.y; // 0 at the source end
-        float axial = (0.30 + 0.70 * pow(1.0 - t, 1.4)) * smoothstep(0.0, 0.05, t);
-        // A cone's geometric silhouette otherwise reads as a hard triangular
-        // laser ramp. Ease its camera-facing density to zero before the mesh
-        // edge, approximating the soft lateral extinction of light in haze.
-        float facing = abs(dot(normalize(vNormal), normalize(uView)));
-        float lateral = pow(smoothstep(0.03, 0.92, facing), 2.1);
-        float smoke = 0.5
-          + 0.32 * vnoise(vec2(t * 7.0 - uTime * 0.30, vUv.x * 3.0 + uSeed * 7.31))
-          + 0.18 * vnoise(vec2(t * 17.0 - uTime * 0.55, vUv.x * 6.0 + uSeed * 3.7));
-        vec3 col = mix(vec3(1.0), uColor, smoothstep(0.0, 0.26, t));
-        gl_FragColor = vec4(col, axial * lateral * smoke * uAlpha * uOn);
+        // Perspective-correct optical depth. The previous fixed +Z view
+        // vector made identical shafts change density as they moved toward a
+        // viewport edge. Beer-Lambert extinction keeps the cross-section soft
+        // and monotone without turning the cone into a graphic wedge.
+        float facing = abs(dot(normalize(vNormal), normalize(vView)));
+        float column = pow(smoothstep(0.02, 0.95, facing), 2.0);
+        float edge = smoothstep(0.02, 0.22, facing);
+        float ends = smoothstep(0.0, 0.055, t) * (1.0 - smoothstep(0.94, 1.0, t));
+        float falloff = 0.24 + 0.76 / pow(1.0 + 1.55 * t, 2.0);
+        float smoke = 0.82
+          + 0.12 * vnoise(vec2(t * 7.0 - uTime * 0.30, vUv.x * 3.0 + uSeed * 7.31))
+          + 0.06 * vnoise(vec2(t * 17.0 - uTime * 0.55, vUv.x * 6.0 + uSeed * 3.7));
+        float tau = uAlpha * column * edge * ends * falloff * smoke;
+        float opticalAlpha = 1.0 - exp(-tau);
+        // All three throws leave one white aperture before their channel
+        // colour separates, so the eye reads one lamp feeding three results.
+        vec3 col = mix(vec3(1.0), uColor, smoothstep(0.08, 0.50, t));
+        gl_FragColor = vec4(col, opticalAlpha * uOn);
       }`
     FAN.forEach((d, i) => {
       const target = new THREE.Vector3(d.x, lampY + d.y, d.z)
@@ -945,10 +1271,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           // as opaque wedges while the steeper blue throw vanished. These
           // values compensate view-facing solid angle rather than ranking the
           // artifacts by brightness.
-          uAlpha: { value: [0.44, 0.64, 0.12][i] },
+          // Optical-depth bases corresponding to the accepted apparent peak
+          // alphas. Responsive layout applies only the one verified mobile
+          // correction: a clearer red corridor to the first output.
+          uAlpha: { value: [0.13, 0.06, 0.02][i] },
           uOn: { value: 0 },
-          // vNormal is in view space, where the camera always lies along +Z.
-          uView: { value: new THREE.Vector3(0, 0, 1) },
         },
         transparent: true,
         blending: THREE.AdditiveBlending,
@@ -968,32 +1295,90 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       scene.add(m)
     })
   }
-  // the projected frames on the wall: THE SAME IMAGE that stands in the gate
-  // (shared renderer), tinted per channel, redrawn each time a new frame
-  // arrives — the machine is visibly projecting the film, not just glowing
+  // The LinkedIn throw is steep enough that its round shaft can become
+  // mathematically edge-on to the camera. A second, extremely soft optical
+  // veil supplies the perceptual beam without forcing the cylinder into a
+  // hard laser wedge. Its ribbon is rebuilt from the live gate/phone segment
+  // so it follows the projector's actualization turn and responsive fan.
+  const blueBeamVeilPositions = new Float32Array(12)
+  const blueBeamVeilGeometry = new THREE.BufferGeometry()
+  blueBeamVeilGeometry.setAttribute('position', new THREE.BufferAttribute(blueBeamVeilPositions, 3))
+  blueBeamVeilGeometry.setAttribute('uv', new THREE.Float32BufferAttribute([
+    0, 0,
+    1, 0,
+    0, 1,
+    1, 1,
+  ], 2))
+  blueBeamVeilGeometry.setIndex([0, 2, 1, 2, 3, 1])
+  const blueBeamVeilMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uOn: { value: 0 },
+    },
+    vertexShader: /* glsl */ `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      uniform float uTime;
+      uniform float uOn;
+      varying vec2 vUv;
+      void main() {
+        float t = vUv.y;
+        float lateral = pow(max(0.0, sin(3.14159265 * vUv.x)), 2.6);
+        float axial = smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(0.78, 1.0, t));
+        float breath = 0.88 + 0.07 * sin(t * 11.0 - uTime * 0.72)
+          + 0.05 * sin(t * 4.7 - uTime * 0.31 + 1.4);
+        vec3 color = mix(vec3(0.82, 0.9, 1.0), vec3(0.18, 0.48, 0.78), smoothstep(0.04, 0.72, t));
+        gl_FragColor = vec4(color, lateral * axial * breath * 0.115 * uOn);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  })
+  const blueBeamVeil = new THREE.Mesh(blueBeamVeilGeometry, blueBeamVeilMat)
+  blueBeamVeil.frustumCulled = false
+  scene.add(blueBeamVeil)
+  // The gate is the physical 16fps sampling point. The channel artifacts use
+  // the same source timeline at native 24fps, delayed by the writer-to-gate
+  // travel; they agree at every pull boundary while remaining fluid between
+  // those boundaries.
   const screenCtxs: { c: HTMLCanvasElement; x: CanvasRenderingContext2D; tex: THREE.CanvasTexture; d: (typeof FAN)[number] }[] = []
   const screenMats: THREE.MeshBasicMaterial[] = []
+  const screenResolveUniforms: {
+    uResolve: { value: number }
+    uResolveTexel: { value: THREE.Vector2 }
+  }[] = []
   const screenMeshes: THREE.Mesh[] = []
   const settledOutputTargets = FAN.map(() => new THREE.Vector3())
   const posedLens = new THREE.Vector3()
   const posedTarget = new THREE.Vector3()
   const posedBeamDir = new THREE.Vector3()
   const beamUp = new THREE.Vector3(0, 1, 0)
+  const blueBeamView = new THREE.Vector3()
+  const blueBeamSide = new THREE.Vector3()
+  const blueBeamStart = new THREE.Vector3()
+  const blueBeamEnd = new THREE.Vector3()
+  const blueBeamPoint = new THREE.Vector3()
   let outputPoseTime = 0
-  function drawScreen(sc: (typeof screenCtxs)[number], id: number) {
+  function drawScreen(
+    sc: (typeof screenCtxs)[number],
+    id: number,
+    liveProjectionSource = false,
+    mediaTimeSeconds = wrapMediaTime(id / SOURCE_FPS),
+  ) {
     const { x, d, c } = sc
     const W2 = c.width
     const H2 = c.height
     x.clearRect(0, 0, W2, H2)
-    // the throw's spill behind the artifact
-    x.save()
-    x.filter = 'blur(26px)'
-    x.fillStyle = d.color
-    // The landscape core has a healthy phone margin; only its broad blurred
-    // spill reached the final few pixels. Restrain the halo, not the card.
-    x.globalAlpha = d.icon === 'yt' ? 0.26 : 0.32
-    x.fillRect(W2 * 0.1, H2 * 0.12, W2 * 0.8, H2 * 0.76)
-    x.restore()
+    // The image core stays optically clean. Spill is a separate plane behind
+    // the artifact so bloom can never lift footage blacks or contaminate skin
+    // tones. This canvas owns only the deliverable itself and its hairline.
     const channelBadge = (
       bx: number,
       by: number,
@@ -1062,18 +1447,29 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       x.restore()
     }
     if (d.icon === 'yt') {
+      x.fillStyle = 'rgba(5,6,8,0.94)'
+      x.fillRect(50, 36, 540, 284)
+      x.strokeStyle = 'rgba(214,61,71,0.62)'
+      x.lineWidth = 2
+      x.strokeRect(56, 42, 528, 274)
       x.save()
       x.translate(58, 44)
-      x.globalCompositeOperation = 'screen'
-      x.globalAlpha = 0.88
-      x.drawImage(frameArt(id, false), 0, 0, 524, 246)
+      x.globalCompositeOperation = 'source-over'
+      x.globalAlpha = 0.96
+      if (liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        drawImageCover(x, projectionVideo, 0, 0, 524, 246)
+      } else {
+        x.drawImage(frameArt(id, false), 0, 0, 524, 246)
+      }
       x.restore()
       x.fillStyle = 'rgba(255,255,255,0.3)'
       x.fillRect(58, 306, 524, 6)
       x.fillStyle = 'rgba(255,255,255,0.9)'
-      x.fillRect(58, 306, 336, 6)
+      const progress = THREE.MathUtils.clamp(mediaTimeSeconds / SOURCE_DURATION, 0, 1)
+      const progressX = 58 + 524 * progress
+      x.fillRect(58, 306, Math.max(4, progressX - 58), 6)
       x.beginPath()
-      x.arc(394, 309, 8, 0, Math.PI * 2)
+      x.arc(progressX, 309, 8, 0, Math.PI * 2)
       x.fill()
       channelBadge(76, 60, 238, 52, 'YOUTUBE', 29)
     } else if (d.icon === 'in') {
@@ -1094,14 +1490,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       x.beginPath()
       x.roundRect(38, 58, 264, 586, 26)
       x.clip()
-      x.globalCompositeOperation = 'screen'
-      x.globalAlpha = 0.9
+      x.globalCompositeOperation = 'source-over'
+      x.globalAlpha = 0.96
       // A curated center crop keeps the steady-state phone from landing on a
       // wall or partial head as the shared editorial id advances. Live mode
       // still uses the real Episode 1 video; deterministic review uses its
       // matching Mike still.
-      const portraitSource = useMovingMedia && episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
-        ? episodeVideo
+      const portraitSource = liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+        ? projectionVideo
         : episodeFrames[0]!
       if (portraitSource instanceof HTMLVideoElement || imageReady(portraitSource)) {
         drawImageCover(x, portraitSource, 38, 58, 264, 586)
@@ -1144,12 +1540,23 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       channelBadge(50, 72, 240, 54, 'LINKEDIN CLIP', 27)
     } else {
       // waveform + transcript: the podcast/RSS artifact
+      x.fillStyle = 'rgba(10,9,8,0.9)'
+      x.strokeStyle = 'rgba(217,162,92,0.6)'
+      x.lineWidth = 2
+      x.beginPath()
+      x.roundRect(30, 16, 580, 388, 22)
+      x.fill()
+      x.stroke()
       x.save()
       x.globalAlpha = 0.9
       x.fillStyle = 'rgba(255,235,205,0.85)'
-      const hsh2 = Math.abs(Math.imul(id | 0, 40503)) >>> 0
+      // A podcast is continuous time, not a random bar chart. Keep each bar's
+      // identity stable and move one low-frequency envelope through it using
+      // the same delayed media clock as the two video projections.
       for (let k = 0; k < 56; k++) {
-        const bh = 12 + (((hsh2 >> (k % 24)) & 7) / 7) * 66 * (0.35 + 0.65 * Math.abs(Math.sin(k * 0.55 + id)))
+        const seed = 0.34 + 0.66 * Math.abs(Math.sin(k * 1.913 + 0.7))
+        const wave = 0.34 + 0.66 * Math.abs(Math.sin(k * 0.47 + mediaTimeSeconds * 3.4))
+        const bh = 12 + seed * wave * 66
         x.fillRect(48 + k * 9.6, 108 - bh / 2, 5.5, bh)
       }
       x.restore()
@@ -1186,10 +1593,47 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const sc = { c, x: c.getContext('2d')!, tex, d }
     screenCtxs.push(sc)
     drawScreen(sc, 0)
-    // Keep the artifact itself optically solid enough to read. Its canvas
-    // already contains a baked additive spill; additive-blending the whole
-    // card made overlaps bleach together and erased the three silhouettes.
+    // Keep the artifact itself optically solid enough to read. Additive-
+    // blending the whole card made overlaps bleach together and erased the
+    // three silhouettes; the dedicated plane below owns spill instead.
     const smat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, blending: THREE.NormalBlending, depthWrite: false })
+    // A projection should optically acquire focus rather than materialize as
+    // an already-crisp UI plane. Extend Three's own basic-material shader so
+    // texture color management, tone mapping and the 24fps CanvasTexture
+    // cadence stay intact; only the RAF-driven sampling footprint changes.
+    // This deliberately blurs the complete deliverable (footage + chrome) for
+    // a few frames, like a lens resolving, without synthesizing media frames.
+    const resolveUniforms = {
+      uResolve: { value: 0 },
+      uResolveTexel: { value: new THREE.Vector2(1 / c.width, 1 / c.height) },
+    }
+    smat.onBeforeCompile = (shader) => {
+      shader.uniforms.uResolve = resolveUniforms.uResolve
+      shader.uniforms.uResolveTexel = resolveUniforms.uResolveTexel
+      shader.fragmentShader = `
+        uniform float uResolve;
+        uniform vec2 uResolveTexel;
+      ${shader.fragmentShader}`
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <map_fragment>',
+        /* glsl */ `
+          #ifdef USE_MAP
+            float focusRadius = 8.0 * pow(1.0 - uResolve, 2.0);
+            vec2 focusOffset = uResolveTexel * focusRadius;
+            vec4 focusCenter = texture2D(map, vMapUv);
+            vec4 focusSoft = focusCenter * 0.40;
+            focusSoft += texture2D(map, vMapUv + vec2(focusOffset.x, 0.0)) * 0.15;
+            focusSoft += texture2D(map, vMapUv - vec2(focusOffset.x, 0.0)) * 0.15;
+            focusSoft += texture2D(map, vMapUv + vec2(0.0, focusOffset.y)) * 0.15;
+            focusSoft += texture2D(map, vMapUv - vec2(0.0, focusOffset.y)) * 0.15;
+            vec4 sampledDiffuseColor = mix(focusSoft, focusCenter, uResolve);
+            diffuseColor *= sampledDiffuseColor;
+          #endif
+        `,
+      )
+    }
+    smat.customProgramCacheKey = () => 'iso4-output-optical-resolve-v1'
+    screenResolveUniforms.push(resolveUniforms)
     screenMats.push(smat)
     const m = new THREE.Mesh(new THREE.PlaneGeometry(d.w, d.h), smat)
     // The artifacts face down the +X optical axis, toward the viewer-facing
@@ -1199,6 +1643,52 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     m.position.set(d.x, lampY + d.y, d.z)
     screenMeshes.push(m)
     scene.add(m)
+
+    // A dedicated low-resolution optical landing field sits behind the crisp
+    // deliverable. Keeping it independent makes glow energy tunable without
+    // sacrificing content contrast or turning every artifact into a luminous
+    // slab. The core plane occludes the middle; only the soft perimeter reads.
+    const glowMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uColor: { value: new THREE.Color(d.color) },
+        uOn: { value: 0 },
+        uStrength: { value: d.icon === 'yt' ? 0.2 : d.icon === 'in' ? 0.15 : 0.23 },
+      },
+      vertexShader: /* glsl */ `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uColor;
+        uniform float uOn;
+        uniform float uStrength;
+        varying vec2 vUv;
+        void main() {
+          vec2 p = (vUv - 0.5) * vec2(1.0, 1.18);
+          float radial = length(p);
+          float halo = 1.0 - smoothstep(0.16, 0.72, radial);
+          halo *= halo;
+          gl_FragColor = vec4(uColor, halo * uStrength * uOn);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    })
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(
+        d.w * (d.icon === 'pod' ? 1.22 : 1.14),
+        d.h * (d.icon === 'pod' ? 1.28 : 1.18),
+      ),
+      glowMat,
+    )
+    outputGlowMats.push(glowMat)
+    outputGlowMeshes.push(glow)
+    scene.add(glow)
   })
   const poseOutputs = (t: number) => {
     outputPoseTime = t
@@ -1213,12 +1703,43 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       screen.rotation.y = Math.PI / 2 + yaw
       screen.rotation.z = d.tilt
 
+      const glow = outputGlowMeshes[i]!
+      glow.position.copy(screen.position)
+      glow.quaternion.copy(screen.quaternion)
+      blueBeamPoint.set(0, 0, 1).applyQuaternion(screen.quaternion)
+      glow.position.addScaledVector(blueBeamPoint, -0.035)
+
       const beam = beamMeshes[i]!
       posedBeamDir.copy(posedTarget).sub(posedLens)
       const len = posedBeamDir.length()
       beam.position.copy(posedLens).add(posedTarget).multiplyScalar(0.5)
       beam.quaternion.setFromUnitVectors(beamUp, posedBeamDir.normalize())
       beam.scale.y = len
+
+      if (i === 1) {
+        // Camera-facing ribbon around the same physical centerline. It starts
+        // just ahead of the gate, fades before the phone, and keeps enough
+        // width to read as haze rather than a graphic stroke.
+        const direction = posedBeamDir
+        blueBeamStart.copy(posedLens).addScaledVector(direction, 0.025 * len)
+        blueBeamEnd.copy(posedTarget).addScaledVector(direction, -0.035 * len)
+        blueBeamView.addVectors(blueBeamStart, blueBeamEnd).multiplyScalar(0.5)
+        blueBeamView.negate().add(camera.position).normalize()
+        blueBeamSide.crossVectors(direction, blueBeamView).normalize()
+        const writePoint = (corner: number, center: THREE.Vector3, halfWidth: number, sign: number) => {
+          blueBeamPoint.copy(center).addScaledVector(blueBeamSide, halfWidth * sign)
+          const o = corner * 3
+          blueBeamVeilPositions[o] = blueBeamPoint.x
+          blueBeamVeilPositions[o + 1] = blueBeamPoint.y
+          blueBeamVeilPositions[o + 2] = blueBeamPoint.z
+        }
+        writePoint(0, blueBeamStart, 0.055, -1)
+        writePoint(1, blueBeamStart, 0.055, 1)
+        writePoint(2, blueBeamEnd, 0.44, -1)
+        writePoint(3, blueBeamEnd, 0.44, 1)
+        blueBeamVeilGeometry.attributes.position!.needsUpdate = true
+        blueBeamVeilMat.uniforms.uTime!.value = t
+      }
     })
   }
   updateOutputLayout = () => {
@@ -1229,16 +1750,31 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // minJerk-derived panoramicFit makes both corrections disappear on the
       // already-balanced tall desktop and phone shots.
       const lowerLift = i === 0 ? 0 : 0.72 * panoramicFit
-      // On phones the portrait output takes a true lower-left branch from the
-      // gate. The landscape remains high-right and the transcript low-right,
-      // producing a bilateral three-ray fan instead of a right-side stack.
-      const mobileFanZ = mobileLayout ? [0.22, 1.75, 0][i]! : 0
+      // The lower artifacts need a real channel of negative space, not merely
+      // different silhouettes. Push the portrait farther outboard/left and a
+      // little higher; push Podcast/RSS outboard/right while preserving its
+      // vertically safe baseline. Desktop gets the same separation at a
+      // smaller amplitude, so neither breakpoint collapses into a lower clump.
+      const fanZ = mobileLayout
+        ? [0.22, 2.2, -0.35][i]!
+        : [0, 0.55, -0.45][i]!
+      const phoneRise = i === 1 ? (mobileLayout ? 0.4 : 0.34) : 0
+      // Owner sketch (2026-08-20): pull the constellation into a tighter
+      // triangle. YouTube steps up-left toward the beam origin, the phone
+      // tucks inboard-left, and Podcast/RSS leaves the bottom-right corner
+      // entirely, rising to the mid-right band between the two. Desktop
+      // families only — the mobile fan was drawn separately and stays.
+      const sketchZ = mobileLayout ? 0 : [0.25, 0.6, -0.15][i]!
+      const sketchRise = mobileLayout ? 0 : [1.1, 0.25, 3.05][i]!
       const target = new THREE.Vector3(
         d.x,
-        lampY + d.y + lowerLift,
-        d.z - 0.78 * panoramicFit + mobileFanZ,
+        lampY + d.y + lowerLift + phoneRise + sketchRise,
+        d.z - 0.78 * panoramicFit + fanZ + sketchZ,
       )
       settledOutputTargets[i]!.copy(target)
+      beamMats[i]!.uniforms.uAlpha!.value = mobileLayout
+        ? [0.18, 0.06, 0.02][i]!
+        : [0.13, 0.06, 0.02][i]!
     })
     poseOutputs(outputPoseTime)
   }
@@ -1710,85 +2246,159 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // ---- per-frame state ----------------------------------------------------
   let lastGateId = Number.NaN
   let lastFilmFrame = Number.NaN
-  const flick = (x: number) => 0.55 + 0.45 * Math.abs(Math.sin(x * 43.7) * Math.sin(x * 17.3))
-  const cubic = (a: number, b: number, c: number, d: number, u: number) => {
-    const v = 1 - u
-    return v * v * v * a + 3 * v * v * u * b + 3 * v * u * u * c + u * u * u * d
+  let lastProjectedVideoRevision = Number.NaN
+  let outputTextureRevision = 0
+  let missedProjectionFrames = 0
+  let missedMechanicalTicks = 0
+  let lastOutputTextureAt = Number.NaN
+  let firstOutputTextureLatency = Number.NaN
+  let firstBeamObserved = false
+  let longestOutputHold = 0
+  let lastGateSourceFrame = -1
+  let lastProjectionSourceFrame = -1
+  let gateProjectionPhaseError = 0
+  const outputTextureTimes: number[] = []
+  const renderFrameTimes: number[] = []
+  // A real lamp can flutter on strike, but the old 45%-depth high-frequency
+  // multiplier made the projected cards themselves appear to drop frames.
+  // This is a small damped optical tremor; content opacity remains monotone.
+  const ignitionFlutter = (age: number, seed = 0) => {
+    const decay = 1 - minJerk(age / 0.46)
+    const tremor = 0.5 + 0.5 * Math.sin((age + seed) * 31.7) * Math.sin((age + seed) * 13.1)
+    return 1 - decay * (0.035 + 0.095 * tremor)
   }
+  const hermite = (a: number, tangentA: number, b: number, tangentB: number, u: number) => {
+    const u2 = u * u
+    const u3 = u2 * u
+    return (2 * u3 - 3 * u2 + 1) * a
+      + (u3 - 2 * u2 + u) * tangentA
+      + (-2 * u3 + 3 * u2) * b
+      + (u3 - u2) * tangentB
+  }
+  // The Bitter operating-field torus established the useful motion grammar:
+  // source-owned peel -> compact vortex -> ordered stream. ISO4 uses the same
+  // lifecycle in the thumbnail's frontal y/z plane, but terminates in three
+  // film-registration anchors instead of a helix. The nested harmonic term is
+  // a deterministic, divergence-free-looking perturbation of one common
+  // spiral; it adds natural lobing without random per-frame noise or boiling.
+  const PARTICLE_DROP_END = 0.24
+  const PARTICLE_INFALL_END = 0.42
+  const PARTICLE_VORTEX_END = 0.8
+  const PARTICLE_REGISTER_END = 0.94
+  const PARTICLE_VORTEX_TURNS = 0.82
+  const PARTICLE_ENTRY_RADIUS = 1.32
+  const PARTICLE_EXIT_RADIUS = 0.34
+  const PARTICLE_FRONT_X = CHARGE_POINT.x + 0.115
+  const PARTICLE_APPROACH_X = CHARGE_POINT.x + 0.42
   const particleMachineP0 = new THREE.Vector3()
-  const particleMachineP1 = new THREE.Vector3()
-  const particleMachineP2 = new THREE.Vector3()
-  const particleMachineP3 = new THREE.Vector3()
   const particleAt = (sd: (typeof bitsSeed)[number], at: number, out: Float32Array, o: number) => {
     if (at < sd.startTime || at > sd.arrivalTime + 0.14) return false
     const q = THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
-    const e = minJerk(q)
     // Source points cover the actual lower edge of the dissolving file rather
     // than erupting from one singularity.
     const edgeProgress = (sd.targetFrame - 0.5) / FRAME_GROUPS
     const sourceX = DROP.x + sd.x
     const sourceY = PLANE_Y + 0.04 + sd.y
     const sourceZ = 0.8 - edgeProgress * 1.6 + sd.z * 0.12
-    // The membrane, source card, and particle source all live on the same
-    // mechanical intake axis. Transform both opening control points with the
-    // yawing machine so information visibly peels from the surface it struck
-    // instead of from the membrane's former world-space position.
-    transformMachinePoint(
-      particleMachineP0.set(sourceX, sourceY, sourceZ),
-      at,
-      particleMachineP0,
-    )
-    transformMachinePoint(
-      particleMachineP1.set(
-        sourceX - 0.52,
-        sourceY - 0.22,
-        sourceZ + Math.sin(sd.orbit) * 0.2,
-      ),
-      at,
-      particleMachineP1,
-    )
     // Three monotone registration sites across the 16:9 film cell. Assignment
     // follows source z order within every cohort, preventing crossing paths.
+    // The x coordinate stays on the camera side of both thumbnail and strip
+    // through the complete capture, so no particle can appear to pass behind
+    // the film before giving its luminance to the image.
     const slot = sd.slot === 0 ? -1 : sd.slot === 2 ? 1 : 0
-    transformMachinePoint(
-      particleMachineP3.set(
-        CHARGE_POINT.x + 0.045,
-        CHARGE_POINT.y + (slot === 0 ? -0.045 : 0.07),
-        slot * IMG_W * 0.41,
-      ),
-      at,
-      particleMachineP3,
-    )
-    transformMachinePoint(
-      particleMachineP2.set(
-        CHARGE_POINT.x + 0.045,
-        CHARGE_POINT.y + (slot === 0 ? -0.045 : 0.07) + 0.92,
-        slot * IMG_W * 0.41,
-      ),
-      at,
-      particleMachineP2,
-    )
-    const p3x = particleMachineP3.x
-    const p3y = particleMachineP3.y
-    const p3z = particleMachineP3.z
-    const p0x = particleMachineP0.x
-    const p0y = particleMachineP0.y
-    const p0z = particleMachineP0.z
-    const p1x = particleMachineP1.x
-    const p1y = particleMachineP1.y
-    const p1z = particleMachineP1.z
-    // P3-P2 points straight down the feed, so every path becomes tangent to
-    // the film before it stops: floating information resolves into order.
-    const p2x = particleMachineP2.x
-    const p2y = particleMachineP2.y
-    const p2z = particleMachineP2.z
-    const curlEnvelope = Math.pow(Math.sin(Math.PI * e), 2)
-    const curlAngle = sd.orbit + Math.PI * 2 * 0.55 * e
-    const curlRadius = (0.25 + Math.abs(sd.z) * 0.1) * curlEnvelope
-    const commonDrift = Math.sin((at - (BOOT.drop + BOOT.fall)) * 0.62) * 0.055 * curlEnvelope
-    out[o] = cubic(p0x, p1x, p2x, p3x, e) + Math.cos(curlAngle) * curlRadius
-    out[o + 1] = cubic(p0y, p1y, p2y, p3y, e) + Math.sin(curlAngle * 0.72) * curlRadius * 0.2 + commonDrift
-    out[o + 2] = cubic(p0z, p1z, p2z, p3z, e) + Math.sin(curlAngle) * curlRadius
+    const targetY = CHARGE_POINT.y + (slot === 0 ? -0.045 : 0.07)
+    const targetZ = slot * IMG_W * 0.41
+    const fallDistance = 1.02 + Math.abs(sd.y) * 0.32 + Math.abs(sd.z) * 0.08
+    const fallX = sourceX - 0.36 - Math.abs(sd.z) * 0.08
+    const fallY = sourceY - fallDistance
+    const fallZ = sourceZ + Math.sin(sd.orbit * 1.7) * 0.14
+    const vortexCenterY = CHARGE_POINT.y + 0.3
+    const vortexCenterZ = 0
+    const phaseOffset = Math.sin(sd.orbit * 2.0) * 0.055
+    const entryAngle = Math.atan2(fallY - vortexCenterY, fallZ - vortexCenterZ) + 0.18 + phaseOffset
+    const turnAngle = Math.PI * 2 * (PARTICLE_VORTEX_TURNS + 0.025 * Math.sin(sd.orbit * 3.0))
+    const vortexStartX = CHARGE_POINT.x + 1.58
+    const vortexStartY = vortexCenterY + Math.sin(entryAngle) * PARTICLE_ENTRY_RADIUS
+    const vortexStartZ = vortexCenterZ + Math.cos(entryAngle) * PARTICLE_ENTRY_RADIUS
+    const exitAngle = entryAngle + turnAngle
+    const vortexExitX = CHARGE_POINT.x + 0.48
+    const vortexExitY = vortexCenterY + Math.sin(exitAngle) * PARTICLE_EXIT_RADIUS
+    const vortexExitZ = vortexCenterZ + Math.cos(exitAngle) * PARTICLE_EXIT_RADIUS
+    let px: number
+    let py: number
+    let pz: number
+
+    if (q < PARTICLE_DROP_END) {
+      // Real gravity first: near-zero initial velocity and a visibly
+      // accelerating vertical fall before the machine begins to influence the
+      // trajectory. Only a restrained depth drift keeps the veil dimensional.
+      const u = q / PARTICLE_DROP_END
+      const gravity = u * u
+      const drift = minJerk(u)
+      px = THREE.MathUtils.lerp(sourceX, fallX, drift)
+      py = sourceY + (fallY - sourceY) * gravity
+      pz = THREE.MathUtils.lerp(sourceZ, fallZ, drift)
+    } else if (q < PARTICLE_INFALL_END) {
+      // Hermite peel into the vortex. Its starting tangent inherits the
+      // gravity drop; its ending tangent is the actual tangent of the shared
+      // orbit, so the handoff has direction as well as positional continuity.
+      const u = (q - PARTICLE_DROP_END) / (PARTICLE_INFALL_END - PARTICLE_DROP_END)
+      const tangentScale = (PARTICLE_INFALL_END - PARTICLE_DROP_END)
+        / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
+      const angularStart = turnAngle * 0.18
+      const vortexTangentY = Math.cos(entryAngle) * PARTICLE_ENTRY_RADIUS * angularStart * tangentScale
+      const vortexTangentZ = -Math.sin(entryAngle) * PARTICLE_ENTRY_RADIUS * angularStart * tangentScale
+      px = hermite(fallX, 0, vortexStartX, 0, u)
+      py = hermite(fallY, -1.25, vortexStartY, vortexTangentY, u)
+      pz = hermite(fallZ, 0, vortexStartZ, vortexTangentZ, u)
+    } else if (q < PARTICLE_VORTEX_END) {
+      // A contracting logarithmic/Fermat hybrid vortex. Angular progression
+      // keeps a small linear term so it never stalls at either handoff, while
+      // the min-jerk component supplies the gravitational acceleration. Three
+      // octave-decaying harmonics gently lobe the shared radius; because they
+      // are functions of phase rather than wall-clock noise, the field stays
+      // silky and deterministic instead of shimmering.
+      const u = (q - PARTICLE_INFALL_END) / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
+      const contraction = minJerk(u)
+      const angularProgress = 0.18 * u + 0.82 * minJerk(u)
+      const angle = entryAngle + turnAngle * angularProgress
+      const harmonicEnvelope = Math.pow(Math.sin(Math.PI * u), 2)
+      const harmonic = 0.065 * Math.sin(angle * 2 + sd.orbit)
+        + 0.027 * Math.sin(angle * 4 - sd.orbit * 1.7)
+        + 0.011 * Math.sin(angle * 8 + sd.orbit * 0.7)
+      const radius = THREE.MathUtils.lerp(PARTICLE_ENTRY_RADIUS, PARTICLE_EXIT_RADIUS, contraction)
+        * (1 + harmonicEnvelope * harmonic)
+      px = THREE.MathUtils.lerp(vortexStartX, vortexExitX, contraction)
+        + harmonicEnvelope * 0.045 * Math.sin(angle * 3 + sd.orbit)
+      py = vortexCenterY + Math.sin(angle) * radius
+      pz = vortexCenterZ + Math.cos(angle) * radius
+    } else if (q < PARTICLE_REGISTER_END) {
+      // Collapse the shared orbit into one of three stable registration sites.
+      // The vortex tangent is carried into the Hermite curve, then deliberately
+      // damped to rest at a point in front of the film.
+      const u = (q - PARTICLE_VORTEX_END) / (PARTICLE_REGISTER_END - PARTICLE_VORTEX_END)
+      const tangentScale = (PARTICLE_REGISTER_END - PARTICLE_VORTEX_END)
+        / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
+      const angularExit = turnAngle * 0.18
+      const exitTangentY = Math.cos(exitAngle) * PARTICLE_EXIT_RADIUS * angularExit * tangentScale
+      const exitTangentZ = -Math.sin(exitAngle) * PARTICLE_EXIT_RADIUS * angularExit * tangentScale
+      px = hermite(vortexExitX, 0, PARTICLE_APPROACH_X, -0.12, u)
+      py = hermite(vortexExitY, exitTangentY, targetY, 0, u)
+      pz = hermite(vortexExitZ, exitTangentZ, targetZ, 0, u)
+    } else {
+      // Final front-normal registration stroke: the point is visibly in front
+      // of the image until it reaches the activation thumbnail. Its luminance
+      // then transfers into the thumbnail during the 140ms absorption hold.
+      const u = minJerk((q - PARTICLE_REGISTER_END) / (1 - PARTICLE_REGISTER_END))
+      px = THREE.MathUtils.lerp(PARTICLE_APPROACH_X, PARTICLE_FRONT_X, u)
+      py = targetY
+      pz = targetZ
+    }
+
+    transformMachinePoint(particleMachineP0.set(px, py, pz), at, particleMachineP0)
+    out[o] = particleMachineP0.x
+    out[o + 1] = particleMachineP0.y
+    out[o + 2] = particleMachineP0.z
     return true
   }
   // Particles wake gradually, gain coherence as they join the common stream,
@@ -1808,12 +2418,34 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // particles or speeding them up; mobile retains its accepted density.
     bitsMat.size = 0.16 * detailScale
     bitsHaloMat.size = 0.42 * detailScale
+    if (movingMediaIsActive() && (episodeVideo.paused || projectionVideo.paused)) {
+      enterDeterministicMediaFallback()
+    }
+    if (temporalMediaResetRequested) {
+      filmSlotReady.fill(false)
+      filmSlotSourceFrames.fill(-1)
+      lastFilmFrame = Number.NaN
+      lastGateId = Number.NaN
+      lastProjectedVideoRevision = Number.NaN
+      temporalMediaResetRequested = false
+    }
+    const movingMediaActive = movingMediaIsActive()
+    if (movingMediaActive) syncMediaClocks(t)
     const dist = transportDist(t)
     // A real projector holds each frame at the gate, then pulls the strip down
     // one pitch. Keep that intermittent 16fps transport distinct from the
     // continuously turning reel loop and the otherwise smooth scene.
     const filmFrame = quantizedFrame(dist / PITCH)
     const filmDist = filmFrame * PITCH
+    const filmPhaseWithinFrame = dist / PITCH - filmFrame
+    // A Geneva-style pull-down: hold the cell steady for most of the frame,
+    // then advance it through one pitch with zero endpoint velocity. The
+    // canvas is still repainted only on the exact 16fps logical tick; a UV
+    // offset supplies the brief physical movement without uploading the full
+    // ribbon at RAF cadence. At the next tick the redrawn texture and zeroed
+    // offset are pixel-continuous with the completed pull.
+    const pulldown = minJerk((filmPhaseWithinFrame - 0.58) / 0.42)
+    filmTex.offset.x = -(pulldown * PITCH) / totalPath
     const off = 0
     machinePivot.rotation.y = apparatusYawAt(t)
     poseOutputs(t)
@@ -1950,28 +2582,58 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const finalHit = timeForFrame(FRAME_GROUPS)
     const chargingActive = completedFrames >= 1 && t <= finalHit + 0.28
     const writerEnvelope = chargingActive ? 1 - minJerk((t - finalHit) / 0.28) : 0
-    for (const mat of lowerChargeMats) mat.emissiveIntensity = 0.01 + chargeProgress * 0.08 + impactPulse * 0.1
-    lowerReelEmber.intensity = 0.04 + chargeProgress * 0.48 + impactPulse * 0.6
+    const chargeRelease = 1 - minJerk((t - finalHit) / Math.max(0.1, BOOT.proj - finalHit + 0.18))
+    for (const mat of lowerChargeMats) {
+      mat.emissiveIntensity = 0.005 + chargeProgress * chargeRelease * 0.07 + impactPulse * 0.1
+    }
+    lowerReelEmber.intensity = 0.025 + chargeProgress * chargeRelease * 0.38 + impactPulse * 0.6
     chargeLight.intensity = writerEnvelope * (chargeProgress * 0.15 + impactPulse * 2.35)
     chargeRingMat.opacity = writerEnvelope * Math.min(0.38, chargeProgress * 0.045 + impactPulse * 0.3)
     chargeRingMat.emissiveIntensity = writerEnvelope * (chargeProgress * 0.09 + impactPulse * 1.05)
     chargeRing.scale.setScalar(1 + impactPulse * 0.08)
     const lastHitAge = completedFrames >= 1 ? Math.max(0, t - timeForFrame(completedFrames)) : 0
-    const writerReveal = completedFrames >= 1 ? minJerk(lastHitAge / 0.14) : 0
-    chargeThumbMat.opacity = writerEnvelope * Math.min(0.62, 0.08 + impactPulse * 0.18 + writerReveal * 0.46)
+    // A frame is not already complete when its triplet arrives. Three
+    // reconstruction fronts spread from the exact registration anchors over
+    // 55ms—short enough to finish before the next 16fps pull—while the impact
+    // pulse and cumulative charge visibly accept the particles' energy.
+    const writerReveal = completedFrames >= 1 ? minJerk(lastHitAge / 0.055) : 0
+    chargeThumbUniforms.uWriterBuild.value = writerReveal
+    chargeThumbUniforms.uWriterImpact.value = impactPulse
+    chargeThumbUniforms.uWriterCharge.value = chargeProgress
+    chargeThumbMat.opacity = writerEnvelope * Math.min(0.66, 0.1 + impactPulse * 0.14 + writerReveal * 0.52)
     filmMatRef.opacity = 0.2 + 0.8 * THREE.MathUtils.smoothstep(t, BOOT.run - 0.05, BOOT.run + 1.55)
     if (filmFrame !== lastFilmFrame) {
+      if (Number.isFinite(lastFilmFrame) && filmFrame > lastFilmFrame + 1) {
+        missedMechanicalTicks += filmFrame - lastFilmFrame - 1
+      }
+      let writerSlot = -1
+      if (movingMediaActive && filmFrame >= 1) {
+        const firstTick = Number.isFinite(lastFilmFrame)
+          ? Math.max(1, lastFilmFrame + 1)
+          : filmFrame
+        for (let tick = firstTick; tick <= filmFrame; tick++) writerSlot = stampFilmSlot(tick)
+      }
       lastFilmFrame = filmFrame
       drawFilm(filmDist, Math.min(totalPath, filmDist))
-      const writerOcc = Math.floor((CHARGE_S - off) / PITCH)
-      renderFrameContent(chargeThumbCtx, chargeThumbCanvas.width, chargeThumbCanvas.height, stableId(writerOcc, off, filmDist), false)
+      if (writerSlot >= 0 && filmSlotReady[writerSlot]) {
+        chargeThumbCtx.clearRect(0, 0, chargeThumbCanvas.width, chargeThumbCanvas.height)
+        chargeThumbCtx.drawImage(filmSlotArt[writerSlot]!, 0, 0, chargeThumbCanvas.width, chargeThumbCanvas.height)
+      } else {
+        renderFrameContent(
+          chargeThumbCtx,
+          chargeThumbCanvas.width,
+          chargeThumbCanvas.height,
+          stableId(writerPathCell, off, filmDist),
+          false,
+        )
+      }
       chargeThumbTex.needsUpdate = true
     }
 
     // ACT 3 — the projector strikes (a real lamp strike: flicker, then hold)
     {
       const ig = t < BOOT.proj ? 0 : Math.min(1, (t - BOOT.proj) / 0.6)
-      const igf = ig >= 1 ? 1 : ig * flick(t)
+      const igf = ig * ignitionFlutter(t - BOOT.proj)
       // Let the ignition flare for a fraction of a second, then settle low
       // enough that the iris, housing and three output beams remain legible.
       const strike = ig < 1 ? 1 + (1 - ig) * 0.8 : 1
@@ -1982,33 +2644,108 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         ? 1 + 0.022 * Math.sin(Math.PI * 2 * 0.37 * t)
           + 0.01 * Math.sin(Math.PI * 2 * 0.53 * t + 1.7)
         : 1
-      gateGlow.intensity = 3.2 * igf * strike * lampBreath
-      headGlow.intensity = 2.45 * igf * strike * (1 + (lampBreath - 1) * 0.55)
-      if (gateFrameMat) gateFrameMat.opacity = 0.88 * igf * (1 + (lampBreath - 1) * 0.65)
+      gateGlow.intensity = 2.3 * igf * strike * lampBreath
+      headGlow.intensity = 2.15 * igf * strike * (1 + (lampBreath - 1) * 0.55)
+      gateLipMat.emissiveIntensity = 0.008 + 0.034 * igf * lampBreath
+      payoffTopRimMat.opacity = 0.032 * igf
+      payoffLowerRimMat.opacity = 0.052 * igf
+      if (gateFrameMat) gateFrameMat.opacity = 0.52 * igf * (1 + (lampBreath - 1) * 0.35)
     }
 
     // ACT 4 — one, two, three: each beam and its screen ignite in turn
     for (let i = 0; i < 3; i++) {
       const t0 = BOOT.beam0 + i * BOOT.beamGap
-      const on = t < t0 ? 0 : minJerk((t - t0) / 0.5)
-      const onf = on >= 1 ? 1 : on * flick(t + i * 3.1)
-      beamMats[i]!.uniforms.uOn!.value = onf
+      const age = t - t0
+      // Light establishes the route first, its landing field follows, and the
+      // solid deliverable resolves last. All three remain monotone except the
+      // shallow damped tremor in optical energy, and all settle inside the
+      // existing 480ms handoff so the accepted one-two-three rhythm survives.
+      const beamResolve = age < 0 ? 0 : minJerk(age / 0.3)
+      const haloResolve = age < 0.04 ? 0 : minJerk((age - 0.04) / 0.44)
+      const screenResolve = age < 0.08 ? 0 : minJerk((age - 0.08) / 0.4)
+      const focusResolve = age < 0.06 ? 0 : minJerk((age - 0.06) / 0.42)
+      const beamOn = beamResolve * ignitionFlutter(age, i * 0.17)
+      beamMats[i]!.uniforms.uOn!.value = beamOn
+      if (i === 1) blueBeamVeilMat.uniforms.uOn!.value = beamOn
+      outputGlowMats[i]!.uniforms.uOn!.value = haloResolve * ignitionFlutter(age - 0.04, i * 0.17)
       const sm = screenMats[i]
-      if (sm) sm.opacity = onf
+      if (sm) sm.opacity = screenResolve
+      screenResolveUniforms[i]!.uResolve.value = focusResolve
     }
 
-    // the wall projects whatever stands in the gate
+    // The physical gate keeps the honest 16fps pull-down. Deterministic stills
+    // use that exact held cell for every output. In motion, the finished
+    // channel artifacts use the phase-locked 24fps projection head: it is
+    // delayed by the same 32-frame transport and therefore agrees with the
+    // gate at every mechanical boundary without inheriting its visible hold.
     {
       const occ = Math.floor((S_GATE - off) / PITCH)
       const id = stableId(occ, off, filmDist)
       if (id !== lastGateId) {
         lastGateId = id
+        const slot = filmSlot(gatePathCell, filmFrame)
+        const gateArt = movingMediaActive && filmSlotReady[slot]
+          ? filmSlotArt[slot]!
+          : frameArt(id, false)
         if (gateFrameCtx && gateFrameTex) {
           gateFrameCtx.clearRect(0, 0, 320, 180)
-          gateFrameCtx.drawImage(frameArt(id, false), 0, 0, 320, 180)
+          gateFrameCtx.drawImage(gateArt, 0, 0, 320, 180)
+          maskGateFrame()
           gateFrameTex.needsUpdate = true
         }
-        for (const sc of screenCtxs) drawScreen(sc, id)
+        lastGateSourceFrame = filmSlotReady[slot] ? filmSlotSourceFrames[slot]! : -1
+        const expectedProjectionFrame = mediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+        if (lastGateSourceFrame >= 0) {
+          const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
+          let frameError = lastGateSourceFrame - expectedProjectionFrame
+          if (frameError > frameCount / 2) frameError -= frameCount
+          if (frameError < -frameCount / 2) frameError += frameCount
+          gateProjectionPhaseError = frameError
+        }
+        if (!movingMediaActive || projectionVideo.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+          for (const sc of screenCtxs) drawScreen(sc, id, false, wrapMediaTime(id / SOURCE_FPS))
+        }
+      }
+
+      if (movingMediaActive
+        && t >= BOOT.proj - 0.1
+        && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        // currentTime is the recovery clock: it remains useful when a browser
+        // deprioritizes callbacks for an off-DOM media element. rVFC still
+        // measures actual decoded presentation, but it is never the sole
+        // trigger for visible output updates.
+        const sourceFrame = presentedMediaFrameIndex(projectionVideo.currentTime)
+        if (sourceFrame !== lastProjectedVideoRevision) {
+          if (Number.isFinite(lastProjectedVideoRevision)) {
+            const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
+            const advanced = (sourceFrame - lastProjectedVideoRevision + frameCount) % frameCount
+            if (advanced > 1 && advanced < frameCount / 2) missedProjectionFrames += advanced - 1
+          }
+          lastProjectedVideoRevision = sourceFrame
+          const mediaTime = projectionVideo.currentTime
+          lastProjectionSourceFrame = sourceFrame
+          for (const sc of screenCtxs) drawScreen(sc, sourceFrame, true, mediaTime)
+          outputTextureRevision += 1
+          const nowSeconds = performance.now() / 1000
+          if (Number.isFinite(lastOutputTextureAt)) {
+            longestOutputHold = Math.max(longestOutputHold, nowSeconds - lastOutputTextureAt)
+          }
+          lastOutputTextureAt = nowSeconds
+          outputTextureTimes.push(nowSeconds)
+          while (outputTextureTimes.length > 2 && nowSeconds - outputTextureTimes[0]! > 1.25) {
+            outputTextureTimes.shift()
+          }
+        }
+      }
+      if (!firstBeamObserved && t >= BOOT.beam0) {
+        firstBeamObserved = true
+        if (Number.isFinite(lastOutputTextureAt)) {
+          firstOutputTextureLatency = Math.abs(lastOutputTextureAt - (timelineStart + BOOT.beam0))
+        }
+      } else if (firstBeamObserved
+        && !Number.isFinite(firstOutputTextureLatency)
+        && Number.isFinite(lastOutputTextureAt)) {
+        firstOutputTextureLatency = Math.max(0, lastOutputTextureAt - (timelineStart + BOOT.beam0))
       }
     }
   }
@@ -2080,11 +2817,57 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     }
   }
 
+  const rollingRate = (times: number[]) => {
+    if (times.length < 2) return 0
+    const span = times[times.length - 1]! - times[0]!
+    return span > 0 ? (times.length - 1) / span : 0
+  }
+  const inspectTemporal = (): Iso4TemporalDiagnostics => {
+    const nowSeconds = performance.now() / 1000
+    const currentHold = Number.isFinite(lastOutputTextureAt) ? nowSeconds - lastOutputTextureAt : 0
+    const framePhase = transportDist(elapsed) / PITCH
+    const tidy = (n: number) => Number(n.toFixed(3))
+    return {
+      timelineSeconds: tidy(elapsed),
+      sourceVideoTimeSeconds: tidy(episodeVideo.currentTime || 0),
+      projectionVideoTimeSeconds: tidy(projectionVideo.currentTime || 0),
+      expectedProjectionVideoTimeSeconds: tidy(wrapMediaTime(elapsed - PROJECTION_DELAY_SECONDS)),
+      sourceClockDriftMs: tidy(sourceClockDrift * 1000),
+      projectionClockDriftMs: tidy(projectionClockDrift * 1000),
+      presentedVideoFramesPerSecond: tidy(rollingRate(projectionPresentationTimes)),
+      presentedVideoFrameRevision: projectionPresentedRevision,
+      presentedVideoMediaTimeSeconds: tidy(projectionPresentedMediaTime),
+      outputTextureFramesPerSecond: tidy(rollingRate(outputTextureTimes)),
+      renderFramesPerSecond: tidy(rollingRate(renderFrameTimes)),
+      firstOutputTextureLatencyMs: Number.isFinite(firstOutputTextureLatency)
+        ? tidy(firstOutputTextureLatency * 1000)
+        : -1,
+      longestOutputHoldMs: tidy(Math.max(longestOutputHold, currentHold) * 1000),
+      outputTextureRevision,
+      missedProjectionFrames,
+      mechanicalGateTick: quantizedFrame(framePhase),
+      mechanicalGateFramesPerSecond: tidy(transportSpeed(elapsed) / PITCH),
+      missedMechanicalTicks,
+      sourceFramesPerSecond: SOURCE_FPS,
+      projectionDelaySeconds: PROJECTION_DELAY_SECONDS,
+      gateSourceFrame: lastGateSourceFrame,
+      projectionSourceFrame: lastProjectionSourceFrame,
+      gateProjectionPhaseErrorFrames: gateProjectionPhaseError,
+      movingMediaPlaying,
+      usingDeterministicFallback: !useMovingMedia,
+    }
+  }
+
   let shadowTick = 0
   function draw(t: number) {
     update(t)
     if ((shadowTick++ & 1) === 0) renderer.shadowMap.needsUpdate = true
     composer.render()
+    const nowSeconds = performance.now() / 1000
+    renderFrameTimes.push(nowSeconds)
+    while (renderFrameTimes.length > 2 && nowSeconds - renderFrameTimes[0]! > 1.25) {
+      renderFrameTimes.shift()
+    }
   }
 
   let raf = 0
@@ -2102,33 +2885,49 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       if (running) return
       running = true
       useMovingMedia = true
+      movingMediaPlaying = false
+      temporalMediaResetRequested = true
       lastFilmFrame = Number.NaN
       lastGateId = Number.NaN
+      lastProjectedVideoRevision = Number.NaN
+      lastOutputTextureAt = Number.NaN
+      firstOutputTextureLatency = Number.NaN
+      firstBeamObserved = false
+      longestOutputHold = 0
+      projectionPresentationTimes.length = 0
+      outputTextureTimes.length = 0
+      renderFrameTimes.length = 0
       timelineStart = performance.now() / 1000 - elapsed
-      void episodeVideo.play().catch(() => {
-        // Muted inline playback is normally allowed; the decoded Mike still
-        // remains the honest fallback if a browser policy says otherwise.
-      })
+      resumeEpisodeMedia(elapsed)
       raf = requestAnimationFrame(loop)
     },
     stop() {
       if (running) elapsed = performance.now() / 1000 - timelineStart
       running = false
+      movingMediaPlaying = false
+      mediaPlayAttempt += 1
       episodeVideo.pause()
+      projectionVideo.pause()
+      cancelProjectionFrame()
       if (raf) cancelAnimationFrame(raf)
       raf = 0
     },
     still(t: number = STILL_T) {
       this.stop()
       useMovingMedia = false
+      temporalMediaResetRequested = true
       lastFilmFrame = Number.NaN
       lastGateId = Number.NaN
+      lastProjectedVideoRevision = Number.NaN
       elapsed = t
       layout()
       draw(t)
     },
     inspect(t: number) {
       return inspectMotion(t)
+    },
+    temporal() {
+      return inspectTemporal()
     },
     resize() {
       layout()
@@ -2138,6 +2937,8 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       this.stop()
       episodeVideo.removeAttribute('src')
       episodeVideo.load()
+      projectionVideo.removeAttribute('src')
+      projectionVideo.load()
       renderer.dispose()
     },
   }
