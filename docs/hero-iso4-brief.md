@@ -15,6 +15,129 @@ this document plus the repo, without the conversation that produced it.
 
 ---
 
+## 0. Current owner ruling — a gentle film-writing ritual (2026-08-19)
+
+This section supersedes the hopper, acid-bath, compact-body, and single-reel
+language later in this lineage document. It also supersedes the faster
+"splash and vanish" timing and circular front-lens language elsewhere below.
+
+- The machine is a **large, vertically stacked dual-reel projector** occupying
+  roughly 85% of the available composition. It remains a supporting character
+  through darkness and selective practical light, not through small scale.
+- The reels have **no base, feet, or pedestal**. A narrow floating housing
+  connects the axles and holds the lamp between them: vintage mechanism,
+  modern suspension.
+- There is **no hopper or acid bath**. Film is already threaded as a dark,
+  nearly blank loop. The incoming file supplies information that energizes
+  this film realm; it does not become a literal chemical material.
+- Preserve the demure dashed drop boundary. Its interior is a very subtle
+  liquid-film membrane. The file settles into this threshold instead of
+  striking it violently. Refraction and impact ripples must be broad, slow,
+  low-contrast, and physically calm.
+- The file does **not** vanish at the first crossing. It remains suspended in
+  the membrane and slowly dissolves from its lower edge throughout the whole
+  charging act, like a controlled molten erosion. Particle triplets peel away
+  from that dissolving edge. The final visible fragment disappears only when
+  the last particles enter the writer and the last thumbnails fill in.
+- The particle field must feel slow, mystical, gentle, elegant, and
+  screensaver-like—not busy, explosive, insect-like, or stressful. After an
+  initial soft expansion, particles drift in sparse layers, follow smooth
+  curved paths with low jerk, decelerate into registration, and settle rather
+  than collide.
+- The attraction point is a **film writer**, not a glowing target. It sits on
+  the lower/front quadrant of the bottom reel where film visibly feeds into
+  the winding path. Each three-particle group resolves into three registration
+  points on one frame cell; the real Episode 1 thumbnail then materializes in
+  that cell and travels away with the filmstrip. A first-time viewer should
+  read information becoming film, not particles being discarded into a reel.
+- Particle absorption and transport are the **same clock**: exactly three
+  particles activate each thumbnail/frame-step. Early isolated groups produce
+  visible mechanical clunks; the exact 36-frame loop is funded by 36 triplets
+  (108 particles total), and acceleration ends at 16 film frames and 48
+  absorbed particles per second.
+- The **first completed thumbnail starts both reels**. They are stationary at
+  that instant, turn slowly, then join the accelerating film transport without
+  an angular jump. Once joined, reel tangent speed and film speed are the same;
+  the gate alone retains the intermittent 16fps cadence.
+- The complete apparatus begins in a slightly more sculptural profile—8.5°
+  farther off its final pose on mobile and 11° on desktop—and holds absolutely
+  still through the whole charging act. The projector strike begins one
+  no-overshoot minimum-jerk turn about the vertical spine; the machine and its
+  three attached optical throws swing into the solved projection pose together,
+  reaching exactly zero yaw as the third artifact completes. The writer,
+  conducted action light, film, reels, gate, beams, screens, drop membrane,
+  incoming file, and concealed practicals must share that mechanical axis.
+  There is no camera counter-move, secondary sway, bounce, recoil, pitch, or
+  roll, and no further motion once the output constellation is complete.
+- Every hit flashes one real Mike & John thumbnail at the writer. Activated
+  cells move away, blank cells replace them, and restrained warmth accumulates
+  in the wound film—not in the metal flange—until the lower reel is charged.
+- The film rises on the shadowed left side, crosses the upper reel crown,
+  descends through the optical gate on the right, and returns around the lower
+  reel. The exposed descending thumbnails must read upright. Wheel rotation,
+  film motion, and the 16fps gate cadence must agree mechanically.
+- The drop membrane stays present while the file is dissolving. The final
+  three-particle hit completes the last thumbnail; only then does the dashed
+  boundary and liquid-film plane dissolve. That withdrawal hands directly to
+  the projector strike. The writer settles after the cloud is exhausted; it
+  must not keep flashing without particles.
+- The source must read immediately as a real input recording before it begins
+  to dissolve: one paper-thin archival sleeve with an integrated tab, a flush
+  axis-aligned contact-sheet inset, literal `ZOOM RECORDING` and `MP4`, paired
+  Mike/John imagery, episode identity, and recording duration. Do not construct
+  it from stacked box primitives or counter-rotate the preview against its
+  carrier. The source card, dashed membrane, liquid interior, particle
+  departure points, and writer must remain coplanar with the profiled
+  apparatus. The dashed boundary may project outward from the machine, but it
+  must never look like an independently offset UI surface.
+- Remove the bright circular canister/lens from the front of the projector.
+  The optical face is a shallow **rectangular gate rim**. Its most luminous
+  element is the real thumbnail standing in the gate, with the light source
+  clearly behind that film frame. The projected beams leave from just ahead
+  of the gate, but no white orb may obscure the causal order `lamp → film →
+  projection`.
+- A conducted stage light follows the active idea once—file, membrane, cloud,
+  writer, lower reel, upper reel, gate, outputs—while the rest of the machine
+  remains noir ambience. The lens must glow, never blind.
+- Mobile is the primary composition and should be judged first at **440×956**.
+  The large upper reel may sit behind the copy only if it remains sufficiently
+  dark; output silhouettes and the particle vortex must stay legible below.
+- On mobile, move the apparatus closer to the left edge and show a little more
+  side profile. The change should reveal the floating spine, gate depth, and
+  mechanical construction without making the reel faces unreadable or
+  turning the shot into a conventional profile view.
+- Treat the three outputs as one composed **holographic constellation**. Give
+  the landscape episode, portrait phone, and waveform/transcript panel clear
+  horizontal intervals, intentional stepped vertical rhythm, and shallow
+  depth staggering. They should balance the machine as a group, avoid muddy
+  overlap, preserve three distinct silhouettes, and appear suspended in one
+  volumetric field rather than pasted to a wall.
+- Caption bars belong only to the **portrait clip**. Reel thumbnails, the
+  writer, the optical gate, and the landscape episode show clean source
+  footage. The waveform/transcript panel retains transcript lines because the
+  transcript is that artifact's content, not a video-caption overlay.
+- Desktop is a separate full-viewport composition, not a widened phone crop.
+  Keep the proposition in its bounded left column while the large mechanism
+  and output constellation jointly occupy the right half with clear scale and
+  breathing room.
+
+The intended emotional sequence is:
+
+`file settles into liquid threshold → slow molten dissolve → sparse particle`
+`drift → film-cell registration → reels turn → membrane fades → backlit gate`
+`strikes → machine and optical field align → holographic artifact constellation`
+
+The particle movement is the signature first-load moment and warrants more
+iteration than ornamental machine detail. Evaluate it through deterministic
+time slices and adversarial review: human arousal/attention, Gestalt and causal
+legibility, cinematic VFX craft, spatial composition, continuity and jerk,
+and the mathematical relationship between particle absorption, film writing,
+reel acceleration, and the 16fps transport. Record each round in
+`docs/hero-iso4-workshop-journal.md`; do not approve motion from a single
+steady-state screenshot.
+
+---
+
 ## 1. What this is
 
 The hero for BitterClip's homepage. BitterClip is **agentic video editing**:
