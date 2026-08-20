@@ -48,7 +48,7 @@ const signupUrl = computed(() => buildSignupUrl({
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-zinc-400">
-          Deep video intelligence — a second brain built from your footage. BitterClip remembers every session, preps your next one, and cuts what's worth sending: progress reels for your clients, episodes for your channels.
+          BitterClip deeply understands your footage and edits it with classical craft — the cleanest cuts you can ship.
         </p>
         <div class="mt-7 flex items-center gap-5">
           <a
@@ -57,12 +57,6 @@ const signupUrl = computed(() => buildSignupUrl({
           >Start free <span aria-hidden="true">→</span></a>
           <a href="/#demo" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
-        <!-- mobile: the machine (full-bleed behind) owns this gap -->
-        <p class="mt-auto max-w-[40ch] pb-4 font-mono text-[0.66rem] leading-loose uppercase tracking-[0.18em] text-zinc-600 md:mt-6 md:pb-0 md:leading-relaxed">
-          <span class="block whitespace-nowrap md:inline">knows who's talking</span><span class="hidden md:inline"> · </span>
-          <span class="block whitespace-nowrap md:inline">finds any moment</span><span class="hidden md:inline"> · </span>
-          <span class="block whitespace-nowrap md:inline">cuts you'd ship</span>
-        </p>
       </div>
     </div>
   </main>
