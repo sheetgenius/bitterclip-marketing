@@ -52,14 +52,17 @@ const signupUrl = computed(() => buildSignupUrl({
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-zinc-400">
-          <span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — it watches everything, remembers every session, and edits with classical craft.
+          <span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows who's talking, finds any moment, cuts you'd ship.
         </p>
-        <div class="mt-7 flex items-center gap-5">
+        <!-- One CTA, one decision. "Watch it work" was cut (owner, 2026-08-20):
+             it pointed at the old homepage's demo section, and the machine
+             beside it already performs what the button promised. If a real
+             product film ever exists, it returns with a real target. -->
+        <div class="mt-7">
           <a
             :href="signupUrl"
             class="inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
           >Start free <span aria-hidden="true">→</span></a>
-          <a href="/#demo" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <!-- deliverables strip: outputs, not features (owner draft 2026-08-20).
              Closes the copy column directly under the CTAs — both outside eyes
