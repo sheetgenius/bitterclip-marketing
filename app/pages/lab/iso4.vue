@@ -76,13 +76,34 @@ const signupUrl = computed(() => buildSignupUrl({
       </div>
     </div>
 
-    <!-- ================= BELOW THE FOLD · 1: BRING YOUR AGENT =================
+    <!-- ============== BELOW THE FOLD · 1: AGENT-NATIVE SUBSTRATE ==============
+         Owner directive 2026-08-20: explain how BitterClip makes video
+         tractable for agents, and introduce the editor with a REAL screenshot
+         (captured from the live clip-demo embed) framed as the surface you
+         typically DON'T use — that's the point of the substrate. -->
+    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
+      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Turns video into agent-native substrate</h2>
+      <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
+        Raw video is opaque to software — a wall of pixels and a waveform. BitterClip decomposes it into material an agent can hold: every word timestamped, every speaker named, every moment indexed, every cut addressable.
+      </p>
+      <figure class="mt-10 md:mt-14">
+        <div class="agent-card overflow-hidden rounded-2xl border">
+          <img src="/images/hero/transcript-editor.png" alt="The BitterClip transcript editor: each speaker's words laid over the audio waveform, with a clip selection dragged across the transcript" class="block w-full" loading="lazy" width="2880" height="880">
+        </div>
+        <figcaption class="agent-measure mt-4 text-sm leading-relaxed text-zinc-500">
+          The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">You'll mostly never open it.</span> That's the point: you ask for what you want, with whatever agent you prefer, and the substrate makes the answer computable.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= BELOW THE FOLD · 2: BRING YOUR AGENT =================
          The cockpit section. The claim (outcome-level direction, not timeline
          operation) is demonstrated by a transcript, not asserted: one complete
          instruction in, understanding shown, finished artifact back. This is
          also where the Andrew/client story lives now that the fold is dead
          simple — trainer world here, podcast world in the machine above. -->
-    <section class="relative mx-auto max-w-6xl px-6 pb-16 pt-24 sm:px-8 md:pb-24 md:pt-36">
+    <section class="btf btf-last relative mx-auto max-w-6xl px-6 sm:px-8">
       <div class="agent-grid grid items-center">
         <div>
           <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
@@ -164,6 +185,26 @@ const signupUrl = computed(() => buildSignupUrl({
 
 .agent-grid {
   gap: 3.5rem;
+}
+
+/* Below-the-fold section rhythm in scoped CSS — the dev Tailwind watcher
+   drops new pt-/pb- splits (pt-24 etc.), which crashed sections together. */
+.btf {
+  padding-top: 6rem;
+}
+
+.btf-last {
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 48rem) {
+  .btf {
+    padding-top: 9rem;
+  }
+
+  .btf-last {
+    padding-bottom: 6rem;
+  }
 }
 
 /* Mobile: stacked list, capped measure. Desktop: one uncapped credits line. */

@@ -697,3 +697,20 @@ NEXT (owner directive, 2026-08-20 late): first below-the-fold section becomes
 agents, introduce the editor with a REAL screenshot, framed as the thing you
 typically DON'T use (you ask an agent instead). Bring-your-agent section
 follows it as the demonstration.
+
+## Round 16 — the substrate section
+
+Owner directive: immediate below-the-fold becomes "Turns video into
+agent-native substrate" — explain how BitterClip makes video tractable for
+agents, and introduce the editor via a REAL screenshot framed as the surface
+you typically don't use. Built as section 1 (Bring-your-agent becomes
+section 2): eyebrow HOW IT WORKS, the owner's H2 verbatim, decomposition
+body (words timestamped / speakers named / moments indexed / cuts
+addressable), then a real screenshot of the live transcript editor captured
+from the public clip-demo embed (app.bitterclip.com/embed/clip-demo, cropped
+to content, public/images/hero/transcript-editor.png), captioned "You'll
+mostly never open it… the substrate makes the answer computable."
+
+Watcher strike #3: new pt-24/md:pt-36 split-padding utilities never
+generated — sections crashed together. All below-the-fold section rhythm now
+lives in scoped .btf/.btf-last classes.
