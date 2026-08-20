@@ -9,10 +9,21 @@
  * and the portrait camera fit frames the machine into the space between
  * (owner, 2026-08-19: machine between the CTA and the bullets, seamless).
  */
+import { buildSignupUrl } from '~/utils/signup-attribution'
+
+// Still a lab route: real title, but noindex stays until this replaces the
+// homepage hero (flip robots + add OG/meta at promotion time).
 useHead({
-  title: 'Facing projector, real 3D — workshop',
+  title: 'BitterClip — Footage in, Episodes out',
   meta: [{ name: 'robots', content: 'noindex, nofollow' }],
 })
+
+const route = useRoute()
+const signupUrl = computed(() => buildSignupUrl({
+  query: route.query,
+  surface: 'lab_iso4',
+  landingPath: route.path,
+}))
 </script>
 
 <template>
@@ -37,14 +48,14 @@ useHead({
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-zinc-400">
-          BitterClip watches your footage, remembers every frame, and cuts it clean — episodes for your channels, reels for your clients, answers from every session.
+          Deep video intelligence — a second brain built from your footage. BitterClip remembers every session, preps your next one, and cuts what's worth sending: progress reels for your clients, episodes for your channels.
         </p>
         <div class="mt-7 flex items-center gap-5">
           <a
-            href="#"
+            :href="signupUrl"
             class="inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
           >Start free <span aria-hidden="true">→</span></a>
-          <a href="#" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
+          <a href="/#demo" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <!-- mobile: the machine (full-bleed behind) owns this gap -->
         <p class="mt-auto max-w-[40ch] pb-4 font-mono text-[0.66rem] leading-loose uppercase tracking-[0.18em] text-zinc-600 md:mt-6 md:pb-0 md:leading-relaxed">
