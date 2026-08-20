@@ -265,54 +265,49 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // a photo — and BOTH the filmstrip and the wall screens call it, so what
   // stands in the gate and what the machine projects are visibly the same
   // picture. Landscape orientation in, callers handle rotation/tint.
+  // THE SHOW IS ALWAYS THE SAME SHOW (owner: "stick with the original theme
+  // — Mike and John, episode one"). Every frame is coverage of one two-person
+  // session: two-shot, Mike close-up, John close-up, and the title card.
   function renderFrameContent(g2: CanvasRenderingContext2D, w: number, h: number, id: number, captioned: boolean) {
     const hsh = Math.abs(Math.imul(id | 0, 2654435761)) >>> 0
-    const variant = hsh % 3
     const j1 = ((hsh >> 3) % 100) / 100
-    const j2 = ((hsh >> 9) % 100) / 100
-    // field: warm stock, a touch of per-frame drift
+    const variant = ((id % 4) + 4) % 4
     const g = g2.createLinearGradient(0, 0, 0, h)
-    g.addColorStop(0, `hsl(${44 + j1 * 10} 13% ${47 + j2 * 6}%)`)
-    g.addColorStop(1, `hsl(${40 + j1 * 8} 15% ${33 + j1 * 5}%)`)
+    g.addColorStop(0, `hsl(${46 + j1 * 6} 13% ${48 + j1 * 4}%)`)
+    g.addColorStop(1, `hsl(${42 + j1 * 6} 15% ${34 + j1 * 4}%)`)
     g2.fillStyle = g
     g2.fillRect(0, 0, w, h)
-    g2.fillStyle = 'rgba(38,34,26,0.9)'
-    if (variant === 0) {
-      // speaker: head and shoulders, off-centre
-      const cx2 = w * (0.34 + j1 * 0.3)
-      const cy2 = h * 0.42
-      const r2 = h * 0.17
+    const person = (cx2: number, cy2: number, r2: number) => {
       g2.beginPath()
       g2.arc(cx2, cy2, r2, 0, Math.PI * 2)
       g2.fill()
       g2.beginPath()
-      g2.ellipse(cx2, h * 0.86, r2 * 2.1, h * 0.3, 0, Math.PI, 0, true)
+      g2.ellipse(cx2, cy2 + r2 * 2.3, r2 * 2.3, r2 * 1.9, 0, Math.PI, 0, true)
       g2.fill()
-    } else if (variant === 1) {
-      // two-shot
-      for (const [fx, fy] of [[0.3 + j1 * 0.1, 0.48], [0.66 + j2 * 0.08, 0.44]] as const) {
-        const r2 = h * 0.13
-        g2.beginPath()
-        g2.arc(w * fx, h * fy, r2, 0, Math.PI * 2)
-        g2.fill()
-        g2.beginPath()
-        g2.ellipse(w * fx, h * 0.88, r2 * 1.9, h * 0.24, 0, Math.PI, 0, true)
-        g2.fill()
-      }
-    } else {
-      // title card: block + subline
-      g2.fillStyle = 'rgba(252,250,244,0.85)'
-      g2.fillRect(w * 0.12, h * 0.3, w * (0.34 + j1 * 0.2), h * 0.13)
-      g2.fillStyle = 'rgba(252,250,244,0.5)'
-      g2.fillRect(w * 0.12, h * 0.5, w * 0.26, h * 0.07)
     }
-    if (captioned) {
-      drawCaptionBars(g2, w, h, id, 1)
+    g2.fillStyle = 'rgba(38,34,26,0.9)'
+    if (variant === 0 || variant === 2) {
+      // the two-shot: Mike (broader) left, John (taller) right
+      person(w * 0.28, h * 0.4, h * 0.13)
+      person(w * 0.72, h * 0.36, h * 0.115)
+    } else if (variant === 1) {
+      person(w * 0.42, h * 0.42, h * 0.19) // Mike close-up
     } else {
-      // RAW footage: dim, low contrast — the turrets' pass visibly lifts it.
-      // Without this, pre-turret title cards read as already enhanced.
-      g2.fillStyle = 'rgba(22,20,16,0.36)'
+      // the title card
+      g2.fillStyle = 'rgba(30,27,21,0.55)'
       g2.fillRect(0, 0, w, h)
+      g2.fillStyle = 'rgba(252,250,244,0.94)'
+      g2.font = `700 ${Math.round(h * 0.17)}px system-ui, sans-serif`
+      g2.textAlign = 'center'
+      g2.textBaseline = 'middle'
+      g2.fillText('MIKE & JOHN', w / 2, h * 0.42)
+      g2.font = `500 ${Math.round(h * 0.1)}px ui-monospace, monospace`
+      g2.fillStyle = 'rgba(252,250,244,0.6)'
+      g2.fillText('EPISODE 01', w / 2, h * 0.62)
+      g2.textAlign = 'left'
+    }
+    if (captioned && variant !== 3) {
+      drawCaptionBars(g2, w, h, id, 1)
     }
   }
 
@@ -593,14 +588,14 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   // beams' origin (lens) is the prism's output face.
   const lens = new THREE.Vector3(10.9, lampY, 0)
   const WALL_X = 16.8
-  // Three kinds of OUT (owner: "the projections become examples of what you
-  // can do"): a published episode, a client reel arriving in a thread, and
-  // the archive answering a question. Red = publish, brand salmon = share,
-  // archive amber = recall.
+  // Three LITERAL artifacts from one session (owner): a landscape episode
+  // with a small YouTube mark, a phone-framed portrait clip with big captions
+  // and a LinkedIn mark, and a waveform-plus-transcript under a podcast/RSS
+  // mark. Different SHAPES read at any size; small logos, top right, tasteful.
   const FAN = [
-    { name: 'PUBLISH', color: '#d63d47', icon: 'publish' },
-    { name: 'SEND', color: '#e8836f', icon: 'share' },
-    { name: 'RECALL', color: '#d9a25c', icon: 'recall' },
+    { icon: 'yt', color: '#d63d47', w: 4.6, h: 2.6, y: 3.05, z: -1.15, cone: 0.95 },
+    { icon: 'in', color: '#3d78ae', w: 1.72, h: 3.5, y: 0.4, z: 2.35, cone: 0.62 },
+    { icon: 'pod', color: '#d9a25c', w: 3.6, h: 2.35, y: -2.45, z: -0.7, cone: 0.85 },
   ]
 
   // (There is deliberately NO wall mesh. A real plane betrayed its edges and
@@ -651,7 +646,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
         gl_FragColor = vec4(col, axial * face * smoke * uAlpha * uOn);
       }`
     FAN.forEach((d, i) => {
-      const target = new THREE.Vector3(WALL_X - 0.05, lampY + 2.95 - i * 2.95, 0)
+      const target = new THREE.Vector3(WALL_X - 0.05, lampY + d.y, d.z)
       const dir = target.clone().sub(lens)
       const len = dir.length()
       const mat = new THREE.ShaderMaterial({
@@ -671,7 +666,7 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
         side: THREE.DoubleSide,
       })
       beamMats.push(mat)
-      const g = new THREE.CylinderGeometry(1.02, 0.09, len, 28, 24, true)
+      const g = new THREE.CylinderGeometry(d.cone, 0.09, len, 28, 24, true)
       const m = new THREE.Mesh(g, mat)
       m.position.copy(lens.clone().add(target).multiplyScalar(0.5))
       m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize())
@@ -706,126 +701,147 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
   const screenCtxs: { c: HTMLCanvasElement; x: CanvasRenderingContext2D; tex: THREE.CanvasTexture; d: (typeof FAN)[number] }[] = []
   const screenMats: THREE.MeshBasicMaterial[] = []
   function drawScreen(sc: (typeof screenCtxs)[number], id: number) {
-    const { x, d } = sc
-    x.clearRect(0, 0, 640, 360)
-    // the throw's spill, baked
+    const { x, d, c } = sc
+    const W2 = c.width
+    const H2 = c.height
+    x.clearRect(0, 0, W2, H2)
+    // the throw's spill behind the artifact
     x.save()
-    x.filter = 'blur(38px)'
+    x.filter = 'blur(26px)'
     x.fillStyle = d.color
-    x.globalAlpha = 0.34
-    x.fillRect(96, 74, 448, 212)
+    x.globalAlpha = 0.32
+    x.fillRect(W2 * 0.1, H2 * 0.12, W2 * 0.8, H2 * 0.76)
     x.restore()
-    x.save()
-    x.filter = 'blur(10px)'
-    x.fillStyle = d.color
-    x.globalAlpha = 0.5
-    x.fillRect(76, 58, 488, 244)
-    x.restore()
-    x.font = '600 24px ui-monospace, monospace'
-    x.textBaseline = 'middle'
-    if (d.icon === 'publish') {
-      // a published episode: the gate's frame, player chrome, YouTube bug
+    const mark = (mx: number, my: number) => {
+      // small ident, top right, tasteful
+      x.fillStyle = 'rgba(255,255,255,0.85)'
+      if (d.icon === 'yt') {
+        x.beginPath()
+        x.roundRect(mx - 34, my - 12, 34, 24, 7)
+        x.fill()
+        x.fillStyle = 'rgba(30,10,10,0.9)'
+        x.beginPath()
+        x.moveTo(mx - 22, my - 6)
+        x.lineTo(mx - 12, my)
+        x.lineTo(mx - 22, my + 6)
+        x.closePath()
+        x.fill()
+      } else if (d.icon === 'in') {
+        x.font = 'bold 26px system-ui, sans-serif'
+        x.textAlign = 'right'
+        x.textBaseline = 'middle'
+        x.fillText('in', mx, my)
+        x.textAlign = 'left'
+      } else {
+        x.strokeStyle = 'rgba(255,255,255,0.85)'
+        x.lineWidth = 3
+        x.beginPath()
+        x.arc(mx - 14, my + 4, 5, 0, Math.PI * 2)
+        x.fill()
+        for (const rr of [11, 18]) {
+          x.beginPath()
+          x.arc(mx - 14, my + 4, rr, -2.35, -0.8)
+          x.stroke()
+        }
+      }
+    }
+    if (d.icon === 'yt') {
       x.save()
-      x.translate(88, 68)
+      x.translate(58, 44)
       x.globalCompositeOperation = 'screen'
-      x.globalAlpha = 0.85
-      x.drawImage(frameArt(id, true), 0, 0, 464, 200)
+      x.globalAlpha = 0.88
+      x.drawImage(frameArt(id, true), 0, 0, 524, 246)
       x.restore()
-      x.fillStyle = 'rgba(255,255,255,0.35)'
-      x.fillRect(88, 278, 464, 6)
-      x.fillStyle = 'rgba(255,255,255,0.95)'
-      x.fillRect(88, 278, 300, 6)
+      x.fillStyle = 'rgba(255,255,255,0.3)'
+      x.fillRect(58, 306, 524, 6)
+      x.fillStyle = 'rgba(255,255,255,0.9)'
+      x.fillRect(58, 306, 336, 6)
       x.beginPath()
-      x.arc(388, 281, 9, 0, Math.PI * 2)
+      x.arc(394, 309, 8, 0, Math.PI * 2)
       x.fill()
-      // play triangle + name, top-right ident
+      mark(576, 66)
+    } else if (d.icon === 'in') {
+      // an actual phone outline, portrait clip inside, big captions
+      x.fillStyle = 'rgba(14,14,18,0.85)'
       x.beginPath()
-      x.moveTo(486, 96)
-      x.lineTo(512, 110)
-      x.lineTo(486, 124)
-      x.closePath()
+      x.roundRect(22, 16, 296, 658, 46)
       x.fill()
-      x.textAlign = 'right'
-      x.fillText('YouTube', 478, 110)
-      x.textAlign = 'left'
-      x.font = '500 21px ui-monospace, monospace'
-      x.fillStyle = 'rgba(255,252,246,0.8)'
-      x.fillText('PUBLISHED', 88, 318)
-    } else if (d.icon === 'share') {
-      // a client reel landing in a message thread
-      x.fillStyle = 'rgba(255,255,255,0.16)'
+      x.strokeStyle = 'rgba(160,165,180,0.5)'
+      x.lineWidth = 3
+      x.stroke()
+      x.fillStyle = 'rgba(160,165,180,0.5)'
       x.beginPath()
-      x.roundRect(88, 70, 380, 224, 22)
+      x.roundRect(140, 34, 60, 10, 5)
       x.fill()
       x.save()
-      x.translate(106, 88)
+      x.beginPath()
+      x.roundRect(38, 58, 264, 586, 26)
+      x.clip()
       x.globalCompositeOperation = 'screen'
       x.globalAlpha = 0.9
-      x.drawImage(frameArt(id, true), 0, 0, 232, 130)
+      const art = frameArt(id, false)
+      x.drawImage(art, 82, 0, 76, 136, 38, 58, 264, 586)
       x.restore()
-      // play badge on the reel thumb
-      x.fillStyle = 'rgba(255,255,255,0.92)'
+      // the big stacked captions a portrait clip wears
+      x.fillStyle = 'rgba(255,255,255,0.96)'
+      const cw1 = 190
       x.beginPath()
-      x.arc(222, 153, 26, 0, Math.PI * 2)
+      x.roundRect((W2 - cw1) / 2, 470, cw1, 30, 7)
       x.fill()
-      x.fillStyle = 'rgba(40,20,16,0.9)'
+      const cw2 = 132
       x.beginPath()
-      x.moveTo(214, 139)
-      x.lineTo(238, 153)
-      x.lineTo(214, 167)
-      x.closePath()
+      x.roundRect((W2 - cw2) / 2, 512, cw2, 30, 7)
       x.fill()
-      x.fillStyle = 'rgba(255,252,246,0.95)'
-      x.font = '500 23px ui-monospace, monospace'
-      x.fillText('Session highlights', 106, 246)
-      x.fillStyle = 'rgba(255,252,246,0.6)'
-      x.font = '500 20px ui-monospace, monospace'
-      x.fillText('Delivered ✓✓', 106, 276)
-      x.fillStyle = 'rgba(255,252,246,0.8)'
-      x.font = '500 21px ui-monospace, monospace'
-      x.fillText('CLIENT REEL', 88, 318)
+      mark(292, 92)
     } else {
-      // the archive answers: a query and the moments it found
-      x.fillStyle = 'rgba(255,255,255,0.18)'
-      x.beginPath()
-      x.roundRect(88, 70, 464, 44, 22)
-      x.fill()
-      x.fillStyle = 'rgba(255,252,246,0.92)'
-      x.font = '500 24px ui-monospace, monospace'
-      x.fillText('⌕  every squat PR — March', 106, 92)
-      for (let k = 0; k < 3; k++) {
-        const rx = 88 + k * 160
-        x.save()
-        x.translate(rx, 132)
-        x.globalCompositeOperation = 'screen'
-        x.globalAlpha = 0.85
-        x.drawImage(frameArt(id - 3 - k * 4, true), 0, 0, 144, 82)
-        x.restore()
-        x.fillStyle = 'rgba(255,252,246,0.6)'
-        x.font = '500 17px ui-monospace, monospace'
-        x.fillText('S' + (9 - k * 2) + ' · 0' + (k + 1) + ':1' + (k * 3) + ':0' + (k * 2), rx, 232)
+      // waveform + transcript: the podcast/RSS artifact
+      x.save()
+      x.globalAlpha = 0.9
+      x.fillStyle = 'rgba(255,235,205,0.85)'
+      const hsh2 = Math.abs(Math.imul(id | 0, 40503)) >>> 0
+      for (let k = 0; k < 56; k++) {
+        const bh = 12 + (((hsh2 >> (k % 24)) & 7) / 7) * 66 * (0.35 + 0.65 * Math.abs(Math.sin(k * 0.55 + id)))
+        x.fillRect(48 + k * 9.6, 108 - bh / 2, 5.5, bh)
       }
-      x.fillStyle = 'rgba(255,252,246,0.8)'
-      x.font = '500 21px ui-monospace, monospace'
-      x.fillText('FOUND IN YOUR ARCHIVE', 88, 318)
+      x.restore()
+      x.strokeStyle = 'rgba(255,240,220,0.25)'
+      x.lineWidth = 2
+      x.beginPath()
+      x.moveTo(48, 186)
+      x.lineTo(592, 186)
+      x.stroke()
+      x.font = '600 24px ui-monospace, monospace'
+      x.textBaseline = 'middle'
+      const line = (ly: number, who: string, frac: number) => {
+        x.fillStyle = 'rgba(255,244,226,0.9)'
+        x.fillText(who, 48, ly)
+        x.fillStyle = 'rgba(255,244,226,0.5)'
+        x.beginPath()
+        x.roundRect(140, ly - 9, 452 * frac, 18, 6)
+        x.fill()
+      }
+      line(226, 'MIKE', 0.86)
+      line(272, 'JOHN', 0.62)
+      line(318, 'MIKE', 0.74)
+      line(364, 'JOHN', 0.4)
+      mark(592, 66)
     }
     sc.tex.needsUpdate = true
   }
-  FAN.forEach((d, i) => {
+  FAN.forEach((d) => {
     const c = document.createElement('canvas')
-    c.width = 640
-    c.height = 360
+    c.width = d.icon === 'in' ? 340 : 640
+    c.height = d.icon === 'in' ? 690 : d.icon === 'pod' ? 420 : 360
     const tex = new THREE.CanvasTexture(c)
     tex.colorSpace = THREE.SRGBColorSpace
     const sc = { c, x: c.getContext('2d')!, tex, d }
     screenCtxs.push(sc)
     drawScreen(sc, 0)
-    const sy = lampY + 2.95 - i * 2.95
     const smat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
     screenMats.push(smat)
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(4.9, 2.76), smat)
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(d.w, d.h), smat)
     m.rotation.y = -Math.PI / 2
-    m.position.set(WALL_X - 0.03, sy, 0)
+    m.position.set(WALL_X - 0.03, lampY + d.y, d.z)
     scene.add(m)
   })
   // the prism's hot origin: a soft radial core where the fan leaves the gate
@@ -868,17 +884,49 @@ export function createIso3(canvas: HTMLCanvasElement): Iso3Scene {
     bootFile.add(card)
     const lc = document.createElement('canvas')
     lc.width = 512
-    lc.height = 192
+    lc.height = 600
     const lx = lc.getContext('2d')!
-    lx.fillStyle = 'rgba(58,54,48,0.92)'
-    lx.font = '600 52px ui-monospace, monospace'
-    lx.textAlign = 'center'
+    // the Zoom call: two tiles, a REC light, the filename
+    lx.fillStyle = 'rgba(16,16,20,0.92)'
+    lx.beginPath()
+    lx.roundRect(10, 10, 492, 580, 26)
+    lx.fill()
+    const tile = (tx: number, name: string) => {
+      lx.fillStyle = '#26262e'
+      lx.beginPath()
+      lx.roundRect(tx, 120, 224, 260, 14)
+      lx.fill()
+      lx.fillStyle = '#4a4a55'
+      lx.beginPath()
+      lx.arc(tx + 112, 220, 46, 0, Math.PI * 2)
+      lx.fill()
+      lx.beginPath()
+      lx.ellipse(tx + 112, 330, 84, 56, 0, Math.PI, 0, true)
+      lx.fill()
+      lx.fillStyle = 'rgba(250,247,240,0.85)'
+      lx.font = '600 30px ui-monospace, monospace'
+      lx.textAlign = 'center'
+      lx.fillText(name, tx + 112, 416)
+    }
+    tile(26, 'MIKE')
+    tile(262, 'JOHN')
+    lx.fillStyle = '#ff4d4d'
+    lx.beginPath()
+    lx.arc(48, 62, 13, 0, Math.PI * 2)
+    lx.fill()
+    lx.fillStyle = 'rgba(250,247,240,0.9)'
+    lx.font = '600 34px ui-monospace, monospace'
+    lx.textAlign = 'left'
     lx.textBaseline = 'middle'
-    lx.fillText('RAW FOOTAGE', 256, 96)
+    lx.fillText('REC 58:14', 76, 62)
+    lx.textAlign = 'center'
+    lx.fillStyle = 'rgba(250,247,240,0.65)'
+    lx.font = '500 30px ui-monospace, monospace'
+    lx.fillText('ep01 — raw session', 256, 520)
     const ltex = new THREE.CanvasTexture(lc)
     ltex.colorSpace = THREE.SRGBColorSpace
     const label = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.5, 0.56),
+      new THREE.PlaneGeometry(1.45, 1.7),
       new THREE.MeshBasicMaterial({ map: ltex, transparent: true }),
     )
     label.rotation.x = -Math.PI / 2
