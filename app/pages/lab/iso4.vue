@@ -54,7 +54,9 @@ const signupUrl = computed(() => buildSignupUrl({
         <!-- The three pillars ARE the subhead (owner: integrated whole, no
              numerals, no duplication): intelligence knows/finds/remembers,
              craft cuts, programmability operates — each concept exactly once. -->
-        <div class="mt-5 max-w-[36ch] space-y-3.5 text-base leading-relaxed text-zinc-400">
+        <!-- a size smaller and a step dimmer than a subhead (owner: the fold
+             felt crammed at full weight) — a spec block, not three subheads -->
+        <div class="mt-5 max-w-[36ch] space-y-3.5 text-sm leading-relaxed text-zinc-500">
           <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows who's talking, finds any moment, remembers every session.</p>
           <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — no video gen here, just masterful cuts and transitions.</p>
           <p><span class="font-semibold text-zinc-100">Highly programmable</span> — operable by any agent: ours, or the one you bring.</p>
