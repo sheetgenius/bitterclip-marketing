@@ -67,14 +67,10 @@ const signupUrl = computed(() => buildSignupUrl({
              stranding void on desktop, leftover pocket on mobile). One labeled
              line on desktop; a tight three-line labeled readout on mobile. The
              machine owns everything below. -->
-        <!-- Stacked at every size (owner 2026-08-20: a horizontal line bleeds
-             into the machine at narrower windows) — a tight labeled readout
-             that stays inside the copy column's lane. -->
-        <p class="deliverables-strip mt-8 font-mono text-[0.66rem] leading-relaxed uppercase tracking-[0.18em] text-zinc-500 md:mt-9">
-          <span class="strip-label">Out:</span><span class="whitespace-nowrap">highlight reels</span>
-          <span class="block whitespace-nowrap">full episodes</span>
-          <span class="block whitespace-nowrap">deep video Q&amp;A with our agent</span>
-        </p>
+        <!-- No deliverables list: it failed in every placement (owner call,
+             2026-08-20 — "does this really make sense?"). The CTAs close the
+             column; the machine's constellation IS the output list; deep
+             video Q&A lives below in the agent transcript, demonstrated. -->
       </div>
     </div>
 
@@ -207,18 +203,6 @@ const signupUrl = computed(() => buildSignupUrl({
   .btf-last {
     padding-bottom: 6rem;
   }
-}
-
-/* Stacked labeled readout at every size, capped to the copy column's lane. */
-.deliverables-strip {
-  max-width: 40ch;
-}
-
-/* the readout's label — echoes the H1's "out" in the machine's warm light.
-   Explicit margin: Vue's whitespace condensing eats inter-span spaces. */
-.strip-label {
-  color: rgb(242 143 132 / 0.6);
-  margin-right: 0.6em;
 }
 
 /* Warm, dim card chrome — the machine's light, not a wireframe. Scoped CSS
