@@ -51,9 +51,14 @@ const signupUrl = computed(() => buildSignupUrl({
         <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
-        <p class="mt-5 max-w-[36ch] text-base leading-relaxed text-zinc-400">
-          <span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows who's talking, finds any moment, cuts you'd ship.
-        </p>
+        <!-- The three pillars ARE the subhead (owner: integrated whole, no
+             numerals, no duplication): intelligence knows/finds/remembers,
+             craft cuts, programmability operates — each concept exactly once. -->
+        <div class="mt-5 max-w-[36ch] space-y-3.5 text-base leading-relaxed text-zinc-400">
+          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows who's talking, finds any moment, remembers every session.</p>
+          <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — no video gen here, just masterful cuts and transitions.</p>
+          <p><span class="font-semibold text-zinc-100">Highly programmable</span> — operable by any agent: ours, or the one you bring.</p>
+        </div>
         <!-- One CTA, one decision. "Watch it work" was cut (owner, 2026-08-20):
              it pointed at the old homepage's demo section, and the machine
              beside it already performs what the button promised. If a real
@@ -70,38 +75,8 @@ const signupUrl = computed(() => buildSignupUrl({
              stranding void on desktop, leftover pocket on mobile). One labeled
              line on desktop; a tight three-line labeled readout on mobile. The
              machine owns everything below. -->
-        <!-- No deliverables list: it failed in every placement (owner call,
-             2026-08-20 — "does this really make sense?"). The CTAs close the
-             column; the machine's constellation IS the output list; deep
-             video Q&A lives below in the agent transcript, demonstrated. -->
       </div>
     </div>
-
-    <!-- ================= BELOW THE FOLD · 0: THE THREE PILLARS ================
-         Owner draft 2026-08-20: the page's thesis in three beats, each
-         previewing a deeper section (intelligence → substrate, craft → the
-         wedge vs gen-first competitors, programmable → bring-your-agent).
-         Pillar 1 carries the second-brain line so it doesn't repeat the fold
-         subhead's "finds any moment". -->
-    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
-      <div class="pillar-grid grid">
-        <div>
-          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">01</p>
-          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Deep Video Intelligence</h2>
-          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">A second brain for your footage. It finds the choicest moments.</p>
-        </div>
-        <div>
-          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">02</p>
-          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Classical editing excellence</h2>
-          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">No video gen here. Just masterful cuts and transitions.</p>
-        </div>
-        <div>
-          <p class="font-mono text-[0.66rem] font-semibold tracking-[0.2em] text-[#f28f84]">03</p>
-          <h2 class="font-display mt-3 text-xl font-bold tracking-[-0.02em] text-white">Highly programmable</h2>
-          <p class="mt-2.5 max-w-[36ch] text-sm leading-relaxed text-zinc-400">Operable by any agent — ours, or the one you bring.</p>
-        </div>
-      </div>
-    </section>
 
     <!-- ============== BELOW THE FOLD · 1: AGENT-NATIVE SUBSTRATE ==============
          Owner directive 2026-08-20: explain how BitterClip makes video
@@ -130,7 +105,7 @@ const signupUrl = computed(() => buildSignupUrl({
          instruction in, understanding shown, finished artifact back. This is
          also where the Andrew/client story lives now that the fold is dead
          simple — trainer world here, podcast world in the machine above. -->
-    <section class="btf btf-last relative mx-auto max-w-6xl px-6 sm:px-8">
+    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
       <div class="agent-grid grid items-center">
         <div>
           <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
@@ -169,6 +144,68 @@ const signupUrl = computed(() => buildSignupUrl({
             <p class="max-w-[46ch] text-zinc-400">Want the same cut for Thursday's clients?</p>
           </div>
         </figure>
+      </div>
+    </section>
+
+    <!-- ==================== BELOW THE FOLD · 3: THE PROOF =====================
+         Real material only: both quotes signed off by Andrew and Rohan
+         (2026-06-10, see index.vue), photos in /images, and the clip is a
+         REAL client reel served live by the clip-embed primitive — the same
+         surface a Pro customer projects onto their own site. -->
+    <section class="btf btf-last relative mx-auto max-w-6xl px-6 sm:px-8">
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">In the field</p>
+      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Real sessions, real cuts</h2>
+      <div class="proof-grid mt-10 grid items-start md:mt-14">
+        <figure>
+          <div class="agent-card relative overflow-hidden rounded-2xl border">
+            <img
+              src="/clips/coaching-session-poster.jpg"
+              alt="Andrew Williams coaching his client Adrian through a lift at Strength & Positions"
+              width="280"
+              height="158"
+              loading="lazy"
+              class="block aspect-video w-full object-cover"
+            >
+            <iframe
+              src="https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba"
+              class="absolute inset-0 h-full w-full"
+              style="border: 0"
+              title="Watch: Andrew Williams coaching Adrian at Strength & Positions"
+              loading="lazy"
+              allow="fullscreen"
+              allowfullscreen
+            />
+          </div>
+          <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
+            A real client clip — Andrew coaching Adrian — cut in BitterClip and <span class="text-zinc-300">served live by the same machine</span>, through the embed his clients see.
+          </figcaption>
+        </figure>
+        <div class="space-y-12">
+          <figure>
+            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+              &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
+            </blockquote>
+            <figcaption class="mt-4 flex items-center gap-3.5">
+              <img src="/images/andrew_williams_strength_and_positions_coach.jpg" alt="Andrew Williams" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
+              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
+                <span class="block text-zinc-200">Andrew Williams</span>
+                <span class="block text-zinc-500">Head Coach · Strength &amp; Positions</span>
+              </div>
+            </figcaption>
+          </figure>
+          <figure>
+            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+              &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
+            </blockquote>
+            <figcaption class="mt-4 flex items-center gap-3.5">
+              <img src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
+              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
+                <span class="block text-zinc-200">Rohan Karunakaran</span>
+                <span class="block text-zinc-500">Founder · Frontier Studio</span>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
       </div>
     </section>
   </main>
@@ -214,14 +251,14 @@ const signupUrl = computed(() => buildSignupUrl({
   gap: 3.5rem;
 }
 
-.pillar-grid {
-  gap: 2.5rem;
+.proof-grid {
+  gap: 3.5rem;
 }
 
 @media (min-width: 48rem) {
-  .pillar-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4rem;
+  .proof-grid {
+    grid-template-columns: 1.05fr 1fr;
+    gap: 5rem;
   }
 }
 

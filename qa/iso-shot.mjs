@@ -42,7 +42,9 @@ if (!times.length) times.push(2.35)
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport, deviceScaleFactor: 2 })
 page.on('pageerror', (e) => console.error('PAGEERROR', e.message))
-await page.goto(process.env.ISO_URL || 'http://localhost:4180/lab/iso', { waitUntil: 'networkidle' })
+// 'load', not 'networkidle': the live clip embed keeps the network busy
+// forever; scene readiness is guarded by the __iso wait below anyway.
+await page.goto(process.env.ISO_URL || 'http://localhost:4180/lab/iso', { waitUntil: 'load' })
 await page.waitForFunction(() => !!window.__iso, null, { timeout: 15000 })
 if (scrollY) {
   // behavior:'instant' overrides the page's scroll-behavior:smooth — in
