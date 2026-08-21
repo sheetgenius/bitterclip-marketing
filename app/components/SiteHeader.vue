@@ -31,6 +31,12 @@ defineProps<{
   menuToggle?: boolean
   /** id of the element the toggle opens, for aria-controls. */
   menuControls?: string
+  /**
+   * Pin over a full-bleed hero instead of occupying document flow. Used on
+   * the homepage (and its /lab/iso4 workshop mirror) so the 100svh canvas
+   * is not shoved down by a body-colored band the height of this bar.
+   */
+  overlay?: boolean
 }>()
 
 const menuOpen = defineModel<boolean>('menuOpen', { default: false })
@@ -49,7 +55,13 @@ const isActive = (to: string) => {
 </script>
 
 <template>
-  <header class="sticky top-4 z-50 mx-auto w-full px-4" :class="wide ? 'max-w-[90rem]' : 'max-w-6xl'">
+  <header
+    class="z-50 mx-auto w-full px-4"
+    :class="[
+      wide ? 'max-w-[90rem]' : 'max-w-6xl',
+      overlay ? 'fixed inset-x-0 top-4' : 'sticky top-4',
+    ]"
+  >
     <nav aria-label="Primary" class="flex items-center justify-between gap-3 px-5 py-2.5 rounded-full nav-glass">
       <div class="flex items-center gap-3 font-bold text-lg tracking-tight">
         <!-- 821px is docs.vue's drawer breakpoint (max-width: 820px) plus one:

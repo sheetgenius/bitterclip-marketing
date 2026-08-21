@@ -2,11 +2,10 @@ import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
 const description =
-  'You record it. BitterClip handles the rest: the full-length episode and the short cuts from that same edit, made by changing the transcript.'
+  'Footage in, episodes out: BitterClip turns raw session footage into the finished episode and the short cuts from that same edit — an agent that watched the whole session, directed and revised by you.'
 // One title for the tab, the og card, and the twitter card. Keep them identical:
 // a share card that disagrees with the page it links to reads as a stale mirror.
-// The hero line carries the brand itself, so there is no separate name prefix.
-const siteTitle = 'You record it. BitterClip handles the rest.'
+const siteTitle = 'BitterClip — Footage in, Episodes out'
 const gaMeasurementId = 'G-JRVVJM49G7'
 
 export default defineNuxtConfig({

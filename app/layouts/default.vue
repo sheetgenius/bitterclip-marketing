@@ -8,6 +8,14 @@ const route = useRoute()
 const signupBaseUrl = SIGNUP_BASE_URL
 const signupStage = ref('default')
 
+// Full-bleed 100svh heroes (homepage + the iso4 workshop mirror) need the
+// site bar pinned over the canvas. Occupying flow on those pages paints a
+// body-colored band above the stage, which is what made / look unlike /docs.
+const overlayNav = computed(() => {
+  const path = route.path.replace(/\/+$/, '') || '/'
+  return path === '/' || path === '/lab/iso4'
+})
+
 const signupUrl = computed(() => {
   return buildSignupUrl({
     baseUrl: signupBaseUrl,
@@ -38,7 +46,7 @@ onBeforeUnmount(() => {
   <!-- No background colour here on purpose. This wrapper covers every page, so
        painting it opaque (it was #303030) hides the body's #0d0d0d field and its
        vignette entirely. The page background has one owner: body, in main.css. -->
-  <div class="relative min-h-screen selection:bg-[#f28f84]/25 text-zinc-100 overflow-hidden flex flex-col justify-between">
+  <div class="relative min-h-screen selection:bg-[#f28f84]/25 text-zinc-100 flex flex-col justify-between">
 
     <!-- The coordinate-grid and scrolling-line backdrops that used to sit here
          read as engineering telemetry. Cinema texture is the body's vignette
@@ -50,11 +58,15 @@ onBeforeUnmount(() => {
          rings on 8-bit displays. Atmosphere now comes from the body vignette
          and film grain, which don't blotch. -->
 
-    <!-- Global Header — the same bar the docs shell mounts. -->
-    <SiteHeader />
+    <!-- Global Header — the same bar the docs shell mounts. Overlay on the
+         full-bleed heroes so the pill floats over the canvas instead of
+         sitting in a band above it. -->
+    <SiteHeader :overlay="overlayNav" />
 
-    <!-- Page Content Viewport -->
-    <div class="grow w-full">
+    <!-- Page Content Viewport. Overflow clip lives here, not on the wrapper
+         above, so the homepage's position:fixed site bar is not clipped
+         away on scroll. -->
+    <div class="grow w-full overflow-x-hidden">
       <slot />
     </div>
 

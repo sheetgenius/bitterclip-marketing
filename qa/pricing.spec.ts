@@ -20,22 +20,10 @@ test.describe('pricing section', () => {
     expect(await freeCta.getAttribute('href')).not.toContain('plan=')
   })
 
-  test('plan params survive demo-stage link rewrites', async ({ page }) => {
-    await page.goto('/')
-    // The demo attribution mutator rewrites every signup anchor on demo
-    // events; the pricing CTAs' plan params must survive it.
-    await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent('bitterclip:demo', { detail: {} }))
-    })
-    // Trigger the sync path directly via a stage event no-op: reload-safe check
-    const clipHref = await page.locator('#pricing').getByRole('link', { name: /Start clipping/ }).getAttribute('href')
-    expect(clipHref).toContain('plan=clip')
-  })
-
   test('paid campaign attribution survives the marketing-to-app handoff', async ({ page }) => {
     await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
 
-    const heroCta = page.getByRole("link", { name: /Bring your footage/ }).first()
+    const heroCta = page.getByRole('link', { name: /Start free/ }).first()
     const initialUrl = new URL(String(await heroCta.getAttribute('href')))
     expect(initialUrl.searchParams.get('utm_source')).toBe('google')
     expect(initialUrl.searchParams.get('utm_medium')).toBe('cpc')
@@ -44,21 +32,6 @@ test.describe('pricing section', () => {
     expect(initialUrl.searchParams.get('gclid')).toBe('audit-click-id')
     expect(initialUrl.searchParams.get('bc_surface')).toBe('homepage')
     expect(initialUrl.searchParams.get('bc_stage')).toBe('default')
-
-    await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveCount(1)
-    await page.evaluate(() => {
-      const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — episode one, cut into clips"]')
-      if (!frame?.contentWindow) throw new Error('hero iframe missing')
-      window.dispatchEvent(new MessageEvent('message', {
-        data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
-        source: frame.contentWindow,
-      }))
-    })
-
-    await expect(heroCta).toHaveAttribute('href', /bc_stage=hero_export_revealed/)
-    const engagedUrl = new URL(String(await heroCta.getAttribute('href')))
-    expect(engagedUrl.searchParams.get('utm_content')).toBe('ad_a')
-    expect(engagedUrl.searchParams.get('gclid')).toBe('audit-click-id')
   })
 
   test('the page makes no deferred or unbuilt pricing claims', async ({ page }) => {

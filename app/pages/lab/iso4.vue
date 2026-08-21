@@ -39,7 +39,7 @@ const signupUrl = computed(() => buildSignupUrl({
       <!-- Placeholder only. On desktop the machine is fitted to the right of
            the stage so this column stays clear; type here is how the
            composition gets judged. -->
-      <div class="iso4-copy relative mx-auto flex h-full max-w-6xl flex-col px-6 pt-8 sm:px-8">
+      <div class="iso4-copy relative mx-auto flex h-full max-w-6xl flex-col px-6 sm:px-8">
         <!-- the machine's warmth pooling under the words: type and stage share light -->
         <div class="pointer-events-none absolute left-0 top-1/2 hidden h-[26rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(242,143,132,0.10),transparent_70%)] blur-2xl md:block" aria-hidden="true" />
         <!-- Once the charged strip reaches the upper run, real face cells pass
@@ -242,7 +242,7 @@ const signupUrl = computed(() => buildSignupUrl({
   z-index: 0;
   left: -1.5rem;
   right: -1.5rem;
-  top: -3.5rem;
+  top: 0;
   height: 30rem;
   background: linear-gradient(
     180deg,
@@ -266,6 +266,12 @@ const signupUrl = computed(() => buildSignupUrl({
 /* Fold rhythm — scoped CSS, not utilities: the dev Tailwind watcher has
    twice dropped newly-introduced classes (see .btf). Scale steps 16/24/36
    so eyebrow→headline→pillars→CTA group instead of stacking evenly. */
+.iso4-copy {
+  /* Clear the floating site bar (top-4 + ~54px pill). pt-8 used to piggyback
+     on the bar's in-flow height; with overlay the canvas starts at y=0. */
+  padding-top: 5.75rem;
+}
+
 .hero-pillars {
   margin-top: 1.5rem;
 }
@@ -429,11 +435,6 @@ const signupUrl = computed(() => buildSignupUrl({
   .agent-grid {
     grid-template-columns: 1fr 1.05fr;
     gap: 5rem;
-  }
-
-  .iso4-stage {
-    height: calc(100svh - 3.375rem);
-    min-height: 35rem;
   }
 
   .iso4-copy {

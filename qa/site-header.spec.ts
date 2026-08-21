@@ -30,6 +30,10 @@ for (const path of ['/', '/compare', '/blog', '/privacy', '/docs', '/docs/assist
 }
 
 test('renders the same bar on the marketing pages and the docs shell', async ({ page }) => {
+  // Twelve full page loads, six of them booting the homepage's WebGL machine —
+  // under headless software rendering each of those costs seconds, so this
+  // loop needs more than the default 30s. The height invariant is unchanged.
+  test.setTimeout(120_000)
   for (const width of [1280, 900, 821, 820, 768, 390]) {
     const heights: number[] = []
     for (const path of ['/', '/docs']) {
@@ -89,4 +93,22 @@ test('shows the sidebar toggle only where there is a sidebar', async ({ page }) 
   await page.goto('/')
 
   await expect(page.getByRole('button', { name: 'Toggle navigation' })).toHaveCount(0)
+})
+
+test('floats the homepage bar over the hero instead of a band above it', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+
+  const header = page.locator('header:has(nav[aria-label="Primary"])')
+  const stage = page.locator('.iso4-stage')
+  const headerBox = await header.boundingBox()
+  const stageBox = await stage.boundingBox()
+
+  expect(headerBox, 'site bar missing').toBeTruthy()
+  expect(stageBox, 'hero stage missing').toBeTruthy()
+  // The 100svh canvas starts at the top of the viewport. A body-colored band
+  // was the header occupying flow (~54px) above the stage.
+  expect(stageBox!.y, 'stage starts below a header band').toBeLessThanOrEqual(1)
+  expect(headerBox!.y).toBeGreaterThan(stageBox!.y)
+  expect(headerBox!.y + headerBox!.height).toBeLessThan(stageBox!.y + stageBox!.height)
 })

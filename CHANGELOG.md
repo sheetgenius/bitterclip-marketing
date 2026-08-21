@@ -83,6 +83,9 @@ under a dated entry.
 
 ### Website
 
+- Floated the homepage site bar over the hero canvas instead of leaving a
+  body-colored band the height of the bar above the 100svh stage. The pill now
+  sits on the machine the same way it sits on the docs page.
 - Added a field report on why BitterClip chose Pi for its embedded agent,
   including the production failure that sharpened the boundary, the actual
   ACP-to-Pi-to-MCP architecture, a fair comparison with DeepSeek Harness

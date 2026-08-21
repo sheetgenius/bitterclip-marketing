@@ -13,7 +13,7 @@ half-migrated states.
 | **Value framing** | Prose sections ("It watched the whole session", "The handoff") | Three pillars in the fold + substrate section (editor screenshot) + Bring-your-agent (transcript) |
 | **Live product** | TWO live embeds: hero recording viewer + clip-demo editor (`#demo`) | Editor as static screenshot; live clip embed in Proof |
 | **Testimonials** | Band under hero: Andrew + Rohan (signed off 2026-06-10) | Same two quotes, in the Proof section with the live clip |
-| **FAQ** | 9 signed answers + FAQPage structured data | — none |
+| **FAQ** | 8 signed answers + FAQPage structured data | — none |
 | **Pricing** | Full ladder Free/$0 · Clip/$9 (recommended) · Pro/$99, plan-carrying CTAs | — none |
 | **SEO head** | canonical, og:url, markdown-twin link, Organization/WebSite/SoftwareApplication/FAQPage JSON-LD | title only; **noindex** |
 | **Signup attribution** | `surface: homepage` + funnel **stages** (hero_editor_opened, editor_clip_created, export…) wired to embed events | `surface: lab_iso4`, no stages |
@@ -31,9 +31,12 @@ half-migrated states.
 2. **Signup attribution** — `surface: 'lab_iso4'` → `'homepage'`; decide
    whether funnel stages survive (the stage events come from the embeds; the
    new page has one live embed — the Proof clip — so stages reduce or retire).
-3. **FAQ section ports** — 9 answers verbatim (bottom-funnel objections;
-   answers were reviewed/signed). New page slot: after Proof, before footer.
-   Keeps `#faq` anchor + FAQPage JSON-LD.
+3. **FAQ section ports** — 8 answers verbatim (bottom-funnel objections;
+   answers were reviewed/signed; the doc previously miscounted 9), plus one
+   NEW destinations answer carrying the old handoff section's facts
+   (YouTube/X/LinkedIn/link, Instagram send-to-phone, confirm gate, client
+   invite). New page slot: after Proof, before footer. Keeps `#faq` anchor +
+   FAQPage JSON-LD.
 4. **Pricing ladder ports** — the Free/Clip/Pro grid + closing pitch,
    verbatim (ladder is owner-ruled, 2026-06-09). Keeps `#pricing` anchor.
    Slot: after FAQ, per current bottom-funnel order.
@@ -58,6 +61,31 @@ half-migrated states.
     CLIP ONLY WORKS…"), mobile phone margin, YouTube false horizon.
 11. **A/B fallback** — keep the old page reachable at `/classic` (noindex)
     for one soak week, then delete.
+
+## Cut-over executed — 2026-08-20
+
+The swap landed as one commit (iso4 content → `app/pages/index.vue`). What was
+decided and done, reconciled from three independent reviews (Fable, Grok,
+Codex) plus owner rulings in-session:
+
+- **Blockers 1–6: done.** SEO head + four JSON-LD blocks migrated; `noindex`
+  dropped; site title/description in nuxt.config → "BitterClip — Footage in,
+  Episodes out". Attribution `surface: 'homepage'`; the demo-stage machinery
+  **retired** (owner ruled the live embeds dead — the eventual successor is a
+  produced ~1-minute product film, not a live surface). FAQ (8 + destinations)
+  and pricing ported verbatim, restyled to warm-card chrome. Nav: the Proof
+  section took `id="demo"` (the live clip is the one touchable thing left).
+  `/lab/iso4` stays as the noindexed workshop mirror; the markdown twin
+  (`public/index.md` — hand-written, not generated) was rewritten.
+- **Woven claims** (from the old page's prose, per the synthesis): recorder
+  line in the substrate intro (the "cannot record" smoke guard was rewritten
+  against it, same intent); speaker-memory + revise-the-same-cut in
+  Bring-your-agent; source-check in the substrate caption; free-tier fine
+  print under the hero CTA. Company links restored on both testimonials.
+- **A/B fallback**: old page soaks at `/classic` (noindex, surface
+  `classic`), guarded by a smoke test; delete after ~a week.
+- Still open (unchanged): OG image reshoot from the machine (T8), headed-GPU
+  perf run (T9), scene-side polish (T10).
 
 ### Losses accepted by the swap (owner-acknowledged)
 - The hero no longer runs the REAL product component (the unified-composition

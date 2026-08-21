@@ -17,14 +17,19 @@ interviews, coaching sessions, founder calls, and workshops.
 
 ## Hero
 
-You record it. BitterClip handles the rest.
+Footage in. Episodes out.
 
-Have the real conversation and get it recorded — on your phone, on a camera, in
-Zoom, or with BitterClip's own browser recorder. From there it is BitterClip's
-job: the full-length episode with your opener and outro, captions, music, and
-camera changes, then the short vertical cuts from that same edit. You edit by
-changing the transcript, or say what is wrong and it revises that same cut
-instead of starting over.
+Agentic video editing, on three pillars:
+
+- Deep Video Intelligence — remembers every session.
+- Classical editing excellence — cuts, not video gen.
+- Highly programmable — our agent, or yours.
+
+The homepage opens with an animated 3D projector performing the pipeline: a
+recorded session drops in, the machine indexes it onto film, and three
+finished artifacts project out — a landscape episode for YouTube, a portrait
+captioned clip for LinkedIn, and a waveform-and-transcript panel for
+podcast/RSS.
 
 Free to start — 60 minutes of footage a month. Everything runs in your browser;
 ChatGPT and Claude are optional, over the same work.
@@ -62,18 +67,18 @@ finished work, and it gets there by being told what to change.
 
 ## Live Product Surface
 
-The BitterClip editor shows the transcript and the source media together. Select
-words, delete them, and the video changes with them. Cuts resolve against the
-actual audio.
+The BitterClip editor shows the transcript and the source media together.
+Select words, delete them, and the video changes with them. Cuts resolve
+against the actual audio. The homepage shows the editor as a real screenshot
+and frames it honestly: you will mostly never open it. You ask for what you
+want — with the built-in agent, or with Claude, ChatGPT, or anything that
+speaks MCP — and the substrate makes the answer computable, with any cut
+checkable against the exact moment it came from.
 
-The public homepage embeds that live surface twice: once inside a phone-style
-preview where an agent is asked to turn a session into the episode, and once
-bare as the full editor. The preview runs in demo mode: expensive or
-account-scoped actions use safe stubs, completed demo interactions are measured,
-signup links carry the visitor's last demo milestone, and the sample export is a
-BitterClip-branded MP4 served from the app origin. The preview supports dark and
-light chrome from the same embedded surface so BitterClip can verify contrast
-across hosts.
+The homepage's proof section embeds one real, live client clip: a coaching
+session synchronized from two dozen loose recordings, playing the same moment
+from two cameras side by side, served by the same embed surface Pro customers
+put on their own sites.
 
 ## Why It Works
 
@@ -152,6 +157,10 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
   hosts are optional.
 - Publishing: nothing is sent automatically. Every send is bound to one exact
   export, one destination, one account, and a final confirmation from a person.
+- Destinations: publish to YouTube, X, or LinkedIn, or grab a shareable link.
+  For Instagram, send the finished clip to your phone and post it from the
+  Instagram app. A client invited to the same session can pull their own cuts —
+  upload once, everyone works from it.
 - Uploads: podcasts, interviews, calls, training sessions — audio or video,
   files up to 4 GB (20 GB on Pro). Several angles of one session stay in sync,
   and the picture can cut between up to five at a time.

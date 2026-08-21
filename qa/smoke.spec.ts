@@ -1,17 +1,24 @@
 import { expect, test } from '@playwright/test'
 
-test('renders the you-still-have-to-record hero', async ({ page }) => {
+test('renders the footage-in episodes-out hero and the bottom funnel', async ({ page }) => {
   await page.goto('/')
 
+  await expect(page.locator('link[rel="canonical"][href="https://bitterclip.com/"]')).toHaveCount(1)
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/index.md"]')).toHaveCount(1)
   const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
   expect(jsonLd).toContain('SoftwareApplication')
+  expect(jsonLd).toContain('FAQPage')
   await expect(page.locator('meta[property="og:image"][content="https://bitterclip.com/images/bitterclip-og.png"]')).toHaveCount(1)
   await expect(page.locator('meta[name="twitter:card"][content="summary_large_image"]')).toHaveCount(1)
-  await expect(page.getByRole('heading', { level: 1, name: /You record it\./ })).toBeVisible()
-  await expect(page.getByRole('heading', { level: 1, name: /BitterClip handles the rest\./ })).toBeVisible()
-  // The hero must not be readable as "BitterClip cannot record": the lede names
-  // the browser recorder alongside the footage people already have.
+  await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0)
+
+  const h1 = page.getByRole('heading', { level: 1 })
+  await expect(h1).toContainText('Footage in')
+  await expect(h1).toContainText('Episodes out')
+  await expect(page.getByText('Deep Video Intelligence')).toBeVisible()
+  await expect(page.getByText('Everything runs in your browser')).toBeVisible()
+  // The page must not be readable as "BitterClip cannot record": the substrate
+  // intro names the browser recorder alongside the footage people already have.
   await expect(page.getByText("with BitterClip's own browser recorder")).toBeVisible()
   await expect(page.getByText('Does BitterClip record for me?')).toBeVisible()
   await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
@@ -19,18 +26,14 @@ test('renders the you-still-have-to-record hero', async ({ page }) => {
   await expect(navCta).toBeVisible()
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
   await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
-  await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(0, 0, 0)')
-  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=dark/)
-  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).not.toHaveAttribute('src', /editor=1/)
-  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
-  await expect(page.getByRole('heading', { name: 'It watched the whole session before it cut anything.' })).toBeVisible()
-  await expect(page.getByText('72%')).toBeVisible()
-  await expect(page.getByText('28%')).toBeVisible()
+  // The below-the-fold spine: substrate → agent → proof (#demo) → FAQ → pricing.
+  await expect(page.getByRole('heading', { name: 'Turns video into agent-native substrate' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Bring your agent' })).toBeVisible()
+  await expect(page.locator('#demo').getByRole('heading', { name: 'Real sessions, real cuts' })).toBeVisible()
+  await expect(page.locator('#demo iframe[title^="Watch:"]')).toHaveAttribute('src', /embed\/clip\//)
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'The episode, and everything that comes out of it.' })).toBeVisible()
-  await expect(page.getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
-  await expect(page.getByText('Everything runs in your browser')).toBeVisible()
+  await expect(page.locator('#faq').getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
   await expect(page.getByText('30-day refund')).toHaveCount(0)
   await expect(page.locator('#pricing').getByRole('link', { name: 'Start free' })).toBeVisible()
   await expect(page.locator('#pricing').getByRole('link', { name: 'Start clipping' })).toBeVisible()
@@ -40,40 +43,12 @@ test('renders the you-still-have-to-record hero', async ({ page }) => {
   await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
 })
 
-test('attributes signup links after hero demo engagement', async ({ page }) => {
-  await page.goto('/')
+test('keeps the pre-swap homepage soaking at /classic, noindexed', async ({ page }) => {
+  await page.goto('/classic')
 
-  const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
-  await expect(hero).toHaveAttribute('src', /embed\/recording/)
-
-  await page.evaluate(() => {
-    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — episode one, cut into clips"]')
-    if (!frame?.contentWindow) throw new Error('hero iframe missing')
-    window.dispatchEvent(new MessageEvent('message', {
-      data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
-      source: frame.contentWindow,
-    }))
-  })
-
-  await expect(page.getByRole("link", { name: /Bring your footage/ }).first()).toHaveAttribute('href', /utm_content=hero_export_revealed/)
-})
-
-test('attributes signup links after mid-page editor engagement', async ({ page }) => {
-  await page.goto('/')
-
-  const editor = page.locator('iframe[title="BitterClip — the live transcript editor"]')
-  await expect(editor).toHaveAttribute('src', /embed\/clip-demo/)
-
-  await page.evaluate(() => {
-    const frame = document.querySelector<HTMLIFrameElement>('iframe[title="BitterClip — the live transcript editor"]')
-    if (!frame?.contentWindow) throw new Error('editor iframe missing')
-    window.dispatchEvent(new MessageEvent('message', {
-      data: { bitterclip_demo_event: 'export_revealed', detail: { has_download_url: true } },
-      source: frame.contentWindow,
-    }))
-  })
-
-  await expect(page.getByRole("link", { name: /Bring your footage/ }).first()).toHaveAttribute('href', /utm_content=editor_export_revealed/)
+  await expect(page.locator('meta[name="robots"][content="noindex, nofollow"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
+  await expect(page.getByRole('heading', { level: 1, name: /You record it\./ })).toBeVisible()
 })
 
 test('records a sitewide signup CTA event without navigating', async ({ page }) => {
@@ -81,7 +56,7 @@ test('records a sitewide signup CTA event without navigating', async ({ page }) 
 
   await page.evaluate(() => {
     const anchor = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))
-      .find((candidate) => candidate.textContent?.includes("Bring your footage"))
+      .find((candidate) => candidate.href.includes('/sign_up') && candidate.textContent?.includes('Start free'))
     if (!anchor) throw new Error('signup CTA missing')
     anchor.addEventListener('click', (event) => event.preventDefault(), { once: true })
     anchor.click()
@@ -94,29 +69,6 @@ test('records a sitewide signup CTA event without navigating', async ({ page }) 
       event.params.marketing_surface === 'homepage',
     ),
   )
-})
-
-test('previews the light hero phone and forwards the theme to the embed', async ({ page }) => {
-  await page.goto('/?heroTheme=light')
-
-  await expect(page.getByTestId('hero-phone-screen')).toHaveCSS('background-color', 'rgb(253, 253, 252)')
-  await expect(page.locator('iframe[title="BitterClip — episode one, cut into clips"]')).toHaveAttribute('src', /theme=light/)
-})
-
-test('defers the mobile hero recording iframe until the phone is in view', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 700 })
-  await page.goto('/')
-  await page.waitForTimeout(1500)
-
-  await expect(page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })).toBeVisible()
-  await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
-
-  const hero = page.locator('iframe[title="BitterClip — episode one, cut into clips"]')
-  await expect(hero).toHaveCount(0)
-
-  await page.getByTestId('hero-phone-screen').scrollIntoViewIfNeeded()
-  await expect(hero).not.toHaveAttribute('src', /editor=1/)
-  await expect(hero).toHaveAttribute('src', /day-1-opening-watermarked\.mp4/)
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {
@@ -377,7 +329,7 @@ test('renders the terms of service page', async ({ page }) => {
 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
-    { path: '/index.md', text: 'You record it. BitterClip handles the rest.' },
+    { path: '/index.md', text: 'Footage in. Episodes out.' },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     {
