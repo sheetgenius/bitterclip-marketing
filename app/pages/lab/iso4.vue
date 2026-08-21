@@ -51,17 +51,14 @@ const signupUrl = computed(() => buildSignupUrl({
         <h1 class="hero-h1 font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
-        <!-- The three pillars ARE the subhead (owner: integrated whole, no
-             numerals, no duplication): intelligence remembers, craft cuts,
-             programmability operates — each concept exactly once. -->
+        <!-- Two named beats under the H1. The third (programmable / our agent
+             or yours) lives in Bring your agent — it never shared this cadence. -->
         <!-- a size smaller and a step dimmer than a subhead (owner: the fold
              felt crammed at full weight) — a spec block, not three subheads.
-             One line per pillar (owner, 2026-08-20): speaker/moment specifics
-             live in the substrate section; the hero keeps the memory moat. -->
+             Speaker/moment specifics live in the substrate section. -->
         <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
           <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — remembers every session.</p>
           <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — cuts, not video gen.</p>
-          <p><span class="font-semibold text-zinc-100">Highly programmable</span> — our agent, or yours.</p>
         </div>
         <!-- One CTA, one decision. "Watch it work" was cut (owner, 2026-08-20):
              it pointed at the old homepage's demo section, and the machine

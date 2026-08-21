@@ -83,6 +83,13 @@ under a dated entry.
 
 ### Website
 
+- Tightened the homepage fold from three named pillars to two that share a
+  cadence: Deep Video Intelligence, Classical editing excellence. The
+  programmable / our-agent-or-yours line is gone from the fold; that path
+  stays in Bring your agent.
+- Replaced the homepage FAQ's two-column always-open dump with a single
+  accordion in the same warm-card chrome as the rest of the fold. Questions
+  stay scannable; answers expand on click (native exclusive `<details>`).
 - Floated the homepage site bar over the hero canvas instead of leaving a
   body-colored band the height of the bar above the 100svh stage. The pill now
   sits on the machine the same way it sits on the docs page.

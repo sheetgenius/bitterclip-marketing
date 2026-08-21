@@ -19,11 +19,10 @@ interviews, coaching sessions, founder calls, and workshops.
 
 Footage in. Episodes out.
 
-Agentic video editing, on three pillars:
+Agentic video editing:
 
 - Deep Video Intelligence — remembers every session.
 - Classical editing excellence — cuts, not video gen.
-- Highly programmable — our agent, or yours.
 
 The homepage opens with an animated 3D projector performing the pipeline: a
 recorded session drops in, the machine indexes it onto film, and three

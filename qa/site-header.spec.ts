@@ -111,4 +111,9 @@ test('floats the homepage bar over the hero instead of a band above it', async (
   expect(stageBox!.y, 'stage starts below a header band').toBeLessThanOrEqual(1)
   expect(headerBox!.y).toBeGreaterThan(stageBox!.y)
   expect(headerBox!.y + headerBox!.height).toBeLessThan(stageBox!.y + stageBox!.height)
+
+  await page.evaluate(() => window.scrollTo(0, 1200))
+  const stuck = await header.boundingBox()
+  expect(stuck!.y).toBeGreaterThan(8)
+  expect(stuck!.y).toBeLessThan(24)
 })

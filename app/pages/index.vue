@@ -163,13 +163,11 @@ useHead({
         <h1 class="hero-h1 font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
-        <!-- The three pillars ARE the subhead (owner: integrated whole, no
-             numerals, no duplication): intelligence remembers, craft cuts,
-             programmability operates — each concept exactly once. -->
+        <!-- Two named beats under the H1. The third (programmable / our agent
+             or yours) lives in Bring your agent — it never shared this cadence. -->
         <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
           <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — remembers every session.</p>
           <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — cuts, not video gen.</p>
-          <p><span class="font-semibold text-zinc-100">Highly programmable</span> — our agent, or yours.</p>
         </div>
         <!-- One CTA, one decision. The produced product film, when it exists,
              brings back "Watch it work" with a real target. -->
@@ -330,16 +328,28 @@ useHead({
 
     <!-- ======================= BELOW THE FOLD · 4: FAQ ========================
          Bottom-funnel objection handling, staged before the pricing ask.
-         Also emitted as FAQPage JSON-LD. -->
-    <section id="faq" aria-label="Common questions" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
+         Native <details> accordion (same name = exclusive) so it works without
+         JS, stays keyboard-accessible, and keeps answers in the HTML for
+         FAQPage JSON-LD. Also emitted as FAQPage JSON-LD. -->
+    <section id="faq" aria-labelledby="faq-heading" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
       <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Before you ask</p>
-      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">The questions everyone asks first</h2>
-      <dl class="mt-10 grid max-w-5xl gap-x-12 gap-y-8 md:mt-14 md:grid-cols-2">
-        <div v-for="item in faqItems" :key="item.q">
-          <dt class="mb-1.5 text-sm font-semibold text-white">{{ item.q }}</dt>
-          <dd class="text-sm leading-relaxed text-zinc-400">{{ item.a }}</dd>
-        </div>
-      </dl>
+      <h2 id="faq-heading" class="font-display max-w-[20ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">The questions everyone asks first</h2>
+      <div class="faq-list agent-card mt-10 overflow-hidden rounded-2xl border md:mt-14">
+        <details
+          v-for="item in faqItems"
+          :key="item.q"
+          class="faq-item"
+          name="homepage-faq"
+        >
+          <summary class="faq-q">
+            <span class="faq-q-text">{{ item.q }}</span>
+            <svg class="faq-plus" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </summary>
+          <p class="faq-a">{{ item.a }}</p>
+        </details>
+      </div>
     </section>
 
     <!-- ====================== BELOW THE FOLD · 5: PRICING =====================
@@ -533,6 +543,109 @@ useHead({
   max-width: 44ch;
 }
 
+.faq-list {
+  max-width: 42rem;
+}
+
+.faq-item + .faq-item {
+  border-top: 1px solid rgb(255 214 205 / 0.1);
+}
+
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 1.15rem 1.25rem;
+  list-style: none;
+  cursor: pointer;
+  color: #f4f4f5;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.35;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.faq-q::marker {
+  content: '';
+}
+
+.faq-q:hover {
+  background: rgb(255 255 255 / 0.025);
+}
+
+.faq-q:focus {
+  outline: none;
+}
+
+.faq-q:focus-visible {
+  outline: 2px solid #f28f84;
+  outline-offset: -2px;
+}
+
+.faq-q-text {
+  min-width: 0;
+}
+
+.faq-plus {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: rgb(161 161 170);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 180ms ease;
+}
+
+.faq-item[open] {
+  background: rgb(242 143 132 / 0.035);
+}
+
+.faq-item[open] > .faq-q {
+  color: #fff;
+}
+
+.faq-item[open] > .faq-q .faq-plus {
+  color: #f28f84;
+  transform: rotate(45deg);
+}
+
+.faq-a {
+  margin: 0;
+  padding: 0.1rem 3.25rem 1.35rem 1.25rem;
+  max-width: 62ch;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.faq-item[open] > .faq-a {
+  animation: faq-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-plus,
+  .faq-item[open] > .faq-a {
+    transition: none;
+    animation: none;
+  }
+}
+
 /* Substrate section bands — scoped (Tailwind-watcher strike avoidance).
    Desktop: H2 and intro share one baseline-aligned header row; the caption's
    two halves sit at opposite edges under the card. Mobile: normal stack. */
@@ -550,6 +663,16 @@ useHead({
 
   .substrate-intro {
     margin-top: 0;
+  }
+
+  .faq-q {
+    padding: 1.25rem 1.5rem;
+    font-size: 1.02rem;
+  }
+
+  .faq-a {
+    padding: 0.1rem 3.5rem 1.35rem 1.5rem;
+    font-size: 0.95rem;
   }
 }
 
