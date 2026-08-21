@@ -57,8 +57,8 @@ const signupUrl = computed(() => buildSignupUrl({
              felt crammed at full weight) — a spec block, not three subheads.
              Speaker/moment specifics live in the substrate section. -->
         <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
-          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — remembers every session.</p>
-          <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — cuts, not video gen.</p>
+          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows your content.</p>
+          <p><span class="font-semibold text-zinc-100">Precision Editing Craft</span> — only the cleanest cuts.</p>
         </div>
         <!-- One CTA, one decision. "Watch it work" was cut (owner, 2026-08-20):
              it pointed at the old homepage's demo section, and the machine

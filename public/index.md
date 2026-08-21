@@ -21,8 +21,8 @@ Footage in. Episodes out.
 
 Agentic video editing:
 
-- Deep Video Intelligence — remembers every session.
-- Classical editing excellence — cuts, not video gen.
+- Deep Video Intelligence — knows your content.
+- Precision Editing Craft — only the cleanest cuts.
 
 The homepage opens with an animated 3D projector performing the pipeline: a
 recorded session drops in, the machine indexes it onto film, and three

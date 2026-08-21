@@ -16,7 +16,9 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(h1).toContainText('Footage in')
   await expect(h1).toContainText('Episodes out')
   await expect(page.getByText('Deep Video Intelligence')).toBeVisible()
-  await expect(page.getByText('Classical editing excellence')).toBeVisible()
+  await expect(page.getByText('knows your content')).toBeVisible()
+  await expect(page.getByText('Precision Editing Craft')).toBeVisible()
+  await expect(page.getByText('only the cleanest cuts')).toBeVisible()
   await expect(page.getByText('Everything runs in your browser')).toBeVisible()
   // The page must not be readable as "BitterClip cannot record": the substrate
   // intro names the browser recorder alongside the footage people already have.

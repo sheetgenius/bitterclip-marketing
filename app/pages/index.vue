@@ -166,8 +166,8 @@ useHead({
         <!-- Two named beats under the H1. The third (programmable / our agent
              or yours) lives in Bring your agent — it never shared this cadence. -->
         <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
-          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — remembers every session.</p>
-          <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — cuts, not video gen.</p>
+          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows your content.</p>
+          <p><span class="font-semibold text-zinc-100">Precision Editing Craft</span> — only the cleanest cuts.</p>
         </div>
         <!-- One CTA, one decision. The produced product film, when it exists,
              brings back "Watch it work" with a real target. -->
