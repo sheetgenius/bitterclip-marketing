@@ -783,3 +783,141 @@ roughness rather than over-fitting. Verified at 16:9, 4:3, the owner's
 aspect, and mobile; evidence tmp/iso4-fan/f2-*, f3-*. NOTE: the scene's
 phase timing moved during the day (fan deploys later than t=14 at some
 aspects) — use t=24 for deployed-fan stills.
+
+## Round 18 — fold rhythm polish (copy column)
+
+Owner call: the fold needed a real layout/spacing/rhythm pass before it can
+be a first impression. All changes page-side; the scene did not move.
+
+- Copy-block spacing normalized to a 16/24/36 scale (eyebrow→H1→pillars→CTA;
+  was 12/20/28) so the groups separate instead of stacking evenly. New values
+  live in scoped `.hero-*` classes — Tailwind-watcher strike avoidance.
+- Pillar clauses zinc-500→zinc-400: 14px zinc-500 on #08090a is ~3.9:1
+  (fails AA) and read murky in stills. Bold zinc-100 leads keep hierarchy.
+- H1 steps to 4.5rem at ≥80rem. Clearance against the reel verified at
+  1280×800 (closest approach) and 1600×900.
+- CTA pill was inert — now hover lift/brighten, active reset, and a
+  focus-visible ring.
+- New wayfinding whisper `HOW IT WORKS ↓` (mono, zinc-600, links to #how on
+  the substrate section), anchored bottom-left of the copy column via
+  margin-top:auto — the permanently dead lower-left corner. Not a
+  deliverables-strip revival: it's navigation, and it only exists on
+  md+ viewports at least 46rem tall, so it can never crowd the CTA or the
+  mobile machine (verified hidden at 1280×700 and 440×956).
+
+Evidence: tmp/iso4-polish/r0-* (before) vs r1-* (after) at 1000×813,
+1600×900, 1280×800, 1280×700, 440×956 — all stills at t=24.
+
+## Round 19 — empty threshold, suspended cloud, Bishop horn, and physical exposure
+
+Owner ruling superseded the old liquid/membrane/splash language. The dashed
+perimeter is now the only visible threshold cue. The upright Zoom MP4 sleeve
+crosses it continuously; the intact portion remains above while the crossed
+portion becomes 108 deterministic particles with the sleeve's instantaneous
+downward velocity. The final shell tail fades with the breakup front over
+dissolve `.82→.96`. A terminal top-band erosion (`v=.80→.91`, dissolve
+`.78→.90`) removes the integrated tab before it can survive as a false lid or
+hopper while leaving the earlier readable sleeve unchanged.
+
+The accepted reservoir is a filled cube-root/Fibonacci volume captured with
+an analytic critically damped response. It inherits downward momentum, loses
+it without a velocity discontinuity, and breathes only through small shared
+low-frequency harmonics. The rejected R0 field was a Fibonacci ball feeding a
+`0.52`-turn contracting vortex: it produced a star-knot, a dotted connector,
+late rebound, p95 jerk up to roughly `1.11 px/frame³`, and trails around
+`11 px`. It was mathematically orderly but perceptually read as suction.
+
+The accepted field uses one arc-length-parameterized cubic J centerline and a
+rotation-minimizing Bishop frame. Filled cross-sections keep full radius
+through normalized arc length `s=.32`, then contract by minimum jerk to a
+`.13` neck. All particles share `0.42` turns of restrained rotation; bounded
+multiscale harmonics provide texture without per-frame randomness. Cohort
+journeys run from `1.42s` for the starter toward `1.28s` at speed, with exact
+arrival times unchanged. This raises important middle-arc occupancy by
+`25–27%` while keeping the early cloud filled. The accepted visual reads as
+one shallow phonograph/saxophone gesture—bell, shoulder, curved body, and
+neck—without drawing a tube, arrow, or vortex.
+
+The cloud-to-field handoff is C2. A quintic carries the sampled cloud velocity
+and acceleration into the Bishop field. The rejected R1/R3 registration
+ended that neck at rest and then relaunched through a 77ms front-normal jab;
+shortening the jab merely moved its impulse upstream. The accepted R4/R5
+registration is one C2 quintic seat from the horn exit to three physical
+emulsion anchors. It inherits the horn's real position, velocity, and
+acceleration and reaches the thumbnail with a small `-0.5 wu/s` normal contact
+velocity. The localized white-hot contact consumes that residual momentum,
+warmth spreads from the same three shader seeds over `52ms`, and the completed
+real Mike & John cell physically departs. There is no abstract target, pause,
+bounce, or behind-strip deletion.
+
+Blank stock is readable only where it matters: a low-energy local edge catch
+and two hollow perforation rails surround roughly two writer pitches. Cell
+interiors stay black, the inverted return stays hidden, and exposed imagery—not
+flange or coil light—accumulates around the loop. One contained 28ms contact
+flash is separated from the low writer heat so accelerating impacts never
+become a continuously hot rectangle.
+
+Mechanical chronology was rebuilt around the first completed cell. Write 1 is
+stationary at `t=3.800`; it starts film and both reels from the same distance
+function. Write 16 lands at `5.675` exactly as transport reaches 16fps; write
+36 lands at `6.925`. Reel tangent speed equals film speed throughout, physical
+film and gate remain intermittent 16fps, and the native 24fps output head
+keeps the exact two-second writer-to-gate delay. Live media now falls back
+deterministically on a skipped mechanical tick, late activation without live
+history, or late start without preserved history; an ordinary stop/resume
+preserves established film-slot and tick provenance instead of bulk-stamping
+multiple cells from one current video frame. Resume also snapshots the
+transport and completed-write indices before awaiting both `play()` promises:
+if either advances during decoder negotiation, the complete chain falls back
+rather than returning live with one stale or missing physical cell.
+
+Final dense 5ms audit at 440×956: p95 maxima `speed 5.590`,
+`acceleration 1.131`, `jerk .497 px/RAF-step`, maximum trail `3.736px`.
+At 1600×900: `7.195 / 1.378 / .592`, trail `4.876px`. Versus R3,
+acceleration and jerk fell `60% / 76%` on mobile and `59% / 77%` wide.
+Registration produced zero outward-x steps, zero total-distance backtracking,
+and zero film-face crossings across `108×1600` samples. Maximum simultaneous
+states were: visible `108`, suspended `96`, horn `53`, registering `12`, and
+transferring `3`; no second triplet overlapped a transfer.
+
+Evidence history: `tmp/iso/particle-baseline-*`, `horn-r0/*`, `horn-r1/*`,
+canonical R2 `particle-r2-iso4-*`, accepted R3 contacts
+`particle-r3-iso4-{mobile,wide,tall}-contact.png`, R4 mechanics
+`particle-r4-final-*`, and final R5b source/action evidence
+`particle-r5b-source-*` plus `particle-r5b-iso4-*`. All acceptance evidence is
+the exact `/lab/iso4` route; accidental `/lab/iso` workshop-study captures were
+discarded. Internal perception, VFX, and motion-math reviews found no remaining
+particle P0/P1. Grok session `fc42a98b-a5ef-4d17-b96e-9a22f487b306` and
+resumable Fable session `dd16423a-cd13-426e-888a-f4f50cfec089` supplied the
+adversarial progress-law, common-fate, evidence-integrity, and stop-and-poke
+critiques that shaped the accepted rounds; their final R5b veto reviews were
+run against the same canonical packet. The final terminal-erosion veto used
+cache-busted `particle-r5d-tabfix-{mobile,wide,tall}-t{3.10,3.15}.png` and
+closed the last visible cap P1. A separate lifecycle veto reproduced the
+former stop-at-`4.063s` / delayed-resume window and verified that crossing a
+writer or transport index now enters deterministic fallback. No final reviewer
+reported a remaining particle P0/P1.
+
+## Round 19 — substrate bands + the park clip
+
+Two owner directives while workshopping the full page for the homepage swap:
+
+**Substrate section layout** ("two clumps to the left"): the intro and
+caption were both 44ch left-hugging blocks against a full-width editor card.
+Now three full-width bands: H2 + intro share a two-column bottom-aligned
+header row (≥64rem), and the caption splits into two 44ch halves at the
+card's opposite edges (≥48rem). Scoped .substrate-* classes.
+
+**Proof section footage** (owner: the Adrian garage clip is "really poor
+quality footage"; show off first-class multi-camera + synchronization; no
+product work): swapped to the July-15 Garen Park session (Andrew & Mike),
+24 recordings / 9 synced angles. The already-rendered "Hip Mobility —
+Two-Angle Moment" clip turned out to have a legacy clip record + ready
+export behind its composition handle, so the existing embed pipeline carried
+it — embed flipped on, zero app changes. The export is a two-up of two
+synchronized cameras (verified by frame inspection: side angle + overhead,
+simultaneous), so the caption's claim — "the same moment from two cameras,
+side by side, frame-locked" — is what the video literally shows. New static
+poster public/clips/park-session-poster.jpg is the export's first frame.
+The old Adrian embed stays published (the current live homepage still uses
+it). Evidence: tmp/iso4-polish/r2-substrate-*, r4-proof-*.

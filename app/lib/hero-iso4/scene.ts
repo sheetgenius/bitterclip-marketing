@@ -2,8 +2,8 @@
  * ISO4 — the particle-charged facing projector, descended from ISO3 and the
  * Canvas 2D study at /lab/iso. A modest-FOV perspective camera looks back
  * toward the projector's +X optical axis while a large floating dual-reel
- * mechanism stays dark behind the copy. A raw session crosses a liquid-film
- * indexing membrane, becomes a suspended particle cloud, and activates the
+ * mechanism stays dark behind the copy. A raw session crosses an optically
+ * empty dashed threshold, becomes a suspended particle cloud, and activates the
  * threaded film three particles per 16fps frame before the three destinations
  * project toward the viewer.
  *
@@ -35,12 +35,18 @@ export interface Iso4Scene {
 export interface Iso4MotionDiagnostics {
   t: number
   visibleParticles: number
+  suspendedParticles: number
+  funnelingParticles: number
+  registeringParticles: number
+  transferringParticles: number
   writtenFrames: number
   fileDissolve: number
   p95SpeedPxPerFrame: number
   p95AccelerationPxPerFrame2: number
   p95JerkPxPerFrame3: number
   maxTrailPx: number
+  meanHornRadiusScale: number
+  hornTurnDegrees: number
   transportFramesPerSecond: number
   reelTangentFramesPerSecond: number
   reelAngleRadians: number
@@ -128,11 +134,21 @@ const EPISODE_FRAME_URLS = [
   '/clips/ep1-john2.jpg',
 ] as const
 
-// THE BOOT NARRATIVE: one file crosses a dashed indexing membrane and bursts
-// into suspended particles. A fixed writer on the lower reel absorbs exactly
+// THE BOOT NARRATIVE: one file passes through an empty dashed boundary and
+// dematerializes into suspended particles. A fixed writer on the lower reel absorbs exactly
 // three particles per frame-step; its isolated clunks accelerate to 16fps,
 // the charged thumbnails reach the gate, and the projector strikes.
-const BOOT = { plane: 0.45, drop: 0.85, fall: 1.85, run: 3.8, runRamp: 2.0, proj: 7.37, beam0: 7.87, beamGap: 0.48 }
+// Fifteen physical pulls follow the stationary starter cell during the run-up.
+// At the end of that 1.875s ramp the sixteenth written frame lands exactly as
+// transport reaches 16fps: the owner's frame-count and speed rules agree.
+const BOOT = { plane: 0.45, drop: 0.85, fall: 1.85, run: 3.8, runRamp: 1.875, proj: 7.37, beam0: 7.87, beamGap: 0.48 }
+// The threshold is kinematic, not a collision. The sleeve reaches it already
+// moving at its transit velocity, then keeps that velocity while its material
+// representation changes from a continuous surface into particles.
+const FILE_APPROACH_SECONDS = 1.25
+const FILE_CONTACT_AT = BOOT.drop + FILE_APPROACH_SECONDS
+const FILE_TRANSIT_SECONDS = 1.15
+const FILE_CLEAR_AT = FILE_CONTACT_AT + FILE_TRANSIT_SECONDS
 const minJerk = (v: number) => {
   const x = THREE.MathUtils.clamp(v, 0, 1)
   return x * x * x * (x * (x * 6 - 15) + 10)
@@ -148,39 +164,27 @@ const transportSpeed = (t: number) => {
   return FILM_SPEED * (u < BOOT.runRamp ? u / BOOT.runRamp : 1)
 }
 const quantizedFrame = (phase: number) => Math.floor(phase + 1e-6)
-const timeForFrame = (frame: number) => {
+const transportTimeForFrames = (frames: number) => {
   const rampFrames = (FILM_FPS * BOOT.runRamp) / 2
-  const u = frame <= rampFrames
-    ? Math.sqrt((2 * BOOT.runRamp * frame) / FILM_FPS)
-    : frame / FILM_FPS + BOOT.runRamp / 2
-  return BOOT.run + u
+  return frames <= rampFrames
+    ? Math.sqrt((2 * BOOT.runRamp * frames) / FILM_FPS)
+    : frames / FILM_FPS + BOOT.runRamp / 2
 }
+// The first completed thumbnail is exposed on stationary stock. It starts the
+// physical transport and both flywheels; each later write is funded by one
+// completed pull. This removes the old impossible pitch of strip motion before
+// the reel starter engaged.
+const timeForFrame = (frame: number) => BOOT.run + transportTimeForFrames(Math.max(0, frame - 1))
+const writtenFramesAt = (t: number) => (
+  t < BOOT.run ? 0 : Math.min(FRAME_GROUPS, 1 + quantizedFrame(transportDist(t) / PITCH))
+)
 
-// The first written thumbnail is the starter motor. At that exact arrival the
-// reels are still at rest; over a restrained 650ms Hermite run-up they join
-// both the position and tangent speed of the accelerating film transport.
-// After the join, angular speed is exactly linear film speed / wound radius.
+// The first written thumbnail is the starter motor. Film and both reel
+// flywheels share one distance function from that instant onward, so there is
+// no hidden slip, catch-up phase, or angular jump.
 const FIRST_ACTIVATION_AT = timeForFrame(1)
-const REEL_SYNC_WINDOW = 0.65
-const REEL_SYNC_AT = FIRST_ACTIVATION_AT + REEL_SYNC_WINDOW
-const REEL_SYNC_DISTANCE = transportDist(REEL_SYNC_AT) - PITCH
-const REEL_SYNC_SPEED = transportSpeed(REEL_SYNC_AT)
-const reelDriveDistance = (t: number) => {
-  if (t <= FIRST_ACTIVATION_AT) return 0
-  if (t >= REEL_SYNC_AT) return transportDist(t) - PITCH
-  const x = (t - FIRST_ACTIVATION_AT) / REEL_SYNC_WINDOW
-  const h01 = -2 * x * x * x + 3 * x * x
-  const h11 = x * x * x - x * x
-  return h01 * REEL_SYNC_DISTANCE + h11 * REEL_SYNC_WINDOW * REEL_SYNC_SPEED
-}
-const reelDriveSpeed = (t: number) => {
-  if (t <= FIRST_ACTIVATION_AT) return 0
-  if (t >= REEL_SYNC_AT) return transportSpeed(t)
-  const x = (t - FIRST_ACTIVATION_AT) / REEL_SYNC_WINDOW
-  const dh01 = -6 * x * x + 6 * x
-  const dh11 = 3 * x * x - 2 * x
-  return (dh01 * REEL_SYNC_DISTANCE + dh11 * REEL_SYNC_WINDOW * REEL_SYNC_SPEED) / REEL_SYNC_WINDOW
-}
+const reelDriveDistance = (t: number) => (t < FIRST_ACTIVATION_AT ? 0 : transportDist(t))
+const reelDriveSpeed = (t: number) => (t < FIRST_ACTIVATION_AT ? 0 : transportSpeed(t))
 
 
 // One continuous film loop: rise on the shadow side, cross the upper crown,
@@ -421,6 +425,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   let episodeMediaRevision = 0
   let useMovingMedia = true
   let movingMediaPlaying = false
+  let hasLiveMediaHistory = false
   let mediaPlayAttempt = 0
   let temporalMediaResetRequested = true
   let refreshBootFileLabel: (() => void) | undefined
@@ -540,6 +545,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const enterDeterministicMediaFallback = () => {
     useMovingMedia = false
     movingMediaPlaying = false
+    hasLiveMediaHistory = false
     temporalMediaResetRequested = true
     mediaPlayAttempt += 1
     episodeVideo.pause()
@@ -548,6 +554,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   }
   const resumeEpisodeMedia = (t: number) => {
     const attempt = ++mediaPlayAttempt
+    const resumedWithLiveHistory = hasLiveMediaHistory
+    const resumeFilmFrame = quantizedFrame(transportDist(t) / PITCH)
+    const resumeWrittenFrames = writtenFramesAt(t)
     movingMediaPlaying = false
     syncMediaClocks(t, true)
     void Promise.all([episodeVideo.play(), projectionVideo.play()]).then(() => {
@@ -556,8 +565,30 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         enterDeterministicMediaFallback()
         return
       }
+      // If the live decoders only become available after film writing began,
+      // there is no honest source snapshot for the already-written cells.
+      // Never bulk-stamp that history from the decoder's current frame.
+      if (elapsed >= BOOT.run && !hasLiveMediaHistory) {
+        enterDeterministicMediaFallback()
+        return
+      }
+      // RAF resumes immediately, while the two play() promises can take a
+      // few hundred milliseconds to settle. If a physical pull or writer hit
+      // happened in that negotiation window, no live source snapshot exists
+      // for it. Preserve the old cells, but invalidate the chain rather than
+      // silently returning to live playback with a fallback/stale hole.
+      if (resumedWithLiveHistory) {
+        const activatedFilmFrame = quantizedFrame(transportDist(elapsed) / PITCH)
+        const activatedWrittenFrames = writtenFramesAt(elapsed)
+        if (activatedFilmFrame !== resumeFilmFrame || activatedWrittenFrames !== resumeWrittenFrames) {
+          enterDeterministicMediaFallback()
+          return
+        }
+      }
+      const firstLiveActivation = !hasLiveMediaHistory
       movingMediaPlaying = true
-      temporalMediaResetRequested = true
+      hasLiveMediaHistory = true
+      if (firstLiveActivation) temporalMediaResetRequested = true
       scheduleProjectionFrame()
     }).catch(() => {
       if (attempt === mediaPlayAttempt) enterDeterministicMediaFallback()
@@ -1143,11 +1174,30 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           float d0 = length((writerUv - a0) * aspect);
           float d1 = length((writerUv - a1) * aspect);
           float d2 = length((writerUv - a2) * aspect);
-          float radius = mix(0.018, 0.82, uWriterBuild);
-          float m0 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d0);
-          float m1 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d1);
-          float m2 = 1.0 - smoothstep(radius - 0.055, radius + 0.055, d2);
-          float assembled = clamp(max(m0, max(m1, m2)), 0.0, 1.0);
+          // The impacts are seeds, not circular windows. A short connective
+          // emulsion front joins the three sites before the photographic
+          // image develops outward as one coherent film cell.
+          vec2 s01 = a1 - a0;
+          vec2 s12 = a2 - a1;
+          float t01 = clamp(dot(writerUv - a0, s01) / dot(s01, s01), 0.0, 1.0);
+          float t12 = clamp(dot(writerUv - a1, s12) / dot(s12, s12), 0.0, 1.0);
+          float bridgeDistance = min(
+            length((writerUv - (a0 + s01 * t01)) * aspect),
+            length((writerUv - (a1 + s12 * t12)) * aspect)
+          );
+          float grain = 0.014 * sin(writerUv.x * 31.0 + writerUv.y * 19.0)
+            + 0.006 * sin(writerUv.x * 67.0 - writerUv.y * 43.0)
+            + 0.003 * sin(writerUv.x * 137.0 + writerUv.y * 89.0);
+          float radius = mix(0.012, 0.82, uWriterBuild);
+          float bridgeRadius = mix(0.006, 0.19, smoothstep(0.04, 0.48, uWriterBuild));
+          float m0 = 1.0 - smoothstep(radius - 0.06, radius + 0.06, d0 + grain);
+          float m1 = 1.0 - smoothstep(radius - 0.06, radius + 0.06, d1 + grain);
+          float m2 = 1.0 - smoothstep(radius - 0.06, radius + 0.06, d2 + grain);
+          float bridge = (1.0 - smoothstep(bridgeRadius - 0.045, bridgeRadius + 0.045, bridgeDistance + grain))
+            * smoothstep(0.03, 0.34, uWriterBuild);
+          float assembled = clamp(max(bridge, max(m0, max(m1, m2))), 0.0, 1.0);
+          float imageCoherence = smoothstep(0.12, 0.5, uWriterBuild);
+          float imagePresence = assembled * mix(0.12, 1.0, imageCoherence);
           float front0 = 1.0 - smoothstep(0.0, 0.05, abs(d0 - radius));
           float front1 = 1.0 - smoothstep(0.0, 0.05, abs(d1 - radius));
           float front2 = 1.0 - smoothstep(0.0, 0.05, abs(d2 - radius));
@@ -1155,23 +1205,68 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
             * (1.0 - 0.72 * uWriterBuild);
           float anchorGlow = exp(-d0 * 18.0) + exp(-d1 * 18.0) + exp(-d2 * 18.0);
           vec3 writerWarm = vec3(1.0, 0.39, 0.24);
-          sampledDiffuseColor.rgb *= 0.055 + 0.945 * assembled;
+          sampledDiffuseColor.rgb *= 0.035 + 0.965 * imagePresence;
           sampledDiffuseColor.rgb += writerWarm * (
-            reconstructionFront * 0.28
-            + anchorGlow * uWriterImpact * 0.18
-            + uWriterCharge * assembled * 0.025
+            reconstructionFront * 0.22
+            + anchorGlow * uWriterImpact * 0.21
+            + uWriterCharge * assembled * 0.032
           );
-          sampledDiffuseColor.a *= 0.08 + 0.92 * assembled;
+          sampledDiffuseColor.a *= 0.035 + 0.965 * imagePresence;
           diffuseColor *= sampledDiffuseColor;
         #endif
       `,
     )
   }
-  chargeThumbMat.customProgramCacheKey = () => 'iso4-writer-reconstruction-v1'
+  chargeThumbMat.customProgramCacheKey = () => 'iso4-writer-reconstruction-v2'
   const chargeThumb = new THREE.Mesh(new THREE.PlaneGeometry(IMG_W, IMG_H), chargeThumbMat)
   chargeThumb.rotation.y = Math.PI / 2
   chargeThumb.position.copy(CHARGE_POINT).add(new THREE.Vector3(0.045, 0, 0))
   machineRoot.add(chargeThumb)
+
+  // A local grazing catch makes the unexposed carrier physically readable
+  // before the first image exists. It covers only the writer neighbourhood;
+  // the upper return and copy-zone ribbon remain buried in shadow. These are
+  // stock edges and perforation rims, not a second glowing strip.
+  const writerStockCatchMat = new THREE.MeshBasicMaterial({
+    color: 0xa0947c,
+    transparent: true,
+    opacity: 0.13,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  })
+  const writerStockCatchX = CHARGE_POINT.x + 0.028
+  const writerStockSpan = PITCH * 2.25
+  for (const edgeZ of [-FILM_W / 2 + 0.025, FILM_W / 2 - 0.025]) {
+    const edge = new THREE.Mesh(new THREE.PlaneGeometry(0.028, writerStockSpan), writerStockCatchMat)
+    edge.rotation.y = Math.PI / 2
+    edge.position.set(writerStockCatchX, CHARGE_POINT.y, edgeZ)
+    machineRoot.add(edge)
+  }
+  const perfOuterW = 0.105
+  const perfOuterH = 0.082
+  const perfShape = new THREE.Shape()
+  perfShape.moveTo(-perfOuterW / 2, -perfOuterH / 2)
+  perfShape.lineTo(perfOuterW / 2, -perfOuterH / 2)
+  perfShape.lineTo(perfOuterW / 2, perfOuterH / 2)
+  perfShape.lineTo(-perfOuterW / 2, perfOuterH / 2)
+  perfShape.closePath()
+  const perfHole = new THREE.Path()
+  perfHole.moveTo(-perfOuterW * 0.31, -perfOuterH * 0.27)
+  perfHole.lineTo(-perfOuterW * 0.31, perfOuterH * 0.27)
+  perfHole.lineTo(perfOuterW * 0.31, perfOuterH * 0.27)
+  perfHole.lineTo(perfOuterW * 0.31, -perfOuterH * 0.27)
+  perfHole.closePath()
+  perfShape.holes.push(perfHole)
+  const perfCatchGeometry = new THREE.ShapeGeometry(perfShape)
+  const perfZ = FILM_W / 2 - PERF_MARGIN * 0.52
+  for (let i = -4; i <= 4; i++) {
+    for (const z of [-perfZ, perfZ]) {
+      const perf = new THREE.Mesh(perfCatchGeometry, writerStockCatchMat)
+      perf.rotation.y = Math.PI / 2
+      perf.position.set(writerStockCatchX + 0.002, CHARGE_POINT.y + i * PITCH / 4, z)
+      machineRoot.add(perf)
+    }
+  }
 
   // ---- the throw: three holographic artifacts in open space ---------------
   // The physically large projector sits dark behind its payoff. Three different
@@ -1791,6 +1886,47 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     emissive: 0xff8d78,
     emissiveIntensity: 0,
   })
+  const bootSleeveUniforms = { uSleeveDissolve: { value: 0 } }
+  bootFileMat.onBeforeCompile = (shader) => {
+    shader.uniforms.uSleeveDissolve = bootSleeveUniforms.uSleeveDissolve
+    shader.vertexShader = `varying float vSleeveY;\n${shader.vertexShader}`
+    shader.vertexShader = shader.vertexShader.replace(
+      '#include <begin_vertex>',
+      '#include <begin_vertex>\n vSleeveY = position.y;',
+    )
+    shader.fragmentShader = `
+      uniform float uSleeveDissolve;
+      varying float vSleeveY;
+    ${shader.fragmentShader}`
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <color_fragment>',
+      /* glsl */ `
+        #include <color_fragment>
+        float sleeveV = clamp((vSleeveY + 1.02) / 2.16, 0.0, 1.0);
+        float sleeveGrain = 0.018 * sin(sleeveV * 41.0)
+          + 0.008 * sin(sleeveV * 97.0 + vSleeveY * 13.0);
+        float sleeveThreshold = uSleeveDissolve * 1.08 - 0.06;
+        float sleeveKeep = smoothstep(
+          sleeveThreshold - 0.022,
+          sleeveThreshold + 0.03,
+          sleeveV + sleeveGrain
+        );
+        // A vertical breakup naturally leaves the integrated folder tab for
+        // last. Without a localized terminal erosion it briefly becomes a
+        // clean salmon cap floating above the cloud. Dissolve only that upper
+        // band a little earlier; the sleeve body keeps the same moving front.
+        float tabBand = smoothstep(0.80, 0.91, sleeveV);
+        float tabOut = 1.0 - smoothstep(0.78, 0.90, uSleeveDissolve);
+        sleeveKeep *= mix(1.0, tabOut, tabBand);
+        float sleeveEdge = smoothstep(0.07, 0.012, abs(sleeveV + sleeveGrain - sleeveThreshold))
+          * sleeveKeep;
+        diffuseColor.a *= sleeveKeep;
+        diffuseColor.rgb += vec3(1.0, 0.34, 0.19) * sleeveEdge * 0.28;
+        if (diffuseColor.a < 0.008) discard;
+      `,
+    )
+  }
+  bootFileMat.customProgramCacheKey = () => 'iso4-source-sleeve-dematerialize-v2'
   let bootLabelMat: THREE.ShaderMaterial | null = null
   const bootFile = new THREE.Group()
   {
@@ -1816,8 +1952,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       bevelThickness: 0.01,
       curveSegments: 10,
     })
-    sleeveGeometry.rotateX(-Math.PI / 2)
-    sleeveGeometry.translate(0, -0.02, 0)
+    // Stand the sleeve in the y/z plane so its face remains readable while
+    // its leading lower edge passes vertically through the horizontal border.
+    sleeveGeometry.rotateY(Math.PI / 2)
+    sleeveGeometry.translate(0.02, 0, 0)
     const sleeve = new THREE.Mesh(sleeveGeometry, bootFileMat)
     sleeve.castShadow = true
     sleeve.receiveShadow = true
@@ -1977,15 +2115,16 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       side: THREE.DoubleSide,
     })
     const label = new THREE.Mesh(new THREE.PlaneGeometry(1.64, 1.74), bootLabelMat)
-    label.rotation.x = -Math.PI / 2
-    label.position.set(0, 0.038, 0.07)
+    label.rotation.y = Math.PI / 2
+    label.position.set(0.11, 0, 0.07)
+    label.renderOrder = 2
     bootFile.add(label)
   }
   bootFile.visible = false
   machineRoot.add(bootFile)
-  // THE SCAN PLANE: a demure dashed indexing membrane. The falling file
-  // splashes into a suspended cloud as it passes through, then the outline
-  // dissolves so no UI chrome remains in steady state.
+  // THE SCAN PLANE: only a demure dashed perimeter. Its interior is optically
+  // empty; the moving breakup edge on the passing sleeve proves where the
+  // transformation plane is without liquid, refraction, ripple, or impact.
   const PLANE_Y = lampY
   let planeMat: THREE.MeshBasicMaterial
   const dropFilmMat = new THREE.ShaderMaterial({
@@ -2039,6 +2178,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const liquid = new THREE.Mesh(new THREE.PlaneGeometry(DROP.w - 0.18, DROP.d - 0.18, 48, 36), dropFilmMat)
     liquid.rotation.x = -Math.PI / 2
     liquid.position.set(DROP.x, PLANE_Y - 0.015, 0)
+    liquid.visible = false
     machineRoot.add(liquid)
 
     const pc = document.createElement('canvas')
@@ -2072,23 +2212,39 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     targetFrame: number
     arrivalTime: number
     startTime: number
+    birthTime: number
     slot: number
   }[] = []
   for (let k = 0; k < BITS_N; k++) {
-    const hx = ((k * 137) % 100) / 100 - 0.5
-    const hz = ((k * 71) % 100) / 100 - 0.5
-    const hy = ((k * 43) % 100) / 100 - 0.5
+    // Fibonacci-sphere anchors give the suspended material an even, organic
+    // volume without random clumps. Birth order is independent of anchor
+    // height, so the dematerializing edge fills the whole cloud rather than
+    // drawing a visible scan pattern through it.
+    const sphereV = (((k * 47) % BITS_N) + 0.5) / BITS_N
+    const sphereY = 1 - 2 * sphereV
+    const sphereRadius = Math.sqrt(Math.max(0, 1 - sphereY * sphereY))
+    const volumeRadius = Math.pow((((k * 73) % BITS_N) + 0.5) / BITS_N, 1 / 3)
+    const phi = (k * 2.399963229728653) % (Math.PI * 2)
     const targetFrame = Math.floor(k / PARTICLES_PER_FRAME) + 1
     const arrivalTime = timeForFrame(targetFrame)
-    const journey = 1.42 + (((k * 17) % 9) / 8) * 0.2
+    const birthTime = FILE_CONTACT_AT + ((k + 0.5) / BITS_N) * FILE_TRANSIT_SECONDS
+    const cohortRamp = minJerk((targetFrame - 1) / 15)
+    const slotJourneyOffset = [0.03, 0, -0.03][k % PARTICLES_PER_FRAME]!
+    const journey = THREE.MathUtils.lerp(1.42, 1.28, cohortRamp) + slotJourneyOffset
+    // Early cohorts get the longest sculptural journey; flight duration then
+    // falls with the same run-up that raises arrival cadence. This keeps the
+    // horn occupied without turning 72 simultaneous movers into a spring, and
+    // avoids whipping the lead triplet to make the starter deadline.
+    const startTime = arrivalTime - journey
     bitsSeed.push({
-      x: hx * 1.42,
-      y: 0.12 + Math.abs(hy) * 0.62,
-      z: hz * 1.68,
-      orbit: (k * 2.399963229728653) % (Math.PI * 2),
+      x: Math.cos(phi) * sphereRadius * volumeRadius,
+      y: sphereY * volumeRadius,
+      z: Math.sin(phi) * sphereRadius * volumeRadius,
+      orbit: phi,
       targetFrame,
       arrivalTime,
-      startTime: Math.max(BOOT.drop + BOOT.fall + 0.08, arrivalTime - journey),
+      startTime,
+      birthTime,
       slot: k % PARTICLES_PER_FRAME,
     })
     bitsPos[k * 3 + 1] = -999
@@ -2165,7 +2321,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     scene.add(rim)
   }
   // One conducted stage light follows the boot story around the machine once:
-  // file → membrane → writer → lower reel → upper reel → gate → outputs. It
+  // file → threshold/cloud → writer → lower reel → upper reel → gate → outputs. It
   // makes the active area legible without illuminating the whole apparatus.
   const actionLightTarget = new THREE.Object3D()
   scene.add(actionLightTarget)
@@ -2175,12 +2331,16 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   scene.add(actionSpot)
   const actionLightPath = [
     { t: 0.2, p: new THREE.Vector3(DROP.x, PLANE_Y + 5.4, 0) },
-    { t: 2.7, p: new THREE.Vector3(DROP.x, PLANE_Y, 0) },
-    { t: 4.3, p: new THREE.Vector3((DROP.x + CHARGE_POINT.x) / 2, (PLANE_Y + CHARGE_POINT.y) / 2, 0) },
-    { t: 5.05, p: CHARGE_POINT.clone() },
-    { t: 5.55, p: new THREE.Vector3(BOTTOM_REEL.x, BOTTOM_REEL.y, 0) },
-    { t: 6.2, p: new THREE.Vector3(ASCENT_X, TOP_REEL.y - 1.1, 0) },
-    { t: 6.8, p: new THREE.Vector3(TOP_REEL.x, TOP_REEL.y, 0) },
+    { t: FILE_CONTACT_AT, p: new THREE.Vector3(DROP.x, PLANE_Y, 0) },
+    { t: FILE_CLEAR_AT, p: new THREE.Vector3(DROP.x - 0.28, PLANE_Y - 0.93, 0.08) },
+    { t: 3.46, p: new THREE.Vector3((DROP.x + CHARGE_POINT.x) / 2, (PLANE_Y - 0.93 + CHARGE_POINT.y) / 2, 0) },
+    // The conducted pool reaches the blank carrier just before the starter
+    // triplet. Registration therefore develops into visible emulsion rather
+    // than flashing on a black, unexplained mini-screen.
+    { t: FIRST_ACTIVATION_AT - 0.18, p: CHARGE_POINT.clone() },
+    { t: 4.45, p: new THREE.Vector3(BOTTOM_REEL.x, BOTTOM_REEL.y, 0) },
+    { t: 5.45, p: new THREE.Vector3(ASCENT_X, TOP_REEL.y - 1.1, 0) },
+    { t: 6.35, p: new THREE.Vector3(TOP_REEL.x, TOP_REEL.y, 0) },
     { t: 7.37, p: new THREE.Vector3(LENS_X, lampY, 0) },
     { t: 9.0, p: new THREE.Vector3(25.8, lampY + 1.1, 1.1) },
     { t: 9.85, p: new THREE.Vector3(25.8, lampY + 1.1, 1.1) },
@@ -2203,8 +2363,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const u = minJerk((t - a.t) / Math.max(0.001, b.t - a.t))
     // Once the light reaches the writer, follow the yawing body rather than
     // leaving the conducted pool behind in the old world-space position.
-    const ap = a.t >= 5.05 ? transformMachinePoint(a.p, t, actionPointA) : a.p
-    const bp = b.t >= 5.05 ? transformMachinePoint(b.p, t, actionPointB) : b.p
+    const writerLightAt = FIRST_ACTIVATION_AT - 0.18
+    const ap = a.t >= writerLightAt ? transformMachinePoint(a.p, t, actionPointA) : a.p
+    const bp = b.t >= writerLightAt ? transformMachinePoint(b.p, t, actionPointB) : b.p
     actionLightTarget.position.lerpVectors(ap, bp, u)
     const wake = THREE.MathUtils.smoothstep(t, 0.15, 0.75)
     const curtain = 1 - THREE.MathUtils.smoothstep(t, 9.85, 10.7)
@@ -2246,6 +2407,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // ---- per-frame state ----------------------------------------------------
   let lastGateId = Number.NaN
   let lastFilmFrame = Number.NaN
+  let lastWrittenFrame = Number.NaN
   let lastProjectedVideoRevision = Number.NaN
   let outputTextureRevision = 0
   let missedProjectionFrames = 0
@@ -2275,124 +2437,376 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       + (-2 * u3 + 3 * u2) * b
       + (u3 - u2) * tangentB
   }
-  // The Bitter operating-field torus established the useful motion grammar:
-  // source-owned peel -> compact vortex -> ordered stream. ISO4 uses the same
-  // lifecycle in the thumbnail's frontal y/z plane, but terminates in three
-  // film-registration anchors instead of a helix. The nested harmonic term is
-  // a deterministic, divergence-free-looking perturbation of one common
-  // spiral; it adds natural lobing without random per-frame noise or boiling.
-  const PARTICLE_DROP_END = 0.24
-  const PARTICLE_INFALL_END = 0.42
-  const PARTICLE_VORTEX_END = 0.8
-  const PARTICLE_REGISTER_END = 0.94
-  const PARTICLE_VORTEX_TURNS = 0.82
-  const PARTICLE_ENTRY_RADIUS = 1.32
-  const PARTICLE_EXIT_RADIUS = 0.34
-  const PARTICLE_FRONT_X = CHARGE_POINT.x + 0.115
-  const PARTICLE_APPROACH_X = CHARGE_POINT.x + 0.42
+  const quinticHermite = (
+    a: number,
+    velocityA: number,
+    accelerationA: number,
+    b: number,
+    velocityB: number,
+    accelerationB: number,
+    u: number,
+  ) => {
+    const u2 = u * u
+    const u3 = u2 * u
+    const u4 = u3 * u
+    const u5 = u4 * u
+    const h00 = 1 - 10 * u3 + 15 * u4 - 6 * u5
+    const h10 = u - 6 * u3 + 8 * u4 - 3 * u5
+    const h20 = 0.5 * (u2 - 3 * u3 + 3 * u4 - u5)
+    const h01 = 10 * u3 - 15 * u4 + 6 * u5
+    const h11 = -4 * u3 + 7 * u4 - 3 * u5
+    const h21 = 0.5 * (u3 - 2 * u4 + u5)
+    return h00 * a + h10 * velocityA + h20 * accelerationA
+      + h01 * b + h11 * velocityB + h21 * accelerationB
+  }
+  const criticallyDamped = (
+    start: number,
+    initialVelocity: number,
+    target: number,
+    omega: number,
+    age: number,
+  ) => {
+    const delta = start - target
+    return target + (delta + (initialVelocity + omega * delta) * age) * Math.exp(-omega * age)
+  }
+  // Source ownership -> suspended volume -> curved horn -> ordered stream.
+  // Every particle is born on the invisible threshold with the sleeve's
+  // downward velocity. A critically damped atmosphere removes that momentum
+  // into a filled Fibonacci cloud. The writer then gathers the cloud through
+  // one asymmetric, contracting volume rather than a frontal orbit around the
+  // reel. A rotation-minimizing Bishop frame keeps that volume from flipping
+  // or accumulating the arbitrary twist of a Frenet frame.
+  const CLOUD_CENTER_X = DROP.x - 0.28
+  const CLOUD_CENTER_Y = PLANE_Y - 0.93
+  const CLOUD_CENTER_Z = 0.08
+  const CLOUD_DAMPING = 3.25
+  const PARTICLE_HORN_END = 0.84
+  const PARTICLE_HORN_TURNS = 0.42
+  const PARTICLE_SHUTTER_SECONDS = 0.014
+  const PARTICLE_FRONT_X = CHARGE_POINT.x + 0.058
+  const HORN_NECK_SCALE = 0.13
+  const HORN_P0 = new THREE.Vector3(CLOUD_CENTER_X, CLOUD_CENTER_Y, CLOUD_CENTER_Z)
+  // In the mobile camera this bows the centerline visibly outward before it
+  // folds down and back into the writer: a J-shaped phonograph/saxophone
+  // gesture, never a center-to-center arrow.
+  const HORN_P1 = new THREE.Vector3(CLOUD_CENTER_X + 0.45, CLOUD_CENTER_Y - 0.75, CLOUD_CENTER_Z - 1.55)
+  const HORN_P2 = new THREE.Vector3(CHARGE_POINT.x + 2.55, CHARGE_POINT.y + 1.5, -1.05)
+  const HORN_P3 = new THREE.Vector3(CHARGE_POINT.x + 0.55, CHARGE_POINT.y + 0.32, -0.18)
+  const HORN_FRAME_SAMPLES = 72
+  const HORN_ARC_SAMPLES = 192
+  const hornCenters: THREE.Vector3[] = []
+  const hornTangents: THREE.Vector3[] = []
+  const hornNormals: THREE.Vector3[] = []
+  const hornBinormals: THREE.Vector3[] = []
+  const hornArcParams: number[] = []
+  const hornArcLengths: number[] = []
+  const hornD10 = HORN_P1.clone().sub(HORN_P0)
+  const hornD21 = HORN_P2.clone().sub(HORN_P1)
+  const hornD32 = HORN_P3.clone().sub(HORN_P2)
+  const hornCurvePoint = (s: number, out: THREE.Vector3) => {
+    const u = THREE.MathUtils.clamp(s, 0, 1)
+    const v = 1 - u
+    return out.set(0, 0, 0)
+      .addScaledVector(HORN_P0, v * v * v)
+      .addScaledVector(HORN_P1, 3 * v * v * u)
+      .addScaledVector(HORN_P2, 3 * v * u * u)
+      .addScaledVector(HORN_P3, u * u * u)
+  }
+  const hornCurveTangent = (s: number, out: THREE.Vector3) => {
+    const u = THREE.MathUtils.clamp(s, 0, 1)
+    const v = 1 - u
+    return out.set(0, 0, 0)
+      .addScaledVector(hornD10, 3 * v * v)
+      .addScaledVector(hornD21, 6 * v * u)
+      .addScaledVector(hornD32, 3 * u * u)
+      .normalize()
+  }
+  {
+    const previous = new THREE.Vector3()
+    const current = new THREE.Vector3()
+    let total = 0
+    hornCurvePoint(0, previous)
+    for (let i = 0; i <= HORN_ARC_SAMPLES; i++) {
+      const parameter = i / HORN_ARC_SAMPLES
+      hornCurvePoint(parameter, current)
+      if (i > 0) total += current.distanceTo(previous)
+      hornArcParams.push(parameter)
+      hornArcLengths.push(total)
+      previous.copy(current)
+    }
+    for (let i = 0; i < hornArcLengths.length; i++) hornArcLengths[i]! /= total
+  }
+  const hornParameterAtArc = (arc: number) => {
+    const s = THREE.MathUtils.clamp(arc, 0, 1)
+    let lo = 0
+    let hi = hornArcLengths.length - 1
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1
+      if (hornArcLengths[mid]! < s) lo = mid
+      else hi = mid
+    }
+    const a0 = hornArcLengths[lo]!
+    const a1 = hornArcLengths[hi]!
+    const f = a1 > a0 ? (s - a0) / (a1 - a0) : 0
+    return THREE.MathUtils.lerp(hornArcParams[lo]!, hornArcParams[hi]!, f)
+  }
+  {
+    const tangent = new THREE.Vector3()
+    const previousTangent = new THREE.Vector3()
+    const normal = new THREE.Vector3()
+    const axis = new THREE.Vector3()
+    const reference = new THREE.Vector3(1, 0, 0)
+    const center = new THREE.Vector3()
+    for (let i = 0; i <= HORN_FRAME_SAMPLES; i++) {
+      const s = i / HORN_FRAME_SAMPLES
+      const parameter = hornParameterAtArc(s)
+      hornCurvePoint(parameter, center)
+      hornCurveTangent(parameter, tangent)
+      if (i === 0) {
+        normal.copy(reference).addScaledVector(tangent, -reference.dot(tangent)).normalize()
+      } else {
+        axis.crossVectors(previousTangent, tangent)
+        const sine = axis.length()
+        const cosine = THREE.MathUtils.clamp(previousTangent.dot(tangent), -1, 1)
+        if (sine > 1e-7) {
+          axis.multiplyScalar(1 / sine)
+          normal.applyAxisAngle(axis, Math.atan2(sine, cosine))
+        }
+        normal.addScaledVector(tangent, -normal.dot(tangent)).normalize()
+      }
+      const binormal = new THREE.Vector3().crossVectors(tangent, normal).normalize()
+      hornCenters.push(center.clone())
+      hornTangents.push(tangent.clone())
+      hornNormals.push(normal.clone())
+      hornBinormals.push(binormal)
+      previousTangent.copy(tangent)
+    }
+  }
+  const hornFrameCenter = new THREE.Vector3()
+  const hornFrameTangent = new THREE.Vector3()
+  const hornFrameNormal = new THREE.Vector3()
+  const hornFrameBinormal = new THREE.Vector3()
+  const sampleHornFrame = (s: number) => {
+    const scaled = THREE.MathUtils.clamp(s, 0, 1) * HORN_FRAME_SAMPLES
+    const i0 = Math.min(HORN_FRAME_SAMPLES - 1, Math.floor(scaled))
+    const i1 = i0 + 1
+    const f = scaled - i0
+    hornFrameCenter.lerpVectors(hornCenters[i0]!, hornCenters[i1]!, f)
+    hornFrameTangent.lerpVectors(hornTangents[i0]!, hornTangents[i1]!, f).normalize()
+    hornFrameNormal.lerpVectors(hornNormals[i0]!, hornNormals[i1]!, f)
+      .addScaledVector(hornFrameTangent, -hornFrameNormal.dot(hornFrameTangent))
+      .normalize()
+    hornFrameBinormal.crossVectors(hornFrameTangent, hornFrameNormal).normalize()
+  }
+  const hornRadiusScaleAt = (s: number) => THREE.MathUtils.lerp(
+    1,
+    HORN_NECK_SCALE,
+    minJerk((s - 0.32) / 0.68),
+  )
   const particleMachineP0 = new THREE.Vector3()
+  const cloudPositionAt = (sd: (typeof bitsSeed)[number], at: number, out: Float32Array, o: number) => {
+    const age = Math.max(0, at - sd.birthTime)
+    const initialX = DROP.x - 0.04
+    const initialY = PLANE_Y
+    const initialZ = 0.1 + sd.z * 0.92 * detailScale
+    const targetX = CLOUD_CENTER_X + sd.x * 0.82
+    // The fastest inherited fragment can still approach its anchor
+    // monotonically: targetY never sits above initialY-|v|/omega. That keeps
+    // the cloud suspended without a hidden vertical rebound.
+    const targetY = CLOUD_CENTER_Y + sd.y * 0.32
+    const targetZ = CLOUD_CENTER_Z + sd.z * 1.08
+    const inheritedVy = -(2.24 * detailScale) / FILE_TRANSIT_SECONDS
+    const breathe = minJerk((age - 0.28) / 0.72)
+    out[o] = criticallyDamped(initialX, 0, targetX, CLOUD_DAMPING, age)
+      + breathe * 0.045 * Math.sin(age * 0.62 + sd.orbit * 1.7)
+    out[o + 1] = criticallyDamped(initialY, inheritedVy, targetY, CLOUD_DAMPING, age)
+      + breathe * 0.038 * Math.sin(age * 0.48 + sd.orbit * 0.8)
+    out[o + 2] = criticallyDamped(initialZ, 0, targetZ, CLOUD_DAMPING, age)
+      + breathe * 0.065 * Math.sin(age * 0.55 + sd.orbit * 1.25)
+  }
+  const cloudStartP = new Float32Array(3)
+  const cloudPreviousP = new Float32Array(3)
+  const cloudBeforePreviousP = new Float32Array(3)
+  const hornEndP = new Float32Array(3)
+  const hornBeforeEndP = new Float32Array(3)
+  const hornBeforeEnd2P = new Float32Array(3)
+  const particleTransferSeconds = (sd: (typeof bitsSeed)[number]) => {
+    if (sd.targetFrame >= FRAME_GROUPS) return 0.12
+    return Math.min(0.12, 0.86 * (timeForFrame(sd.targetFrame + 1) - sd.arrivalTime))
+  }
+  const hornFlowAt = (
+    sd: (typeof bitsSeed)[number],
+    cloudVx: number,
+    cloudVy: number,
+    cloudVz: number,
+    cloudAx: number,
+    cloudAy: number,
+    cloudAz: number,
+    stageDuration: number,
+    u: number,
+    out: Float32Array,
+    o: number,
+  ) => {
+    // Endpoint-speed quintic: C2 at the cloud, broadly occupied through the
+    // shoulder/middle, then still moving into the neck. The old 2u^3-u^4 map
+    // left most cohorts parked in the bell before shooting into a bead string
+    // with twice the necessary endpoint speed.
+    const uu = THREE.MathUtils.clamp(u, 0, 1)
+    const u2 = uu * uu
+    const u3 = u2 * uu
+    const u4 = u3 * uu
+    const u5 = u4 * uu
+    const s = minJerk(uu) + 0.45 * (-4 * u3 + 7 * u4 - 3 * u5)
+    sampleHornFrame(s)
+    const dx = cloudStartP[0]! - HORN_P0.x
+    const dy = cloudStartP[1]! - HORN_P0.y
+    const dz = cloudStartP[2]! - HORN_P0.z
+    const n0 = hornNormals[0]!
+    const b0 = hornBinormals[0]!
+    const t0 = hornTangents[0]!
+    const localN = dx * n0.x + dy * n0.y + dz * n0.z
+    const localB = dx * b0.x + dy * b0.y + dz * b0.z
+    const localT = dx * t0.x + dy * t0.y + dz * t0.z
+    // One shared cross-section rotation creates common fate. Individual
+    // particles do not independently orbit the centerline.
+    const theta = Math.PI * 2 * PARTICLE_HORN_TURNS * minJerk(s)
+    const cosTheta = Math.cos(theta)
+    const sinTheta = Math.sin(theta)
+    const rotatedN = localN * cosTheta - localB * sinTheta
+    const rotatedB = localN * sinTheta + localB * cosTheta
+    const radiusScale = hornRadiusScaleAt(s)
+    const tangentScale = 1 - minJerk(s)
+    const detailEnvelope = Math.pow(Math.sin(Math.PI * s), 2)
+    // Bounded 1/f-ish detail preserves authored volume without per-frame noise
+    // or a boiling velocity field.
+    const detailN = detailEnvelope * (
+      0.028 * Math.sin(s * Math.PI * 3 + sd.orbit)
+      + 0.012 * Math.sin(s * Math.PI * 7 - sd.orbit * 1.7)
+      + 0.005 * Math.sin(s * Math.PI * 13 + sd.orbit * 0.6)
+    )
+    const detailB = detailEnvelope * (
+      0.024 * Math.sin(s * Math.PI * 4 - sd.orbit * 0.8)
+      + 0.009 * Math.sin(s * Math.PI * 9 + sd.orbit * 1.3)
+    )
+    // Quintic Hermite carry terms reproduce the cloud's sampled velocity and
+    // acceleration at departure, then vanish with zero first/second
+    // derivatives. The cloud-to-field handoff is C2, not a force switch.
+    const momentumCarry = (uu - 6 * u3 + 8 * u4 - 3 * u5) * stageDuration
+    const accelerationCarry = 0.5 * (u2 - 3 * u3 + 3 * u4 - u5) * stageDuration * stageDuration
+    const normalAmount = rotatedN * radiusScale + detailN
+    const binormalAmount = rotatedB * radiusScale + detailB
+    const tangentAmount = localT * tangentScale
+    out[o] = hornFrameCenter.x
+      + hornFrameNormal.x * normalAmount
+      + hornFrameBinormal.x * binormalAmount
+      + hornFrameTangent.x * tangentAmount
+      + cloudVx * momentumCarry
+      + cloudAx * accelerationCarry
+    out[o + 1] = hornFrameCenter.y
+      + hornFrameNormal.y * normalAmount
+      + hornFrameBinormal.y * binormalAmount
+      + hornFrameTangent.y * tangentAmount
+      + cloudVy * momentumCarry
+      + cloudAy * accelerationCarry
+    out[o + 2] = hornFrameCenter.z
+      + hornFrameNormal.z * normalAmount
+      + hornFrameBinormal.z * binormalAmount
+      + hornFrameTangent.z * tangentAmount
+      + cloudVz * momentumCarry
+      + cloudAz * accelerationCarry
+  }
   const particleAt = (sd: (typeof bitsSeed)[number], at: number, out: Float32Array, o: number) => {
-    if (at < sd.startTime || at > sd.arrivalTime + 0.14) return false
+    if (at < sd.birthTime || at > sd.arrivalTime + particleTransferSeconds(sd)) return false
+    if (at < sd.startTime) {
+      cloudPositionAt(sd, at, out, o)
+      transformMachinePoint(particleMachineP0.set(out[o]!, out[o + 1]!, out[o + 2]!), at, particleMachineP0)
+      out[o] = particleMachineP0.x
+      out[o + 1] = particleMachineP0.y
+      out[o + 2] = particleMachineP0.z
+      return true
+    }
     const q = THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
-    // Source points cover the actual lower edge of the dissolving file rather
-    // than erupting from one singularity.
-    const edgeProgress = (sd.targetFrame - 0.5) / FRAME_GROUPS
-    const sourceX = DROP.x + sd.x
-    const sourceY = PLANE_Y + 0.04 + sd.y
-    const sourceZ = 0.8 - edgeProgress * 1.6 + sd.z * 0.12
+    cloudPositionAt(sd, sd.startTime, cloudStartP, 0)
+    cloudPositionAt(sd, sd.startTime - 0.01, cloudPreviousP, 0)
+    cloudPositionAt(sd, sd.startTime - 0.02, cloudBeforePreviousP, 0)
+    const cloudVx = (cloudStartP[0]! - cloudPreviousP[0]!) / 0.01
+    const cloudVy = (cloudStartP[1]! - cloudPreviousP[1]!) / 0.01
+    const cloudVz = (cloudStartP[2]! - cloudPreviousP[2]!) / 0.01
+    const cloudAx = (cloudStartP[0]! - 2 * cloudPreviousP[0]! + cloudBeforePreviousP[0]!) / 0.0001
+    const cloudAy = (cloudStartP[1]! - 2 * cloudPreviousP[1]! + cloudBeforePreviousP[1]!) / 0.0001
+    const cloudAz = (cloudStartP[2]! - 2 * cloudPreviousP[2]! + cloudBeforePreviousP[2]!) / 0.0001
     // Three monotone registration sites across the 16:9 film cell. Assignment
     // follows source z order within every cohort, preventing crossing paths.
     // The x coordinate stays on the camera side of both thumbnail and strip
     // through the complete capture, so no particle can appear to pass behind
     // the film before giving its luminance to the image.
     const slot = sd.slot === 0 ? -1 : sd.slot === 2 ? 1 : 0
-    const targetY = CHARGE_POINT.y + (slot === 0 ? -0.045 : 0.07)
-    const targetZ = slot * IMG_W * 0.41
-    const fallDistance = 1.02 + Math.abs(sd.y) * 0.32 + Math.abs(sd.z) * 0.08
-    const fallX = sourceX - 0.36 - Math.abs(sd.z) * 0.08
-    const fallY = sourceY - fallDistance
-    const fallZ = sourceZ + Math.sin(sd.orbit * 1.7) * 0.14
-    const vortexCenterY = CHARGE_POINT.y + 0.3
-    const vortexCenterZ = 0
-    const phaseOffset = Math.sin(sd.orbit * 2.0) * 0.055
-    const entryAngle = Math.atan2(fallY - vortexCenterY, fallZ - vortexCenterZ) + 0.18 + phaseOffset
-    const turnAngle = Math.PI * 2 * (PARTICLE_VORTEX_TURNS + 0.025 * Math.sin(sd.orbit * 3.0))
-    const vortexStartX = CHARGE_POINT.x + 1.58
-    const vortexStartY = vortexCenterY + Math.sin(entryAngle) * PARTICLE_ENTRY_RADIUS
-    const vortexStartZ = vortexCenterZ + Math.cos(entryAngle) * PARTICLE_ENTRY_RADIUS
-    const exitAngle = entryAngle + turnAngle
-    const vortexExitX = CHARGE_POINT.x + 0.48
-    const vortexExitY = vortexCenterY + Math.sin(exitAngle) * PARTICLE_EXIT_RADIUS
-    const vortexExitZ = vortexCenterZ + Math.cos(exitAngle) * PARTICLE_EXIT_RADIUS
+    const targetY = CHARGE_POINT.y + (slot === 0 ? -0.06 * IMG_H : 0.06 * IMG_H)
+    const targetZ = slot * IMG_W * 0.32
     let px: number
     let py: number
     let pz: number
 
-    if (q < PARTICLE_DROP_END) {
-      // Real gravity first: near-zero initial velocity and a visibly
-      // accelerating vertical fall before the machine begins to influence the
-      // trajectory. Only a restrained depth drift keeps the veil dimensional.
-      const u = q / PARTICLE_DROP_END
-      const gravity = u * u
-      const drift = minJerk(u)
-      px = THREE.MathUtils.lerp(sourceX, fallX, drift)
-      py = sourceY + (fallY - sourceY) * gravity
-      pz = THREE.MathUtils.lerp(sourceZ, fallZ, drift)
-    } else if (q < PARTICLE_INFALL_END) {
-      // Hermite peel into the vortex. Its starting tangent inherits the
-      // gravity drop; its ending tangent is the actual tangent of the shared
-      // orbit, so the handoff has direction as well as positional continuity.
-      const u = (q - PARTICLE_DROP_END) / (PARTICLE_INFALL_END - PARTICLE_DROP_END)
-      const tangentScale = (PARTICLE_INFALL_END - PARTICLE_DROP_END)
-        / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
-      const angularStart = turnAngle * 0.18
-      const vortexTangentY = Math.cos(entryAngle) * PARTICLE_ENTRY_RADIUS * angularStart * tangentScale
-      const vortexTangentZ = -Math.sin(entryAngle) * PARTICLE_ENTRY_RADIUS * angularStart * tangentScale
-      px = hermite(fallX, 0, vortexStartX, 0, u)
-      py = hermite(fallY, -1.25, vortexStartY, vortexTangentY, u)
-      pz = hermite(fallZ, 0, vortexStartZ, vortexTangentZ, u)
-    } else if (q < PARTICLE_VORTEX_END) {
-      // A contracting logarithmic/Fermat hybrid vortex. Angular progression
-      // keeps a small linear term so it never stalls at either handoff, while
-      // the min-jerk component supplies the gravitational acceleration. Three
-      // octave-decaying harmonics gently lobe the shared radius; because they
-      // are functions of phase rather than wall-clock noise, the field stays
-      // silky and deterministic instead of shimmering.
-      const u = (q - PARTICLE_INFALL_END) / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
-      const contraction = minJerk(u)
-      const angularProgress = 0.18 * u + 0.82 * minJerk(u)
-      const angle = entryAngle + turnAngle * angularProgress
-      const harmonicEnvelope = Math.pow(Math.sin(Math.PI * u), 2)
-      const harmonic = 0.065 * Math.sin(angle * 2 + sd.orbit)
-        + 0.027 * Math.sin(angle * 4 - sd.orbit * 1.7)
-        + 0.011 * Math.sin(angle * 8 + sd.orbit * 0.7)
-      const radius = THREE.MathUtils.lerp(PARTICLE_ENTRY_RADIUS, PARTICLE_EXIT_RADIUS, contraction)
-        * (1 + harmonicEnvelope * harmonic)
-      px = THREE.MathUtils.lerp(vortexStartX, vortexExitX, contraction)
-        + harmonicEnvelope * 0.045 * Math.sin(angle * 3 + sd.orbit)
-      py = vortexCenterY + Math.sin(angle) * radius
-      pz = vortexCenterZ + Math.cos(angle) * radius
-    } else if (q < PARTICLE_REGISTER_END) {
-      // Collapse the shared orbit into one of three stable registration sites.
-      // The vortex tangent is carried into the Hermite curve, then deliberately
-      // damped to rest at a point in front of the film.
-      const u = (q - PARTICLE_VORTEX_END) / (PARTICLE_REGISTER_END - PARTICLE_VORTEX_END)
-      const tangentScale = (PARTICLE_REGISTER_END - PARTICLE_VORTEX_END)
-        / (PARTICLE_VORTEX_END - PARTICLE_INFALL_END)
-      const angularExit = turnAngle * 0.18
-      const exitTangentY = Math.cos(exitAngle) * PARTICLE_EXIT_RADIUS * angularExit * tangentScale
-      const exitTangentZ = -Math.sin(exitAngle) * PARTICLE_EXIT_RADIUS * angularExit * tangentScale
-      px = hermite(vortexExitX, 0, PARTICLE_APPROACH_X, -0.12, u)
-      py = hermite(vortexExitY, exitTangentY, targetY, 0, u)
-      pz = hermite(vortexExitZ, exitTangentZ, targetZ, 0, u)
+    const totalJourney = sd.arrivalTime - sd.startTime
+    const hornDuration = totalJourney * PARTICLE_HORN_END
+    if (q < PARTICLE_HORN_END) {
+      const u = q / PARTICLE_HORN_END
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, u, hornEndP, 0)
+      px = hornEndP[0]!
+      py = hornEndP[1]!
+      pz = hornEndP[2]!
     } else {
-      // Final front-normal registration stroke: the point is visibly in front
-      // of the image until it reaches the activation thumbnail. Its luminance
-      // then transfers into the thumbnail during the 140ms absorption hold.
-      const u = minJerk((q - PARTICLE_REGISTER_END) / (1 - PARTICLE_REGISTER_END))
-      px = THREE.MathUtils.lerp(PARTICLE_APPROACH_X, PARTICLE_FRONT_X, u)
-      py = targetY
-      pz = targetZ
+      // Collapse the curved horn into one of three stable registration sites
+      // in one continuous C2 seat. The former neck stopped at an abstract
+      // approach point, then relaunched through a 77ms front-normal jab. This
+      // quintic inherits the Bishop flow's real velocity and acceleration and
+      // reaches the emulsion with a small residual normal velocity. The sharp
+      // loss of that last momentum is the exposure event itself.
+      const registerSpan = 1 - PARTICLE_HORN_END
+      const u = (q - PARTICLE_HORN_END) / registerSpan
+      const epsilon = 0.0015
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1, hornEndP, 0)
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1 - epsilon, hornBeforeEndP, 0)
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1 - 2 * epsilon, hornBeforeEnd2P, 0)
+      const derivativeScale = registerSpan / PARTICLE_HORN_END
+      const secondDerivativeScale = derivativeScale * derivativeScale
+      const endpointVelocity = (axis: number) => (
+        (3 * hornEndP[axis]! - 4 * hornBeforeEndP[axis]! + hornBeforeEnd2P[axis]!)
+        / (2 * epsilon)
+      ) * derivativeScale
+      const endpointAcceleration = (axis: number) => (
+        (hornEndP[axis]! - 2 * hornBeforeEndP[axis]! + hornBeforeEnd2P[axis]!)
+        / (epsilon * epsilon)
+      ) * secondDerivativeScale
+      const registerDuration = totalJourney * registerSpan
+      const contactVelocityX = -0.5 * registerDuration
+      px = quinticHermite(
+        hornEndP[0]!,
+        endpointVelocity(0),
+        endpointAcceleration(0),
+        PARTICLE_FRONT_X,
+        contactVelocityX,
+        0,
+        u,
+      )
+      py = quinticHermite(
+        hornEndP[1]!,
+        endpointVelocity(1),
+        endpointAcceleration(1),
+        targetY,
+        0,
+        0,
+        u,
+      )
+      pz = quinticHermite(
+        hornEndP[2]!,
+        endpointVelocity(2),
+        endpointAcceleration(2),
+        targetZ,
+        0,
+        0,
+        u,
+      )
     }
 
     transformMachinePoint(particleMachineP0.set(px, py, pz), at, particleMachineP0)
@@ -2402,15 +2816,20 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     return true
   }
   // Particles wake gradually, gain coherence as they join the common stream,
-  // then give their luminance to the written film cell during the 140ms hold.
+  // then give their luminance to the written film cell during one cadence-aware hold.
   // The registration point is a transfer, not a deletion.
   const particleEnergy = (sd: (typeof bitsSeed)[number], at: number) => {
-    if (at < sd.startTime || at > sd.arrivalTime + 0.14) return 0
+    const transferSeconds = particleTransferSeconds(sd)
+    if (at < sd.birthTime || at > sd.arrivalTime + transferSeconds) return 0
+    const materialize = minJerk((at - sd.birthTime) / 0.2)
+    if (at < sd.startTime) {
+      const cloudBreath = 0.94 + 0.06 * Math.sin((at - sd.birthTime) * 0.72 + sd.orbit)
+      return materialize * 0.36 * cloudBreath
+    }
     const q = THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
-    const birth = minJerk(q / 0.18)
-    const coherence = 0.34 + 0.66 * minJerk(q / 0.72)
-    const transfer = at <= sd.arrivalTime ? 1 : 1 - minJerk((at - sd.arrivalTime) / 0.14)
-    return birth * coherence * transfer
+    const coherence = 0.36 + 0.64 * minJerk(q / 0.8)
+    const transfer = at <= sd.arrivalTime ? 1 : 1 - minJerk((at - sd.arrivalTime) / transferSeconds)
+    return materialize * coherence * transfer
   }
   function update(t: number) {
     // The desktop camera sees a much larger physical stage. Preserve the
@@ -2425,11 +2844,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       filmSlotReady.fill(false)
       filmSlotSourceFrames.fill(-1)
       lastFilmFrame = Number.NaN
+      lastWrittenFrame = Number.NaN
       lastGateId = Number.NaN
       lastProjectedVideoRevision = Number.NaN
       temporalMediaResetRequested = false
     }
-    const movingMediaActive = movingMediaIsActive()
+    let movingMediaActive = movingMediaIsActive()
     if (movingMediaActive) syncMediaClocks(t)
     const dist = transportDist(t)
     // A real projector holds each frame at the gate, then pulls the strip down
@@ -2452,56 +2872,63 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     for (const m of beamMats) m.uniforms.uTime!.value = t
     updateActionLight(t)
 
-    // ACT 1 — the rite of indexing: the membrane wakes; a file materializes,
-    // splashes through it, hangs as a cloud, then enters the writer in groups
-    // of three particles for every mechanical frame-step.
+    // ACT 1 — the rite of indexing: an upright file passes through an empty
+    // dashed boundary. Its material inherits the same downward velocity as it
+    // becomes a suspended cloud, then triplets peel into the writer.
     const bx = DROP.x
     const framePhase = dist / PITCH
-    const chargeProgress = Math.min(1, framePhase / FRAME_GROUPS)
+    const writePhase = t < BOOT.run ? 0 : Math.min(FRAME_GROUPS, 1 + framePhase)
+    const chargeProgress = writePhase / FRAME_GROUPS
     let impactPulse = 0
     {
       // Materialize below the CTA band. The earlier 9.6-world-unit corridor
       // forced the readable file face through “Watch it work” on mobile.
       const y0 = PLANE_Y + 6.2
       const tau = t - BOOT.drop
-      const tPlane = BOOT.fall
-      const crossAge = tau - tPlane
+      const crossAge = t - FILE_CONTACT_AT
+      const transitProgress = THREE.MathUtils.clamp(crossAge / FILE_TRANSIT_SECONDS, 0, 1)
       const finalHit = timeForFrame(FRAME_GROUPS)
-      // One broad ripple acknowledges contact. The membrane remains while the
-      // source is being written, then recedes before the projector strikes.
+      // Only the perimeter exists. It calmly locates the transformation plane
+      // and fades after the source has fully crossed; its empty interior never
+      // splashes, refracts, ripples, or glows.
       const wake = THREE.MathUtils.smoothstep(t, BOOT.plane, BOOT.plane + 0.6)
-      const crossFlash = crossAge > 0 ? 1 - minJerk(crossAge / 1.08) : 0
-      const zoneOut = minJerk((t - (finalHit + 0.14)) / Math.max(0.1, BOOT.proj - finalHit - 0.14))
-      const scanFade = 1 - zoneOut
-      const outlineDim = crossAge > 0
-        ? 1 - 0.55 * minJerk(crossAge / 1.15) - 0.3 * Math.pow(chargeProgress, 0.82)
-        : 1
-      planeMat.opacity = wake * scanFade * outlineDim * (0.25 + 0.035 * Math.sin(t * 0.82) + 0.28 * crossFlash)
+      const borderOut = 1 - minJerk((t - (FILE_CLEAR_AT + 0.18)) / 0.72)
+      planeMat.opacity = wake * borderOut * 0.24
       dropFilmMat.uniforms.uTime!.value = t
-      dropFilmMat.uniforms.uImpact!.value = crossFlash
-      dropFilmMat.uniforms.uOpacity!.value = wake * scanFade * (0.58 + crossFlash * 0.16)
-      // The card glides to rest, then erodes from its lower edge for the full
-      // duration of the write. Its last ember vanishes with the final cohort.
+      dropFilmMat.uniforms.uImpact!.value = 0
+      dropFilmMat.uniforms.uOpacity!.value = 0
+      // Approach with a Hermite velocity match, then cross at one constant
+      // speed. The threshold changes representation only: the sleeve and the
+      // particles on its far side have the same position and momentum.
       const fileIn = minJerk(tau / 0.42)
-      const dissolve = crossAge > 0 ? Math.pow(chargeProgress, 0.82) : 0
-      if (tau > 0 && t < BOOT.proj && dissolve < 0.9995) {
+      const dissolve = transitProgress
+      if (tau > 0 && t < FILE_CLEAR_AT && dissolve < 0.9995) {
         bootFile.visible = true
-        const fallLinear = THREE.MathUtils.clamp(tau / tPlane, 0, 1)
-        const fall = minJerk(fallLinear)
-        const flatten = minJerk((fallLinear - 0.52) / 0.48)
-        const settle = crossAge > 0 ? minJerk(crossAge / Math.max(0.1, finalHit - (BOOT.drop + tPlane))) : 0
-        bootFile.position.set(bx - 0.1, THREE.MathUtils.lerp(y0, PLANE_Y + 0.09, fall) - settle * 0.1, 0.1)
+        const fileHalfHeight = 1.12 * detailScale
+        const contactY = PLANE_Y + fileHalfHeight
+        const transitVelocity = -(2 * fileHalfHeight) / FILE_TRANSIT_SECONDS
+        const approachU = THREE.MathUtils.clamp(tau / FILE_APPROACH_SECONDS, 0, 1)
+        const approachY = hermite(
+          y0,
+          0,
+          contactY,
+          transitVelocity * FILE_APPROACH_SECONDS,
+          approachU,
+        )
+        const fileY = crossAge <= 0
+          ? approachY
+          : contactY + transitVelocity * Math.min(FILE_TRANSIT_SECONDS, crossAge)
+        bootFile.position.set(bx - 0.1, fileY, 0.1)
         bootFile.scale.setScalar(detailScale)
-        // Present the Zoom face during the descent, then lay it flat into the
-        // liquid-film plane instead of showing a thin, unreadable plank.
-        // The sleeve and its printed inset share one axis. A restrained roll
-        // keeps the recording readable in flight without counter-rotating the
-        // media panel against its physical container.
-        bootFile.rotation.z = THREE.MathUtils.lerp(-0.82, 0, flatten) + 0.025 * Math.sin(tau * 0.72) * (1 - flatten) * (1 - dissolve)
-        bootFile.rotation.x = THREE.MathUtils.lerp(0.14, 0, flatten) + 0.018 * Math.sin(tau * 0.55) * (1 - flatten) * (1 - dissolve)
-        const bodyFade = crossAge <= 0 ? 1 : 1 - minJerk(crossAge / 0.55)
-        bootFileMat.opacity = fileIn * (0.07 * (1 - dissolve) + 0.71 * bodyFade)
-        bootFileMat.emissiveIntensity = 0.12 + crossFlash * 0.42
+        bootFile.rotation.set(0, -0.1, 0)
+        // The last surviving geometry used to be the integrated folder tab,
+        // which briefly read as a lid hovering over the cloud. Let the shell
+        // finish with the same moving breakup front instead of leaving a clean
+        // container-shaped cap after the printed face is gone.
+        const shellOut = 1 - minJerk((dissolve - 0.82) / 0.14)
+        bootFileMat.opacity = fileIn * shellOut * 0.76
+        bootFileMat.emissiveIntensity = 0.1
+        bootSleeveUniforms.uSleeveDissolve.value = dissolve
         if (bootLabelMat) {
           bootLabelMat.uniforms.uOpacity!.value = fileIn
           bootLabelMat.uniforms.uDissolve!.value = dissolve
@@ -2509,10 +2936,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       } else {
         bootFile.visible = false
       }
-      // Cohorts peel away gradually and share one broad flow. Their arrivals
-      // remain exactly frame-locked, while each trajectory is a deterministic
-      // minimum-jerk curve with a single restrained curl.
-      if (crossAge > 0 && t < finalHit + 0.18) {
+      // Material points are born along the crossing edge, coast into one
+      // suspended volume, then leave that cloud in frame-funded triplets.
+      if (t >= FILE_CONTACT_AT && t < finalHit + 0.18) {
         let visibleBits = 0
         for (let k = 0; k < BITS_N; k++) {
           const sd = bitsSeed[k]!
@@ -2541,8 +2967,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           trailPos[i6 + 1] = bitsPos[i3 + 1]!
           trailPos[i6 + 2] = bitsPos[i3 + 2]!
           const q = (t - sd.startTime) / (sd.arrivalTime - sd.startTime)
-          const trailEnvelope = minJerk((q - 0.58) / 0.12) * (1 - minJerk((q - 0.88) / 0.12))
-          const hasTrail = particleAt(sd, t - 0.028, trailPos, i6 + 3)
+          const trailEnvelope = q < PARTICLE_HORN_END
+            ? minJerk((q - 0.48) / 0.14)
+              * (1 - minJerk((q - (PARTICLE_HORN_END - 0.1)) / 0.1))
+            : 0
+          const hasTrail = particleAt(sd, t - PARTICLE_SHUTTER_SECONDS, trailPos, i6 + 3)
           if (hasTrail && trailEnvelope > 0) {
             trailPos[i6 + 3] = THREE.MathUtils.lerp(bitsPos[i3]!, trailPos[i6 + 3]!, trailEnvelope)
             trailPos[i6 + 4] = THREE.MathUtils.lerp(bitsPos[i3 + 1]!, trailPos[i6 + 4]!, trailEnvelope)
@@ -2566,55 +2995,75 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       }
     }
 
-    // ACT 2 — the lower reel catches in visible steps, then resolves into a
-    // smooth flywheel while the film itself keeps its honest 16fps cadence.
+    // ACT 2 — the first exposed cell starts one shared transport/flywheel
+    // drive. The strip keeps its honest 16fps gate cadence while both reels
+    // rotate continuously at exactly the carrier's tangent speed.
     const reelDist = reelDriveDistance(t)
     // Clockwise matches the loop: film rises on the left tangents and falls
     // on the right, so flange motion and thumbnail motion agree.
     reel.rotation.z = -reelDist / coilR
     lowerReel.rotation.z = -reelDist / coilR
-    const completedFrames = Math.min(FRAME_GROUPS, quantizedFrame(framePhase))
-    for (let n = Math.max(1, completedFrames - 4); n <= completedFrames; n++) {
+    const completedFrames = writtenFramesAt(t)
+    const lastHitAge = completedFrames >= 1 ? Math.max(0, t - timeForFrame(completedFrames)) : 0
+    for (let n = Math.max(1, completedFrames - 2); n <= completedFrames; n++) {
       const age = t - timeForFrame(n)
-      if (age >= 0) impactPulse += Math.exp(-age / 0.14)
+      if (age >= 0) impactPulse += Math.exp(-age / 0.09)
     }
-    impactPulse = Math.min(1, impactPulse * 0.42)
+    impactPulse = Math.min(0.55, impactPulse * 0.22)
+    const contactFlash = completedFrames >= 1 ? Math.exp(-lastHitAge / 0.028) : 0
+    const writerImpact = Math.min(1, contactFlash * 0.86 + impactPulse * 0.34)
     const finalHit = timeForFrame(FRAME_GROUPS)
     const chargingActive = completedFrames >= 1 && t <= finalHit + 0.28
     const writerEnvelope = chargingActive ? 1 - minJerk((t - finalHit) / 0.28) : 0
     const chargeRelease = 1 - minJerk((t - finalHit) / Math.max(0.1, BOOT.proj - finalHit + 0.18))
     for (const mat of lowerChargeMats) {
-      mat.emissiveIntensity = 0.005 + chargeProgress * chargeRelease * 0.07 + impactPulse * 0.1
+      mat.emissiveIntensity = 0.005 + chargeProgress * chargeRelease * 0.055 + impactPulse * 0.035
     }
-    lowerReelEmber.intensity = 0.025 + chargeProgress * chargeRelease * 0.38 + impactPulse * 0.6
-    chargeLight.intensity = writerEnvelope * (chargeProgress * 0.15 + impactPulse * 2.35)
-    chargeRingMat.opacity = writerEnvelope * Math.min(0.38, chargeProgress * 0.045 + impactPulse * 0.3)
-    chargeRingMat.emissiveIntensity = writerEnvelope * (chargeProgress * 0.09 + impactPulse * 1.05)
-    chargeRing.scale.setScalar(1 + impactPulse * 0.08)
-    const lastHitAge = completedFrames >= 1 ? Math.max(0, t - timeForFrame(completedFrames)) : 0
+    lowerReelEmber.intensity = 0.025 + chargeProgress * chargeRelease * 0.22 + impactPulse * 0.18
+    chargeLight.intensity = writerEnvelope * (chargeProgress * 0.1 + writerImpact * 2.1)
+    chargeRingMat.opacity = writerEnvelope * Math.min(0.28, chargeProgress * 0.03 + writerImpact * 0.22)
+    chargeRingMat.emissiveIntensity = writerEnvelope * (chargeProgress * 0.065 + writerImpact * 0.82)
+    chargeRing.scale.setScalar(1 + contactFlash * 0.035)
+    writerStockCatchMat.opacity = 0.13 + chargeProgress * chargeRelease * 0.025 + contactFlash * 0.065
     // A frame is not already complete when its triplet arrives. Three
     // reconstruction fronts spread from the exact registration anchors over
     // 55ms—short enough to finish before the next 16fps pull—while the impact
     // pulse and cumulative charge visibly accept the particles' energy.
-    const writerReveal = completedFrames >= 1 ? minJerk(lastHitAge / 0.055) : 0
+    const writerReveal = completedFrames >= 1 ? minJerk(lastHitAge / 0.052) : 0
     chargeThumbUniforms.uWriterBuild.value = writerReveal
-    chargeThumbUniforms.uWriterImpact.value = impactPulse
+    chargeThumbUniforms.uWriterImpact.value = writerImpact
     chargeThumbUniforms.uWriterCharge.value = chargeProgress
-    chargeThumbMat.opacity = writerEnvelope * Math.min(0.66, 0.1 + impactPulse * 0.14 + writerReveal * 0.52)
+    chargeThumbMat.opacity = writerEnvelope * Math.min(
+      0.66,
+      0.07 + writerImpact * 0.08 + writerReveal * 0.46 + chargeProgress * 0.07,
+    )
     filmMatRef.opacity = 0.2 + 0.8 * THREE.MathUtils.smoothstep(t, BOOT.run - 0.05, BOOT.run + 1.55)
-    if (filmFrame !== lastFilmFrame) {
+    const transportChanged = filmFrame !== lastFilmFrame
+    const writerChanged = completedFrames !== lastWrittenFrame
+    if (transportChanged || writerChanged) {
       if (Number.isFinite(lastFilmFrame) && filmFrame > lastFilmFrame + 1) {
         missedMechanicalTicks += filmFrame - lastFilmFrame - 1
+        // A live frame cannot be truthfully reconstructed after RAF skipped a
+        // mechanical writer tick: every missed cell would otherwise inherit
+        // the same current video snapshot. Prefer the deterministic 16fps
+        // fallback to silently breaking film/gate/output phase causality.
+        if (movingMediaActive) {
+          enterDeterministicMediaFallback()
+          movingMediaActive = false
+        }
       }
       let writerSlot = -1
-      if (movingMediaActive && filmFrame >= 1) {
-        const firstTick = Number.isFinite(lastFilmFrame)
-          ? Math.max(1, lastFilmFrame + 1)
-          : filmFrame
-        for (let tick = firstTick; tick <= filmFrame; tick++) writerSlot = stampFilmSlot(tick)
+      if (movingMediaActive && completedFrames >= 1) {
+        const firstWrite = Number.isFinite(lastWrittenFrame)
+          ? Math.max(1, lastWrittenFrame + 1)
+          : 1
+        for (let write = firstWrite; write <= completedFrames; write++) {
+          writerSlot = stampFilmSlot(write - 1)
+        }
       }
       lastFilmFrame = filmFrame
-      drawFilm(filmDist, Math.min(totalPath, filmDist))
+      lastWrittenFrame = completedFrames
+      drawFilm(filmDist, Math.min(totalPath, completedFrames * PITCH))
       if (writerSlot >= 0 && filmSlotReady[writerSlot]) {
         chargeThumbCtx.clearRect(0, 0, chargeThumbCanvas.width, chargeThumbCanvas.height)
         chargeThumbCtx.drawImage(filmSlotArt[writerSlot]!, 0, 0, chargeThumbCanvas.width, chargeThumbCanvas.height)
@@ -2764,6 +3213,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const jerks: number[] = []
     let maxTrailPx = 0
     let visibleParticles = 0
+    let suspendedParticles = 0
+    let funnelingParticles = 0
+    let registeringParticles = 0
+    let transferringParticles = 0
+    let hornRadiusScaleTotal = 0
+    let hornRadiusSamples = 0
     const rect = canvas.getBoundingClientRect()
     const toScreen = (source: Float32Array, target: THREE.Vector3) => {
       target.set(source[0]!, source[1]!, source[2]!).project(camera)
@@ -2771,7 +3226,34 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     }
     for (const seed of bitsSeed) {
       const visible = samples.every((sample, i) => particleAt(seed, t - i * dt, sample, 0))
-      if (particleAt(seed, t, samples[0]!, 0) && particleEnergy(seed, t) > 0.04) visibleParticles += 1
+      const activeNow = particleAt(seed, t, samples[0]!, 0)
+      if (activeNow && particleEnergy(seed, t) > 0.04) {
+        visibleParticles += 1
+        if (t < seed.startTime) {
+          suspendedParticles += 1
+        } else if (t <= seed.arrivalTime) {
+          const q = THREE.MathUtils.clamp(
+            (t - seed.startTime) / (seed.arrivalTime - seed.startTime),
+            0,
+            1,
+          )
+          if (q < PARTICLE_HORN_END) {
+            funnelingParticles += 1
+            const u = q / PARTICLE_HORN_END
+            const u2 = u * u
+            const u3 = u2 * u
+            const u4 = u3 * u
+            const u5 = u4 * u
+            const s = minJerk(u) + 0.45 * (-4 * u3 + 7 * u4 - 3 * u5)
+            hornRadiusScaleTotal += hornRadiusScaleAt(s)
+            hornRadiusSamples += 1
+          } else {
+            registeringParticles += 1
+          }
+        } else {
+          transferringParticles += 1
+        }
+      }
       if (!visible) continue
       for (let i = 0; i < 4; i++) toScreen(samples[i]!, projected[i]!)
       const p0 = projected[0]!
@@ -2782,17 +3264,22 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       accelerations.push(Math.hypot(p0.x - 2 * p1.x + p2.x, p0.y - 2 * p1.y + p2.y))
       jerks.push(Math.hypot(p0.x - 3 * p1.x + 3 * p2.x - p3.x, p0.y - 3 * p1.y + 3 * p2.y - p3.y))
       const trailSample = new Float32Array(3)
-      if (particleAt(seed, t - 0.028, trailSample, 0)) {
+      if (particleAt(seed, t - PARTICLE_SHUTTER_SECONDS, trailSample, 0)) {
         const trailPoint = new THREE.Vector3()
         toScreen(trailSample, trailPoint)
         const q = (t - seed.startTime) / (seed.arrivalTime - seed.startTime)
-        const trailEnvelope = minJerk((q - 0.58) / 0.12) * (1 - minJerk((q - 0.88) / 0.12))
+        const trailEnvelope = q < PARTICLE_HORN_END
+          ? minJerk((q - 0.48) / 0.14)
+            * (1 - minJerk((q - (PARTICLE_HORN_END - 0.1)) / 0.1))
+          : 0
         maxTrailPx = Math.max(maxTrailPx, p0.distanceTo(trailPoint) * trailEnvelope)
       }
     }
-    const framePhase = transportDist(t) / PITCH
-    const crossing = BOOT.drop + BOOT.fall
-    const fileDissolve = t <= crossing ? 0 : Math.pow(Math.min(1, framePhase / FRAME_GROUPS), 0.82)
+    const fileDissolve = THREE.MathUtils.clamp(
+      (t - FILE_CONTACT_AT) / FILE_TRANSIT_SECONDS,
+      0,
+      1,
+    )
     const yawDegrees = THREE.MathUtils.radToDeg(apparatusYawAt(t))
     const yawSpeedDegrees = THREE.MathUtils.radToDeg(
       (apparatusYawAt(t + dt) - apparatusYawAt(t - dt)) / (2 * dt),
@@ -2801,12 +3288,18 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     return {
       t: tidy(t),
       visibleParticles,
-      writtenFrames: Math.min(FRAME_GROUPS, quantizedFrame(framePhase)),
+      suspendedParticles,
+      funnelingParticles,
+      registeringParticles,
+      transferringParticles,
+      writtenFrames: writtenFramesAt(t),
       fileDissolve: tidy(fileDissolve),
       p95SpeedPxPerFrame: tidy(p95(speeds)),
       p95AccelerationPxPerFrame2: tidy(p95(accelerations)),
       p95JerkPxPerFrame3: tidy(p95(jerks)),
       maxTrailPx: tidy(maxTrailPx),
+      meanHornRadiusScale: tidy(hornRadiusSamples ? hornRadiusScaleTotal / hornRadiusSamples : 0),
+      hornTurnDegrees: tidy(PARTICLE_HORN_TURNS * 360),
       transportFramesPerSecond: tidy(transportSpeed(t) / PITCH),
       reelTangentFramesPerSecond: tidy(reelDriveSpeed(t) / PITCH),
       reelAngleRadians: tidy(-reelDriveDistance(t) / coilR),
@@ -2883,22 +3376,36 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   return {
     start() {
       if (running) return
+      const canResumeLiveHistory = useMovingMedia
+        && hasLiveMediaHistory
+        && Number.isFinite(lastFilmFrame)
+        && Number.isFinite(lastWrittenFrame)
+      const lateWithoutLiveHistory = elapsed >= BOOT.run && !canResumeLiveHistory
       running = true
-      useMovingMedia = true
+      useMovingMedia = !lateWithoutLiveHistory
       movingMediaPlaying = false
-      temporalMediaResetRequested = true
-      lastFilmFrame = Number.NaN
-      lastGateId = Number.NaN
-      lastProjectedVideoRevision = Number.NaN
+      temporalMediaResetRequested = !canResumeLiveHistory
+      if (!canResumeLiveHistory && !lateWithoutLiveHistory) {
+        lastFilmFrame = Number.NaN
+        lastWrittenFrame = Number.NaN
+        lastGateId = Number.NaN
+        lastProjectedVideoRevision = Number.NaN
+      }
       lastOutputTextureAt = Number.NaN
       firstOutputTextureLatency = Number.NaN
       firstBeamObserved = false
       longestOutputHold = 0
+      outputTextureRevision = 0
+      missedProjectionFrames = 0
+      missedMechanicalTicks = 0
+      projectionPresentedRevision = 0
+      projectionPresentedMediaTime = 0
       projectionPresentationTimes.length = 0
       outputTextureTimes.length = 0
       renderFrameTimes.length = 0
       timelineStart = performance.now() / 1000 - elapsed
-      resumeEpisodeMedia(elapsed)
+      if (lateWithoutLiveHistory) enterDeterministicMediaFallback()
+      else resumeEpisodeMedia(elapsed)
       raf = requestAnimationFrame(loop)
     },
     stop() {
@@ -2915,8 +3422,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     still(t: number = STILL_T) {
       this.stop()
       useMovingMedia = false
+      hasLiveMediaHistory = false
       temporalMediaResetRequested = true
       lastFilmFrame = Number.NaN
+      lastWrittenFrame = Number.NaN
       lastGateId = Number.NaN
       lastProjectedVideoRevision = Number.NaN
       elapsed = t

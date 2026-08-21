@@ -47,28 +47,30 @@ const signupUrl = computed(() => buildSignupUrl({
              giant machine present without allowing footage contrast to fight
              the words; it fades before the transformation stage begins. -->
         <div class="mobile-copy-shroud pointer-events-none absolute" aria-hidden="true" />
-        <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
-        <h1 class="font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
+        <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
+        <h1 class="hero-h1 font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
         </h1>
         <!-- The three pillars ARE the subhead (owner: integrated whole, no
-             numerals, no duplication): intelligence knows/finds/remembers,
-             craft cuts, programmability operates — each concept exactly once. -->
+             numerals, no duplication): intelligence remembers, craft cuts,
+             programmability operates — each concept exactly once. -->
         <!-- a size smaller and a step dimmer than a subhead (owner: the fold
-             felt crammed at full weight) — a spec block, not three subheads -->
-        <div class="mt-5 max-w-[36ch] space-y-3.5 text-sm leading-relaxed text-zinc-500">
-          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows who's talking, finds any moment, remembers every session.</p>
-          <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — no video gen here, just masterful cuts and transitions.</p>
-          <p><span class="font-semibold text-zinc-100">Highly programmable</span> — operable by any agent: ours, or the one you bring.</p>
+             felt crammed at full weight) — a spec block, not three subheads.
+             One line per pillar (owner, 2026-08-20): speaker/moment specifics
+             live in the substrate section; the hero keeps the memory moat. -->
+        <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
+          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — remembers every session.</p>
+          <p><span class="font-semibold text-zinc-100">Classical editing excellence</span> — cuts, not video gen.</p>
+          <p><span class="font-semibold text-zinc-100">Highly programmable</span> — our agent, or yours.</p>
         </div>
         <!-- One CTA, one decision. "Watch it work" was cut (owner, 2026-08-20):
              it pointed at the old homepage's demo section, and the machine
              beside it already performs what the button promised. If a real
              product film ever exists, it returns with a real target. -->
-        <div class="mt-7">
+        <div class="hero-cta-row">
           <a
             :href="signupUrl"
-            class="inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
+            class="hero-cta inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
           >Start free <span aria-hidden="true">→</span></a>
         </div>
         <!-- deliverables strip: outputs, not features (owner draft 2026-08-20).
@@ -77,6 +79,11 @@ const signupUrl = computed(() => buildSignupUrl({
              stranding void on desktop, leftover pocket on mobile). One labeled
              line on desktop; a tight three-line labeled readout on mobile. The
              machine owns everything below. -->
+        <!-- Not a deliverables strip: a wayfinding whisper. The 100svh stage
+             gives no hint the substrate/agent/proof sections exist; this rides
+             the permanently dead lower-left corner, desktop-and-tall only so
+             it can never crowd the CTA or the mobile machine. -->
+        <a href="#how" class="hero-scroll font-mono text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-600 hover:text-zinc-300">How it works <span aria-hidden="true">↓</span></a>
       </div>
     </div>
 
@@ -85,18 +92,24 @@ const signupUrl = computed(() => buildSignupUrl({
          tractable for agents, and introduce the editor with a REAL screenshot
          (captured from the live clip-demo embed) framed as the surface you
          typically DON'T use — that's the point of the substrate. -->
-    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
+    <section id="how" class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
       <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
-      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Turns video into agent-native substrate</h2>
-      <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-        Raw video is opaque to software — a wall of pixels and a waveform. BitterClip decomposes it into material an agent can hold: every word timestamped, every speaker named, every moment indexed, every cut addressable.
-      </p>
+      <!-- Full-width bands, not left-hugging clumps (owner, 2026-08-20): the
+           H2 and intro share a two-column header band above the card, and the
+           caption splits into two halves spanning the card's width below it. -->
+      <div class="substrate-head">
+        <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Turns video into agent-native substrate</h2>
+        <p class="substrate-intro agent-measure text-base leading-relaxed text-zinc-400">
+          Raw video is opaque to software — a wall of pixels and a waveform. BitterClip decomposes it into material an agent can hold: every word timestamped, every speaker named, every moment indexed, every cut addressable.
+        </p>
+      </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
           <img src="/images/hero/transcript-editor.png" alt="The BitterClip transcript editor: each speaker's words laid over the audio waveform, with a clip selection dragged across the transcript" class="block w-full" loading="lazy" width="2880" height="880">
         </div>
-        <figcaption class="agent-measure mt-4 text-sm leading-relaxed text-zinc-500">
-          The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">You'll mostly never open it.</span> That's the point: you ask for what you want, with whatever agent you prefer, and the substrate makes the answer computable.
+        <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
+          <p>The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">You'll mostly never open it.</span></p>
+          <p>That's the point: you ask for what you want, with whatever agent you prefer, and the substrate makes the answer computable.</p>
         </figcaption>
       </figure>
     </section>
@@ -161,25 +174,30 @@ const signupUrl = computed(() => buildSignupUrl({
         <figure>
           <div class="agent-card relative overflow-hidden rounded-2xl border">
             <img
-              src="/clips/coaching-session-poster.jpg"
-              alt="Andrew Williams coaching his client Adrian through a lift at Strength & Positions"
+              src="/clips/park-session-poster.jpg"
+              alt="The same park moment from two synchronized cameras side by side: Mike kneeling into a coached hip stretch by the tree, and the overhead view of the stretch pad"
               width="280"
               height="158"
               loading="lazy"
               class="block aspect-video w-full object-cover"
             >
             <iframe
-              src="https://app.bitterclip.com/embed/clip/clip_yf9ibrk2b7v13yzztbba"
+              src="https://app.bitterclip.com/embed/clip/clip_ikmni9p7hairtsqoeepw"
               class="absolute inset-0 h-full w-full"
               style="border: 0"
-              title="Watch: Andrew Williams coaching Adrian at Strength & Positions"
+              title="Watch: Andrew coaching Mike through a hip stretch at the park"
               loading="lazy"
               allow="fullscreen"
               allowfullscreen
             />
           </div>
+          <!-- Park session (owner swap 2026-08-20; the Adrian garage clip read
+               as poor footage). Multicam claims are grounded: 24 recordings /
+               15 bursts, 9 placed synced angles in the session episode; the
+               export (verified by frame inspection) is a two-up of the side
+               angle and the overhead camera rendered simultaneously. -->
           <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
-            A real client clip — Andrew coaching Adrian — cut in BitterClip and <span class="text-zinc-300">served live by the same machine</span>, through the embed his clients see.
+            A real session — Andrew working on Mike's hip at the park. Phones, an iPad, and Meta glasses ran loose; BitterClip synchronized all two dozen recordings, and this cut plays <span class="text-zinc-300">the same moment from two cameras, side by side, frame-locked</span> — served live by the same machine, through the embed his clients see.
           </figcaption>
         </figure>
         <div class="space-y-12">
@@ -245,8 +263,100 @@ const signupUrl = computed(() => buildSignupUrl({
   z-index: 1;
 }
 
+/* Fold rhythm — scoped CSS, not utilities: the dev Tailwind watcher has
+   twice dropped newly-introduced classes (see .btf). Scale steps 16/24/36
+   so eyebrow→headline→pillars→CTA group instead of stacking evenly. */
+.hero-pillars {
+  margin-top: 1.5rem;
+}
+
+.hero-cta-row {
+  margin-top: 2.25rem;
+}
+
+@media (min-width: 80rem) {
+  .hero-h1 {
+    font-size: 4.5rem;
+  }
+}
+
+.hero-cta {
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.hero-cta:hover {
+  background-color: #f6a094;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 48px -8px rgb(242 143 132 / 0.55);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+.hero-cta:focus-visible {
+  outline: 2px solid #f28f84;
+  outline-offset: 4px;
+}
+
+/* Wayfinding whisper at the stage foot. mt-auto anchors it to the bottom of
+   the copy flex column; hidden below md and on short viewports where the
+   column would push it into the CTA or off the stage. */
+.hero-scroll {
+  display: none;
+}
+
+@media (min-width: 48rem) and (min-height: 46rem) {
+  .hero-scroll {
+    display: block;
+    margin-top: auto;
+    padding-bottom: 1.75rem;
+    transition: color 160ms ease;
+  }
+}
+
 .agent-measure {
   max-width: 44ch;
+}
+
+/* Substrate section bands — scoped (Tailwind-watcher strike avoidance).
+   Desktop: H2 and intro share one baseline-aligned header row; the caption's
+   two halves sit at opposite edges under the card. Mobile: normal stack. */
+.substrate-intro {
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 64rem) {
+  .substrate-head {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    column-gap: 4rem;
+    align-items: end;
+  }
+
+  .substrate-intro {
+    margin-top: 0;
+  }
+}
+
+.substrate-caption p {
+  max-width: 44ch;
+}
+
+.substrate-caption p + p {
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 48rem) {
+  .substrate-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+
+  .substrate-caption p + p {
+    margin-top: 0;
+  }
 }
 
 .agent-grid {

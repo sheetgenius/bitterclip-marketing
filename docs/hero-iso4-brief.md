@@ -15,11 +15,11 @@ this document plus the repo, without the conversation that produced it.
 
 ---
 
-## 0. Current owner ruling — a gentle film-writing ritual (2026-08-19)
+## 0. Current owner ruling — a gentle film-writing ritual (2026-08-20)
 
-This section supersedes the hopper, acid-bath, compact-body, and single-reel
-language later in this lineage document. It also supersedes the faster
-"splash and vanish" timing and circular front-lens language elsewhere below.
+This section supersedes the hopper, acid-bath, compact-body, single-reel,
+liquid-membrane, splash, molten-erosion, generic-vortex, linear-suction, and
+circular front-lens language later in this lineage document.
 
 - The machine is a **large, vertically stacked dual-reel projector** occupying
   roughly 85% of the available composition. It remains a supporting character
@@ -30,37 +30,51 @@ language later in this lineage document. It also supersedes the faster
 - There is **no hopper or acid bath**. Film is already threaded as a dark,
   nearly blank loop. The incoming file supplies information that energizes
   this film realm; it does not become a literal chemical material.
-- Preserve the demure dashed drop boundary. Its interior is a very subtle
-  liquid-film membrane. The file settles into this threshold instead of
-  striking it violently. Refraction and impact ripples must be broad, slow,
-  low-contrast, and physically calm.
-- The file does **not** vanish at the first crossing. It remains suspended in
-  the membrane and slowly dissolves from its lower edge throughout the whole
-  charging act, like a controlled molten erosion. Particle triplets peel away
-  from that dissolving edge. The final visible fragment disappears only when
-  the last particles enter the writer and the last thumbnails fill in.
-- The particle field must feel slow, mystical, gentle, elegant, and
-  screensaver-like—not busy, explosive, insect-like, or stressful. After an
-  initial soft expansion, particles drift in sparse layers, follow smooth
-  curved paths with low jerk, decelerate into registration, and settle rather
-  than collide.
+- Preserve the demure dashed drop boundary. Its perimeter is the **only visible
+  threshold indicator**. The interior is optically empty: no membrane, liquid,
+  surface, ripple, splash, refraction, glow, collision, or invisible-floor
+  response.
+- The archival sleeve descends upright, face readable and edge-first. It passes
+  continuously through the boundary. The crossed portion visibly becomes
+  particles while the intact portion remains above, so representation changes
+  at the plane without a position or velocity discontinuity. The sleeve clears
+  once its last crossed material has been conserved into the cloud; it does not
+  remain as a molten fragment through the charging act.
+- Newly released particles inherit the sleeve's instantaneous downward
+  momentum, then dissipate it through critically damped motion into a slow,
+  filled, genuinely volumetric suspended cloud. The cloud breathes coherently
+  and subtly—never boiling, sparkling, orbiting independently, forming a hollow
+  shell, or resembling insects.
+- Attraction gradually organizes that cloud into an asymmetric reverse-flow
+  phonograph/saxophone-horn gesture made entirely from particle distribution:
+  broad bell, visible shoulder, off-axis J or shallow-S sweep, contracting
+  body, and narrow throat. Nested streamlines share restrained angular motion
+  of roughly half a revolution across the whole path. There is no rendered
+  tube, funnel, connector, tractor beam, corkscrew, black-hole vortex, or
+  decorated arrow. Flow accelerates as it contracts while retaining low jerk
+  and coherent common fate.
 - The attraction point is a **film writer**, not a glowing target. It sits on
   the lower/front quadrant of the bottom reel where film visibly feeds into
-  the winding path. Each three-particle group resolves into three registration
-  points on one frame cell; the real Episode 1 thumbnail then materializes in
-  that cell and travels away with the filmstrip. A first-time viewer should
-  read information becoming film, not particles being discarded into a reel.
+  the winding path. Each three-particle group becomes visibly ordered in the
+  neck, rotates through a short final approach normal to the film plane, and
+  strikes three registration points on the **front face** of one frame cell.
+  A contained white-hot contact transfers into warm emulsion development,
+  restrained perforation response, and the real Episode 1 thumbnail. That
+  completed physical cell travels away with the filmstrip. No particle passes
+  behind the carrier, bounces from the reel, or disappears at an abstract
+  target.
 - Particle absorption and transport are the **same clock**: exactly three
   particles activate each thumbnail/frame-step. Early isolated groups produce
   visible mechanical clunks; the exact 36-frame loop is funded by 36 triplets
   (108 particles total), and acceleration ends at 16 film frames and 48
   absorbed particles per second.
-- The **first completed thumbnail starts both reels**. They are stationary at
-  that instant, turn slowly, then join the accelerating film transport without
-  an angular jump. Once joined, reel tangent speed and film speed are the same;
-  the physical film and gate retain the intermittent 16fps cadence. The strip
-  holds for most of each interval and completes one minimum-jerk pull-down near
-  the end; the reels remain continuous flywheels rather than stepping with it.
+- The **first completed thumbnail starts the film and both reels** from rest.
+  One shared distance function drives carrier position and both reel angles,
+  so they begin slowly and remain position-, speed-, and acceleration-synced
+  without slip, catch-up, or an angular jump. The physical film and gate retain
+  the intermittent 16fps cadence: the strip holds for most of each interval
+  and completes one minimum-jerk pull-down near the end, while the reels remain
+  continuous flywheels rather than stepping with it.
 - Treat the 36 images as **physical film slots**, not disposable render IDs.
   The writer overwrites one slot, that same thumbnail survives the loop seam,
   and the gate reads it 32 pulls later. A cell may not silently repaint as it
@@ -71,10 +85,12 @@ language later in this lineage document. It also supersedes the faster
   no-overshoot minimum-jerk turn about the vertical spine; the machine and its
   three attached optical throws swing into the solved projection pose together,
   reaching exactly zero yaw as the third artifact completes. The writer,
-  conducted action light, film, reels, gate, beams, screens, drop membrane,
+  conducted action light, film, reels, gate, beams, screens, intake perimeter,
   incoming file, and concealed practicals must share that mechanical axis.
   There is no camera counter-move, secondary sway, bounce, recoil, pitch, or
-  roll, and no further motion once the output constellation is complete.
+  roll, and no further motion once the output constellation is complete. The
+  dashed intake shares the apparatus's profiled axis, but it is not a material
+  surface attached to the mechanism.
 - Every hit flashes one real Mike & John thumbnail at the writer. Activated
   cells move away, blank cells replace them, and restrained warmth accumulates
   in the wound film—not in the metal flange—until the lower reel is charged.
@@ -120,32 +136,32 @@ language later in this lineage document. It also supersedes the faster
   but it is recessed behind warm inner lips, edge-vignetted, and materially
   dimmer than the final artifacts. It must read as film observed through an
   aperture—not a fourth screen or a monitor attached to the mechanism.
-- The drop membrane stays present while the file is dissolving. The final
-  three-particle hit completes the last thumbnail; only then does the dashed
-  boundary and liquid-film plane dissolve. That withdrawal hands directly to
-  the projector strike. The writer settles after the cloud is exhausted; it
-  must not keep flashing without particles.
+- The dashed perimeter stays present only long enough to locate the sleeve's
+  crossing, then fades after the file has fully passed. There is no interior
+  plane to withdraw. The final three-particle hit still completes the last
+  thumbnail and exhausts the cloud; the writer then settles and must not keep
+  flashing without particles.
 - The source must read immediately as a real input recording before it begins
   to dissolve: one paper-thin archival sleeve with an integrated tab, a flush
   axis-aligned contact-sheet inset, literal `ZOOM RECORDING` and `MP4`, paired
   Mike/John imagery, episode identity, and recording duration. Do not construct
   it from stacked box primitives or counter-rotate the preview against its
-  carrier. The source card, dashed membrane, liquid interior, particle
-  departure points, and writer must remain coplanar with the profiled
-  apparatus. The dashed boundary may project outward from the machine, but it
-  must never look like an independently offset UI surface.
+  carrier. The source card, dashed perimeter, particle departure region, and
+  writer must remain aligned with the profiled apparatus. The dashed boundary
+  may project outward from the machine, but it must never look like an
+  independently offset UI surface.
 - Remove the bright circular canister/lens from the front of the projector.
   The optical face is a shallow **rectangular gate rim**. Its most luminous
   element is the real thumbnail standing in the gate, with the light source
   clearly behind that film frame. The projected beams leave from just ahead
   of the gate, but no white orb may obscure the causal order `lamp → film →
   projection`.
-- A conducted stage light follows the active idea once—file, membrane, cloud,
+- A conducted stage light follows the active idea once—file, threshold, cloud,
   writer, lower reel, upper reel, gate, outputs—while the rest of the machine
   remains noir ambience. The lens must glow, never blind.
 - Mobile is the primary composition and should be judged first at **440×956**.
   The large upper reel may sit behind the copy only if it remains sufficiently
-  dark; output silhouettes and the particle vortex must stay legible below.
+  dark; output silhouettes and the curved particle horn must stay legible below.
 - On mobile, move the apparatus closer to the left edge and show a little more
   side profile. The change should reveal the floating spine, gate depth, and
   mechanical construction without making the reel faces unreadable or
@@ -176,9 +192,9 @@ language later in this lineage document. It also supersedes the faster
 
 The intended emotional sequence is:
 
-`file settles into liquid threshold → slow molten dissolve → sparse particle`
-`drift → film-cell registration → reels turn → membrane fades → backlit gate`
-`strikes → machine and optical field align → holographic artifact constellation`
+`recognition → crossing → continuity → suspension → coherence → attraction →`
+`acceleration → film-cell exposure → accumulation → backlit gate strikes →`
+`machine and optical field align → holographic artifact constellation`
 
 The particle movement is the signature first-load moment and warrants more
 iteration than ornamental machine detail. Evaluate it through deterministic
