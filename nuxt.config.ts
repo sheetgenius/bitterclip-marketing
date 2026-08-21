@@ -58,13 +58,15 @@ export default defineNuxtConfig({
         { property: 'og:title', content: siteTitle },
         { property: 'og:description', content: description },
         { property: 'og:type', content: 'website' },
-        { property: 'og:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
+        // -iso4 filename: social scrapers cache by URL, so the hero-true card
+        // reshoot (machine at t=24) ships under a new name to bust old cards.
+        { property: 'og:image', content: 'https://bitterclip.com/images/bitterclip-og-iso4.png' },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: siteTitle },
         { name: 'twitter:description', content: description },
-        { name: 'twitter:image', content: 'https://bitterclip.com/images/bitterclip-og.png' },
+        { name: 'twitter:image', content: 'https://bitterclip.com/images/bitterclip-og-iso4.png' },
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },

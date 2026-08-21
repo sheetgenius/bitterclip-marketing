@@ -11,4 +11,4 @@ support_email: hello@bitterclip.com
 mcp_resource_url: https://app.bitterclip.com/mcp
 app_origin: https://app.bitterclip.com
 # Default 1200x630 social card for marketing and docs routes.
-og_image_default: /images/bitterclip-og.png
+og_image_default: /images/bitterclip-og-iso4.png

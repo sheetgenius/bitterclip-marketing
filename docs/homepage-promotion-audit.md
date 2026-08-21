@@ -84,8 +84,17 @@ Codex) plus owner rulings in-session:
   print under the hero CTA. Company links restored on both testimonials.
 - **A/B fallback**: old page soaks at `/classic` (noindex, surface
   `classic`), guarded by a smoke test; delete after ~a week.
-- Still open (unchanged): OG image reshoot from the machine (T8), headed-GPU
-  perf run (T9), scene-side polish (T10).
+- **T8 done (2026-08-21):** OG card reshot from the real scene —
+  `public/images/bitterclip-og-iso4.png` (new filename to bust scraper
+  caches; nuxt.config og/twitter meta + site.yml `og_image_default` +
+  smoke assertion updated; the old `bitterclip-og.png` stays for any legacy
+  references). Recipe: 1200×630 viewport at dpr 2 on `/`, hide `header`,
+  `.hero-cta-row`, `.hero-fineprint`, freeze `window.__iso.still(24)`
+  (deployed constellation), screenshot, `sips -z 630 1200` downscale.
+  Composition: headline + pillars left, machine + three projections right —
+  no CTA button (an un-clickable button reads as a screenshot, and
+  og:title/description already carry the ask).
+- Still open (unchanged): headed-GPU perf run (T9), scene-side polish (T10).
 
 ### Losses accepted by the swap (owner-acknowledged)
 - The hero no longer runs the REAL product component (the unified-composition
