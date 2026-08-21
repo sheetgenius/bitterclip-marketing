@@ -7,7 +7,7 @@ test.describe('pricing section', () => {
     await page.goto('/')
     const pricing = page.locator('#pricing')
 
-    const clipCta = pricing.getByRole('link', { name: /Start clipping/ })
+    const clipCta = pricing.getByRole('link', { name: /Start on Clip/ })
     await expect(clipCta).toBeVisible()
     expect(await clipCta.getAttribute('href')).toContain('plan=clip')
 

@@ -6,6 +6,8 @@ dist
 mike_and_john
 node_modules
 test-results
+tmp
+.playwright-mcp
 .DS_Store
 .antigravitycli
 .env

@@ -617,18 +617,22 @@ The correction deliberately separates mechanical and digital cadence without
 breaking causality. The physical ribbon and gate remain intermittent 16fps.
 The real Episode 1 source is 24fps, so a second phase-locked playback head runs
 at native cadence with a two-second delay (`32 writer-to-gate cells / 16fps`).
-YouTube and LinkedIn now share that delayed head. At each mechanical pull their
-source-time agrees with the gate; between pulls the finished digital artifacts
-continue at 24fps. Podcast waveform motion uses the same delayed time instead
-of choosing unrelated random heights per frame. A media-timestamp fallback can
+YouTube and LinkedIn now share that delayed head. Each freshly written cell's
+source-time agrees with that head on the cell's first gate pass during the
+projection payoff; between pulls the finished digital artifacts continue at
+24fps. After the finite physical carrier recirculates,
+the already-launched digital result keeps playing forward instead of seeking
+backward. Podcast waveform motion uses the same delayed time instead of
+choosing unrelated random heights per frame. A media-timestamp fallback can
 still update the outputs if an off-DOM video-frame callback is deprioritized.
 
 The film loop also gained a real conservation model. Thirty-six persistent
 physical slot canvases replace absolute render IDs that changed at the loop
 seam. The writer overwrites one slot, the same image rides both reels, and the
 gate reads that slot thirty-two pulls later. A pure integer audit across 72
-steady-state ticks reports zero slot mismatches and zero 24→16 phase errors;
-source-frame steps alternate one/two as required by the exact 3:2 ratio.
+steady-state ticks reports zero slot mismatches. On each fresh cell's first
+writer-to-gate pass, source-frame steps alternate one/two as required by the
+exact 3:2 ratio.
 
 Mechanical motion is quieter without becoming fake. Reel flanges remain
 continuous flywheels. The film holds for 58% of each interval and completes
@@ -921,3 +925,805 @@ side by side, frame-locked" — is what the video literally shows. New static
 poster public/clips/park-session-poster.jpg is the export's first frame.
 The old Adrian embed stays published (the current live homepage still uses
 it). Evidence: tmp/iso4-polish/r2-substrate-*, r4-proof-*.
+
+## Round 20 — 2026-08-21 homepage truth and particle baseline
+
+This round supersedes Round 19's acceptance-surface statement. `/lab/iso4`
+remains useful for narrow diagnostics, but every acceptance frame, collision
+judgment, cold load, continuous pass, and reviewer packet in this campaign came
+from the actual homepage `/` with its header, proposition, CTA, footnote,
+responsive spacing, and fold boundary.
+
+The accepted mechanics were locked before particle work. Baseline homepage
+capture showed three specific losses: the 108 visible points occupied only
+about `.693x` the sleeve's projected area at wide suspension; the half-crossing
+integrated-luminance ratio fell as low as `.685`; and source colour was rapidly
+normalized into pale warm beads. The effect conserved packet count but not the
+owner's perceived material or source identity. Baseline evidence lives at
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r0-baseline/`.
+Collision masks were established against the DOM copy, CTA, output targets,
+machine bounds, and viewport; all accepted candidates report zero copy, CTA,
+and viewport collisions, but screenshots—not those masks—remain authoritative.
+
+## Round 21 — density: 324 vs 648 vs 972 visible fragments
+
+The logical accounting stayed fixed at 108 packets and three logical packets
+per physical cell while each packet rendered three, six, or nine children.
+Paths, timing, horn, cameras, writer anchors, reel motion, and output layout
+were identical.
+
+- **324 visible / 3 per packet / 9 per cell — rejected.** Calm and inexpensive,
+  but sparse and beady. The breakup still made a substantial sleeve become a
+  lesser constellation.
+- **648 visible / 6 per packet / 18 per cell — accepted.** Smallest density that
+  produced a filled body and preserved discrete material at normal homepage
+  scale. Wide/tall full-suspension area settles at `1.211x/1.207x` the sleeve;
+  mobile reaches `1.467x`, the upper expressive bound. Luminance is
+  `1.013/1.001/.959x`, so the gain is projected area rather than heat.
+- **972 visible / 9 per packet / 27 per cell — rejected.** It added powder,
+  sparkle stress, screen density, and update cost without a meaningful union-
+  coverage gain. Late cohorts became harder to parse at the writer.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r1-density/`.
+
+## Round 22 — colour dramaturgy
+
+All three colour scripts ran at the chosen 648 density and were compared in
+full colour and grayscale across intact source, quarter/half/three-quarter
+crossing, release, suspension, attraction, horn, compression, contact, and
+developed-film beats.
+
+- **Archival warm — rejected.** Coherent, but sepia collapsed blue Zoom marks,
+  black panels, and skin/stock differences into one period grade.
+- **Spectral pearl — accepted.** Frozen source RGB moves through OKLab toward a
+  restrained pearlescent suspension, then compresses without luminance pumping.
+  Skin, salmon, blue, white type, graphite, blue-black, and muted brown remain
+  perceptible. Dark pixels are lifted into material rather than discarded.
+- **Bichromatic information field — rejected.** Clean silhouette, but it
+  imposed a two-channel graphic over the recording and felt generically
+  technological.
+
+Source-to-target colour transport was tested and rejected for the live path:
+even gradual target morphing created unnecessary chromatic chatter and weakened
+the recording identity. Only a restrained fallback-only late target bias
+remains. Accepted source-to-cloud OKLab distance is about `.059`; deterministic
+sample-bin source coverage is `1.0`. Those are sampling tripwires, not rendered
+framebuffer histogram claims.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r2-color/`.
+
+## Round 23 — source identity mapping
+
+Every visible child now owns a deterministic source UV and a frozen sampled
+colour. The exact homepage sleeve/contact sheet is rasterized once, low-
+discrepancy candidates are generated over the complete surface, and every
+fragment is born from the CPU twin of the moving dissolve field at its matching
+breakup location. Released material is never repainted by later live-video
+frames. A short family opening preserves nearby source neighborhoods before the
+horn.
+
+- **Uniform low discrepancy — rejected.** Complete coverage, but too little
+  representation of faces, type, logos, edges, and chromatic transitions.
+- **Importance-only — rejected.** Preserved highlights and semantic edges at
+  the expense of quiet dark surface; risked the forbidden highlight-only read.
+- **Balanced hybrid — accepted.** 75% complete low-discrepancy coverage and 25%
+  deterministic importance allocation. It retains full-surface material while
+  giving faces, logo/type, edges, and transitions enough votes.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r3-sampling/`.
+
+## Round 24 — volumetric material
+
+The accepted cloud separates normal-blended cores from a low-energy additive
+halo. Cores use bounded size/shape families and depth extinction; halos remain
+only 6–12% of the core signal. A Beer–Lambert-inspired density response reduces
+overlap heating. The field is filled (`cloudHollowCenterRatio=0`) and the p95
+screen density falls rather than rises as the accepted family envelope spreads
+coverage, which is why the larger body does not become a furnace.
+
+Equal bright sprites, larger bloom, stronger halos, and a dense 972-fragment
+fog were rejected. The final six-child core uses size `.365`, alpha `.135`, and
+a core opacity floor `.08`; the suspension-only family envelope opens around a
+zero-centroid parent and C2-returns in the last 340ms before horn entry. Mobile
+at `1.467x` projected area is now a locked upper bound: subsequent lighting work
+must not raise particle alpha or halo energy.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r4-material/`.
+
+## Round 25 — packet reconvergence
+
+Tighter zero-centroid rings `[.25,.42,.58]` replaced the broad child scatter.
+The parent path, Bishop frame, horn radius, `.42` turns, C2 seat, and three
+registration anchors did not move. Wide DPR2 cohesion contracts from `5.446px`
+at horn progress `.55` to `1.051px` at `.90`; mobile contracts
+`4.704→.866px`; arrival spread remains exactly zero. A trial late separation
+lobe made the three cohorts more literal but raised jerk, so it was rejected.
+The accepted version makes common fate readable without eighteen independent
+flakes or a new terminal impulse. Final sampled p95 speed/acceleration/jerk at
+`t=6.70` wide are `5.760/1.395/.626` px per frame powers, with `.085px`
+maximum trail in that terminal sample.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r5-packets/`
+and `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r10-particle-final/settled/`.
+
+## Round 26 — exposure and energy transfer
+
+Eighteen visible fragments resolve into three packet clusters, strike the three
+existing emulsion anchors, and fund one physical film slot. Three grain-
+perturbed fronts join over 52ms while the 32ms contact afterimage decays; the
+particle extinction and image build overlap. First write remains `3.800s`,
+write 16 `5.675s`, and write 36 `6.925s`. The completed image leaves on the
+same 16fps physical film clock.
+
+The corrected first, write-16, and final sheets show blank cell → three seeds →
+connected development → coherent real image → physical departure. The numeric
+`energyBalanceError=0` is an analytic complement by construction, not an
+independent framebuffer energy measurement; the visual close-ups are the
+acceptance proof. Whole-cell fades, flashes, explosions, starbursts, and a
+continuously hot writer were rejected.
+
+Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r10-particle-final/impact/first-contact-sheet.png`,
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r10-particle-final/impact/write16-contact-sheet.png`,
+and `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r10-particle-final/impact/final-contact-sheet.png`.
+
+## Round 27 — particle integration, hostile displays, and performance
+
+The complete homepage was checked at 440x956, 1600x900, 1817x1454, exact and
+nearby 768px/1200px boundaries, DPR1/DPR2, grayscale, 55% brightness, 2px blur,
+JPEG quality 24, cold load, real live media, deterministic media, reduced
+motion, and SwiftShader. The final 648 suspension remains source-coloured and
+filled in grayscale and compressed darks; no cloud, horn, writer, beam, output,
+copy, CTA, or viewport collision is reported or visible. The exact breakpoint
+changes from the separately authored mobile camera to desktop at 768px, but
+both sides remain composed and the accepted camera families were not retuned.
+
+Apple M2 Max / Chrome Metal, 1600x900 DPR2, final real-time run: scene ready
+`958.6ms`, `118.7–120.3fps`, update/render p95 `<=2.1/2.0ms`, film/output
+texture prep p95 `.4/.4ms`, zero missed mechanical/projection frames, live
+media throughout, no fallback, 160 output revisions, and `49.2ms` longest
+output hold. The corresponding mobile DPR2 run is `118.8–120.3fps`, update/
+render p95 `2.0/2.3ms`, zero misses, and `50.0ms` longest hold.
+
+SwiftShader is selected before emission, caps DPR at one, and presents the
+completed `t=11.9` tableau. It does not attempt the former dishonest two-fps
+sequence. That boundary preserves outcome, not animated narrative parity.
+
+Canonical motion and hostile evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-deterministic-60fps.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-wide-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-wide-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/hostile-wide-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/breakpoint-contact-sheet.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-software-fallback.webm.json`
+
+## Round 28 — particle adversarial veto and lock
+
+Grok, the resumable Claude/Fable session
+`dd16423a-cd13-426e-888a-f4f50cfec089`, and the internal perception, VFX, and
+motion-math reviewers independently cleared the corrected particle subsystem
+with no P0/P1. The first review wave rejected the sparse `.693x` material body,
+late flakes, incomplete impact crops, contaminated video, and two-fps software
+path. The bounded correction and recaptured homepage evidence closed each.
+
+Remaining particle P2s are evidence or taste: six children are not literally
+countable at normal scale; mobile is near the upper soft-body bound; the
+analytic energy metric is not framebuffer-independent; and representative
+mid-tier device coverage remains future device-lab work. These do not justify
+reopening particle alpha, halo, colour, horn, timing, or registration.
+
+## Round 29 — holistic inventory and LinkedIn output
+
+After the particle lock, the homepage final tableau made the next ROI order
+plain: (1) the LinkedIn phone looked like a generic mock because of its heavy
+chrome, `LINKEDIN CLIP` label, and three opaque caption plates; (2) the film
+carrier was mustard/muddy and the writer introduced a hard activation-only
+edge; (3) the 440px YouTube result intruded into the free-tier footnote; (4)
+the Podcast card remains the least authored output, but was lower priority.
+
+LinkedIn now uses the real BitterClip Active Word grammar grounded in
+`CaptionTreatment::ACTIVE_WORD_PRESET` and the HTML caption renderer: the full
+ten-word phrase holds fixed across three lines, exactly one word is lime
+`#CCFF36`, inactive words remain white with black outline/shadow, and a 1.055
+scale punch occurs without reflow. The authored word hold is `1/2.25s = 444ms`
+and is driven by the delayed projection media clock. The badge is `LINKEDIN`,
+the shell is thinner/darker, and a lower optical shade replaces the plates.
+`PODCAST / RSS` was simplified to `PODCAST`.
+
+The real-time 8fps crop proves fixed line breaks/position, one advancing active
+word, and live face motion; it also shows the complete hairline rather than the
+forehead clipping inferred from a downsampled sheet. Evidence:
+`/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/linkedin-active-word-8fps.jpg`.
+
+## Round 30 — film, writer, and mobile optical cleanup
+
+Film stock moved from `#2b2820` mustard to `#191b1d` graphite; unexposed cells
+use `#101214`; edge codes, cell hairlines, stock edges, and sprocket outlines
+share one restrained silver/blue family. The same `.13` hairline surrounds
+blank and exposed cells. Texture anisotropy rises from 4 to the supported
+maximum capped at 8; material roughness falls `.90→.74`. The source grade moves
+from sepia/saturation `.16/.72` to `.06/.84`, preserving crisper skin and source
+colour without making the strip emissive.
+
+The local edge catch doubles from `2.25` to `4.5` pitches and uses a longitudinal
+alpha taper to zero at both ends. Nineteen perforation positions use a bounded
+Gaussian-like opacity envelope. The writer aperture is persistent neutral
+hardware: its base opacity resolves before first contact, its emissive changed
+from salmon to silver, peak scale response fell from `1.035` to `1.008`, and
+the local warm light peak fell `2.1→1.25`. Source-coloured development seeds
+still account for the particle energy; the aperture no longer becomes a hard
+yellow/orange rectangle.
+
+On 440px mobile the full fan moves down `.62` world units as one optical
+constellation. The YouTube card now clears the complete footnote by visible
+negative space while beams and the internal triangle remain attached to the
+gate. No page structure or copy was edited. The copy difference between early
+and late evidence belongs to parallel homepage copy work and is not attributed
+to this scene pass.
+
+Latest evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/writer-close-t3.82.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/writer-motion-8fps.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-wide-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-mobile-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h3-film-final/homepage-wide-hardware-contact-sheet.jpg`
+
+Remaining holistic P2 taste decisions: the Podcast waveform/transcript is the
+least authored artifact; the three output media have intentionally different
+physical silhouettes and therefore unequal optical finish; LinkedIn uses an
+aggressive but credible portrait crop; and the wound reel pack retains a quiet
+taupe archival tone while the carrier itself is neutral. None competes with the
+proposition or CTA, and none justifies disturbing the accepted chronology.
+
+## Round 31 — final homepage evidence and holistic acceptance
+
+The accepted sequence was recaptured at all 19 principal beats with the
+workshop density forced explicitly to six microfragments per packet, avoiding
+the software-renderer default in the evidence harness. The 1600x900,
+1817x1454, and 440x956 contact sheets all therefore show the final 648-visible
+material model. They preserve the complete homepage header, proposition, CTA,
+machine, responsive spacing, section boundary, film, and three-output payoff.
+
+Final internal perception and VFX reviews independently report no unresolved
+P0/P1. Perception's former evidence P1 was closed by the exact 60fps master and
+live hardware pass; it now accepts the stable Active Word layout, contained
+neutral writer, film departure, mobile clearance, and locked particles. VFX
+accepts the same milestone and specifically closes the former film-continuity
+and orange-aperture notes. Grok's prior holistic pass accepted the milestone;
+its downsampled-sheet concern about the caption and face crop is contradicted by
+the direct 8fps hardware crop, which shows one lime word, stable line geometry,
+continuous face motion, and the full hairline. The resumable Claude/Fable
+session accepted with no P0/P1; a final resume attempt was unavailable because
+the provider spend limit had been reached, and no feedback is fabricated.
+
+Motion-math review found and then closed one inherited evidence P1: a 36-cell
+physical loop at 16fps repeats every `2.25s`, while the 108-frame native-24
+source repeats every `4.5s`, so an old claim of perpetual same-frame identity
+was mathematically impossible. The code and binding brief now guarantee source
+identity structurally on every freshly written cell's first writer-to-gate pass
+during the `7.37–8.925s` projection payoff. Later raw recirculation error stays
+observable but non-contractual; the output continues forward instead of making
+a visible 54-frame seek. A new Chrome/Metal homepage trace measures fresh-pass
+expected and presented error at no more than one native frame (`41.67ms`),
+`23.963fps` output, `119.968fps` rendering, update/render p95 `.8/2.2ms`, a
+`50.4ms` longest output hold, and zero missed mechanical or projection frames.
+Motion-math therefore reports no remaining P0/P1 and accepts the milestone.
+
+Canonical forced-648 contact sheets:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/final-accepted/wide/homepage-wide-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/final-accepted/tall/homepage-tall-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/final-accepted/mobile/homepage-mobile-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/h4-sync-scope/homepage-wide-hardware-final.webm.json`
+
+## Round 32 — LinkedIn caption raster and projection halo refinement
+
+The owner identified two defects in the actual homepage payoff: the oblique
+LinkedIn Active Word caption was losing edge definition, and the Podcast glow
+revealed straight projection-plane boundaries. The causes were distinct. The
+caption was authored on a `340x690` canvas with no texture anisotropy, heavy
+outline and shadow, and near-white inactive words bright enough to enter the
+global bloom pass. The original landing field still had nonzero energy at the
+edges of a card-shaped plane, so an otherwise soft glow terminated as a hard
+rectangle.
+
+Three controlled revisions were rejected or advanced on `/`. A first
+supersampled caption proved the raster diagnosis, but a rounded-rectangle halo
+still read as a larger luminous card. A second version replaced that pad with
+an edge-safe two-lobe Gaussian-like field and moved inactive caption whites
+below bloom; it removed the clipping but left the sentence too small. The
+accepted version authors the portrait texture at `680x1380` while retaining a
+stable `340x690` coordinate system, applies anisotropy up to 8, uses a thinner
+`3.5px` logical outline and `2px` shadow, and distributes Mike's source line —
+"I'm hurting myself if I continue writing code" — across four short `31px`
+lines. One exact `#ccff36` word remains active at a time; inactive words use
+restrained `rgba(216,216,211,.99)` and no longer create a white bloom cloud.
+
+Each landing halo now sits on a plane `1.5–1.62x` larger than its core. Two
+slightly offset elliptical falloffs create a diffuse photographic spill, and
+a squared 12% UV edge guard forces alpha to zero before every mesh boundary.
+Accepted strengths are `.17` Podcast, `.12` YouTube, and `.085` LinkedIn. A
+more obvious rounded rectangle and a uniformly stronger fog bank were both
+rejected. The output cores, beam timing, media geometry, projection fan,
+camera, copy, particles, film mechanics, and native-frame contract were not
+changed.
+
+The final 1600x900 Chrome/Metal pass rendered at `120fps` while the output
+clock held `24.002fps`; update/render p95 was `.6/1.4ms`, output preparation
+p95 `.3ms`, and there were zero missed mechanical or projection frames. The
+fresh writer-to-gate pass remained within one native output frame with no
+runtime errors. A 440x956 capture preserves copy/CTA clearance and the three-
+output fan. DPR2 detail captures confirm that the portrait caption retains
+cleaner word edges and the Podcast spill decays naturally without a straight
+cutoff.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-before-after.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-wide-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-mobile-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-phone-dpr2-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-podcast-dpr2-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-wide-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-glow/v5-wide-hardware.webm.json`
+
+## Round 33 — finite projection passage and noir terminal prints
+
+The owner identified the remaining rhythmic contradiction: the machine visibly
+finished its file-to-film-to-output transformation, but the YouTube and
+LinkedIn media continued looping forever. That made the outputs read as
+decorative screens and denied the sequence a completed thought. The accepted
+intervention does not retime projection onset, the film gate, reels, particles,
+camera, fan, or copy. It adds a finite output passage followed by a terminal
+proof state.
+
+Each artifact now resolves in the same one-two-three order as its arrival. The
+terminal transitions start at `10.02s`, `10.32s`, and `10.62s`, each lasting
+`.76s`, and all finish at `11.38s`. The third print is already materially over
+its source before the shared 4.5-second projection head wraps, so the waveform
+cannot expose a visible loop seam. YouTube becomes `PUBLISHED / TO YOUTUBE / FULL EPISODE`;
+the portrait becomes `PUBLISHED / TO LINKEDIN / PORTRAIT CLIP`; Podcast becomes
+`TRANSCRIPT / READY / PODCAST / RSS`. The last wording describes a prepared
+artifact rather than claiming podcast-feed publication.
+
+The accepted material is an optical contact print rather than a UI receipt.
+The live image remains as a very dark photographic ghost beneath a 93% black
+wash. Static silver grain, four open registration corners, condensed outcome
+type, a small release-print marking, and one channel-coloured hairline supply
+the noir/kino character. Inactive text remains below the global bloom
+threshold. The prints retain their landscape, portrait, and transcript
+silhouettes and do not collapse into three matching cards.
+
+Three variants were evaluated on `/`. V1 used a complete inset frame, small
+technical copy, and a broad branded smoke annulus; it was rejected because it
+looked like a dashboard receipt and briefly revealed the landing plane as a
+large rectangle. V2 enlarged the outcome words and replaced the border with
+open corners, but its terminal breath still occupied too much of the glow
+plane. The accepted V3 constrains a neutral-silver noise annulus to radii
+`.38–.76` inside the plane and caps it at `.026` alpha. The breath is momentary,
+directional enough to read as projector exhaust, and fully gone in the hold;
+it neither clips nor competes with the proposition.
+
+Beams settle to 6% residual optical energy and the projector lamp to 18% while
+the accepted physical carrier/flywheel motion remains intact. At `11.38s` both
+video heads pause, projection frame callbacks stop, and completed output
+textures cease uploading. Developed film slots and the gate continue using
+their persisted source canvases after that pause; decoder state cannot replace
+them with deterministic fallback art. The final Chrome/Metal 1600x900 pass reports
+`120fps` rendering, update/render p95 `1/2ms`, output preparation p95 `.7ms`,
+zero missed mechanical or projection frames, three terminal outputs, zero
+copy/CTA/viewport collisions, `0fps` presented/output media after settlement,
+no errors, and no deterministic fallback. SwiftShader reduced motion lands
+directly on the `11.9s` tableau with three terminal outputs, no media playback,
+and no collisions.
+
+The first motion-math review rejected the otherwise accepted visual pass for
+two P1 timing faults: the third artifact could expose the source wrap before
+its print covered the waveform, and decoder pause could make the film/gate
+choose fallback art over already-developed slots. The earlier stagger and
+persistent-slot ownership rules close both defects. Temporal telemetry now
+reports actual settled output textures and an explicit terminal media pause;
+the intentional final hold is no longer counted as an active texture stall.
+The corrected timing puts the third print at exactly 50% minimum-jerk progress
+at the expected `11.00s` wrap. The first post-wrap telemetry sample at `11.09s`
+has two prints settled and the third about 71.7% resolved; all three are
+structurally settled by `11.38s`. The pass holds `120fps`, active output
+hold at `50.4ms`, output-preparation p95 `.8ms`, zero mechanical/projection
+misses, no fallback, and no runtime error.
+
+Final internal adversarial review is unanimous with no P0/P1. Perception
+accepted the cinematic completion and homepage hierarchy, with LinkedIn's
+secondary mobile copy at the low-brightness floor. VFX accepted the neutral
+interior breath and clean blacks; it explicitly vetoed raising the smoke or
+glow. Motion math initially rejected the pass for the two faults above, then
+accepted the corrected code and v5 evidence after confirming persistent film
+ownership, masked wrap timing, truthful terminal diagnostics, and safe restart
+behavior. Remaining notes are P2 taste/reporting limits only: keep the current
+exposure floor, accept that fine print and exhaust disappear under hostile
+compression, and do not strengthen the faint LinkedIn face ghost enough to
+make the contact print look unfinished.
+
+The final state survives 440x956 mobile, 1600x900 wide, 1817x1454 tall,
+grayscale, 55% display brightness, 2px blur, JPEG quality 24, and DPR2 output
+close-ups. At low brightness the secondary release-print microcopy recedes by
+design, while the three primary outcomes remain readable. The continuous
+hardware contact sheet shows four unchanged terminal samples after the stagger,
+proving that the output content no longer loops.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v5-terminal-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v5-wide-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v5-wide-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-terminal-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v3-wide-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v3-wide-hardware-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v3-wide-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v3-mobile-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-tall-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-linkedin-dpr2-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-podcast-dpr2-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-hostile-contact-sheet.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-wide-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-noir/v4-reduced-motion.webm.json`
+
+## Round 33 — LinkedIn caption is a real sentence from episode 1
+
+The portrait caption was still invented product copy (`THE CLIP ONLY WORKS IF
+THE SOURCE IS STILL ATTACHED`). Day one of the Mike and John show has a
+clearer sentence: Mike, after twelve years of writing code by hand, says "I'm
+hurting myself if I continue writing code." That is the line now on the
+LinkedIn phone. Layout, Active Word timing, lime, and four-line 31px grammar
+are unchanged.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-quote/wide-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-quote/phone-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-quote/mobile-t11.90.png`
+
+## Round 34 — emphasis color, punch only on the hits
+
+The episode-1 caption still walks every word as the active karaoke beat, but
+function words no longer take the lime or the 1.055 scale. `HURTING`,
+`WRITING`, and `CODE` stay colored in. The scale punch fires only when the
+active word is one of those three.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-emphasis/phone-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-emphasis/wide-t11.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-emphasis/mobile-t11.90.png`
+
+## Round 35 — source-timed caption, recut loop
+
+The portrait caption was the real sentence, but the 4.5s hero loop was a
+different stretch of Mike talking, and karaoke walked at a synthetic
+`2.25` words/sec. The loop is recut from Episode 1 and phased so the
+completed sentence begins as the LinkedIn portrait lands (`clip 1.850s` =
+source `445.159s`). Word starts are the AssemblyAI clock. After `code` the
+phrase holds until the title card. Film, YouTube, and LinkedIn still share
+that one 108-frame 24fps head.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-lipsync/phone-hurting-t8.70.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-lipsync/phone-writing-t10.00.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-lipsync/phone-code-t10.20.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-lipsync/wide-hurting-t8.70.png`
+
+## Round 36 — lighter line: marketing asset
+
+"I'm hurting myself if I continue writing code" was too dark for the
+LinkedIn phone. The replacement is still Mike, episode 1, still a real
+sentence: "I am my own marketing asset." Same 0.70x 12s loop, same
+first-word-after-resolve phase. Lime still follows the spoken word.
+
+## Round 37 — demo is a cut you'd post
+
+The park two-up is no longer the first object after the fold. `#demo` now
+plays a 19-second captioned cut from day one: "I am my own marketing asset."
+Heading is "A line you'd post." Andrew and Rohan remain as quotes.
+
+## Round 37 — human-speed Active Word passage and a motionless silver-print end
+
+The owner found that the portrait sentence passed too quickly to follow and
+that the nominally finished machine kept running behind terminal cards whose
+near-black substrate disappeared into the homepage void. Both defects were
+judged on `/`, with the real proposition, CTA, header, machine, and output fan
+present. The concurrent wording pass remained authoritative: this round did
+not rewrite `I AM / MY OWN / MARKETING / ASSET`.
+
+The original 4.5-second, 108-frame projection loop gave the LinkedIn artifact
+less than two useful seconds before its print transition. Controlled `0.80x`,
+`0.70x`, and `0.62x` source passages were watched at normal speed. `0.80x`
+still felt hurried and `0.62x` made Mike's face conspicuously languid. The
+accepted `0.70x` recut is 288 frames / 12 seconds at native 24fps, with audio
+removed as before. The screen reaches full focus near `8.83s`; `I` begins at
+scene `9.00s`, leaving about `.65s` to recognize the portrait before reading.
+The source-derived highlight starts are `9.000`, `9.137`, `9.573`, `9.801`,
+`10.489`, and `11.176s`. A presentation-only 200ms minimum dwell moves only
+the adjacent `AM` hit to `9.200s`; later hits immediately rejoin the source
+clock, so no timing drift accumulates. The final active word releases at
+`11.896s`, leaving a clean complete-sentence hold before the LinkedIn print
+begins at `12.57s`. Inactive words are white and exactly one current word is
+lime; the old permanent lime keywords and never-ending final highlight remain
+rejected.
+
+The terminal cards now use a lifted cool-charcoal silver-gelatin D-min rather
+than a 93% near-black wash. A broad low-contrast diagonal sheen, restrained
+radial density, and neutral sub-pixel print edge disclose each plane without
+raising type energy or reviving the channel halos. The previous YouTube card
+sample was `srgb(3,3,4)` against an approximately `srgb(5,5,5)` local field;
+the accepted sample is `srgb(14,17,21)` and the final silhouettes remain
+visible through grayscale, 55% luminance, and JPEG quality 24. A first, lower
+D-min candidate around `srgb(6,7,8)` was still too close to black and was
+rejected. The live-content ghost is reduced to 1.5% so the receipt reads as a
+clean result, not two superposed interfaces.
+
+The third print starts at `12.87s`. Film and both reels begin one shared C2
+minimum-jerk coast at `13.00s`, slow from 16fps to `8.88fps` at `13.40s`, and
+reach exactly zero at `13.85s`. Integrated distance lands from frame phase
+`132.2` on frame `139.0`, so the final pull completes without a speed,
+acceleration, position, or angular discontinuity. The reel angle is
+`-80.153rad` at `13.85`, `13.90`, `15.00`, and the final live sample after
+`16.7s`. Beam, halo, and lamp time uniforms are capped at the same stop. The
+two decoded heads pause, all three terminal textures settle, and no hidden
+visual clock remains.
+
+The final 1600x900 Chrome/Metal cold pass used the Apple M2 Max renderer, loaded
+the scene in `880ms`, sustained `119.833fps` rendering and `23.993fps` output
+texture cadence before settlement, and measured update/render/output-prep p95
+of `.8/1.6/.3ms`. It reported zero missed mechanical ticks, zero
+missed projection frames, no fallback, no runtime errors, and no copy, CTA, or
+viewport collisions. At the terminal sample, transport and reel tangent speed
+are both zero, media is paused, and all three outputs are settled.
+
+Motion-math's first adversarial pass rejected the otherwise accepted milestone
+because cold decoder startup had regressed fresh writer-to-gate phase to a
+two-native-frame maximum. The correction force-resynchronizes both heads only
+after both `play()` promises settle, then primes the projection decoder by one
+native frame to compensate its presentation-callback latency. The physical
+carrier remains exactly 32 cells / two seconds behind the writer and no
+mid-payoff correction seek occurs. Final hardware maxima are one frame for both
+expected and actually presented fresh-pass error. Motion math then accepted
+with no P0/P1. Perception accepted the human-followable sequence and static
+finish, retaining only P2 cautions not to shorten `I`/`MY` or lower the D-min.
+VFX accepted the print separation, clean halo boundaries, and motionless noir
+end with no P0/P1.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-pacing/accepted-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/caption-pacing/ep1-070-breathe.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-mobile-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-hostile-gray-low-q24.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-hostile-blur2.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-wide-hardware-final.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-contrast/accepted-wide-hardware-final.webm.json`
+
+## Round 38 — the contact stream ends at film; final prints name their channel
+
+The owner caught a physical read that ordinary wide acceptance frames had
+missed. At writer times near `6.55s–6.82s`, several densely overlapped packet
+cohorts aligned with the bright developing cell. Their equal core/halo footprint
+made the approach look like a salmon-white strip of film continuing horizontally
+through and beyond the reel. The same close inspection found that the separate
+gate image lived about `.35` world units in front of the actual descending
+carrier, so camera parallax could turn a useful optical lift into a fourth,
+monitor-like screen. Both judgments were made on `/` with the real homepage
+camera and surrounding composition.
+
+The accepted contact treatment does not alter any logical path, packet clock,
+registration site, writer hit, horn centerline, reel, gate cadence, camera, or
+homepage layout. It keeps 108 logical packets, six visible microfragments per
+packet, and 18 fragments per physical film cell. Over the final `q=.68→1`
+seat, the overlapping cores contract by at most 58%, core opacity falls by at
+most 52%, and diffraction falls by at most 90%. The six siblings therefore
+remain one visible packet contact while their departing luminance enters the
+52ms connected emulsion front. A first 38% footprint/78% halo reduction was
+better but still read as a short bead-string in the close-up and was rejected.
+The accepted stronger seat preserves the three-contact grammar and removes the
+false implication that physical stock leaves the reel sideways.
+
+The gate's decoded lift now sits at `DESCENT_X + .018`, a hairline offset from
+the physical carrier rather than at `LENS_X - .03`, and its peak opacity is
+`.14` instead of `.52`. The actual film texture owns the image; the duplicate
+plane contributes only local density inside the aperture. The warm lips and
+concealed lamp still disclose the sampling point, but the image no longer
+parallaxes against the film perforations as an attached monitor.
+
+Each arrested output now carries one centered Canvas-vector mark above the
+result wording: a red YouTube play lozenge, a blue LinkedIn `in`, or an amber
+RSS glyph. The marks are rendered into the existing high-resolution/anisotropic
+output textures, remain smaller than the primary status line, and do not add a
+pill, badge row, checkmark, or modern UI card. Desktop and 440x956 mobile
+captures preserve the proposition/CTA hierarchy and the three different output
+silhouettes.
+
+The current Chrome/Metal homepage probe used the Apple M2 Max renderer, reached
+scene readiness in `811ms`, sustained approximately `120fps` render cadence and
+native `24–26fps` decoded/output cadence before settlement, and measured
+update/render/output-preparation p95 maxima of `2.4/2.2/.5ms`. It reported zero
+missed mechanical pulls, zero missed projection frames, no fallback, no runtime
+errors, and maximum fresh expected/presented gate errors of one native frame.
+At `16.666s`, all three output textures are settled, decoded/output cadence is
+zero, reel and film speed are zero, the reel angle remains `-80.153rad`, and
+copy, CTA, and viewport collisions are all zero. SwiftShader mobile and desktop
+checks land directly on the three-print quality-fallback tableau with no media
+or mechanical clock and no missed-frame accounting.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/writer-before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/gate-before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/terminal-logo-responsive.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/accepted-terminal-1600-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/accepted-terminal-mobile-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/accepted-wide-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/accepted-wide-hardware.webm.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/gate-carrier/accepted-wide-hardware-probe.json`
+
+Final internal adversarial review is unanimous with no P0/P1. VFX found that
+the former ribbon is now a compact cell-local contact, the gate image belongs
+to carrier continuity, and the channel marks behave like registered print
+marks rather than badges or UI. Perception found the packet material distinct
+from stock edges/perforations in motion, the terminal marks recognizable but
+subordinate on both desktop and mobile, and the homepage proposition/CTA
+hierarchy intact. Motion math confirmed exact 108/648/18 accounting, unchanged
+arrival positions/times, `5.459px` cohesion at 55% horn progress, `1.051px` at
+90%, zero arrival spread, the same 52ms transfer, one-frame maximum fresh phase
+error, and no motion regression.
+
+Remaining P2 decisions are intentionally locked rather than “fixed”: the
+three-contact count is brief at full-homepage scale, the bronze lower gate rail
+must remain in OLED/low-brightness regression sheets, and the LinkedIn mark is
+already near the mobile pixel floor. Enlarging it would over-brand the print.
+Motion math also noted that the existing projected-coverage and luminance
+diagnostics describe the pre-seat particle envelope; they must not be cited as
+literal photometry of the final `q=.68→1` contraction until `contactSeat` is
+incorporated into those diagnostic calculations. Logical conservation and the
+visible energy-transfer acceptance are unaffected.
+
+## Round 39 — one clockwise output circuit
+
+The owner wanted the fan to read as one circular composition rather than an
+array-order reveal. The accepted change separates each artifact's narrative
+`sequence` from its storage/spatial index. The three existing poses, beam
+geometry, channel-specific optical compensation, textures, LinkedIn wording,
+camera, projector motion, and terminal timing constants remain untouched.
+Ignition now travels clockwise from the high YouTube card to the right-hand
+Transcript/RSS card and then to the lower-left LinkedIn portrait. The terminal
+prints traverse the same circuit rather than returning to the former
+YouTube → LinkedIn → Transcript order.
+
+The ignition starts remain exactly `.48s` apart at `7.87s`, `8.35s`, and
+`8.83s`; the terminal starts remain exactly `.30s` apart at `12.27s`,
+`12.57s`, and `12.87s`. Each terminal transition still lasts `.76s`, all three
+prints are settled by `13.63s`, and the shared carrier still stops on the same
+cell boundary at `13.85s`. Deterministic `/` captures at 1600x900 DPR 2 and
+440x956 DPR 2 show YouTube alone, then YouTube plus Transcript/RSS, then the
+complete fan. Terminal samples show the corresponding print order. Both
+families report zero copy, CTA, and viewport collisions.
+
+A second deterministic motion pass captured every homepage frame from
+`7.70s–13.90s` at exact 60fps (`373` frames, 1600x900). It confirms the same
+clockwise ignition, stable readable-content hold, mirrored terminal circuit,
+and unchanged final tableau without relying on wall-clock capture cadence.
+
+The real-time homepage pass used Chrome/Metal on the Apple M2 Max. It reached
+scene readiness in `1017ms`, sustained about `120fps` render cadence and
+native `24fps` decoded/output cadence, and finished with all three textures
+settled, both media heads paused, transport/reel speed zero, no fallback, no
+runtime errors, zero missed mechanical pulls, zero missed projection frames,
+and a one-frame maximum fresh gate-phase error. Update/render/output-prep p95
+at the final sample were `.5/2.3/.8ms`. The in-app browser connection was not
+available for an additional interactive pass; the canonical repo harness and
+hardware Chrome pass both targeted the actual homepage at `/`.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/ignition-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/terminal-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/mobile-ignition-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/mobile-terminal-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/wide-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/mobile-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/clockwise-homepage-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/clockwise-homepage-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/clockwise-order/clockwise-deterministic-60fps.mp4`
+
+## Round 40 — the activation aperture advances with the reel
+
+The owner identified a perceptual continuity error at the fixed film
+activation/gate region: the carrier and reels visibly accelerated while the
+deterministic thumbnail could remain the identical two-shot. The mechanical
+clock was correct, but the fallback editorial mapper grouped each still across
+20 physical cells. That converted genuine pull-down into an apparent static
+screen and made the surrounding moving stock feel disconnected from the image.
+
+The accepted correction keeps all path geometry, 36 physical slots, 32-cell
+writer-to-gate delay, write times, reel/film synchronization, live-media phase,
+gate material, and exposure energy unchanged. Deterministic coverage now uses
+four-cell takes from the existing real Mike & John Episode 1 stills. The
+visible thumbnail cadence therefore rises with the actual carrier from about
+`1.45fps` at scene `4.48s` (`5.803 / 4`), to `3.84fps` at `5.60s`
+(`15.36 / 4`), and then `4fps` at full 16fps transport. A one-cell variant was
+rejected because cutting among editorial angles at 16fps read as a strobe, not
+as photographed film.
+
+The live path was inspected separately rather than blamed for the fallback
+hold. Its physical gate source advances from native frame `116` at scene
+`7.059s`, to `132` at `7.559s`, and `144` at `8.067s`, while mechanical gate
+ticks advance `37 → 45 → 53`. Thus the actual homepage aperture continues to
+sample real moving media at the accelerating/then steady physical cadence;
+the shorter deterministic takes make that same causal relationship legible
+when live decoding is unavailable or exact stills are captured.
+
+Desktop gate close-ups and the 440x956 homepage sequence show the change
+without adding a flash, shutter gimmick, exposure flare, new yellow edge, or
+copy/CTA competition. Mobile diagnostics remain at zero copy, CTA, and
+viewport collisions. The post-change Chrome/Metal pass reached scene readiness
+in `1071ms`, sustained about `120fps`, recorded zero missed mechanical or
+projection frames, no fallback or runtime errors, one-frame maximum fresh
+gate-phase error, and final update/render/output-prep p95 of `.2/2.3/1.0ms`.
+All three terminal textures settle, both media heads pause, and transport/reel
+speed returns to zero.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/gate-before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/after-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/gate-after-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/mobile-contact.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/accepted-homepage-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/writer-cadence/accepted-homepage-hardware.webm.json`
+
+## Round 41 — LinkedIn's outcome develops before its supporting copy
+
+The owner caught a hierarchy failure in the terminal portrait print: on the
+steep, narrow LinkedIn card, `TO LINKEDIN` and `PORTRAIT CLIP` could remain
+readable while the actual outcome word `PUBLISHED` appeared trapped in the
+low-density ghost layer. The settled deterministic texture was technically
+present, but the transition darkened the photographed portrait before the
+primary silver type had developed enough to survive perspective, minification,
+and the surrounding black stage.
+
+The accepted correction is local to the existing Canvas contact print. The
+LinkedIn logo and `PUBLISHED` now share an earlier development curve while the
+destination and detail retain the original slower receipt curve. The primary
+word rises from 35px/850 weight to 38px/900 weight in the same condensed family,
+uses tighter `.7px` tracking, a neutral `238/238/232` fill, and a `.9px`
+sub-pixel silver underprint. This adds ink rather than bloom: the card's D-min,
+sheen, grain, position, perspective, channel hairline, terminal clock, and
+motionless final state are unchanged. YouTube and Transcript/RSS typography are
+unchanged.
+
+At the exact 1600x900 DPR 2 transition sample (`13.35s`), the normalized
+grayscale mean in a fixed 230x72 `PUBLISHED` screen-space ROI rose from `.226`
+to `.279` (+23.5%); its maximum rose from `.777` to `.890` (+14.5%). The result
+is already the dominant semantic unit while the portrait trace is still
+departing, then remains crisp on the fully arrested `13.63s/13.90s` print.
+Canonical homepage captures at 440x956, 1600x900, and 1817x1454, all DPR 2,
+preserve the copy/CTA hierarchy and report zero copy, CTA, and viewport
+collisions. At `13.35s` the shared carrier is still coasting at `10.593fps`;
+at `13.90s` all three prints are settled and film/reel speed is exactly zero.
+
+Accepted evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/linkedin-primary-before-after.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/responsive-final.jpg`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-wide-t13.35.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-wide-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-mobile-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-tall-t13.90.png`

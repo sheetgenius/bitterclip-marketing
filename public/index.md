@@ -17,18 +17,17 @@ interviews, coaching sessions, founder calls, and workshops.
 
 ## Hero
 
-Footage in. Episodes out.
-
-Agentic video editing:
+Footage in. Episode out.
 
 - Deep Video Intelligence — knows your content.
-- Precision Editing Craft — only the cleanest cuts.
+- Precision Edits — the good parts, finished.
 
 The homepage opens with an animated 3D projector performing the pipeline: a
 recorded session drops in, the machine indexes it onto film, and three
 finished artifacts project out — a landscape episode for YouTube, a portrait
 captioned clip for LinkedIn, and a waveform-and-transcript panel for
-podcast/RSS.
+podcast/RSS. Directly under the fold is a cut from that same session — Mike
+saying he is his own marketing asset — then how it works.
 
 Free to start — 60 minutes of footage a month. Everything runs in your browser;
 ChatGPT and Claude are optional, over the same work.
@@ -37,7 +36,9 @@ ChatGPT and Claude are optional, over the same work.
 
 1. Recording: record the session in the browser, or upload what you already
    shot, including several synchronized angles.
-2. Speakers: know who said what, and recognize them when they return.
+2. Speakers: voices are split. Until you name someone they stay Speaker 1,
+   Speaker 2. Name them in this project; later recognition needs a saved voice
+   and can fail.
 3. Episode: the full-length primary program you and the agent work in.
 4. Edit: change the transcript, direct the agent, revise the same cut.
 5. Verify: check any decision against the source it came from.
@@ -49,16 +50,16 @@ ChatGPT and Claude are optional, over the same work.
 
 Clipping is table stakes. The difference is the relationship to the work:
 
-- it understands the whole relevant source instead of matching isolated
-  transcript phrases;
+- it works from the whole session, not a scored pile of leftover phrases;
+  search can find a neighborhood, it does not pick the cut;
 - it commits to a specific editorial choice and can explain it;
 - it can show you the moment in the recording that choice came from;
 - the result stays editable work you keep changing, not a flat file you have to
   redo;
 - it accepts direction in plain language and revises the same edit, keeping the
   previous version; and
-- it retains confirmed project and speaker context, so the next session starts
-  further along.
+- named speakers stay named in that project; later recognition needs a saved
+  voice and can fail.
 
 The narrow claim is not that BitterClip solves every kind of video editing. It
 does one job: it turns long recorded conversations and session footage into
@@ -68,16 +69,15 @@ finished work, and it gets there by being told what to change.
 
 The BitterClip editor shows the transcript and the source media together.
 Select words, delete them, and the video changes with them. Cuts resolve
-against the actual audio. The homepage shows the editor as a real screenshot
-and frames it honestly: you will mostly never open it. You ask for what you
-want — with the built-in agent, or with Claude, ChatGPT, or anything that
-speaks MCP — and the substrate makes the answer computable, with any cut
-checkable against the exact moment it came from.
+against the actual audio. The homepage shows the editor as a real screenshot:
+open it to check the tape. The agent can still make the cut. You ask for what
+you want — with the built-in agent, or with Claude, ChatGPT, or anything that
+speaks MCP — and any cut is checkable against the exact moment it came from.
 
-The homepage's proof section embeds one real, live client clip: a coaching
-session synchronized from two dozen loose recordings, playing the same moment
-from two cameras side by side, served by the same embed surface Pro customers
-put on their own sites.
+The homepage's first section after the fold plays a cut from day one of the
+Mike and John show — the same session the hero machine is cutting. Mike, a
+week out of a twelve-year job, says he is his own marketing asset. That is
+the line you'd post.
 
 ## Why It Works
 
@@ -93,12 +93,14 @@ BitterClip structures the session with:
   whole
 - every cut checkable against the moment it came from
 - a person confirms before anything is sent
-- recurring memory for speakers, projects, and prior show context
+- named speakers stay named in the project; later recognition needs a saved
+  voice
 
 ## Speaker-Aware Editing
 
-The best editorial choices depend on knowing who said what. BitterClip works from
-the shape of the conversation, not a flat transcript blob.
+Editorial choices depend on who said what. BitterClip splits the voices and
+works from the shape of the conversation, not a flat transcript blob. Speakers
+start unnamed. You name them in the project.
 
 Example selected moment:
 
@@ -148,10 +150,17 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
   signed-in person on one device: no remote guests, no guest recording links, no
   separate track per person. Most people bring footage they already shot on a
   phone, a camera, Zoom, or Riverside, and that stays completely normal.
-- Why this differs from an AI clipper: it is not picking moments out of a
-  transcript search. It works from the whole session and commits to a cut it can
-  explain and show the source for. When it is wrong, you say what is wrong and it
-  revises that same cut instead of returning ten more options.
+- Why this differs from an AI clipper: it does not hand you a scored pile of
+  leftovers. It works from the whole session and commits to a cut it can show
+  the source for. Search can find a neighborhood; it does not pick the cut.
+  When it is wrong, you say what is wrong and it revises that same cut instead
+  of returning ten more options.
+- Who is talking: voices are split. Until you name someone they stay Speaker 1,
+  Speaker 2. Name them in this project and they stay named there. Later
+  recognition needs a saved voice, and it can fail.
+- Invented context: no. The source clock is the authority. Any cut can be
+  opened in the editor and checked against the moment in the recording it came
+  from.
 - Do you need ChatGPT or Claude: no. The agent is built into the editor. The
   hosts are optional.
 - Publishing: nothing is sent automatically. Every send is bound to one exact
@@ -175,9 +184,10 @@ Three plans, one uniform price list:
 
 - Free — $0. 60 minutes of footage a month, 10 clip exports at 1080p
   (watermarked), file uploads up to 4 GB. Resets every month — not a trial.
-- Clip (recommended) — $9/month. 10 hours of footage a month, 150 clip
-  exports at 1080p with no watermark, file uploads up to 4 GB, and clips can
-  be embedded on your own site. For a weekly show or regular interviews.
+- Clip (recommended) — $9/month. 10 hours of footage a month, file uploads up
+  to 4 GB, clips can be embedded on your own site, and 150 clip exports at
+  1080p with no watermark. For a weekly show or regular interviews. Start on
+  Clip.
 - Pro — $99/month. 40 hours of footage a month, 1,000 clip exports at 1080p,
   file uploads up to 20 GB, front-of-queue processing, and visual analysis
   workflows. For people whose footage is their business.

@@ -14,13 +14,13 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
 
   const h1 = page.getByRole('heading', { level: 1 })
   await expect(h1).toContainText('Footage in')
-  await expect(h1).toContainText('Episodes out')
+  await expect(h1).toContainText('Episode out')
   await expect(page.getByText('Deep Video Intelligence')).toBeVisible()
   await expect(page.getByText('knows your content')).toBeVisible()
-  await expect(page.getByText('Precision Editing Craft')).toBeVisible()
-  await expect(page.getByText('only the cleanest cuts')).toBeVisible()
+  await expect(page.getByText('Precision Edits')).toBeVisible()
+  await expect(page.getByText('the good parts, finished')).toBeVisible()
   await expect(page.getByText('Everything runs in your browser')).toBeVisible()
-  // The page must not be readable as "BitterClip cannot record": the substrate
+  // The page must not be readable as "BitterClip cannot record": the how
   // intro names the browser recorder alongside the footage people already have.
   await expect(page.getByText("with BitterClip's own browser recorder")).toBeVisible()
   await expect(page.getByText('Does BitterClip record for me?')).toBeVisible()
@@ -29,19 +29,33 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(navCta).toBeVisible()
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
   await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
-  // The below-the-fold spine: substrate → agent → proof (#demo) → FAQ → pricing.
-  await expect(page.getByRole('heading', { name: 'Turns video into agent-native substrate' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Bring your agent' })).toBeVisible()
-  await expect(page.locator('#demo').getByRole('heading', { name: 'Real sessions, real cuts' })).toBeVisible()
-  await expect(page.locator('#demo iframe[title^="Watch:"]')).toHaveAttribute('src', /embed\/clip\//)
+  // The below-the-fold spine: proof (#demo) → how → agent → FAQ → pricing.
+  const btfHeadings = await page.locator('main h2').allTextContents()
+  expect(btfHeadings.map((text) => text.trim())).toEqual([
+    "A line you'd post",
+    'First, the session is in view',
+    'Bring your agent',
+    'The questions everyone asks first',
+    'Bring one recording. Leave with the episode.',
+  ])
+  await expect(page.locator('#demo').getByRole('heading', { name: "A line you'd post" })).toBeVisible()
+  await expect(page.locator('#demo video[title^="Watch:"] source')).toHaveAttribute('src', /day-1-marketing-asset\.mp4/)
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
+  await expect(page.getByText('Open it to check the tape.')).toBeVisible()
+  await expect(page.getByText('Intro drags. Start on the squat.')).toBeVisible()
+  await expect(page.getByText('Open in editor · Download after render')).toBeVisible()
+  await expect(page.getByText('Agentic video editing')).toHaveCount(0)
+  await expect(page.getByText("You'll mostly never open it")).toHaveCount(0)
+  await expect(page.getByText('every speaker named')).toHaveCount(0)
+  await expect(page.getByText('transcript_search')).toHaveCount(0)
+  await expect(page.getByText('Start clipping')).toHaveCount(0)
   const faq = page.locator('#faq')
   await faq.getByText('Where can the finished work go?').click()
   await expect(faq.getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
   await expect(page.getByText('30-day refund')).toHaveCount(0)
   await expect(page.locator('#pricing').getByRole('link', { name: 'Start free' })).toBeVisible()
-  await expect(page.locator('#pricing').getByRole('link', { name: 'Start clipping' })).toBeVisible()
+  await expect(page.locator('#pricing').getByRole('link', { name: 'Start on Clip' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Go Pro' })).toBeVisible()
   await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
@@ -236,7 +250,7 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   await expect(page.getByRole('link', { name: 'Strength & Positions' })).toBeVisible()
   await expect(page.getByText('Read my mind. MVP for a podcast: 30-sec sizzle intro hook')).toBeVisible()
   await expect(page.getByText(/min read/)).toBeVisible()
-  const startFree = page.getByRole('link', { name: 'Start free' })
+  const startFree = page.getByLabel('Get started with BitterClip').getByRole('link', { name: 'Start free' })
   await expect(startFree).toBeVisible()
   await expect(startFree).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
   await expect(page.getByRole('link', { name: 'Use it with your assistant' })).toBeVisible()
@@ -334,7 +348,7 @@ test('renders the terms of service page', async ({ page }) => {
 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
-    { path: '/index.md', text: 'Footage in. Episodes out.' },
+    { path: '/index.md', text: 'Footage in. Episode out.' },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     {

@@ -1,4 +1,4 @@
-// Deterministic screenshot harness for the /lab/iso hero workshop.
+// Deterministic screenshot harness for the homepage ISO4 acceptance surface.
 //
 // The renderer exposes itself as window.__iso (see HeroIso.client.vue), so a
 // frame can be frozen at an exact animation time — two builds compared at the
@@ -22,6 +22,9 @@ let clip = null
 let viewport = { width: 1600, height: 900 }
 let metrics = false
 let scrollY = 0
+let dpr = 2
+let reducedMotion = false
+const workshop = {}
 const times = []
 for (let i = 1; i < args.length; i++) {
   if (args[i] === '--clip') {
@@ -35,17 +38,31 @@ for (let i = 1; i < args.length; i++) {
     viewport = { width, height }
   } else if (args[i] === '--metrics') {
     metrics = true
+  } else if (args[i] === '--dpr') {
+    dpr = Number(args[++i])
+    if (!(dpr > 0 && dpr <= 2)) throw new Error('dpr must be greater than 0 and at most 2')
+  } else if (args[i] === '--reduced-motion') {
+    reducedMotion = true
+  } else if (args[i] === '--fragments') {
+    workshop.fragmentsPerPacket = Number(args[++i])
+    if (![3, 6, 9].includes(workshop.fragmentsPerPacket)) throw new Error('fragments must be 3, 6, or 9')
+  } else if (args[i] === '--color') {
+    workshop.colorScript = args[++i]
+  } else if (args[i] === '--sampling') {
+    workshop.samplingStrategy = args[++i]
   } else times.push(Number(args[i]))
 }
 if (!times.length) times.push(2.35)
 
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport, deviceScaleFactor: 2 })
+const page = await browser.newPage({ viewport, deviceScaleFactor: dpr, reducedMotion: reducedMotion ? 'reduce' : 'no-preference' })
 page.on('pageerror', (e) => console.error('PAGEERROR', e.message))
 // 'load', not 'networkidle': the live clip embed keeps the network busy
 // forever; scene readiness is guarded by the __iso wait below anyway.
-await page.goto(process.env.ISO_URL || 'http://localhost:4180/lab/iso', { waitUntil: 'load' })
+await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'load' })
 await page.waitForFunction(() => !!window.__iso, null, { timeout: 15000 })
+await page.waitForFunction(() => window.__iso.sourceReady?.() ?? true, null, { timeout: 15000 })
+if (Object.keys(workshop).length) await page.evaluate((options) => window.__iso.configure(options), workshop)
 if (scrollY) {
   // behavior:'instant' overrides the page's scroll-behavior:smooth — in
   // headless the smooth animation stalls (no rAF) and shots catch mid-scroll.

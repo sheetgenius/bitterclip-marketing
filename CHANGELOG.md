@@ -30,6 +30,12 @@ under a dated entry.
 
 ### Product Context
 
+- Corrected homepage speaker and clipper claims against shipped behavior.
+  Voices are split; unnamed speakers stay Speaker 1, Speaker 2 until named in
+  the project, and later recognition needs a saved voice and can fail. Search
+  finds a neighborhood; it does not pick the cut. The first artifact an agent
+  produces is a draft of one cut, revised in place, then opened or downloaded
+  after render — not a ready MP4 and not a ranked pile.
 - Reframed the homepage around the division of labor between the person and the
   product. The hero now reads "You record it. BitterClip handles the
   rest." The person shows up and has the real conversation; everything after
@@ -83,8 +89,55 @@ under a dated entry.
 
 ### Website
 
+- Replaced the park two-up in the first proof section with a 19-second cut
+  from day one of the Mike and John show: Mike saying he is his own marketing
+  asset. The heading is "A line you'd post." Andrew and Rohan's quotes stay
+  as signed social proof beside it.
+- Refined the homepage projector's physical output read: packet halos and
+  cores now compact as they register so the exposure stream cannot resemble a
+  strip of film protruding through the reel; the gate image is registered to
+  the actual descending carrier rather than a forward monitor-like plane; and
+  the motionless YouTube, LinkedIn, and Podcast/RSS contact prints now carry
+  small centered vector destination marks. Projection ignition and terminal
+  print settlement now share one clockwise YouTube, Transcript/RSS, LinkedIn
+  circuit while preserving the accepted output positions and optical finish.
+  Deterministic film coverage now advances through short real Episode 1 takes
+  as the carrier accelerates instead of holding one thumbnail across most of
+  the spool-up. The narrow LinkedIn contact print now develops its denser
+  `PUBLISHED` outcome ahead of the supporting destination/detail copy so the
+  result remains legible throughout the portrait-to-print transition without
+  brightening the whole card.
+
+- Dropped the fold's "Watch a cut" whisper. It sat alone in the lower-left
+  of the stage and named a cut the machine is already showing. The Demo
+  item in the site bar still goes to the live client session.
+- Overhauled the homepage below the fold so a live client cut sits
+  immediately after the machine. Fold dropped the "Agentic video editing"
+  eyebrow; Precision Edits now reads "the good parts, finished."
+  How it works is "First, the session is in view," with the editor framed
+  as the place you check the tape. The Claude card drafts then revises a
+  cut, with no fake tool chrome and no ready MP4. Clip's pricing CTA is
+  "Start on Clip"; 150 exports sit last. The footer matches the fold
+  instead of "into clips."
+- Replaced the invented LinkedIn-projection caption with a sentence Mike
+  actually said on day one of the Mike and John show: "I am my own marketing
+  asset." The hero passage is recut to that moment at a calmer 0.70x cadence;
+  the karaoke follows the source word clock with one active word, a bounded
+  minimum dwell for adjacent hits, and a clean unhighlighted result hold.
+- Rebuilt the homepage ISO4 transformation around 108 conserved information
+  packets rendered as 648 source-coloured microfragments, then refined the
+  physical film writer and projected outputs. The LinkedIn result now uses a
+  supersampled product-style Active Word caption, while edge-safe diffuse
+  landing halos, the film carrier, sprockets, development contact, and
+  responsive mobile fan use cleaner, more continuous optical treatment. After
+  one finite passage, all three outputs now settle into delineated charcoal
+  contact prints, stop their media heads, and wind the shared film/reel drive
+  down to a motionless cell instead of looping indefinitely.
+- Set the homepage H1 to singular: Footage in / Episode out. One tape in,
+  one finished program out — the same unit as "Bring one recording. Leave
+  with the episode."
 - Tightened the homepage fold from three named pillars to two that share a
-  cadence: Deep Video Intelligence — knows your content; Precision Editing
+  cadence: Deep Video Intelligence — knows your content; Precision Edits
   Craft — only the cleanest cuts. The programmable / our-agent-or-yours
   line is gone from the fold; that path stays in Bring your agent.
 - Replaced the homepage FAQ's two-column always-open dump with a single

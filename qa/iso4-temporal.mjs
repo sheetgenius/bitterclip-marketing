@@ -1,11 +1,11 @@
-// Live temporal acceptance harness for /lab/iso4.
+// Live temporal acceptance harness for the canonical homepage ISO4.
 //
 // The still-image harness proves composition. This harness resumes the scene
 // just before projector ignition and measures the decoded video cadence,
 // canvas-texture cadence, writer/gate transport, missed ticks, clock drift,
 // and longest visible output hold while real time advances.
 //
-//   ISO_URL='http://localhost:4180/lab/iso4' \
+//   ISO_URL='http://localhost:4180/' \
 //     node qa/iso4-temporal.mjs --viewport 440x956
 
 import { chromium } from '@playwright/test'
@@ -24,7 +24,7 @@ for (let i = 0; i < args.length; i++) {
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport, deviceScaleFactor: 2 })
 page.on('pageerror', (error) => console.error('PAGEERROR', error.message))
-await page.goto(process.env.ISO_URL || 'http://localhost:4180/lab/iso4', { waitUntil: 'networkidle' })
+await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'load' })
 await page.waitForFunction(() => !!window.__iso?.temporal, null, { timeout: 15000 })
 
 // Skip directly to the live payoff; start() phase-locks both playback heads to
@@ -82,8 +82,11 @@ if (report.missedMechanicalTicks > 0) {
 if (report.missedProjectionFrames > 0) {
   failures.push(`missed ${report.missedProjectionFrames} projected source frames`)
 }
-if (report.gateSourceFrame >= 0 && Math.abs(report.gateProjectionPhaseErrorFrames) > 1) {
-  failures.push(`gate/projection phase error is ${report.gateProjectionPhaseErrorFrames} source frames`)
+if (report.maxFreshGateExpectedTimelineErrorFrames > 1) {
+  failures.push(`fresh-pass gate/expected-timeline error reached ${report.maxFreshGateExpectedTimelineErrorFrames} source frames`)
+}
+if (report.maxFreshGatePresentedFrameErrorFrames > 1) {
+  failures.push(`fresh-pass gate/presented-frame error reached ${report.maxFreshGatePresentedFrameErrorFrames} source frames`)
 }
 
 await browser.close()

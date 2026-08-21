@@ -21,6 +21,20 @@ This section supersedes the hopper, acid-bath, compact-body, single-reel,
 liquid-membrane, splash, molten-erosion, generic-vortex, linear-suction, and
 circular front-lens language later in this lineage document.
 
+**Binding homepage particle addendum (2026-08-21).** The homepage `/` is the
+canonical product and acceptance surface; `/lab/iso4` is diagnostic only. The
+conservation model contains **108 logical information packets**, not 108 visible
+points. The accepted material renders **six frozen-identity microfragments per
+logical packet: 648 visible fragments total**. Three logical packets still fund
+one physical film cell, so **18 visible fragments reconvene into three packet
+clusters and strike the existing three emulsion anchors**. The 324-visible
+candidate (three fragments per packet) was too sparse to preserve sleeve mass;
+the 972-visible candidate (nine per packet) added powder/stress and GPU work
+without useful silhouette gain. Keep the accepted 648 density, spectral-pearl
+OKLab colour progression, balanced hybrid source sampling, zero-centroid family
+opening with C2 return, core/halo balance, and static software-renderer final
+tableau locked unless new homepage evidence proves a regression.
+
 - The machine is a **large, vertically stacked dual-reel projector** occupying
   roughly 85% of the available composition. It remains a supporting character
   through darkness and selective practical light, not through small scale.
@@ -55,19 +69,25 @@ circular front-lens language later in this lineage document.
   and coherent common fate.
 - The attraction point is a **film writer**, not a glowing target. It sits on
   the lower/front quadrant of the bottom reel where film visibly feeds into
-  the winding path. Each three-particle group becomes visibly ordered in the
-  neck, rotates through a short final approach normal to the film plane, and
-  strikes three registration points on the **front face** of one frame cell.
+  the winding path. Each logical packet's six microfragments become visibly
+  ordered in the neck; three packet clusters rotate through a short final
+  approach normal to the film plane and strike three registration points on the
+  **front face** of one frame cell.
   A contained white-hot contact transfers into warm emulsion development,
   restrained perforation response, and the real Episode 1 thumbnail. That
   completed physical cell travels away with the filmstrip. No particle passes
   behind the carrier, bounces from the reel, or disappears at an abstract
-  target.
-- Particle absorption and transport are the **same clock**: exactly three
-  particles activate each thumbnail/frame-step. Early isolated groups produce
-  visible mechanical clunks; the exact 36-frame loop is funded by 36 triplets
-  (108 particles total), and acceleration ends at 16 film frames and 48
-  absorbed particles per second.
+  target. During the final 32% of horn progress the overlapping packet cores
+  contract on their registration sites while diffraction falls away faster
+  than the cores. The approach must remain readable as three contacts; it may
+  not become a hot horizontal bead-string that looks like film stock extending
+  through or beyond the reel.
+- Packet absorption and transport are the **same clock**: exactly three logical
+  packets, rendered as 18 visible microfragments, activate each thumbnail/
+  frame-step. Early isolated triplets produce visible mechanical clunks; the
+  exact 36-frame loop is funded by 36 logical triplets (108 logical packets,
+  648 visible fragments total), and acceleration ends at 16 film frames, 48
+  logical packets, and 288 visible fragments absorbed per second.
 - The **first completed thumbnail starts the film and both reels** from rest.
   One shared distance function drives carrier position and both reel angles,
   so they begin slowly and remain position-, speed-, and acceleration-synced
@@ -102,14 +122,29 @@ circular front-lens language later in this lineage document.
   samples that moving source—never alternate long JPEG holds with a moving
   angle. Finished YouTube and LinkedIn artifacts share one native-24fps
   projection playback head delayed by the exact writer-to-gate travel
-  (`32 / 16 = 2s`). At every 16fps pull boundary the gate and digital playback
-  resolve to the same source timeline; between pulls the finished digital
-  outputs remain fluid. Podcast/RSS motion uses that same delayed clock.
+  (`32 / 16 = 2s`). Each freshly written cell and the digital playback resolve
+  to the same source timeline on that cell's first gate pass during the
+  projection payoff; between pulls the finished digital outputs remain fluid.
+  After the finite 36-cell physical carrier begins recirculating, the already-
+  launched output continues forward at native cadence rather than visibly
+  seeking backward through the finite carrier. The accepted projection passage
+  is a 288-frame, 12-second native-24fps excerpt, long enough for the portrait
+  sentence and a clean result hold before the terminal state. Podcast/RSS
+  motion uses that same delayed clock.
 - Moving footage is live only after both muted playback heads have confirmed
   `play()`. If autoplay is rejected or either head pauses unexpectedly, the
   whole writer → gate → output chain invalidates together and falls back to
   deterministic 16fps editorial frames; a merely decoded but frozen video
-  must never masquerade as live motion.
+  must never masquerade as live motion. After both play promises settle, force
+  one shared timeline resynchronization before exposing live frames to the
+  writer. Prime the projection decoder by exactly one native 24fps frame to
+  compensate its cold presentation callback latency; this is an activation-
+  only display lead, not a change to the physical two-second gate delay or a
+  license for repeated correction seeks during the payoff. Deterministic film
+  coverage uses short four-cell takes from the real Episode 1 stills. Its
+  visible editorial cadence therefore accelerates with the carrier up to 4fps;
+  never return to the old 20-cell hold, and do not cycle camera angles on every
+  16fps cell merely to manufacture activity.
 - Projection surfaces resolve monotonically in a three-stage optical handoff:
   the beam establishes the route, a separate low-energy landing halo follows,
   and the solid deliverable appears last. A short GPU focus acquisition may
@@ -117,7 +152,14 @@ circular front-lens language later in this lineage document.
   exact unfiltered texture before the next channel lands. A small damped
   flutter may live in the lamp, beam, and halo during ignition; opacity,
   focus, and the actual footage remain monotone so they can never masquerade
-  as dropped frames.
+  as dropped frames. The binding narrative order is one clockwise circuit of
+  the fan: high YouTube first, right-hand Transcript/RSS second, and lower-left
+  LinkedIn third. Spatial/array identity must remain separate from this timing
+  order so changing the circuit never moves or materially relights an output.
+- Landing halos live on planes materially larger than their output cores and
+  must reach zero alpha before every mesh boundary. Use a quiet, asymmetric
+  two-lobe falloff with an explicit edge guard; a uniformly blurred card,
+  rounded rectangle, or nonzero plane edge will reveal the projection mesh.
 - Treat every output as two materials. The footage, channel badge, captions,
   progress, waveform, and transcript live on a crisp NormalBlending core with
   real blacks and undistorted skin. Colored projection spill lives on a
@@ -125,6 +167,50 @@ circular front-lens language later in this lineage document.
   the media and then composite the media with `screen`: that contaminates the
   image core, erases black level, and turns projected deliverables into
   luminous slabs.
+- The LinkedIn Active Word texture is authored at twice its logical resolution
+  and downsampled with anisotropic filtering. Inactive caption whites stay
+  below the global bloom threshold while the exact lime active word may carry
+  the restrained emphasis. Prefer a few short, stable lines over shrinking a
+  long sentence or using bloom to manufacture legibility. Source word starts
+  remain authoritative, but adjacent hits closer than 200ms receive a local
+  minimum dwell so the 160ms punch can resolve; later words return to their
+  exact source clock instead of accumulating drift. After the last spoken word
+  the phrase holds with no word active.
+- Finished outputs do not loop indefinitely. After one readable passage they
+  resolve through the same clockwise YouTube → Transcript/RSS → LinkedIn
+  circuit as their arrival into static optical contact prints. The accepted
+  terminal language is `PUBLISHED / TO YOUTUBE /
+  FULL EPISODE`, `PUBLISHED / TO LINKEDIN / PORTRAIT CLIP`, and `TRANSCRIPT /
+  READY / PODCAST / RSS`; the latter describes the artifact and must not imply
+  that BitterClip published a podcast feed. Each print carries one small,
+  centered, crisp vector destination mark above its primary outcome: YouTube,
+  LinkedIn, or RSS. The marks clarify channel identity but remain subordinate
+  to the silver-print type; do not turn the prints into branded UI tiles. On
+  the narrow LinkedIn print, `PUBLISHED` is the primary semantic and optical
+  layer: its logo/outcome pair develops ahead of `TO LINKEDIN` and `PORTRAIT
+  CLIP`, uses a dense neutral silver underprint, and must remain the most
+  legible text during the dissolve as well as after settlement. Never brighten
+  the entire card or add glow to recover that hierarchy.
+- The terminal material is a lifted cool-charcoal silver-gelatin print with a
+  broad, low-contrast internal sheen, static silver grain, open registration
+  corners, a neutral sub-pixel print edge, and one restrained channel-colour
+  hairline. Its D-min must remain visibly above the page black under reduced
+  brightness without becoming a glowing slab. A short neutral projector breath
+  may bridge footage to print, but it must remain well inside the landing plane,
+  disappear completely, and never read as a rectangular halo, fog bank, magic
+  dust, or success toast.
+- On the canonical timeline the YouTube, Transcript/RSS, and LinkedIn prints
+  begin respectively at `12.27s`, `12.57s`, and `12.87s`, each resolving over
+  `.76s`; all are final by `13.63s`, before the
+  12-second projection head reaches its first visible wrap at scene `14.00s`.
+  Both decoded media heads then pause and CanvasTexture uploads stop. After the
+  third result appears, the shared film/reel drive follows one C2 coast from
+  16fps at `13.00s` to an exact cell-boundary stop at `13.85s`; lamp, beam, and
+  time-driven optical textures settle with it. Reduced motion and deterministic
+  fallback land directly on the same motionless `13.9s` terminal tableau.
+- Pausing the decoders never changes ownership of developed physical cells.
+  Once a film slot has source art, the strip and gate continue drawing that
+  persisted art regardless of media playback state.
 - All three throws leave one restrained white aperture before separating into
   red, blue, and amber. Beam extinction uses the true per-fragment view vector
   and optical depth rather than a fixed orthographic view assumption. Preserve
@@ -135,7 +221,11 @@ circular front-lens language later in this lineage document.
 - The 16fps thumbnail in the gate remains visible as conservation evidence,
   but it is recessed behind warm inner lips, edge-vignetted, and materially
   dimmer than the final artifacts. It must read as film observed through an
-  aperture—not a fourth screen or a monitor attached to the mechanism.
+  aperture—not a fourth screen or a monitor attached to the mechanism. The
+  decoded gate lift sits at only a hairline optical offset from the descending
+  carrier and stays below the film image in opacity. It may not live at the
+  forward lens plane, create parallax against the perforations, or read as a
+  bright rectangular band detached from the stock.
 - The dashed perimeter stays present only long enough to locate the sleeve's
   crossing, then fades after the file has fully passed. There is no interior
   plane to withdraw. The final three-particle hit still completes the last

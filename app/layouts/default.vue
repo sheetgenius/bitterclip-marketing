@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
             <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
-              Turn long podcasts, interviews, and founder calls into clips you can check before they leave your hands.
+              Footage in, episode out. A recorded session becomes the finished episode, and the short cuts from that same edit.
             </p>
             <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
           </div>
@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">Assistants</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/compare">Compare tools</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/#pricing">Pricing</NuxtLink>
-              <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start clipping</a>
+              <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start free</a>
             </div>
             <div class="flex flex-col gap-3">
               <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Legal</h2>

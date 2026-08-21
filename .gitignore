@@ -6,6 +6,8 @@ node_modules
 test-results
 playwright-report
 coverage
+tmp/
+.playwright-mcp/
 .DS_Store
 .antigravitycli/
 *.log

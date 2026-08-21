@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * Mounts the real-3D iso scene. The scene module (and three.js with it) loads
- * via dynamic import so it lives in a lazy chunk owned by this lab route —
- * three.js must never enter the homepage bundle.
+ * Mounts the real-3D ISO4 scene. The scene module (and three.js with it) loads
+ * through a client-only dynamic import so both the homepage and the diagnostic
+ * lab keep the renderer in a lazy browser chunk.
  */
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Iso4Scene } from '~/lib/hero-iso4/scene'
@@ -63,4 +63,3 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 </style>
-

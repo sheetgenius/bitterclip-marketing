@@ -2,7 +2,7 @@
 /**
  * The homepage — promoted from /lab/iso4 (owner ruling, 2026-08-20; the
  * cut-over plan is docs/homepage-promotion-audit.md). The fold is the ISO4
- * machine; below it: substrate → bring-your-agent → proof (#demo) → FAQ
+ * machine; below it: proof (#demo) → how (#how) → bring-your-agent → FAQ
  * (#faq) → pricing (#pricing). /lab/iso4 stays as the noindexed workshop
  * mirror; the pre-swap homepage soaks at /classic (noindex) before deletion.
  *
@@ -41,7 +41,15 @@ const faqItems = [
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
-    a: 'Because it is not picking moments out of a transcript search. It works from the whole session — who is speaking, what came before and after, what is on screen — and commits to a cut it can explain and show you the source for. When it is wrong, you say what is wrong and it revises that same cut instead of handing you ten more options.',
+    a: 'It does not hand you a scored pile of leftovers. It works from the whole session — who is speaking, what came before and after — and commits to one cut it can show you the source for. Search can find a neighborhood; it does not pick the cut. When it is wrong, you say what is wrong and it revises that same cut instead of offering ten more options.',
+  },
+  {
+    q: 'Does it know who is talking?',
+    a: 'It splits the voices. Until you name someone they stay Speaker 1, Speaker 2. Name them in this project and they stay named there. Later recognition needs a saved voice, and it can fail.',
+  },
+  {
+    q: 'Does it invent what happened in the recording?',
+    a: 'No. The source clock is the authority. Any cut can be opened in the editor and checked against the moment in the recording it came from.',
   },
   {
     q: 'Do I need ChatGPT or Claude?',
@@ -88,7 +96,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'Footage in, episodes out: BitterClip turns raw session footage into the finished episode and the short cuts from that same edit — an agent that watched the whole session, directed and revised by you.',
+    description: 'Footage in, episode out: BitterClip turns raw session footage into the finished episode and the short cuts from that same edit — an agent that watched the whole session, directed and revised by you.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -102,7 +110,7 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
-    description: 'Agentic video editing: record in the browser or bring footage you already shot, and BitterClip cuts it into the finished episode, portrait clips, and transcripts — with its built-in agent, or yours over Claude, ChatGPT, and MCP.',
+    description: 'Footage in, episode out: record in the browser or bring footage you already shot, and BitterClip cuts it into the finished episode, portrait clips, and transcripts — with its built-in agent, or yours over Claude, ChatGPT, and MCP.',
     offers: {
       '@type': 'AggregateOffer',
       lowPrice: '0',
@@ -159,15 +167,14 @@ useHead({
              giant machine present without allowing footage contrast to fight
              the words; it fades before the transformation stage begins. -->
         <div class="mobile-copy-shroud pointer-events-none absolute" aria-hidden="true" />
-        <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Agentic video editing</p>
         <h1 class="hero-h1 font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
-          Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episodes out</span>
+          Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episode out</span>
         </h1>
         <!-- Two named beats under the H1. The third (programmable / our agent
              or yours) lives in Bring your agent — it never shared this cadence. -->
         <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
           <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows your content.</p>
-          <p><span class="font-semibold text-zinc-100">Precision Editing Craft</span> — only the cleanest cuts.</p>
+          <p><span class="font-semibold text-zinc-100">Precision Edits</span> — the good parts, finished.</p>
         </div>
         <!-- One CTA, one decision. The produced product film, when it exists,
              brings back "Watch it work" with a real target. -->
@@ -180,121 +187,34 @@ useHead({
         <!-- one quiet line answering "what does free mean" at the moment of
              the click (the fold's only salvage from the old hero fine print) -->
         <p class="hero-fineprint font-mono text-[0.68rem] font-medium text-zinc-500">Free to start — 60 minutes of footage a month. Everything runs in your browser.</p>
-        <!-- Wayfinding whisper: the 100svh stage gives no hint the sections
-             below exist; this rides the permanently dead lower-left corner,
-             desktop-and-tall only so it can never crowd the CTA or the
-             mobile machine. -->
-        <a href="#how" class="hero-scroll font-mono text-[0.66rem] font-semibold uppercase tracking-[0.24em] text-zinc-600 hover:text-zinc-300">How it works <span aria-hidden="true">↓</span></a>
       </div>
     </div>
 
-    <!-- ============== BELOW THE FOLD · 1: AGENT-NATIVE SUBSTRATE ==============
-         How BitterClip makes video tractable for agents, with the editor as a
-         REAL screenshot framed as the surface you typically DON'T use —
-         that's the point of the substrate. The intro carries the recorder
-         fact: the site must never be readable as "BitterClip cannot record"
-         (guarded in qa/smoke.spec.ts). -->
-    <section id="how" class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
-      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
-      <div class="substrate-head">
-        <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Turns video into agent-native substrate</h2>
-        <p class="substrate-intro agent-measure text-base leading-relaxed text-zinc-400">
-          Raw video is opaque to software — a wall of pixels and a waveform. Shoot on a phone, in Zoom, or with BitterClip's own browser recorder, and BitterClip decomposes it into material an agent can hold: every word timestamped, every speaker named, every moment indexed, every cut addressable.
-        </p>
-      </div>
-      <figure class="mt-10 md:mt-14">
-        <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/transcript-editor.png" alt="The BitterClip transcript editor: each speaker's words laid over the audio waveform, with a clip selection dragged across the transcript" class="block w-full" loading="lazy" width="2880" height="880">
-        </div>
-        <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
-          <p>The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">You'll mostly never open it.</span></p>
-          <p>That's the point: you ask for what you want, with whatever agent you prefer, and the substrate makes the answer computable — any cut checkable against the exact moment it came from.</p>
-        </figcaption>
-      </figure>
-    </section>
-
-    <!-- ================= BELOW THE FOLD · 2: BRING YOUR AGENT =================
-         The cockpit section. The claim (outcome-level direction, not timeline
-         operation) is demonstrated by a transcript, not asserted: one complete
-         instruction in, understanding shown, finished artifact back. -->
-    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
-      <div class="agent-grid grid items-center">
-        <div>
-          <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
-          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Bring your agent</h2>
-          <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-            BitterClip ships with its agent built in — but it also plugs into Claude, ChatGPT, or anything that speaks MCP. Your agent shows up to footage that's already understood: every speaker named, every moment findable. Confirm a name once and it recognizes that person when they return.
-          </p>
-          <p class="agent-measure mt-4 text-base leading-relaxed text-zinc-200">
-            You don't operate a timeline. You ask for the finished cut — and when it's wrong, you say so and it revises that same cut.
-          </p>
-          <a href="/docs" class="mt-7 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Connect your agent <span aria-hidden="true">→</span></a>
-        </div>
-        <figure class="agent-card rounded-2xl border p-5 sm:p-6">
-          <figcaption class="mb-5 flex items-center gap-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] text-zinc-500">
-            <span class="agent-dot inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" /> Claude · connected to BitterClip
-          </figcaption>
-          <div class="space-y-4 text-sm leading-relaxed">
-            <p class="agent-bubble ml-auto w-fit max-w-[36ch] rounded-2xl rounded-br-md px-4 py-2.5 text-zinc-200">
-              Can you cut Tuesday's session with Sarah into a highlight reel? Best lifts, under a minute, captions on.
-            </p>
-            <p class="font-mono text-[0.66rem] tracking-[0.08em] text-zinc-500">▸ transcript_search · speaker: sarah · range: tuesday</p>
-            <div class="max-w-[46ch] text-zinc-400">
-              <p>Found it — Tuesday, 47 minutes, you and Sarah. Her strongest moments:</p>
-              <p class="mt-2 font-mono text-[0.72rem] leading-loose text-zinc-400">
-                12:40 · deadlift — "that's a PR"<br>31:22 · squat — "best depth all month"<br>44:05 · sled finisher
-              </p>
-            </div>
-            <p class="font-mono text-[0.66rem] tracking-[0.08em] text-zinc-500">▸ render · 9:16 · captions burned</p>
-            <div class="agent-artifact flex items-center gap-3.5 rounded-xl border px-4 py-3">
-              <span class="text-[#f28f84]" aria-hidden="true">▶</span>
-              <div>
-                <p class="font-mono text-xs text-zinc-200">sarah-highlights.mp4</p>
-                <p class="mt-0.5 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-zinc-500">0:58 · captions · ready</p>
-              </div>
-            </div>
-            <p class="max-w-[46ch] text-zinc-400">Want the same cut for Thursday's clients?</p>
-          </div>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ==================== BELOW THE FOLD · 3: THE PROOF =====================
-         Real material only: both quotes signed off by Andrew and Rohan
-         (2026-06-10), and the clip is a REAL client reel served live by the
-         clip-embed primitive — the same surface a Pro customer projects onto
-         their own site. id="demo" keeps the nav anchor honest: this is the
-         one live thing on the page you can touch. -->
+    <!-- ==================== BELOW THE FOLD · 1: THE PROOF =====================
+         First painted object after the fold is a cut you'd send from the same
+         session the machine is projecting — not a multicam flex. Quotes stay
+         as signed social proof. -->
     <section id="demo" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
-      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">In the field</p>
-      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Real sessions, real cuts</h2>
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">The cut</p>
+      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">A line you'd post</h2>
       <div class="proof-grid mt-10 grid items-start md:mt-14">
         <figure>
-          <div class="agent-card relative overflow-hidden rounded-2xl border">
-            <img
-              src="/clips/park-session-poster.jpg"
-              alt="The same park moment from two synchronized cameras side by side: Mike kneeling into a coached hip stretch by the tree, and the overhead view of the stretch pad"
-              width="280"
-              height="158"
-              loading="lazy"
-              class="block aspect-video w-full object-cover"
+          <div class="agent-card overflow-hidden rounded-2xl border">
+            <video
+              class="block aspect-video w-full bg-black"
+              poster="/clips/day-1-marketing-asset-poster.jpg"
+              controls
+              playsinline
+              preload="metadata"
+              width="1280"
+              height="720"
+              title="Watch: Mike, day one — I am my own marketing asset"
             >
-            <iframe
-              src="https://app.bitterclip.com/embed/clip/clip_ikmni9p7hairtsqoeepw"
-              class="absolute inset-0 h-full w-full"
-              style="border: 0"
-              title="Watch: Andrew coaching Mike through a hip stretch at the park"
-              loading="lazy"
-              allow="fullscreen"
-              allowfullscreen
-            />
+              <source src="/clips/day-1-marketing-asset.mp4" type="video/mp4">
+            </video>
           </div>
-          <!-- Multicam claims are grounded: 24 recordings / 15 bursts, 9 placed
-               synced angles in the session episode; the export (verified by
-               frame inspection) is a two-up of the side angle and the overhead
-               camera rendered simultaneously. -->
           <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
-            A real session — Andrew working on Mike's hip at the park. Phones, an iPad, and Meta glasses ran loose; BitterClip synchronized all two dozen recordings, and this cut plays <span class="text-zinc-300">the same moment from two cameras, side by side, frame-locked</span> — served live by the same machine, through the embed his clients see.
+            Day one of the session the machine is cutting. A week out of a twelve-year job, Mike says the quiet part: <span class="text-zinc-300">he is his own marketing asset.</span> This is the line you'd post.
           </figcaption>
         </figure>
         <div class="space-y-12">
@@ -323,6 +243,75 @@ useHead({
             </figcaption>
           </figure>
         </div>
+      </div>
+    </section>
+
+    <!-- =================== BELOW THE FOLD · 2: HOW IT WORKS ===================
+         The editor is a REAL screenshot framed as the place you check the
+         tape. The agent can still make the cut. The intro carries the
+         recorder fact: the site must never be readable as "BitterClip cannot
+         record" (guarded in qa/smoke.spec.ts). -->
+    <section id="how" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
+      <div class="substrate-head">
+        <h2 class="font-display max-w-[19ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">First, the session is in view</h2>
+        <p class="substrate-intro agent-measure text-base leading-relaxed text-zinc-400">
+          Raw video is a wall of pixels and a waveform. Shoot on a phone, in Zoom, or with BitterClip's own browser recorder, and BitterClip transcribes it, timestamps every word, and splits the voices. After a recording is ready, it reviews the Episode. Cuts land on the word.
+        </p>
+      </div>
+      <figure class="mt-10 md:mt-14">
+        <div class="agent-card overflow-hidden rounded-2xl border">
+          <img src="/images/hero/transcript-editor.png" alt="The BitterClip transcript editor: each speaker's words laid over the audio waveform, with a clip selection dragged across the transcript" class="block w-full" loading="lazy" width="2880" height="880">
+        </div>
+        <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
+          <p>The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">Open it to check the tape.</span></p>
+          <p>The agent can still make the cut. You ask for what you want; any cut is checkable against the exact moment it came from.</p>
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= BELOW THE FOLD · 3: BRING YOUR AGENT =================
+         The cockpit section. The claim (outcome-level direction, not timeline
+         operation) is demonstrated by a transcript, not asserted: ask, draft
+         that cut, revise that cut, then open or download after render. -->
+    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
+      <div class="agent-grid grid items-center">
+        <div>
+          <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
+          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Bring your agent</h2>
+          <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
+            BitterClip ships with its agent built in — but it also plugs into Claude, ChatGPT, or anything that speaks MCP. Your agent shows up to footage that's already in view: every word timestamped, voices split, cuts addressable.
+          </p>
+          <p class="agent-measure mt-4 text-base leading-relaxed text-zinc-200">
+            You don't operate a timeline. You ask for the finished cut — and when it's wrong, you say so and it revises that same cut.
+          </p>
+          <a href="/docs" class="mt-7 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Connect your agent <span aria-hidden="true">→</span></a>
+        </div>
+        <figure class="agent-card rounded-2xl border p-5 sm:p-6">
+          <figcaption class="mb-5 flex items-center gap-2 font-mono text-[0.66rem] uppercase tracking-[0.18em] text-zinc-500">
+            <span class="agent-dot inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" /> Claude · connected to BitterClip
+          </figcaption>
+          <div class="space-y-4 text-sm leading-relaxed">
+            <p class="agent-bubble ml-auto w-fit max-w-[36ch] rounded-2xl rounded-br-md px-4 py-2.5 text-zinc-200">
+              Cut Tuesday's session with Sarah. Under a minute, captions on.
+            </p>
+            <div class="max-w-[46ch] text-zinc-400">
+              <p>Drafted that cut. Fifty-eight seconds, captions on. It opens on the deadlift.</p>
+            </div>
+            <div class="agent-artifact flex items-center gap-3.5 rounded-xl border px-4 py-3">
+              <span class="text-[#f28f84]" aria-hidden="true">▶</span>
+              <div>
+                <p class="font-mono text-xs text-zinc-200">sarah-highlights</p>
+                <p class="mt-0.5 font-mono text-[0.66rem] uppercase tracking-[0.14em] text-zinc-500">0:58 · captions · draft</p>
+              </div>
+            </div>
+            <p class="agent-bubble ml-auto w-fit max-w-[36ch] rounded-2xl rounded-br-md px-4 py-2.5 text-zinc-200">
+              Intro drags. Start on the squat.
+            </p>
+            <p class="max-w-[46ch] text-zinc-400">Revised that cut. It opens on the squat now.</p>
+            <p class="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-zinc-500">Open in editor · Download after render</p>
+          </div>
+        </figure>
       </div>
     </section>
 
@@ -394,15 +383,15 @@ useHead({
           <p class="mb-5 mt-1.5 text-xs text-zinc-400">For a weekly show or regular interviews.</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 hours of footage a month</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>No watermark — 150 clip exports at 1080p</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Embed clips on your own site</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>No watermark — 150 clip exports at 1080p</li>
           </ul>
           <a
             :href="signupUrlClip"
             class="mt-auto flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
           >
-            <span>Start clipping</span>
+            <span>Start on Clip</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="h-4 w-4" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
@@ -478,7 +467,7 @@ useHead({
 
 /* Fold rhythm — scoped CSS, not utilities: the dev Tailwind watcher has
    twice dropped newly-introduced classes (see .btf). Scale steps 16/24/36
-   so eyebrow→headline→pillars→CTA group instead of stacking evenly. */
+   so headline→pillars→CTA group instead of stacking evenly. */
 .iso4-copy {
   /* Clear the floating site bar (top-4 + ~54px pill). pt-8 used to piggyback
      on the bar's in-flow height; with overlay the canvas starts at y=0. */
@@ -521,22 +510,6 @@ useHead({
 .hero-cta:focus-visible {
   outline: 2px solid #f28f84;
   outline-offset: 4px;
-}
-
-/* Wayfinding whisper at the stage foot. mt-auto anchors it to the bottom of
-   the copy flex column; hidden below md and on short viewports where the
-   column would push it into the CTA or off the stage. */
-.hero-scroll {
-  display: none;
-}
-
-@media (min-width: 48rem) and (min-height: 46rem) {
-  .hero-scroll {
-    display: block;
-    margin-top: auto;
-    padding-bottom: 1.75rem;
-    transition: color 160ms ease;
-  }
 }
 
 .agent-measure {
