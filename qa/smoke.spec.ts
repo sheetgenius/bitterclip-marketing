@@ -12,6 +12,12 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.locator('meta[name="twitter:card"][content="summary_large_image"]')).toHaveCount(1)
   await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0)
 
+  const iso4Prepaint = page.locator('picture.iso4__prepaint')
+  await expect(iso4Prepaint).toHaveCount(1)
+  await expect(iso4Prepaint.locator('source')).toHaveCount(6)
+  await expect(iso4Prepaint.locator('img')).toHaveAttribute('src', '/images/hero/iso4-prepaint-ultrawide.webp')
+  await expect(page.locator('link[rel="preload"][as="image"][href*="iso4-prepaint-"]')).toHaveCount(7)
+
   const h1 = page.getByRole('heading', { level: 1 })
   await expect(h1).toContainText('Footage in')
   await expect(h1).toContainText('Episode out')

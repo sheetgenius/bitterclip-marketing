@@ -2338,3 +2338,87 @@ External closure evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r46-review/final-review-packet.md`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r46-review/grok-closure-verdict.md`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r45-sequence/homepage-deterministic-60fps.webm`
+
+## Round 49 — exact cold takeover and desktop de-jank
+
+The deployed SSR prepaint solved the former blank WebGL load, but a fresh
+desktop navigation exposed a new discontinuity: the static projector was an
+older, coarser camera render. At 1600x900 its top reel occupied 207px of the
+measured bright-material crop and the live t=0 reel occupied 224px; the lower
+reel changed from 264px to 315px. The handoff therefore made the machine appear
+approximately 8% wider at the top and 19% wider at the lower focal reel. The
+two layers also used different transition durations (`260ms` and `220ms`), so
+their combined opacity rose to approximately `1.145` at the middle of the
+dissolve. Meanwhile the scene clock advanced from `.011s` to `.253s` during
+the swap. Geometry mismatch, a brightness pulse, and leaked motion all
+reinforced the same apparent jump.
+
+Every prepaint was regenerated losslessly from the current hardware renderer
+at t=0. Desktop no longer asks two images to cover every camera interpolation:
+five frames now cover tall (1817x1454), classic (1400x1000), standard
+(1600x1000), wide (1600x900), and ultrawide (1920x900), while mobile and tablet
+retain their dedicated frames. Picture media queries select the nearest
+camera family and `object-fit: cover` preserves reel geometry between those
+anchors instead of stretching it. At 1600x900 the accepted WebP and live t=0
+canvas have RMSE `0`, perceptual-hash difference `0`, and identical measured
+reel bounds.
+
+The takeover is now a distinct phase rather than a side effect of scene start:
+
+1. Decode and paint the SSR image.
+2. Import and construct the shared scene behind it.
+3. Size the renderer and precompute the 108-centroid field.
+4. Warm the otherwise invisible folder/apex material behind the poster.
+5. Restore and render t=0.
+6. Exchange poster and canvas over the same 180ms easing curve.
+7. Start the scene clock only after that transition ends.
+
+Measured opacity sums remain exactly `1.000` at every sampled takeover frame,
+and `timelineSeconds` remains exactly zero until the canvas is fully opaque.
+The folder warm-up removes the old 14.7ms live entrance render; the final
+15-second Metal pass reports a 7.4ms render maximum and 2.2ms maximum rolling
+p95. Runtime performance is `114.093fps` minimum and `120.038fps` median, with
+zero mechanical misses, projection misses, browser errors, fallback, or copy,
+CTA, and viewport collisions. Update p95 peaks at 9.5ms during the dense impact
+window, one-frame maximum 16.5ms, then returns below 2ms without disturbing
+mechanical accounting.
+
+Cold startup still performs material GPU work, but it is visually owned by the
+exact poster. The final measured phase durations on Apple M2 Max were 36.3ms
+module import, 77.5ms scene construction, 237.9ms hidden preparation/warm-up,
+2.9ms final t=0 render, and 183.4ms takeover. FCP was 236ms; the timeline began
+at approximately 1.06s. Layout shift remained `.000351`, confined to existing
+text nodes rather than the ISO4 host. A full freeze-to-background-video remains
+a valid later delivery strategy, especially for mobile, but is not required to
+make the current desktop opening stable on the reference machine.
+
+Rejected variants:
+
+- Three.js `compileAsync()`: 944.6ms preparation and a 756ms main-thread task
+  on Metal, substantially worse than the normal hidden warm-up.
+- Full-clear particle prewarm: did not materially improve the 15-16ms CPU
+  maximum and introduced extra 211ms/57ms startup tasks.
+- DPR reduction: unnecessary; it would trade away the crisp material the owner
+  prioritized while the selected DPR2 pass already sustains the reference
+  display.
+- Hard swap or fade-through-black: both conceal rather than solve geometry
+  mismatch and weaken the opening's continuous cinematic read.
+
+Final verification on 2026-08-22: `git diff --check` passed, `bun run
+generate` completed successfully, and `bun run qa:smoke` passed all 44 tests.
+The smoke contract now requires one ISO4 prepaint picture, six responsive
+sources, the ultrawide fallback image, and all seven matching preload links.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r1/local-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/prepaint-live-exact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/prepaint-live-difference.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/homepage-local-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/homepage-local-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/homepage-full-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-final/homepage-full-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/classic-1400x1000.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/standard-1600x1000.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/ultrawide-1920x900.webm.json`

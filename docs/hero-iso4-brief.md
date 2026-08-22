@@ -87,11 +87,19 @@ audit path. The accepted homepage path measures `.01531` film widths maximum
 divergence, captures all 108 packets through the shared field, and retains zero
 within-triplet registration spread.
 
-**Binding cold-load and provenance addendum (2026-08-21).** The homepage must
-server-render a camera-matched static apparatus prepaint at mobile, tablet,
-wide, and tall-desktop sizes. It remains under the live canvas until ISO4 has
-rendered a real first frame, then crossfades without advancing or shortening
-the opening ritual. A physical film cell may claim live-video provenance only
+**Binding cold-load and provenance addendum (2026-08-21, amended
+2026-08-22).** The homepage must server-render a camera-matched, lossless t=0
+apparatus prepaint. Mobile and tablet keep dedicated frames; desktop uses tall,
+classic, standard, wide, and ultrawide aspect families so no coarse poster is
+stretched into a visibly thinner or wider projector. The image uses
+aspect-preserving cover, decodes before three.js work begins, and remains the
+sole visible machine through scene construction, deterministic field
+precomputation, hidden shader/material warm-up, and the first real WebGL frame.
+Poster and canvas then exchange opacity over the same 180ms curve; their alpha
+sum must remain one and the scene clock must remain exactly t=0 until the
+handoff completes. The hidden warm-up may render the folder apex once, but it
+must restore t=0 before takeover and may never freeze source colour or alter
+film accounting. A physical film cell may claim live-video provenance only
 when the decoder frame actually available to the writer is within one native
 24fps frame of that cell's expected source instant. If not, ISO4 enters its
 deterministic real-Episode-1 fallback atomically *before* stamping the cell;

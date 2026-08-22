@@ -24,6 +24,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 
 export interface Iso4Scene {
+  prepare(): void
   start(): void
   stop(): void
   still(t?: number): void
@@ -165,8 +166,12 @@ export interface Iso4TemporalDiagnostics {
   usingDeterministicFallback: boolean
   updateWallTimeP50Ms: number
   updateWallTimeP95Ms: number
+  updateWallTimeP99Ms: number
+  updateWallTimeMaxMs: number
   renderWallTimeP50Ms: number
   renderWallTimeP95Ms: number
+  renderWallTimeP99Ms: number
+  renderWallTimeMaxMs: number
   filmTexturePrepP95Ms: number
   outputTexturePrepP95Ms: number
   qualityFallbackActive: boolean
@@ -6034,8 +6039,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       usingDeterministicFallback: !useMovingMedia,
       updateWallTimeP50Ms: tidy(percentile(updateWallTimes, 0.5)),
       updateWallTimeP95Ms: tidy(percentile(updateWallTimes, 0.95)),
+      updateWallTimeP99Ms: tidy(percentile(updateWallTimes, 0.99)),
+      updateWallTimeMaxMs: tidy(Math.max(0, ...updateWallTimes)),
       renderWallTimeP50Ms: tidy(percentile(renderWallTimes, 0.5)),
       renderWallTimeP95Ms: tidy(percentile(renderWallTimes, 0.95)),
+      renderWallTimeP99Ms: tidy(percentile(renderWallTimes, 0.99)),
+      renderWallTimeMaxMs: tidy(Math.max(0, ...renderWallTimes)),
       filmTexturePrepP95Ms: tidy(percentile(filmTexturePrepTimes, 0.95)),
       outputTexturePrepP95Ms: tidy(percentile(outputTexturePrepTimes, 0.95)),
       qualityFallbackActive: softwareRenderer && workshopOptions.fragmentsPerPacket === 3,
@@ -6078,6 +6087,15 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   }
 
   return {
+    prepare() {
+      layout()
+      ensurePacketFieldPaths()
+      // The folder is absent at t=0, so a t=0-only warm-up defers its material
+      // and shadow variants until the first visible entrance frame. Render the
+      // apex once under the SSR prepaint; the wrapper immediately restores t=0
+      // before takeover, but the live entrance no longer pays shader cost.
+      draw(FILE_APEX_AT)
+    },
     sourceReady() {
       return episodeFrames.every((image) => imageReady(image))
     },
