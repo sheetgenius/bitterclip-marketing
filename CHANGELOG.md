@@ -89,6 +89,12 @@ under a dated entry.
 
 ### Website
 
+- Replaced the single-line `#demo` proof ("A line you'd post") with a
+  portrait cut from day one of the Mike and John show. The heading is
+  "Find the Hidden Gems." The clip is a full-length Zoom, the founder
+  talking about leaving a twelve-year job to build bitter.sh, cut to the
+  minute you'd send. Michael Ruescher's quote sits with Andrew and Rohan's
+  signed social proof. The live file is `/clips/day-1-sizzle.mp4`.
 - Replaced the park two-up in the first proof section with a 19-second cut
   from day one of the Mike and John show: Mike saying he is his own marketing
   asset. The heading is "A line you'd post." Andrew and Rohan's quotes stay

@@ -191,32 +191,50 @@ useHead({
     </div>
 
     <!-- ==================== BELOW THE FOLD · 1: THE PROOF =====================
-         First painted object after the fold is a cut you'd send from the same
-         session the machine is projecting — not a multicam flex. Quotes stay
-         as signed social proof. -->
+         First painted object after the fold is a cut you'd send: a full-length
+         Zoom, the founder talking about leaving a twelve-year job to build
+         bitter.sh. His quote sits under the player; Andrew and Rohan stay as
+         signed social proof beside it. -->
     <section id="demo" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
-      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">The cut</p>
-      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">A line you'd post</h2>
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">From a Zoom call</p>
+      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Find the Hidden Gems</h2>
+      <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
+        A week out of a twelve-year job, Michael Ruescher says why he quit to build <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">bitter.sh</a>. This is the cut you'd send.
+      </p>
       <div class="proof-grid mt-10 grid items-start md:mt-14">
-        <figure>
-          <div class="agent-card overflow-hidden rounded-2xl border">
-            <video
-              class="block aspect-video w-full bg-black"
-              poster="/clips/day-1-marketing-asset-poster.jpg"
-              controls
-              playsinline
-              preload="metadata"
-              width="1280"
-              height="720"
-              title="Watch: Mike, day one — I am my own marketing asset"
-            >
-              <source src="/clips/day-1-marketing-asset.mp4" type="video/mp4">
-            </video>
-          </div>
-          <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
-            Day one of the session the machine is cutting. A week out of a twelve-year job, Mike says the quiet part: <span class="text-zinc-300">he is his own marketing asset.</span> This is the line you'd post.
-          </figcaption>
-        </figure>
+        <div class="proof-clip">
+          <figure>
+            <div class="agent-card overflow-hidden rounded-2xl border">
+              <video
+                class="block aspect-[9/16] w-full bg-black"
+                poster="/clips/day-1-sizzle-poster.jpg"
+                controls
+                playsinline
+                preload="metadata"
+                width="1080"
+                height="1920"
+                title="Watch: Michael Ruescher on quitting to build bitter.sh"
+              >
+                <source src="/clips/day-1-sizzle.mp4" type="video/mp4">
+              </video>
+            </div>
+            <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
+              The hours you would have sat through are still on the tape.
+            </figcaption>
+          </figure>
+          <figure>
+            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+              &ldquo;I built BitterClip for myself because I realized <span class="text-white">the most important thing about being a founder is getting anyone to know or care about your product.</span>&rdquo;
+            </blockquote>
+            <figcaption class="mt-4 flex items-center gap-3.5">
+              <img src="/images/michael_ruescher.jpg" alt="Michael Ruescher" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
+              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
+                <span class="block text-zinc-200">Michael Ruescher</span>
+                <span class="block text-zinc-500">Founder · <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">Bitter.sh</a></span>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
         <div class="space-y-12">
           <figure>
             <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
@@ -675,6 +693,15 @@ useHead({
 
 .proof-grid {
   gap: 3.5rem;
+}
+
+.proof-clip {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
 }
 
 @media (min-width: 48rem) {

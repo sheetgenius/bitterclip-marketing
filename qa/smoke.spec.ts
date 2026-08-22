@@ -32,14 +32,19 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   // The below-the-fold spine: proof (#demo) → how → agent → FAQ → pricing.
   const btfHeadings = await page.locator('main h2').allTextContents()
   expect(btfHeadings.map((text) => text.trim())).toEqual([
-    "A line you'd post",
+    'Find the Hidden Gems',
     'First, the session is in view',
     'Bring your agent',
     'The questions everyone asks first',
     'Bring one recording. Leave with the episode.',
   ])
-  await expect(page.locator('#demo').getByRole('heading', { name: "A line you'd post" })).toBeVisible()
-  await expect(page.locator('#demo video[title^="Watch:"] source')).toHaveAttribute('src', /day-1-marketing-asset\.mp4/)
+  await expect(page.locator('#demo').getByRole('heading', { name: 'Find the Hidden Gems' })).toBeVisible()
+  await expect(page.locator('#demo video[title^="Watch:"] source')).toHaveAttribute('src', /day-1-sizzle\.mp4/)
+  await expect(page.locator('#demo').getByRole('button', { name: 'v2 now' })).toHaveCount(0)
+  await expect(page.locator('#demo').getByRole('button', { name: 'v1 first cut' })).toHaveCount(0)
+  await expect(page.getByText('getting anyone to know or care about your product')).toBeVisible()
+  await expect(page.locator('#demo').getByRole('link', { name: 'bitter.sh', exact: true })).toHaveAttribute('href', 'https://bitter.sh/')
+  await expect(page.locator('#demo').getByRole('link', { name: 'Bitter.sh', exact: true })).toHaveAttribute('href', 'https://bitter.sh/')
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
   await expect(page.getByText('Open it to check the tape.')).toBeVisible()

@@ -26,8 +26,9 @@ The homepage opens with an animated 3D projector performing the pipeline: a
 recorded session drops in, the machine indexes it onto film, and three
 finished artifacts project out — a landscape episode for YouTube, a portrait
 captioned clip for LinkedIn, and a waveform-and-transcript panel for
-podcast/RSS. Directly under the fold is a cut from that same session — Mike
-saying he is his own marketing asset — then how it works.
+podcast/RSS. Directly under the fold is a portrait cut from a full-length
+Zoom: day one, Michael Ruescher a week out of a twelve-year job, talking
+about building bitter.sh. Then how it works.
 
 Free to start — 60 minutes of footage a month. Everything runs in your browser;
 ChatGPT and Claude are optional, over the same work.
@@ -74,10 +75,13 @@ open it to check the tape. The agent can still make the cut. You ask for what
 you want — with the built-in agent, or with Claude, ChatGPT, or anything that
 speaks MCP — and any cut is checkable against the exact moment it came from.
 
-The homepage's first section after the fold plays a cut from day one of the
-Mike and John show — the same session the hero machine is cutting. Mike, a
-week out of a twelve-year job, says he is his own marketing asset. That is
-the line you'd post.
+The homepage's first section after the fold is titled "Find the Hidden
+Gems." It plays a portrait cut from day one of the Mike and John show.
+The source was a full-length Zoom. A week out of a twelve-year job,
+Michael Ruescher says why he quit to build [bitter.sh](https://bitter.sh/).
+The hours you would have sat through are still on the tape; this is the
+cut you'd send. His quote sits under the player. Andrew Williams and Rohan
+Karunakaran stay as signed social proof beside it.
 
 ## Why It Works
 
