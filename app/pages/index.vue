@@ -191,72 +191,71 @@ useHead({
     </div>
 
     <!-- ==================== BELOW THE FOLD · 1: THE PROOF =====================
-         First painted object after the fold is a cut you'd send: a full-length
-         Zoom, the founder talking about leaving a twelve-year job to build
-         bitter.sh. His quote sits under the player; Andrew and Rohan stay as
-         signed social proof beside it. -->
+         Portrait clip + quote column: the phone is a fixed column, the three
+         voices fill its height. Header matches the how-section band (title
+         left, lede right) so the right side of the section is never empty. -->
     <section id="demo" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
       <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">From a Zoom call</p>
-      <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Find the Hidden Gems</h2>
-      <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-        A week out of a twelve-year job, Michael Ruescher says why he quit to build <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">bitter.sh</a>. This is the cut you'd send.
-      </p>
-      <div class="proof-grid mt-10 grid items-start md:mt-14">
-        <div class="proof-clip">
-          <figure>
-            <div class="agent-card overflow-hidden rounded-2xl border">
-              <video
-                class="block aspect-[9/16] w-full bg-black"
-                poster="/clips/day-1-sizzle-poster.jpg"
-                controls
-                playsinline
-                preload="metadata"
-                width="1080"
-                height="1920"
-                title="Watch: Michael Ruescher on quitting to build bitter.sh"
-              >
-                <source src="/clips/day-1-sizzle.mp4" type="video/mp4">
-              </video>
-            </div>
-            <figcaption class="mt-4 max-w-[44ch] text-sm leading-relaxed text-zinc-500">
-              The hours you would have sat through are still on the tape.
-            </figcaption>
-          </figure>
-          <figure>
-            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+      <div class="proof-head">
+        <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Find the Hidden Gems</h2>
+        <p class="proof-lede">
+          A week out of a twelve-year job, Michael Ruescher says why he quit to build <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">bitter.sh</a>. This is the cut you'd send.
+        </p>
+      </div>
+      <div class="proof-stage">
+        <figure class="proof-player">
+          <div class="proof-frame agent-card overflow-hidden rounded-2xl border">
+            <video
+              class="block aspect-[9/16] w-full bg-black"
+              poster="/clips/day-1-sizzle-poster.jpg"
+              controls
+              playsinline
+              preload="metadata"
+              width="1080"
+              height="1920"
+              title="Watch: Michael Ruescher on quitting to build bitter.sh"
+            >
+              <source src="/clips/day-1-sizzle.mp4" type="video/mp4">
+            </video>
+          </div>
+          <figcaption class="proof-caption">
+            The hours you would have sat through are still on the tape.
+          </figcaption>
+        </figure>
+        <div class="proof-quotes">
+          <figure class="proof-quote proof-quote-lead">
+            <blockquote class="font-display">
               &ldquo;I built BitterClip for myself because I realized <span class="text-white">the most important thing about being a founder is getting anyone to know or care about your product.</span>&rdquo;
             </blockquote>
-            <figcaption class="mt-4 flex items-center gap-3.5">
-              <img src="/images/michael_ruescher.jpg" alt="Michael Ruescher" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
-              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
-                <span class="block text-zinc-200">Michael Ruescher</span>
-                <span class="block text-zinc-500">Founder · <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">Bitter.sh</a></span>
+            <figcaption>
+              <img src="/images/michael_ruescher.jpg" alt="Michael Ruescher" width="48" height="48" loading="lazy">
+              <div>
+                <span class="proof-quote-name">Michael Ruescher</span>
+                <span class="proof-quote-role">Founder · <a href="https://bitter.sh/" target="_blank" rel="noopener">Bitter.sh</a></span>
               </div>
             </figcaption>
           </figure>
-        </div>
-        <div class="space-y-12">
-          <figure>
-            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+          <figure class="proof-quote">
+            <blockquote class="font-display">
               &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
             </blockquote>
-            <figcaption class="mt-4 flex items-center gap-3.5">
-              <img src="/images/andrew_williams_strength_and_positions_coach.jpg" alt="Andrew Williams" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
-              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
-                <span class="block text-zinc-200">Andrew Williams</span>
-                <span class="block text-zinc-500">Head Coach · <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">Strength &amp; Positions</a></span>
+            <figcaption>
+              <img src="/images/andrew_williams_strength_and_positions_coach.jpg" alt="Andrew Williams" width="48" height="48" loading="lazy">
+              <div>
+                <span class="proof-quote-name">Andrew Williams</span>
+                <span class="proof-quote-role">Head Coach · <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener">Strength &amp; Positions</a></span>
               </div>
             </figcaption>
           </figure>
-          <figure>
-            <blockquote class="font-display text-lg font-medium leading-[1.55] tracking-tight text-zinc-400">
+          <figure class="proof-quote">
+            <blockquote class="font-display">
               &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
             </blockquote>
-            <figcaption class="mt-4 flex items-center gap-3.5">
-              <img src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" loading="lazy" class="h-12 w-12 rounded-full object-cover">
-              <div class="font-mono text-[10px] uppercase leading-relaxed tracking-widest">
-                <span class="block text-zinc-200">Rohan Karunakaran</span>
-                <span class="block text-zinc-500">Founder · <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">Frontier Studio</a></span>
+            <figcaption>
+              <img src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" loading="lazy">
+              <div>
+                <span class="proof-quote-name">Rohan Karunakaran</span>
+                <span class="proof-quote-role">Founder · <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener">Frontier Studio</a></span>
               </div>
             </figcaption>
           </figure>
@@ -691,23 +690,169 @@ useHead({
   gap: 3.5rem;
 }
 
-.proof-grid {
-  gap: 3.5rem;
+.proof-lede {
+  margin-top: 1.25rem;
+  max-width: 36em;
+  color: #a1a1aa;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
-.proof-clip {
+.proof-stage {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.proof-player {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
   width: 100%;
   max-width: 22rem;
   margin-inline: auto;
 }
 
+.proof-caption {
+  margin-top: 1rem;
+  color: #71717a;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.proof-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+}
+
+.proof-quote {
+  margin: 0;
+}
+
+.proof-quote blockquote {
+  margin: 0;
+  color: #a1a1aa;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  line-height: 1.55;
+}
+
+.proof-quote-lead blockquote {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.proof-quote figcaption {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-top: 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.proof-quote figcaption img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.proof-quote-name {
+  display: block;
+  color: #e4e4e7;
+}
+
+.proof-quote-role {
+  display: block;
+  color: #71717a;
+}
+
+.proof-quote-role a {
+  color: rgb(242 143 132 / 0.9);
+  transition: color 160ms ease;
+}
+
+.proof-quote-role a:hover {
+  color: #ffa89e;
+}
+
 @media (min-width: 48rem) {
-  .proof-grid {
-    grid-template-columns: 1.05fr 1fr;
-    gap: 5rem;
+  .proof-stage {
+    margin-top: 3.25rem;
+  }
+
+  .proof-quotes {
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  .proof-stage {
+    grid-template-columns: 24rem minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 4.5rem;
+    row-gap: 1rem;
+    align-items: stretch;
+    margin-top: 3.75rem;
+  }
+
+  .proof-player {
+    display: contents;
+  }
+
+  .proof-frame {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .proof-caption {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+  }
+
+  .proof-quotes {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 100%;
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  .proof-quote-lead blockquote {
+    font-size: 1.28rem;
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 80rem) {
+  .proof-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.9fr);
+    column-gap: 4.5rem;
+    align-items: center;
+  }
+
+  .proof-lede {
+    margin-top: 0;
+    max-width: 34em;
+  }
+
+  .proof-stage {
+    margin-top: 4.25rem;
+  }
+
+  .proof-quote-lead blockquote {
+    font-size: 1.32rem;
+    line-height: 1.48;
   }
 }
 

@@ -93,8 +93,10 @@ under a dated entry.
   portrait cut from day one of the Mike and John show. The heading is
   "Find the Hidden Gems." The clip is a full-length Zoom, the founder
   talking about leaving a twelve-year job to build bitter.sh, cut to the
-  minute you'd send. Michael Ruescher's quote sits with Andrew and Rohan's
-  signed social proof. The live file is `/clips/day-1-sizzle.mp4`.
+  minute you'd send. On wide screens the heading shares a band with the
+  lede, the phone is a fixed column, and the three voices fill that
+  height: Michael Ruescher first, then Andrew and Rohan. The live file
+  is `/clips/day-1-sizzle.mp4`.
 - Replaced the park two-up in the first proof section with a 19-second cut
   from day one of the Mike and John show: Mike saying he is his own marketing
   asset. The heading is "A line you'd post." Andrew and Rohan's quotes stay
