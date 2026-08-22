@@ -280,7 +280,7 @@ useHead({
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/sizzle-editor.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" loading="lazy" width="2720" height="1480">
+          <img src="/images/hero/sizzle-editor-2.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the clip description beside him, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" loading="lazy" width="2720" height="1480">
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>
