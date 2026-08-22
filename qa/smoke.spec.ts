@@ -14,9 +14,10 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
 
   const iso4Prepaint = page.locator('picture.iso4__prepaint')
   await expect(iso4Prepaint).toHaveCount(1)
-  await expect(iso4Prepaint.locator('source')).toHaveCount(6)
+  await expect(iso4Prepaint.locator('source')).toHaveCount(7)
+  await expect(iso4Prepaint.locator('source[srcset="/images/hero/iso4-prepaint-panoramic.webp"]')).toHaveCount(1)
   await expect(iso4Prepaint.locator('img')).toHaveAttribute('src', '/images/hero/iso4-prepaint-ultrawide.webp')
-  await expect(page.locator('link[rel="preload"][as="image"][href*="iso4-prepaint-"]')).toHaveCount(7)
+  await expect(page.locator('link[rel="preload"][as="image"][href*="iso4-prepaint-"]')).toHaveCount(8)
 
   const h1 = page.getByRole('heading', { level: 1 })
   await expect(h1).toContainText('Footage in')

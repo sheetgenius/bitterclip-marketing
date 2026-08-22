@@ -2422,3 +2422,42 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/classic-1400x1000.webm.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/standard-1600x1000.webm.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r2/ultrawide-1920x900.webm.json`
+
+## Round 50 — panoramic handoff alignment
+
+The owner's follow-up identified a smaller remaining defect that the exact
+1600x900 comparison did not cover: in the active Chrome viewport the machine
+still appeared to nudge left during takeover. Browser inspection reproduced it
+at the real 1728x936, DPR2 stage. That 24:13 viewport selected the 1600x900
+16:9 `wide` prepaint, while the live camera continuously reaches its panoramic
+pose at an aspect ratio of 1.85. The alpha exchange remained correct, but its
+two layers represented nearby rather than identical camera poses.
+
+A new lossless 1728x936 `panoramic` prepaint was captured from the hardware
+renderer at deterministic t=0. Desktop selection now assigns 16:9 `wide` only
+through 29:16, the new 24:13 anchor from 29:16 through 2:1, and the 1920x900
+`ultrawide` frame above 2:1. The owner's viewport therefore receives its exact
+camera family instead of a vertically cropped 16:9 approximation.
+
+Thresholded machine-centroid comparisons across several luminance cutoffs
+measured the former horizontal disagreement at approximately 3.1-3.7 CSS
+pixels. The accepted handoff measures 0.15-0.29px. Normalized RMSE across the
+machine crop fell from `.015906` to `.003373`, a 78.8% reduction. Direct browser
+reloads show the top reel, writer, and lower reel holding one screen-space pose
+through poster, mixed-alpha, and live-canvas frames; opacity still sums to one.
+
+Final verification: `git diff --check` passed, `bun run generate` completed,
+and `bun run qa:smoke` passed all 44 tests. The homepage smoke contract now
+requires seven responsive `<source>` elements, the panoramic asset itself, and
+all eight matching preload links.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/panoramic-1728x936-t0.00.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/before-poster-1728x936.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/before-live-1728x936.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/after-poster-1728x936.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/after-live-1728x936.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-contact.png`

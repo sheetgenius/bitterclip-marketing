@@ -90,8 +90,10 @@ within-triplet registration spread.
 **Binding cold-load and provenance addendum (2026-08-21, amended
 2026-08-22).** The homepage must server-render a camera-matched, lossless t=0
 apparatus prepaint. Mobile and tablet keep dedicated frames; desktop uses tall,
-classic, standard, wide, and ultrawide aspect families so no coarse poster is
-stretched into a visibly thinner or wider projector. The image uses
+classic, standard, wide, 24:13 panoramic, and ultrawide aspect families so no
+coarse poster is stretched into a visibly thinner or wider projector, and the
+reference 1728x936 browser viewport never inherits a nearby 16:9 camera. The
+image uses
 aspect-preserving cover, decodes before three.js work begins, and remains the
 sole visible machine through scene construction, deterministic field
 precomputation, hidden shader/material warm-up, and the first real WebGL frame.

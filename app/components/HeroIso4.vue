@@ -14,8 +14,9 @@ useHead({
     { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-tall.webp', media: '(min-width: 960px) and (max-aspect-ratio: 4/3)' },
     { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-classic.webp', media: '(min-width: 960px) and (min-aspect-ratio: 4/3) and (max-aspect-ratio: 3/2)' },
     { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-standard.webp', media: '(min-width: 960px) and (min-aspect-ratio: 3/2) and (max-aspect-ratio: 17/10)' },
-    { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-wide.webp', media: '(min-width: 960px) and (min-aspect-ratio: 17/10) and (max-aspect-ratio: 39/20)' },
-    { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-ultrawide.webp', media: '(min-width: 960px) and (min-aspect-ratio: 39/20)' },
+    { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-wide.webp', media: '(min-width: 960px) and (min-aspect-ratio: 17/10) and (max-aspect-ratio: 29/16)' },
+    { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-panoramic.webp', media: '(min-width: 960px) and (min-aspect-ratio: 29/16) and (max-aspect-ratio: 2/1)' },
+    { rel: 'preload', as: 'image', href: '/images/hero/iso4-prepaint-ultrawide.webp', media: '(min-width: 960px) and (min-aspect-ratio: 2/1)' },
   ],
 })
 
@@ -129,7 +130,8 @@ onBeforeUnmount(() => {
       <source media="(max-aspect-ratio: 4/3)" srcset="/images/hero/iso4-prepaint-tall.webp">
       <source media="(max-aspect-ratio: 3/2)" srcset="/images/hero/iso4-prepaint-classic.webp">
       <source media="(max-aspect-ratio: 17/10)" srcset="/images/hero/iso4-prepaint-standard.webp">
-      <source media="(max-aspect-ratio: 39/20)" srcset="/images/hero/iso4-prepaint-wide.webp">
+      <source media="(max-aspect-ratio: 29/16)" srcset="/images/hero/iso4-prepaint-wide.webp">
+      <source media="(max-aspect-ratio: 2/1)" srcset="/images/hero/iso4-prepaint-panoramic.webp">
       <img
         ref="prepaintImage"
         src="/images/hero/iso4-prepaint-ultrawide.webp"
