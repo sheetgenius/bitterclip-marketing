@@ -199,7 +199,7 @@ useHead({
       <div class="proof-head">
         <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Find the Hidden Gems</h2>
         <p class="proof-lede">
-          A week out of a twelve-year job, Michael Ruescher says why he quit to build <a href="https://bitter.sh/" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">bitter.sh</a>. This is the cut you'd send.
+          Michael Ruescher quit a twelve-year job to build <a href="https://bitter.sh/" target="_blank" rel="noopener">bitter.sh</a>.<br>This is the cut you'd send.
         </p>
       </div>
       <div class="proof-stage">
@@ -219,7 +219,7 @@ useHead({
             </video>
           </div>
           <figcaption class="proof-caption">
-            The hours you would have sat through are still on the tape.
+            The rest of the hours are still on the tape.
           </figcaption>
         </figure>
         <div class="proof-quotes">
@@ -696,11 +696,25 @@ useHead({
   color: #a1a1aa;
   font-size: 1rem;
   line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.proof-lede a {
+  color: #d4d4d8;
+  text-decoration: underline;
+  text-decoration-color: rgb(242 143 132 / 0.4);
+  text-underline-offset: 0.18em;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.proof-lede a:hover {
+  color: #ffa89e;
+  text-decoration-color: #ffa89e;
 }
 
 .proof-stage {
   display: grid;
-  gap: 2.5rem;
+  gap: 2.25rem;
   margin-top: 2.5rem;
 }
 
@@ -713,16 +727,16 @@ useHead({
 }
 
 .proof-caption {
-  margin-top: 1rem;
-  color: #71717a;
+  margin-top: 0.9rem;
+  color: #a1a1aa;
   font-size: 0.875rem;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .proof-quotes {
   display: flex;
   flex-direction: column;
-  gap: 2.75rem;
+  gap: 2.5rem;
 }
 
 .proof-quote {
@@ -736,28 +750,28 @@ useHead({
   font-weight: 500;
   letter-spacing: -0.018em;
   line-height: 1.55;
+  text-wrap: pretty;
 }
 
 .proof-quote-lead blockquote {
-  font-size: 1.2rem;
-  line-height: 1.5;
+  color: #c4c4cc;
 }
 
 .proof-quote figcaption {
   display: flex;
   align-items: center;
   gap: 0.875rem;
-  margin-top: 1rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
   font-size: 10px;
-  line-height: 1.6;
-  letter-spacing: 0.16em;
+  line-height: 1.55;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .proof-quote figcaption img {
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 999px;
   object-fit: cover;
 }
@@ -773,7 +787,7 @@ useHead({
 }
 
 .proof-quote-role a {
-  color: rgb(242 143 132 / 0.9);
+  color: var(--bitter-accent-clip);
   transition: color 160ms ease;
 }
 
@@ -781,9 +795,15 @@ useHead({
   color: #ffa89e;
 }
 
+.proof-lede a:focus-visible,
+.proof-quote-role a:focus-visible {
+  outline: 2px solid var(--bitter-accent-clip);
+  outline-offset: 3px;
+}
+
 @media (min-width: 48rem) {
   .proof-stage {
-    margin-top: 3.25rem;
+    margin-top: 3.5rem;
   }
 
   .proof-quotes {
@@ -794,12 +814,12 @@ useHead({
 
 @media (min-width: 64rem) {
   .proof-stage {
-    grid-template-columns: 24rem minmax(0, 1fr);
+    grid-template-columns: 22.5rem minmax(0, 1fr);
     grid-template-rows: auto auto;
-    column-gap: 4.5rem;
-    row-gap: 1rem;
+    column-gap: 4rem;
+    row-gap: 0.9rem;
     align-items: stretch;
-    margin-top: 3.75rem;
+    margin-top: 3.5rem;
   }
 
   .proof-player {
@@ -821,14 +841,14 @@ useHead({
     grid-column: 2;
     grid-row: 1;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1.75rem;
     min-height: 100%;
-    max-width: none;
+    max-width: 36rem;
     margin-inline: 0;
   }
 
   .proof-quote-lead blockquote {
-    font-size: 1.28rem;
+    font-size: 1.25rem;
     line-height: 1.5;
   }
 }
@@ -836,23 +856,19 @@ useHead({
 @media (min-width: 80rem) {
   .proof-head {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.9fr);
-    column-gap: 4.5rem;
-    align-items: center;
+    grid-template-columns: auto minmax(22rem, 1fr);
+    column-gap: 3.25rem;
+    align-items: end;
   }
 
   .proof-lede {
     margin-top: 0;
-    max-width: 34em;
+    max-width: 34rem;
   }
 
   .proof-stage {
-    margin-top: 4.25rem;
-  }
-
-  .proof-quote-lead blockquote {
-    font-size: 1.32rem;
-    line-height: 1.48;
+    grid-template-columns: 24rem minmax(0, 1fr);
+    column-gap: 4.5rem;
   }
 }
 
