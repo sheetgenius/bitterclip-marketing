@@ -2461,3 +2461,99 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-hardware.webm`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-hardware.webm.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cold-load-r3/homepage-local-panoramic-contact.png`
+
+## Round 51 — actual iPhone Simulator composition and terminal readability
+
+The owner's 1179x2556 physical iPhone capture exposed a mobile failure that
+the browser-sized acceptance stills understated. The 30rem homepage copy veil
+correctly protected the proposition, but the shared `-.62` world-unit drop
+placed the YouTube output inside its darkest region. LinkedIn and Podcast/RSS
+then occupied the remaining clear field at small projected sizes. At the final
+state, YouTube was almost absent, the other two prints merged into page black,
+and the intended clockwise payoff could not be followed.
+
+iOS 26.0.1 and an exact `iPhone 15 Pro` device were installed and booted in
+Xcode Simulator. Mobile acceptance was then performed in Simulator Safari on
+the canonical homepage, including its real status bar, Dynamic Island, browser
+chrome, navigation, copy, CTA, fine print, copy veil, and stage boundary. The
+baseline localhost and production captures reproduced the owner's screenshot;
+this was a scene-composition defect, not desktop emulation or Safari text
+scaling.
+
+The accepted scene-only correction replaces the one-size mobile drop with a
+deliberate clockwise landing triangle. YouTube moves down and right into the
+first clear band; LinkedIn remains the lower-left portrait anchor; Podcast/RSS
+remains lower-right. The physical planes scale by `1.18`, `1.14`, and `1.12`
+respectively, with matching landing-field scale so halo geometry cannot expose
+an edge. Small per-channel exposure compensation (`1.06`, `1.04`, `1.02`)
+recovers live midtones after the DOM veil without changing activation timing
+or using additive brightness.
+
+The terminal print itself receives a mobile-only neutral D-min of
+`rgb(35 39 45)`, a slightly clearer neutral hairline, and modestly raised
+silver type. The first iteration raised transcript type too far and produced a
+soft bloom; the accepted second pass pulled noncompact titles back to
+`rgb(220 220 215)` while preserving plane separation. This retains the noir
+contact-print material rather than making the outputs glow like UI cards.
+
+The selected continuous Simulator pass shows the complete causal sequence and
+terminal state with all three outputs readable. The YouTube plane no longer
+touches the fine print, LinkedIn karaoke remains crisp at actual device scale,
+the platform marks survive, and the final triangle remains inside the viewport.
+Deterministic homepage telemetry at 440x956 and 1600x900 reports zero copy, CTA,
+or viewport collisions and all three terminal outputs settled. Desktop output
+geometry and print density remain unchanged.
+
+Cold-load Simulator footage was sampled at 10fps across the poster-to-canvas
+handoff. The reel, gate, and film spine hold the same screen-space pose through
+the exchange; no skinny-to-wide change or leftward nudge is visible. The
+opening clock still begins only after the exact mobile prepaint has been
+replaced.
+
+On Apple M2 Max / Metal at 440x956 DPR2, the final realtime pass reached scene
+readiness in `999.5ms`, sustained `117.401–120fps`, and measured `1.9ms` maximum
+rolling render p95, `9.5ms` maximum render, and `2.1ms` maximum update p95.
+At 4x CPU throttle, scene readiness was `1971.6ms`, cadence remained
+`109.123–120.029fps`, maximum rolling render p95 was `8.2ms`, and the maximum
+render was `16.5ms`. Both paths completed 36 writes and three outputs with zero
+mechanical misses, projection misses, errors, fallbacks, or protected-region
+collisions.
+
+Grayscale, 46% brightness, quality-38 JPEG compression, and 2.2px mild blur
+retain the three distinct terminal planes and their primary labels. The
+low-brightness pass is intentionally quiet, but no output disappears into the
+page and compression does not reveal straight halo boundaries.
+
+Rejected alternatives:
+
+- Shortening or removing the homepage copy veil: it would trade output
+  visibility for proposition/CTA interference and trigger an unnecessary
+  homepage-structure surface.
+- Dropping all three outputs farther as one unit: it preserves the original
+  failure by spending scarce vertical space on the already-clear lower pair.
+- Global output or bloom inflation: it raises footage blacks, creates glowing
+  typography, and does not solve the landing geometry.
+- A mobile background-video freeze in this round: still a valid future delivery
+  strategy, but unnecessary for the accepted reference-machine performance and
+  not a substitute for first fixing the composition rendered into that video.
+
+Final verification on 2026-08-22: `git diff --check` passed, `bun run generate`
+completed with the existing non-fatal sourcemap and chunk-size warnings, and
+`bun run qa:smoke` passed all 44 tests in 1.2 minutes. No ISO3, homepage copy,
+navigation, DOM structure, public Markdown twin, mechanics, particle physics,
+projection order, terminal wording, or desktop camera was edited.
+
+Evidence:
+
+- `/Users/c3po/Library/Messages/Attachments/71/01/E79F2AAC-E712-46DA-B40A-BB9C088DDDD2/IMG_4735.heic`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/production-terminal.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/local-baseline-terminal-settled.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-continuous.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-handoff-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-terminal.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-hostile-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-hardware-cpu4.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/deterministic/mobile-t13.80.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/deterministic/desktop-t13.80.png`

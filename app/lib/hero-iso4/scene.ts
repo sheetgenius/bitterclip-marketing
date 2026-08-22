@@ -2045,6 +2045,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const p = THREE.MathUtils.clamp(terminalProgress, 0, 1)
     const receipt = minJerk((p - 0.18) / 0.82)
     const compact = d.icon === 'in'
+    // The phone composition deliberately protects the proposition with a
+    // dark optical veil. Give the arrested prints a slightly higher neutral
+    // D-min so their physical planes remain distinguishable after that veil
+    // without turning the type, logos, or perimeter into emitted light.
+    const mobilePrint = mobileLayout
     // The portrait card is the smallest and most steeply foreshortened print.
     // Develop its identifying logo and primary outcome before the secondary
     // copy so the card never passes through a dark, semantically inverted
@@ -2063,7 +2068,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // above the page black at a silver-gelatin D-min rather than collapsing
     // into it: separation comes from the material plane, not inflated type or
     // a reintroduced projector halo.
-    x.fillStyle = `rgba(24,27,32,${0.985 * p})`
+    x.fillStyle = mobilePrint
+      ? `rgba(35,39,45,${0.985 * p})`
+      : `rgba(24,27,32,${0.985 * p})`
     x.fillRect(0, 0, W2, H2)
     const printSheen = x.createLinearGradient(0, 0, W2, H2)
     printSheen.addColorStop(0, `rgba(82,85,88,${0.17 * receipt})`)
@@ -2081,7 +2088,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // One sub-pixel print edge is enough to disclose the object under reduced
     // brightness. It is neutral and continuous, avoiding the harsh channel-
     // colored activation edge that made the live film transition feel cut.
-    x.globalAlpha = 0.19 * receipt
+    x.globalAlpha = (mobilePrint ? 0.27 : 0.19) * receipt
     x.strokeStyle = 'rgb(157,162,164)'
     x.lineWidth = compact ? 0.8 : 1
     x.strokeRect(0.5, 0.5, W2 - 1, H2 - 1)
@@ -2157,7 +2164,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       leadY,
       `${compact ? 900 : 850} ${compact ? 38 : 50}px "Arial Narrow", "Helvetica Neue", sans-serif`,
       compact ? 0.7 : 1.8,
-      compact ? 'rgb(238,238,232)' : 'rgb(216,216,211)',
+      compact
+        ? 'rgb(238,238,232)'
+        : mobilePrint ? 'rgb(220,220,215)' : 'rgb(216,216,211)',
       primaryReceipt,
       compact ? { color: 'rgba(244,244,238,0.34)', width: 0.9 } : undefined,
     )
@@ -2168,7 +2177,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       nameY,
       `700 ${compact ? 21 : 27}px ui-monospace, monospace`,
       compact ? 1.6 : 2.5,
-      'rgb(194,197,194)',
+      mobilePrint ? 'rgb(204,207,203)' : 'rgb(194,197,194)',
       0.9 * receipt,
     )
     drawTrackedText(
@@ -2178,13 +2187,13 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       H2 * (compact ? 0.66 : 0.77),
       `650 ${compact ? 16 : 18}px ui-monospace, monospace`,
       compact ? 1.3 : 1.9,
-      'rgb(178,181,178)',
+      mobilePrint ? 'rgb(188,192,188)' : 'rgb(178,181,178)',
       0.82 * receipt,
     )
     x.font = `600 ${compact ? 12 : 14}px ui-monospace, monospace`
     x.textAlign = 'left'
     x.textBaseline = 'alphabetic'
-    x.fillStyle = 'rgb(151,154,153)'
+    x.fillStyle = mobilePrint ? 'rgb(171,175,173)' : 'rgb(151,154,153)'
     x.globalAlpha = 0.62 * receipt
     x.fillText(`RELEASE PRINT ${plate.number}`, inset + (compact ? 12 : 16), H2 - inset - (compact ? 11 : 13))
     x.textAlign = 'right'
@@ -2663,7 +2672,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // vertically safe baseline. Desktop gets the same separation at a
       // smaller amplitude, so neither breakpoint collapses into a lower clump.
       const fanZ = mobileLayout
-        ? [0.22, 2.2, -0.35][i]!
+        ? [-0.9, 2.25, -0.45][i]!
         : [0, 0.55, -0.45][i]!
       const phoneRise = i === 1 ? (mobileLayout ? 0.4 : 0.34) : 0
       // Owner sketch (2026-08-20): pull the constellation into a tighter
@@ -2673,16 +2682,28 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // families only — the mobile fan was drawn separately and stays.
       const sketchZ = mobileLayout ? 0 : [0.25, 0.6, -0.15][i]!
       const sketchRise = mobileLayout ? 0 : [1.1, 0.25, 3.05][i]!
-      // On the real 440px homepage the YouTube card previously started inside
-      // the free-tier footnote. Drop the complete mobile fan as one optical
-      // constellation, preserving its internal triangle and beam causality.
-      const mobileCopyClearance = mobileLayout ? -0.62 : 0
+      // A real iPhone 15 Pro capture showed that one shared mobile drop was
+      // not enough: YouTube remained buried under the copy veil while the two
+      // lower prints consumed the available clear field. Compose the phone as
+      // an explicit clockwise triangle instead. YouTube lands first at the
+      // upper-right edge of the clear field, Podcast/RSS remains lower-right,
+      // and the portrait anchors the left. This changes only the landing
+      // planes; projector, beam order, timing, and machine framing stay fixed.
+      const mobileY = mobileLayout ? [-2.7, -0.72, -0.35][i]! : 0
+      const mobileScale = mobileLayout ? [1.18, 1.14, 1.12][i]! : 1
       const target = new THREE.Vector3(
         d.x,
-        lampY + d.y + lowerLift + phoneRise + sketchRise + mobileCopyClearance,
+        lampY + d.y + lowerLift + phoneRise + sketchRise + mobileY,
         d.z - 0.78 * panoramicFit + fanZ + sketchZ,
       )
       settledOutputTargets[i]!.copy(target)
+      screenMeshes[i]!.scale.setScalar(mobileScale)
+      outputGlowMeshes[i]!.scale.setScalar(mobileScale)
+      // A small exposure compensation recovers photographic midtones on the
+      // phone after the DOM copy-protection layer. It is uniform across live
+      // footage and terminal prints, so there is no brightness jump at the
+      // transition and no additive-white shortcut.
+      screenMats[i]!.color.setScalar(mobileLayout ? [1.06, 1.04, 1.02][i]! : 1)
       beamMats[i]!.uniforms.uAlpha!.value = mobileLayout
         ? [0.18, 0.06, 0.02][i]!
         : [0.13, 0.06, 0.02][i]!
