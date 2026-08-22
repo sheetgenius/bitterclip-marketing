@@ -1727,3 +1727,614 @@ Accepted evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-wide-t13.90.png`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-mobile-t13.90.png`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/linkedin-legibility/after-tall-t13.90.png`
+
+## Round 38 — day-one sizzle on #demo
+
+The 19-second marketing-asset line was a sendable cut but not the object
+the page needed after the fold. `#demo` now plays a 29.6-second mashup of
+eleven day-one takes, captioned with lime on the punch words. Heading is
+"Thirty seconds of day one." The LinkedIn portrait on the machine is
+unchanged. An upbeat electro bed was mixed in, then pulled: it read as
+the wrong energy. The replacement is a quiet wind-up: low rumble and a
+rising tone that start near silence and swell through the last takes,
+with a reverse-noise lift on the closer. No beat. Captions were moved
+off the face into the lower third and recut so the line stays white
+except one or two lime punch words.
+
+Later rounds of that cut (density, word-clipping, freeze-frame, chill-hop
+bed, the ffmpeg scratch pipeline) are sealed as case
+`docs/cases/2026-08-21-day-one-sizzle-ffmpeg/`, including the finished
+specimen. Do not fold that after-action into this ISO4 motion ledger.
+
+## Round 42 — the opening file becomes pure information
+
+The owner broadened the particle workshop into the complete above-the-fold
+movie opening, then made the opening material ruling explicit: the source
+should be an ordinary vanilla-manila folder carrying a legible Zoom recording,
+and the threshold should convert it in place into a monochrome Bitter-red
+screen-door field. It is not a red generic particle effect. It is the same file
+with its surface rewritten as pure information. The converted object must clear
+the threshold without teleportation, coast to a nearly motionless Wile E.
+Coyote hold, loosen at its seams, and only then submit to the accepted horn.
+
+The canonical implementation remains the homepage `/`; every official capture
+in this round includes the real navigation, proposition, CTA, machine, section
+boundary, and responsive spacing. `/lab/iso4` was not used for acceptance. The
+folder is now paper-thin `#d0ad70` stock rather than a salmon block, with a
+continuous tab silhouette, paper margin, flush black contact sheet, real Mike
+and John imagery, a literal blue Zoom camera mark, `ZOOM`, `RAW RECORDING`, and
+an MP4 annotation. No homepage copy or structure was changed for this work.
+
+### Controlled density and material rounds
+
+The logical model remains exactly 108 information packets and 36 physical film
+cells. The three controlled visible densities were rebuilt on identical
+timing, camera, horn, registration, writer, reel, and output systems:
+
+- 324 visible fragments: three per packet and nine per cell. At the held file,
+  projected-area proxy was `.807` and density p95 was `22`; at `4.8s`, area was
+  `.748` and density p95 `29`. It exposed vertical stripes and did not make the
+  transformed object feel as materially complete as the folder.
+- 648 visible fragments: six per packet and 18 per cell. A 24x24 body plus a
+  12x6 tab gives every packet a local 2x3 screen-door family. At the hold, area
+  was `.834` and density p95 `40`; at `4.8s`, area was `.851` and density p95
+  `49`. It is the smallest count that keeps a continuous folder, a filled later
+  body, readable packet common fate, and calm homepage hierarchy.
+- 972 visible fragments: nine per packet and 27 per cell. Held area was `.846`
+  with density p95 `58`; horn density reached p95 `118` and area `.988`. It
+  added edge chatter and powder stress without a clearer source object, so it
+  was rejected despite the available frame-time headroom.
+
+Earlier controlled archival-warm, spectral-pearl, and bichromatic-information
+scripts were retained as diagnostics. Spectral pearl had previously been the
+strongest photographic cloud, but all three conflicted with the later binding
+pure-information metaphor: source hues competed with the literal screen-door
+conversion and could read as decorative confetti. The accepted information-red
+script therefore transports source identity as bounded OKLab lightness inside
+one hue family. Source-frozen UV modulation is 32%, clamped to OKLab lightness
+`.44–.78`; dark Zoom/contact-sheet regions become legible deep red rather than
+holes, while faces and white typography remain lighter red neighborhoods. It
+does not hue-cycle, repaint from live video, normalize to warm white, or use
+bloom to fake mass.
+
+Uniform, importance, and balanced-hybrid source sampling were also retained as
+diagnostics. Importance improved face/logo counts but weakened complete surface
+coverage; uniform preserved coverage but had no stable file-like adjacency;
+hybrid balanced both for the former photographic cloud. The accepted opening
+uses a deterministic screen grid because adjacency itself is the information
+story. Every fragment still owns a stable source UV and begins at its exact
+moving breakup location. A column permutation avoids a simplistic rectangular
+wipe while each 2x3 packet neighborhood stays coherent.
+
+The crossing takes `.78s`. The crossed region becomes square, screen-stable,
+non-rotating, high-opacity cores at the moving material boundary; the intact
+folder above remains continuous. A `.18s` post-clear settle preserves inherited
+velocity and damps it with a C2/minimum-jerk handoff. At `3.12s`, all 648
+fragments are still visible, source-shape retention is `.994`, p50/p95 speed is
+`.018/.318px` per frame, acceleration is `.010/.163px` per frame squared, jerk
+is `.004/.055px` per frame cubed, source-color coverage is `1.0`, source-to-
+cloud OKLab distance is `.236`, area proxy is `.834`, integrated-luminance
+proxy is `.163`, hollow-center ratio is `0`, and there are no copy, CTA, or
+viewport collisions. This is deliberate projected area at low luminance, not
+brightness inflation.
+
+After the hold, the digital cores remain crisp through the shoulder and relax
+into the existing photographic core/halo material only as the horn compresses.
+The later body retains bounded size families, restrained high-opacity cores,
+low-energy halos, depth extinction, shared illumination, and a filled center.
+At `4.8s`, 576 fragments remain: 252 suspended, 288 funneling, 18 registering,
+and 18 transferring. p50/p95 speed is `1.653/7.187px` per frame; acceleration
+`.263/1.083`; jerk `.076/.659`; maximum trail `5.835px`; area `.851`; hollow
+center `0`; packet cohesion is `5.118px` at 55% horn progress and `1.104px` at
+90%; registration spread is `0ms`. The accepted J centerline, Bishop frame,
+151.2-degree shared turn, bell/neck radii, and write times were not retuned.
+
+Each six-fragment family reconvenes as one packet. Three families become the
+three contained front-face contacts for one film cell. Particle extinction and
+the connected emulsion front overlap for `52ms`; energy accounting remains
+exact (`particleEnergy + thumbnailEnergy = 108`, error `0`). At `6.93s`, the
+last 18 fragments are visibly transferring and all 36 persistent slots are
+written. At `13.90s`, particle energy is `0`, thumbnail energy `108`, three
+terminal outputs are present, and particle, film, reel, apparatus-yaw, and
+media motion are all zero.
+
+### Holistic above-the-fold integration
+
+The same pass kept and verified the related high-ROI corrections: the film
+carrier is continuous neutral graphite/silver rather than a yellow-edged band;
+the gate lift is local to the aperture; deterministic editorial coverage
+advances in four-cell takes; YouTube, Transcript/RSS, then LinkedIn ignite and
+arrest clockwise; landing halos use edge-guarded falloff with no straight
+clipped boundary; LinkedIn uses a twice-rasterized, anisotropic portrait canvas
+with a hard 3.5px underprint and one lime Active Word held for at least 340ms;
+the terminal prints use centered vector platform marks and legible silver type;
+and the film, reels, projection heads, textures, and apparatus stop completely.
+The caption phrase itself was deliberately left untouched because another
+agent owned that wording lane.
+
+Desktop composition now activates only from `960px` when aspect ratio is at
+least `1.05`; the 768–959 band keeps the protected tablet/mobile camera instead
+of accidentally inheriting a constrained desktop simulation. Camera-matched
+mobile, tablet, tall, and wide t=0 prepaints are server-rendered under the live
+canvas. The opening clock does not begin until Three has drawn the actual first
+frame; a 220–260ms handoff removes the cold blank without shortening the
+ritual. No diagnostic query state is added to the public URL.
+
+Principal accepted homepage evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-opening.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-density.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-machine-wide.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-terminal-wide.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-subtitles.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-mobile.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-tall.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-breakpoint-fixed.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-hostile.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/tonal-wide-t3.12.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/metrics-wide.log`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r2-color/color-script-comparison.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r2-color/color-script-grayscale-comparison.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r3-sampling/sampling-comparison.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/r3-sampling/sampling-verified-close-comparison.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/deterministic60/homepage-1600x900-60fps.mp4`
+
+## Round 43 — cold truth, hostile displays, and live provenance closure
+
+The SSR-capable `HeroIso4.vue` wrapper replaces the client-only filename solely
+so the camera-matched picture prepaint exists in first HTML. It dynamically
+imports the same shared scene on mount, keeps the prepaint beneath the WebGL
+canvas, and removes it only after a real first render. Cold mobile and tablet
+captures already contain the apparatus at 250ms; the wide prepaint appears
+during module/media startup without creating a hard transition. These are
+runtime product assets, not generated test output:
+
+- `/Users/c3po/co/bitterclip-marketing/public/images/hero/iso4-prepaint-mobile.webp`
+- `/Users/c3po/co/bitterclip-marketing/public/images/hero/iso4-prepaint-tablet.webp`
+- `/Users/c3po/co/bitterclip-marketing/public/images/hero/iso4-prepaint-tall.webp`
+- `/Users/c3po/co/bitterclip-marketing/public/images/hero/iso4-prepaint-wide.webp`
+
+The writer now proves provenance before mutating a persistent cell. It computes
+the expected native frame for that exact write ordinal, reads the decoder frame
+actually available, wraps the 108-frame source distance, and atomically enters
+the deterministic Episode 1 fallback if the error exceeds one frame. A desired
+`currentTime` is never treated as decoded evidence. The projection-head
+diagnostic separately compares the freshly arriving physical cell with the
+visible native-24fps output. A bounded physical-cell override is available if
+two independent decoders ever straddle opposite frame boundaries: for that one
+gate arrival the exact live-stamped cell paints all three channel treatments,
+then native 24fps updates continue. The raw decoder error, effective displayed
+error, and correction count remain separately observable; no metric is waived.
+
+The final recorded Chrome/Metal homepage pass used Apple M2 Max hardware,
+reached live scene readiness in `1043ms`, remained live, and needed zero phase
+corrections. Maximum fresh expected, visible-presented, and raw-decoder errors
+were all one native frame. It wrote all 36 cells, settled all three outputs,
+reported zero missed 16fps mechanical pulls and zero missed 24fps projection
+frames, zero errors, zero quality fallback, and zero copy/CTA/viewport
+collisions. Final rolling render cadence was `86.733fps`; p95 update/render was
+`2.0/4.1ms`; p95 film/output texture preparation was `1.0/1.2ms`. At 2x CPU
+throttle, scene readiness was `1403ms`, the same three phase maxima remained
+one frame, correction count remained zero, there were no missed pulls/frames,
+and p95 update/render was `2.5/7.0ms`.
+
+Forced media failure retained all 648 configured fragments, used the
+deterministic real-Episode-1 path for every sample, wrote 36 physical cells,
+settled three outputs, stopped at terminal, and reported no collision or missed
+mechanical/projection frame. Reduced motion lands directly on the same
+motionless 13.9s three-print tableau. Full-color, grayscale, 45%-brightness,
+mild-blur/peripheral, and JPEG 4:2:0 quality-28 sheets preserve the folder,
+filled red field, horn, card silhouettes, and copy hierarchy without a fog bank
+or clipped glow. DPR 1/2, 440x956, 1600x900, 1817x1454, and the 767/768/959/960
+breakpoint neighborhood all report zero protected-region collisions.
+
+Final live and hostile evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/realtime-corrected/homepage-1600x900.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/realtime-corrected/homepage-1600x900.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/live-provenance-corrected/homepage.json.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/live-provenance-corrected-2x/homepage.json.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r11/fallback/homepage.json.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r11/reduced-motion/homepage.json.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r11/cold-prepaint-mobile-250ms.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r11/cold-prepaint-tablet-250ms.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/contact-hostile.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/final-mobile-t3.12.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/final-mobile-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/final-tall-t3.12.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/final-tall-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/contact-final-hostile.png`
+
+### Adversarial closure
+
+The internal perception, VFX, and motion-math reviewers received homepage
+evidence rather than lab captures. After the cold prepaint and provenance fixes,
+all three reported no unresolved P0/P1. Perception accepted the opening,
+responsive hierarchy, terminal cards, and mobile protection; an occasional
+wide 250ms copy-before-prepaint capture remains P2 because the apparatus arrives
+before the live scene and produces no hard seam. VFX accepted the stronger red
+source structure, contained contact/energy transfer, neutral carrier, clean
+halos, and terminal stop. Motion math confirmed exact 108/648/18 accounting,
+unchanged horn/write clocks, zero registration spread, one-frame live phase
+maxima, and zero missed mechanical/projection frames in nominal and 2x passes.
+
+Grok's first pass returned ACCEPT/no P0 but promoted three craft notes to P1:
+the held field's source structure was faint, the three contacts were not
+individually countable at full composition, and peripheral camera-facing squares
+could taste voxel-like. The first was accepted and corrected with the stronger
+bounded OKLab lightness transport. The other two were reconciled against the
+binding owner ruling: exact packet/contact grammar is proven in close evidence,
+while the homepage may read one coherent bundle; the digital square character
+is intentional and relaxes before final compression. On the r12 closure packet,
+Grok returned ACCEPT with no unresolved P0/P1, marked source identity and
+contact legibility closed, and classified the peripheral voxel aftertaste as
+P2 taste. It found no more principled algorithm necessary to ship.
+
+The Claude/Fable CLI was given the prepared multimodal packet through the
+required resumable workflow, but the provider refused the session because the
+account had reached its monthly spend limit. No Claude opinion is claimed or
+fabricated. This is an external-provider availability failure, not a hidden
+visual verdict.
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r10/external-review-packet.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/grok-closure-packet.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/source-grid-r12/grok-closure-verdict.md`
+
+### Required repository gates
+
+- `git diff --check`: pass.
+- `bun run generate`: pass; the generated `/index.html` contains all four
+  responsive preloads and the server-rendered ISO4 `<picture>`.
+- `bun run qa:smoke`: 44 passed in 1.8 minutes.
+
+No ISO3 file changed. Generated evidence and `tmp/` remain untracked. The
+day-one sizzle, homepage copy/Markdown twins, classic-route migration, Nuxt
+configuration, and smoke changes already present in the shared worktree were
+preserved rather than normalized into this scene workshop.
+
+## Round 44 — lower-reel threading correction
+
+A close homepage review exposed a physically impossible loose film band below
+the lower reel. This was not an intended free tail. Two rendering shortcuts
+overlapped there: the continuous paper-thin loop remained coplanar with the
+front flange around the lower half-wrap, while the separate straight writer
+catch and its perforation helpers extended symmetrically past the actual lower
+reel tangent.
+
+The correction preserves the accepted 36-slot loop, UV accounting, transport
+distance, writer position, reel radius, 16fps mechanics, camera, and timing.
+The flange assembly now has `0.18` units of clearance on either side of the
+unchanged stock width so the stock is mechanically captured between its faces.
+The carrier stays fully visible through the writer and right tangent, then its
+lower wrap makes a short quarter-pitch optical handoff behind the opaque
+flange. The straight writer catch keeps its useful lead-in above the aperture
+but terminates at the lower tangent; helper perforations below that tangent are
+not instantiated.
+
+Homepage close-ups at the final write, active projection, and terminal tableau
+show the vertical carrier entering the lower reel with no unsupported tongue or
+perforation rails below it. Full 440x956, 1600x900, and 1817x1454 captures keep
+the established composition. Diagnostics at `6.93s` and `13.90s` retain 108
+logical packets, 648 configured fragments, 18 fragments per film cell, 36
+written physical slots, zero energy-balance error, zero registration spread,
+and zero copy, CTA, or viewport collisions. At terminal, transport and reel
+tangent speeds remain exactly zero and all three outputs are present.
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-close-t6.93.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-close-t8.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-close-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-wide-t6.93.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-tall-t6.93.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/film-wrap-clearance/final-mobile-t6.93.png`
+
+## Round 45 — terminal focal-cell phase lock
+
+The lower writer aperture was motionless at the old terminal time, but its
+carrier stopped on an integer transport tick rather than the aperture's actual
+held-frame phase. Because the fixed writer and optical gate sit at `.303351` of
+a pitch and the physical pull-down occupies only the final 42% of each 16fps
+interval, the old stop left the aperture about one fifth of a cell away from a
+centered thumbnail. A frame line and neighboring coverage therefore remained
+inside the writer's focal rectangle and read as a fuzzy double exposure.
+
+The terminal coast now solves its endpoint through the same minimum-jerk Geneva
+pull used by the live film texture. The writer and gate are exactly 32 pitches
+apart, so one solved phase centers both without changing their geometry. Three
+nearby centered cells were compared on the canonical homepage: the two earlier
+cells were valid Mike/John split coverage but still looked doubled at thumbnail
+scale; the immediately following cell is the first centered single-camera
+close-up. The machine therefore performs one additional calm pull and reaches
+its C2, zero-velocity stop at approximately `13.96s`. The default/reduced-
+motion still is sampled 50ms after that stop rather than at a stale hard-coded
+`13.9s`.
+
+A 14.6-second Chrome/Metal cold real-time homepage pass finished on one crisp
+Mike thumbnail, paused both media heads, settled all three outputs, wrote all
+36 physical cells, and reported zero transport or reel speed, zero missed
+mechanical ticks, zero missed projection frames, zero browser errors, and zero
+copy, CTA, or viewport collisions. Logical particle accounting and all writer,
+horn, output, and projection event times are unchanged.
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/writer-n137-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/writer-n138-t13.90.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/writer-n139-t14.05.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/final-close-t14.05.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/final-mobile-t14.05.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/realtime-homepage.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/realtime-homepage.webm.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/realtime-homepage.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/terminal-gate-center/reduced-motion.json.json`
+
+## Round 46 — theatrical threshold handoff
+
+Normal-speed homepage review isolated the remaining awkwardness in the opening
+to the handoff after the folder cleared the threshold. The row-by-row conversion
+itself was coherent: each sampled source neighborhood crossed at the exact
+folder velocity and became its corresponding Bitter-red screen-door blocks.
+The failure came immediately afterward. The baseline removed that inherited
+velocity in only `180ms` and began the first writer cohort almost at once. At
+`3.05s`, just `170ms` after the folder cleared, wide-homepage p95 velocity had
+already collapsed from `3.17px/frame` to about `0.03px/frame`; p95 jerk was
+`0.149px/frame^3`. The rhythm read `cross -> hard brake -> suction`, leaving no
+credible Wile E. Coyote suspension beat.
+
+Three controlled homepage passes kept the `2.10s` threshold contact, `0.78s`
+crossing, first `3.800s` write, horn path, writer anchors, camera, apparatus,
+copy, and output chronology fixed:
+
+- Baseline: `180ms` brake and no readable pause. Rejected for the visible snap.
+- Silk brake: `300ms` brake and `440ms` first pull. The stop improved, but the
+  shorter coast still made the lower edge yield before the entire information
+  object had convincingly arrived.
+- Long breath: `360ms` minimum-jerk brake and `360ms` first pull. Accepted. The
+  converted folder is still gracefully coasting at `3.05s`, reaches rest at
+  about `3.24s`, begins a nearly imperceptible seam opening around `3.30s`, and
+  sends the first lower packet families into the horn around `3.41-3.47s`.
+
+At the selected 648-fragment density, wide-homepage p95 velocity is
+`3.172px/frame` at `2.85s`, `1.868` at `3.05s`, and `0.001` at `3.24s`. The
+corresponding p95 jerk is `0.000`, `0.018`, and `0.022px/frame^3`; the object
+therefore loses momentum continuously instead of striking an invisible stop.
+Source-shape retention is `1.000` at rest, `0.994` as the first seams open at
+`3.30s`, and `0.952` when the first 12 microfragments commit at `3.45s`. The
+first exposure remains exactly `3.800s`, with 18 fragments resolving into the
+same three registration clusters. No trail is emitted during crossing or the
+held beat.
+
+The accepted timing was captured on the canonical homepage at `440x956`,
+`1600x900`, and `1817x1454`, all with the explicit 108-logical/648-visible
+model. Every sampled beat reported zero copy, CTA, or viewport collisions. A
+five-second real-time Chrome/Metal cold pass on Apple M2 Max stayed on the live
+media path with no browser errors or quality fallback; the final sample
+reported `120.096fps`, `1.0ms` p95 update, `1.2ms` p95 render, and `0.4ms` p95
+film-texture preparation. The software-renderer 324-fragment fallback was also
+observed with the same timing contract and no protected-region collision.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/timing-comparison-60fps.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/baseline-homepage-60fps.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/silk-homepage-60fps.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/long-breath-homepage-60fps.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/baseline-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/silk-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/long-breath-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/mobile-648-t3.24.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/mobile-648-t3.45.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/wide-648-t3.24.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/wide-648-t3.45.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/tall-648-t3.24.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-responsive/tall-648-t3.45.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-realtime-homepage.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/threshold-fluidity/final-realtime-homepage.webm.json`
+
+## Round 47 — continuous-field physics: no more settle-and-launch
+
+The canonical homepage opening still failed after the theatrical toss and
+full-clear fracture were established. The red screen-door field expanded,
+appeared to park, then individual packet cohorts visibly activated and left in
+a queue. This survived local C2 handoffs because it was a population-state
+problem rather than an easing defect: every packet had a private movement
+onset, and the old cloud path deliberately settled its velocity to zero before
+the horn journey began.
+
+The accepted replacement simulates 108 logical packet centroids. Each centroid
+owns six bounded, zero-centroid screen-door fragments, preserving 648 visible
+microfragments, 18 per physical film cell, 36 triplets, and the exact
+`3.800s / 5.675s / 6.925s` write boundaries. The only post-threshold movement
+discontinuity is the shared full-clear collision at `2.160s`. It keeps `.22` of
+the incoming tangential velocity, keeps `.04` of the arrested normal component,
+adds the broad zero-mean planar/depth fracture, and never bounces.
+
+After impact, two influences coexist continuously:
+
+`dp/dt = (1-w) sigma(t) v_free(tau) + u`
+
+`du/dt = (u_field(p,t)-u)/tau_v`
+
+The fracture clock falls from real time to a permanent 6% rate after the first
+270ms, then loses memory only through gentle drag; it never reaches a staged
+full stop. Attraction rises independently in wall-clock time as
+`1-exp(-((t-tImpact)/.68)^3)`. Separating those clocks prevents the field from
+storing force during bullet time and releasing it as a whip.
+
+### Controlled model and variant rounds
+
+- The baseline private `startTime` scheduler was rejected because it produced
+  the exact `park -> activate -> streak` rhythm under normal-speed homepage
+  playback.
+- Point attraction toward the writer, horn origin, or cloud center was rejected
+  analytically: its streamlines inevitably reconverge a broad plume into a
+  ball and become singular near the target.
+- Tangential retentions `.15`, `.22`, and `.30` were compared. `.15` made the
+  arrest too dead; `.30` over-carried the blast; `.22` is the smallest value
+  that lets the original toss remain perceptible without entering protected
+  homepage regions.
+- Attraction times `.58s`, `.68s`, and `.78s` were compared. `.58s` competed
+  with the fracture read; `.78s` shortened the safe registration runway;
+  `.68s` made the writer-facing peel legible during the suspended breath.
+- Compact smootherstep, screened exponential, and anisotropic Gaussian mouth
+  currents were run against identical collision, density, camera, and horn
+  geometry. Compact capture emptied the plume abruptly. Screened exponential
+  stranded far packets and eventually exceeded 26px/frame. The selected
+  Gaussian current bends a wide curtain toward the horn without contracting
+  transverse coordinates to one point.
+- Mouth radii near `1.05x`, `1.12x`, and `1.20x` impact RMS were compared.
+  `1.12x` preserved a broad intake while preventing an obvious tube edge.
+- A `.34` far-mobility floor translated the whole sheet into depth and read as
+  a shrinking glob. `.12` and `.16` left the far residue too late. `.18`, with
+  a continuous `1.28` near-side ceiling, captures all 108 packets naturally
+  while keeping proximity visible.
+- Assigning cohorts before actual simulation was rejected. The final path
+  measures every spatial crossing first, sorts that realized capture order,
+  groups adjacent packets into 36 triplets, and then gives each triplet its
+  physical write identity.
+- Exact cadence at the capture mouth was rejected because deadlines visibly
+  contaminated the peel. Every packet now receives the same `.95s`
+  cadence-free traverse to horn-flow `u=.72`, accepted horn arc `s=.776`.
+  Only there does the bounded quintic seat inherit position, velocity, and
+  acceleration and solve the remaining exposure boundary.
+- A temporary two-packet feasibility seat was rejected and removed. All 108
+  packets now satisfy the shared spatial capture predicate with no forced path.
+- Large or bright horn cores made a flower-like hot center. Selected cores are
+  smaller and darker through the shoulder; only the active registration
+  triplet receives enough optical weight to show three contained contacts.
+
+The folder's first threshold contact was also corrected to use its bottom
+extent while retaining the accepted `1.800s` contact and `2.160s` full-clear
+clocks. Every crossed fragment now has bounded nonzero material at birth, so
+the full-clear impact contains all 648 rather than the former 633.
+
+### Determinism and exact mechanics
+
+Packet motion is precomputed at 240Hz in machine-local coordinates with RK2
+midpoint field evaluation, exact exponential velocity relaxation, trapezoid
+position integration, and a sub-step solve of the shared spatial capture
+boundary. Cached positions and velocities are cubic-Hermite sampled for
+arbitrary deterministic homepage seeks. The incoming ballistic derivative is
+sampled at a fixed 1/960s interval independent of the field step.
+
+The independent 120/240Hz audit found maximum centroid divergence
+`.015302455` film widths and global RMS `.001764`, below the `.02` tripwire.
+Both rates captured all 108 packets with the same rounded capture
+p50/p95/max of `3.036/4.637/5.558s`. Write-boundary probes returned exactly
+0/1 at `3.799999/3.800`, 15/16 at `5.674999/5.675`, and 35/36 at
+`6.924999/6.925`, with zero within-triplet arrival spread. Minimum deep-throat
+registration runway is `.341s` wide and `.309s` mobile, above the `.28s`
+contract.
+
+### Homepage visual measurements
+
+At `1600x900`, projected fragment area relative to the disappearing folder is
+`1.048x` at 2.43s, `1.078x` at 2.55s, `1.077x` at 2.70s, `.947x` at 2.90s,
+`.800x` at 3.20s, and `.495x` at 3.79s as material enters the horn. Relative
+integrated luminance is `.157/.157/.151/.141/.166/.092` at those beats, so
+visible mass comes from screen area rather than light inflation. The
+hollow-center ratio stays zero through 3.20s and reaches `.238` only at 3.79s,
+when the information is already committed to one open asymmetric current.
+
+Wide p95 screen speed is `.709px/frame` at 2.70s, `6.478` at 2.90s, `6.522`
+at 3.20s, and `7.216` at 3.79s; maximum measured trail at first registration
+is `6.155px`. Mobile projected area is `1.068/1.010/.843/.553x` at
+2.43/2.90/3.20/3.79s; tall desktop is `1.071/.948/.811/.505x`. Mobile, wide,
+tall, DPR1/DPR2, and the 959/960px breakpoint neighborhood report zero copy,
+CTA, machine, output, or viewport collisions.
+
+Grayscale, 48%-brightness, 2px-blur/peripheral, and JPEG-quality-34 homepage
+evidence preserves the red body's silhouette and near-side peel without a fog
+bank, bright central knot, sparks, glitter, or confetti. The three contacts are
+readable under normal wide/mobile/tall evidence; exact counting becomes subtle
+only when the darkest and blurred stressors are combined.
+
+### Runtime and fallback
+
+The final DPR2 Chrome/Metal pass on Apple M2 Max used 648 fragments, captured
+all 108 packets naturally, precomputed the field in `18.5ms`, stayed above
+`109.43fps` during the particle window, and reported zero mechanical misses,
+projection misses, errors, fallback, or protected-region collisions. At 4x CPU
+throttle, precompute was `51.2ms`, minimum cadence was `69fps`, and all 36
+writes and three outputs completed with zero mechanical/projection misses or
+collisions. SwiftShader selected the intentional 324-visible quality fallback,
+preserved logical accounting and source identity, completed 36 writes and
+three terminal cards, and reported zero misses, errors, or collisions.
+
+### Internal adversarial closure
+
+Motion math, perception, and VFX independently reviewed the current scene,
+wide/mobile/tall homepage sheets, hostile evidence, hardware video, telemetry,
+and convergence data. All three returned ACCEPT with no P0/P1. Motion math
+independently reproduced all 108 natural captures, exact write boundaries,
+zero spread, deep-throat runway, and `.015302455` convergence. It retained one
+P2 terminology note: cached cubic-Hermite rendering is C1 at ordinary fixed
+step knots even though the governing trajectory and authored handoffs are C2
+to integration error. Perception and VFX retained one visual P2: the open
+3.20–3.79s shoulder can briefly evoke coral, a neuronal arbor, or a skeletal
+hand. In continuous motion it remains one directional current, not a starburst
+or ball; correcting it would be an optical taste adjustment, not grounds to
+retune the accepted field.
+
+The resumable Claude/Fable session
+`dd16423a-cd13-426e-888a-f4f50cfec089` received the prepared final multimodal
+homepage packet read-only at maximum effort. The provider refused the session
+at the account's monthly spend limit before review began. No Fable feedback is
+claimed.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cinematic-opening/continuous-field-physics-review.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/cinematic-opening/continuous-field-physics-decision.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r43-final/wide-contact-sheet.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r43-final/mobile-contact-sheet.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r43-final/tall-contact-sheet.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r40-hostile/hostile-contact-sheet.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r41-convergence/centroid-convergence.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r44-realtime/homepage-hardware.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r44-realtime/homepage-hardware.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r44-realtime/homepage-hardware-cpu4.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r44-realtime/homepage-software-fallback.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r45-sequence/homepage-deterministic-60fps.webm`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r46-review/final-review-packet.md`
+
+## Round 48 — external closure and repository gates
+
+Grok received the complete final packet read-only at its highest available
+`xhigh` reasoning effort. It returned **P2 / no P0 / no P1 / close it**. It
+independently confirmed that the three earlier blockers are closed: cadence no
+longer begins at the capture mouth, physical triplets follow realized field
+crossings rather than the preliminary ballistic score, and the nominal plus 4x
+hardware paths no longer collapse or miss mechanics. It found inherited
+momentum, living bullet time, writer-facing-first peel, no global ball, a broad
+Gaussian current, and a sufficiently deep cadence boundary. It recommended no
+field, timing, density, fracture, mobility, or horn correction.
+
+Grok's tool could inspect the code, individual homepage stills, hostile sheet,
+breakpoints, convergence report, and JSON telemetry but could not decode the
+WebM files as playback. It therefore kept the 12 frames between 2.70 and 2.90s
+as a P2 evidentiary caveat. That gap was independently watched in the hardware
+pass by the perception and VFX reviewers; both found continuous deformation,
+no parked slab, no cohort launch, and no late whip. Grok also correctly warned
+that population p95 speed, hollow-center ratio after median capture, and
+zero-spread registration are regression tripwires or boundary facts—not proof
+of organic individual worldlines. Future packets should keep normal-speed
+watching primary.
+
+Final deterministic evidence contains 481 canonical homepage frames at
+1600x900, 60fps, duration 8.017s. It covers folder entrance through the complete
+36-cell accumulation without substituting `/lab/iso4` or an isolated camera.
+
+Repository gates:
+
+- `git diff --check`: pass.
+- `bun run generate`: pass. Nuxt generated all public routes; existing
+  sourcemap and large-chunk warnings remain non-fatal.
+- `bun run qa:smoke`: 44 passed in 2.4 minutes.
+
+No ISO3 file, homepage structure, copy, navigation, projection card, output
+wording, or public Markdown twin was edited by this focused physics round.
+Generated evidence remains under `tmp/` and is not intended for commit.
+
+External closure evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r46-review/final-review-packet.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r46-review/grok-closure-verdict.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/continuous-field/r45-sequence/homepage-deterministic-60fps.webm`

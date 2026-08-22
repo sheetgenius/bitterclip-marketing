@@ -30,18 +30,29 @@ export interface Iso4Scene {
   configure(options: Partial<Iso4WorkshopOptions>): void
   sourceReady(): boolean
   inspect(t: number): Iso4MotionDiagnostics
+  packetCentroidsInFilmWidths(t: number): number[]
   temporal(): Iso4TemporalDiagnostics
   resize(): void
   destroy(): void
 }
 
-export type Iso4ColorScript = 'archival-warm' | 'spectral-pearl' | 'bichromatic-field'
-export type Iso4SamplingStrategy = 'uniform' | 'importance' | 'hybrid'
+export type Iso4ColorScript = 'archival-warm' | 'spectral-pearl' | 'bichromatic-field' | 'information-red'
+export type Iso4SamplingStrategy = 'uniform' | 'importance' | 'hybrid' | 'screen-grid'
+export type Iso4EntranceTrajectory = 'shallow-toss' | 'depth-swish' | 'frontal-toss'
+export type Iso4FractureStyle = 'planar' | 'depth-forward' | 'balanced'
+export type Iso4FieldKernel = 'screened' | 'compact' | 'gaussian'
 
 export interface Iso4WorkshopOptions {
   fragmentsPerPacket: 3 | 6 | 9
   colorScript: Iso4ColorScript
   samplingStrategy: Iso4SamplingStrategy
+  entranceTrajectory: Iso4EntranceTrajectory
+  fractureStyle: Iso4FractureStyle
+  fieldKernel: Iso4FieldKernel
+  tangentialRetention: 0.15 | 0.22 | 0.3
+  attractionTime: 0.58 | 0.68 | 0.78
+  mouthRadiusScale: 1.05 | 1.12 | 1.2
+  fieldIntegrationHz: 120 | 240
 }
 
 export interface Iso4MotionDiagnostics {
@@ -72,10 +83,27 @@ export interface Iso4MotionDiagnostics {
   logicalPackets: number
   configuredVisibleFragments: number
   visibleMicrofragments: number
+  digitalMemoryFragments: number
+  sourceShapeRetention: number
   fragmentsPerPacket: number
   fragmentsPerFilmCell: number
   colorScript: Iso4ColorScript
   samplingStrategy: Iso4SamplingStrategy
+  entranceTrajectory: Iso4EntranceTrajectory
+  fractureStyle: Iso4FractureStyle
+  fieldKernel: Iso4FieldKernel
+  tangentialRetention: number
+  attractionTime: number
+  mouthRadiusScale: number
+  capturedLogicalPackets: number
+  naturalCapturePackets: number
+  captureTimeP50: number
+  captureTimeP95: number
+  captureTimeMax: number
+  deepThroatHornArcProgress: number
+  minRegistrationRunwaySeconds: number
+  fieldPrecomputeMs: number
+  fieldIntegrationHz: number
   sourceColorCoverage: number
   sourceToCloudOklabDistance: number
   projectedAreaVsSleeve: number
@@ -125,6 +153,9 @@ export interface Iso4TemporalDiagnostics {
   maxFreshGateExpectedTimelineErrorFrames: number
   freshGatePresentedFrameErrorFrames: number
   maxFreshGatePresentedFrameErrorFrames: number
+  freshGateDecoderFrameErrorFrames: number
+  maxFreshGateDecoderFrameErrorFrames: number
+  gateProjectionCorrections: number
   // Observational only after a developed physical cell begins recirculating.
   // A 36-cell/16fps loop and a 108-frame/24fps source have different periods.
   gateProjectionPhaseErrorFrames: number
@@ -161,8 +192,15 @@ const MAX_FRAGMENTS_PER_PACKET = 9
 const MAX_VISIBLE_FRAGMENTS = LOGICAL_PACKETS * MAX_FRAGMENTS_PER_PACKET
 const DEFAULT_WORKSHOP_OPTIONS: Iso4WorkshopOptions = {
   fragmentsPerPacket: 6,
-  colorScript: 'spectral-pearl',
-  samplingStrategy: 'hybrid',
+  colorScript: 'information-red',
+  samplingStrategy: 'screen-grid',
+  entranceTrajectory: 'depth-swish',
+  fractureStyle: 'planar',
+  fieldKernel: 'gaussian',
+  tangentialRetention: 0.22,
+  attractionTime: 0.68,
+  mouthRadiusScale: 1.12,
+  fieldIntegrationHz: 240,
 }
 // The projector has no table or pedestal: two large reels and a narrow
 // connecting spine float as a single dark machine. The strip is an already-
@@ -173,7 +211,13 @@ const BOTTOM_REEL = { x: 12.0, y: -0.75 }
 // runs plus two half-circumferences equal exactly 36 frame pitches.
 const REEL = {
   r: (FRAME_GROUPS * PITCH - 2 * (TOP_REEL.y - BOTTOM_REEL.y)) / (2 * Math.PI),
-  w: FILM_W,
+  // The stock must run between the reel flanges. Giving the flange assembly
+  // exactly FILM_W depth left the lower half-wrap coplanar with the front
+  // flange, so transparent film triangles painted across its face like a
+  // loose tongue hanging below the reel. A narrow 0.18 clearance per side
+  // lets the opaque flange occlude the wrap while the tangent run, writer,
+  // perforations and physical film width remain unchanged.
+  w: FILM_W + 0.36,
 }
 const machineFloorY = BOTTOM_REEL.y - REEL.r
 const COIL_F = 0.58
@@ -219,7 +263,6 @@ const RIG_Z = 1.545
 const LAMP_CX = 13.55
 const LAMP_LEN = 0.62 // half-length of the housing along x
 const DROP = { x: 20.4, w: 6.9, d: 4.8 }
-const STILL_T = 13.9
 const EPISODE_FRAME_URLS = [
   '/clips/ep1-michael.jpg',
   '/clips/ep1-john.jpg',
@@ -228,7 +271,8 @@ const EPISODE_FRAME_URLS = [
 
 // THE BOOT NARRATIVE: one file passes through an empty dashed boundary and
 // dematerializes into suspended particles. A fixed writer on the lower reel absorbs exactly
-// three particles per frame-step; its isolated clunks accelerate to 16fps,
+// three logical packets (18 visible fragments) per frame-step; its isolated
+// clunks accelerate to 16fps,
 // the charged thumbnails reach the gate, and the projector strikes.
 // Fifteen physical pulls follow the stationary starter cell during the run-up.
 // At the end of that 1.875s ramp the sixteenth written frame lands exactly as
@@ -245,23 +289,125 @@ const OUTPUT_TERMINAL_COMPLETE = OUTPUT_TERMINAL_BASE
   + OUTPUT_TERMINAL_GAP * 2
   + OUTPUT_TERMINAL_DURATION
 // The third receipt starts at 12.87s. Give the projector a perceptible coast
-// after that final result appears, then stop the shared film/reel drive on an
-// exact 16fps cell boundary. With the accepted ramp, 13.00s -> 13.85s carries
-// frame phase 132.2 -> 139.0: the last pull finishes cleanly with no snap.
+// after that final result appears, then stop the shared film/reel drive with a
+// complete thumbnail centered in both fixed apertures. The writer and gate are
+// separated by exactly 32 pitches, so they share one screen-space cell phase;
+// their physical locations are not integer multiples of PITCH. Treating an
+// integer transport tick as the finish left both apertures about one fifth of
+// a cell off-center and exposed a fuzzy frame line in the terminal focal point.
 const TERMINAL_COAST_START = OUTPUT_TERMINAL_BASE + OUTPUT_TERMINAL_GAP * 2 + 0.13
-const TERMINAL_COAST_DURATION = 0.85
-const TERMINAL_STOP_AT = TERMINAL_COAST_START + TERMINAL_COAST_DURATION
-// The threshold is kinematic, not a collision. The sleeve reaches it already
-// moving at its transit velocity, then keeps that velocity while its material
-// representation changes from a continuous surface into particles.
-const FILE_APPROACH_SECONDS = 1.25
-const FILE_CONTACT_AT = BOOT.drop + FILE_APPROACH_SECONDS
-const FILE_TRANSIT_SECONDS = 1.15
+const TERMINAL_COAST_NOMINAL_DURATION = 0.85
+// The threshold is kinematic, not a collision. The folder enters as a thrown
+// prop, rises through one natural ballistic apex, and keeps that same
+// acceleration while its representation changes from paper to information.
+// Only the fully converted digital body meets the arrest plane below.
+const FILE_ENTRANCE_AT = 0.22
+const FILE_APEX_AT = 0.98
+const FILE_CONTACT_AT = 1.8
+const FILE_DESCENT_SECONDS = FILE_CONTACT_AT - FILE_APEX_AT
+const FILE_TRANSIT_SECONDS = 0.36
 const FILE_CLEAR_AT = FILE_CONTACT_AT + FILE_TRANSIT_SECONDS
+// The perimeter is part of the throw's anticipation: one continuous dashed
+// circuit begins as the prop enters and completes before first contact. It is
+// not a loading indicator and never chases the crossing edge.
+const THRESHOLD_DRAW_START = FILE_ENTRANCE_AT - 0.04
+const THRESHOLD_DRAW_END = FILE_CONTACT_AT - 0.18
+// Distance under constant gravity is g(t0*t + t^2/2) after threshold contact.
+// Choosing g from the responsive folder height keeps contact/clear clocks
+// identical across camera families while preserving true constant acceleration.
+const FILE_TRANSIT_DISTANCE_FACTOR = FILE_DESCENT_SECONDS * FILE_TRANSIT_SECONDS
+  + 0.5 * FILE_TRANSIT_SECONDS * FILE_TRANSIT_SECONDS
+const gravityTransitFractionAt = (age: number) => age <= 0
+  ? 0
+  : THREE.MathUtils.clamp(
+      (FILE_DESCENT_SECONDS * age + 0.5 * age * age) / FILE_TRANSIT_DISTANCE_FACTOR,
+      0,
+      1,
+    )
+const gravityTransitAgeAtFraction = (fraction: number) => Math.sqrt(
+  FILE_DESCENT_SECONDS * FILE_DESCENT_SECONDS
+    + 2 * THREE.MathUtils.clamp(fraction, 0, 1) * FILE_TRANSIT_DISTANCE_FACTOR,
+) - FILE_DESCENT_SECONDS
+// Collision is the one legitimate velocity discontinuity in the opening. Its
+// lost momentum becomes a bounded outward pressure bloom. The first 90ms run
+// at full speed; only then does local particle time collapse into the nearly
+// suspended plume. The broad current is mathematically present from impact,
+// but its C2 wall-clock envelope is negligible through the fracture impulse.
+const FRACTURE_FULL_SPEED_SECONDS = 0.09
+const FRACTURE_TIME_COLLAPSE_END = 0.27
+const FRACTURE_PLUME_HOLD_END = 0.72
+const FRACTURE_MEMORY_RELEASE_END = 1
+const FRACTURE_SLOW_SCALE = 0.06
+const FIELD_REFERENCE_AGE = 0.27
 const minJerk = (v: number) => {
   const x = THREE.MathUtils.clamp(v, 0, 1)
   return x * x * x * (x * (x * 6 - 15) + 10)
 }
+// Integral of 6u^5 - 15u^4 + 10u^3 from zero to u. It lets the local
+// bullet-time clock slow continuously without sacrificing deterministic seek
+// or making dropped render frames change the simulated result.
+const minJerkIntegral = (v: number) => {
+  const u = THREE.MathUtils.clamp(v, 0, 1)
+  const u2 = u * u
+  const u4 = u2 * u2
+  return u4 * (u2 - 3 * u + 2.5)
+}
+const fractureEffectiveAgeAt = (age: number) => {
+  if (age <= 0) return 0
+  if (age <= FRACTURE_FULL_SPEED_SECONDS) return age
+  const collapseDuration = FRACTURE_TIME_COLLAPSE_END - FRACTURE_FULL_SPEED_SECONDS
+  if (age <= FRACTURE_TIME_COLLAPSE_END) {
+    const u = (age - FRACTURE_FULL_SPEED_SECONDS) / collapseDuration
+    return FRACTURE_FULL_SPEED_SECONDS + collapseDuration * (
+      u + (FRACTURE_SLOW_SCALE - 1) * minJerkIntegral(u)
+    )
+  }
+  const collapseDistance = FRACTURE_FULL_SPEED_SECONDS + collapseDuration * (
+    1 + (FRACTURE_SLOW_SCALE - 1) * 0.5
+  )
+  return collapseDistance
+    + (age - FRACTURE_TIME_COLLAPSE_END) * FRACTURE_SLOW_SCALE
+}
+const inverseMinJerk = (value: number) => {
+  const target = THREE.MathUtils.clamp(value, 0, 1)
+  let lo = 0
+  let hi = 1
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2
+    if (minJerk(mid) < target) lo = mid
+    else hi = mid
+  }
+  return (lo + hi) / 2
+}
+// drawFilm() advances in whole cells while filmTex.offset supplies the brief
+// Geneva pull. Solve the terminal raw phase through that same nonlinear pull,
+// then choose the nearest centered stop to the nominal 850ms coast. Since the
+// integral of 1 - minJerk is exactly 0.5, duration follows directly from the
+// required frame distance without introducing a speed discontinuity.
+const terminalGatePath = (TOP_REEL.y - BOTTOM_REEL.y)
+  + REEL.r * Math.PI
+  + (TOP_REEL.y - lampY)
+const terminalGatePhase = ((terminalGatePath / PITCH) % 1 + 1) % 1
+const terminalCenteredPull = ((terminalGatePhase - 0.5) % 1 + 1) % 1
+const terminalCenteredRawPhase = 0.58 + 0.42 * inverseMinJerk(terminalCenteredPull)
+const terminalCoastStartFrames = FILM_FPS * (
+  TERMINAL_COAST_START - BOOT.run - BOOT.runRamp / 2
+)
+const terminalNominalStopFrames = terminalCoastStartFrames
+  + FILM_FPS * TERMINAL_COAST_NOMINAL_DURATION * 0.5
+// The nearest centered cell is the deterministic two-shot. At the writer's
+// thumbnail scale that valid split edit still resembles a double exposure, so
+// finish on the immediately following centered, single-camera cell. This adds
+// one calm 16fps pull without changing any writer or projection event.
+const TERMINAL_FOCAL_CELL_ADVANCE = 1
+const terminalCenteredStopFrames = Math.round(
+  terminalNominalStopFrames - terminalCenteredRawPhase,
+) + terminalCenteredRawPhase + TERMINAL_FOCAL_CELL_ADVANCE
+const TERMINAL_COAST_DURATION = 2
+  * (terminalCenteredStopFrames - terminalCoastStartFrames)
+  / FILM_FPS
+const TERMINAL_STOP_AT = TERMINAL_COAST_START + TERMINAL_COAST_DURATION
+const STILL_T = TERMINAL_STOP_AT + 0.05
 const outputTerminalProgressAt = (t: number, index: number) => minJerk(
   (t - (OUTPUT_TERMINAL_BASE + index * OUTPUT_TERMINAL_GAP)) / OUTPUT_TERMINAL_DURATION,
 )
@@ -362,6 +508,10 @@ const PROJECTION_DELAY_SECONDS = WRITER_TO_GATE_FRAMES / FILM_FPS
 // presentation latency once, after both play() promises settle, so the frame
 // actually shown—not merely the media clock property—retains the 2s physical
 // writer-to-gate phase contract.
+const SOURCE_PRESENTATION_LEAD_SECONDS = 1 / SOURCE_FPS
+// Prime both decoded heads by one native frame. The exact physical gate cell
+// remains the authority at a fresh first pass; a bounded correction below
+// resolves the occasional two-frame phase split between independent decoders.
 const PROJECTION_PRESENTATION_LEAD_SECONDS = 1 / SOURCE_FPS
 
 export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
@@ -421,11 +571,17 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     composer.setSize(W, H)
 
     const wide = W / H
-    detailScale = W >= 768 ? 1.15 : 1
+    // The CSS `md` breakpoint is not sufficient evidence that the complete
+    // optical fan fits. Tablet-width canvases between 768 and 959px were
+    // entering the desktop camera while still clipping the transcript at the
+    // right edge. Keep the protected phone/tablet composition until there is
+    // both physical width and a landscape-enough aspect for the desktop shot.
+    const useDesktopLayout = W >= 960 && wide >= 1.05
+    detailScale = useDesktopLayout ? 1.15 : 1
     camera.clearViewOffset()
     camera.aspect = wide
 
-    if (W >= 768) {
+    if (useDesktopLayout) {
       mobileLayout = false
       camera.fov = 35
       // Desktop is one continuous shot across tall and wide canvases. The old
@@ -619,9 +775,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const captionWords = LINKEDIN_CAPTION_LINES.flat()
   // Preserve the source clock while giving very short function words enough
   // screen time for the 160ms Active Word settle to register. This only
-  // affects adjacent hits closer than 200ms; later source starts rejoin their
+  // affects adjacent hits closer than 340ms; later source starts rejoin their
   // exact timing instead of accumulating editorial drift.
-  const CAPTION_MIN_ACTIVE_SECONDS = 0.2
+  const CAPTION_MIN_ACTIVE_SECONDS = 0.34
   const captionHighlightStarts: number[] = []
   captionWords.forEach((word, index) => {
     const previous = index > 0 ? captionHighlightStarts[index - 1]! : Number.NEGATIVE_INFINITY
@@ -769,6 +925,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // media to the writer; otherwise a cold start can preserve roughly two
       // frames of relative startup skew even though both promises resolved.
       syncMediaClocks(elapsed, true)
+      // Chrome/Metal's decoded source head consistently presents one native
+      // frame behind an assigned currentTime on cold activation, just like the
+      // projection decoder. Prime that latency before the writer ever stamps
+      // a persistent physical cell; ongoing playback then lands within the
+      // provenance gate without seeking at each 16fps pull.
+      episodeVideo.currentTime = wrapMediaTime(
+        elapsed + SOURCE_PRESENTATION_LEAD_SECONDS,
+      )
       projectionVideo.currentTime = wrapMediaTime(
         elapsed - PROJECTION_DELAY_SECONDS + PROJECTION_PRESENTATION_LEAD_SECONDS,
       )
@@ -789,14 +953,18 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const imageReady = (image: HTMLImageElement) => image.complete && image.naturalWidth > 0
   const drawImageCover = (
     ctx: CanvasRenderingContext2D,
-    image: HTMLImageElement | HTMLVideoElement,
+    image: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement,
     dx: number,
     dy: number,
     dw: number,
     dh: number,
   ) => {
-    const sourceWidth = image instanceof HTMLVideoElement ? image.videoWidth : image.naturalWidth
-    const sourceHeight = image instanceof HTMLVideoElement ? image.videoHeight : image.naturalHeight
+    const sourceWidth = image instanceof HTMLVideoElement
+      ? image.videoWidth
+      : image instanceof HTMLCanvasElement ? image.width : image.naturalWidth
+    const sourceHeight = image instanceof HTMLVideoElement
+      ? image.videoHeight
+      : image instanceof HTMLCanvasElement ? image.height : image.naturalHeight
     const sourceAspect = sourceWidth / sourceHeight
     const targetAspect = dw / dh
     let sx = 0
@@ -970,14 +1138,30 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const writerPathCell = Math.floor(CHARGE_S / PITCH)
   const gatePathCell = Math.floor(S_GATE / PITCH)
   const stampFilmSlot = (transportFrame: number) => {
+    // A physical cell may only claim live provenance when the decoder head is
+    // actually within one native frame of the writer instant that funds it.
+    // currentTime corrections are asynchronous, so assigning a desired media
+    // time is not evidence that drawImage() can already see that frame. Fall
+    // back atomically before touching the persistent slot rather than baking
+    // stale live art into the loop and later calling the gate phase-safe.
+    const expectedSourceFrame = mediaFrameIndex(timeForFrame(transportFrame + 1))
+    const availableSourceFrame = episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+      ? presentedMediaFrameIndex(episodeVideo.currentTime)
+      : -1
+    const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
+    let provenanceError = availableSourceFrame - expectedSourceFrame
+    if (provenanceError > frameCount / 2) provenanceError -= frameCount
+    if (provenanceError < -frameCount / 2) provenanceError += frameCount
+    if (availableSourceFrame < 0 || Math.abs(provenanceError) > 1) {
+      enterDeterministicMediaFallback()
+      return -1
+    }
     const slot = filmSlot(writerPathCell, transportFrame)
     const c = filmSlotArt[slot]!
     renderFrameContent(c.getContext('2d')!, c.width, c.height, writerPathCell - transportFrame, false)
     filmSlotReady[slot] = true
     filmSlotWriteOrdinals[slot] = transportFrame
-    filmSlotSourceFrames[slot] = episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
-      ? presentedMediaFrameIndex(episodeVideo.currentTime)
-      : -1
+    filmSlotSourceFrames[slot] = availableSourceFrame
     return slot
   }
 
@@ -1121,6 +1305,31 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       transparent: true,
       opacity: 0,
     })
+    // The loop is modeled as a paper-thin ribbon rather than a solid belt
+    // captured between two flange volumes. Without an occlusion handoff, the
+    // textured lower half-wrap remains visible around the front circumference
+    // and reads as a loose vertical tongue below the reel. Keep the descending
+    // stock fully present through the writer and right tangent, then tuck it
+    // behind the opaque flange over a quarter-frame of travel. The hidden
+    // geometry, UV loop, 36 physical slots and transport distance stay whole.
+    const lowerWrapU = sAfterDescent / totalPath
+    const lowerWrapHiddenU = (sAfterDescent + PITCH * 0.26) / totalPath
+    filmMat.onBeforeCompile = (shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <map_fragment>',
+        /* glsl */ `
+          #include <map_fragment>
+          float lowerWrapVisibility = 1.0 - smoothstep(
+            ${lowerWrapU.toFixed(8)},
+            ${lowerWrapHiddenU.toFixed(8)},
+            vMapUv.x
+          );
+          diffuseColor.a *= lowerWrapVisibility;
+          if (diffuseColor.a < 0.008) discard;
+        `,
+      )
+    }
+    filmMat.customProgramCacheKey = () => 'iso4-film-lower-wrap-occlusion-v1'
     filmMatRef = filmMat
     const filmMesh = new THREE.Mesh(g, filmMat)
     filmMesh.receiveShadow = true
@@ -1265,9 +1474,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       reel.add(f)
     }
     // wound film: core + the fresh outer lap in the strip's own stock
-    const coilCore = cyl(coilR * 0.9, REEL.w - 0.14, M.coil, 'z', reel)
+    const coilCore = cyl(coilR * 0.9, FILM_W - 0.14, M.coil, 'z', reel)
     coilCore.name = 'film-coil-core'
-    const coilLap = cyl(coilR, REEL.w - 0.2, M.lap, 'z', reel)
+    const coilLap = cyl(coilR, FILM_W - 0.2, M.lap, 'z', reel)
     coilLap.name = 'film-coil-lap'
     // the archive's depth: winding laps on the coil's near face
     for (const wr of [0.38, 0.52, 0.66, 0.8]) {
@@ -1275,7 +1484,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         new THREE.TorusGeometry(coilR * wr, 0.02, 6, 64),
         new THREE.MeshStandardMaterial({ color: 0x2e2a20, roughness: 1 }),
       )
-      ring.position.z = REEL.w / 2 - 0.19
+      ring.position.z = FILM_W / 2 - 0.19
       ring.name = 'film-coil-ring'
       reel.add(ring)
     }
@@ -1479,11 +1688,20 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   })
   const writerPerfCatchMats: THREE.MeshBasicMaterial[] = []
   const writerStockCatchX = CHARGE_POINT.x + 0.028
-  const writerStockSpan = PITCH * 4.5
+  // This is a straight tangent highlight, not another piece of stock. Its old
+  // symmetric 4.5-frame plane continued below the reel tangent and exposed a
+  // pair of perforation rails as a physically impossible hanging band. Keep
+  // the useful lead-in above the writer, but terminate the catch exactly where
+  // the real carrier turns behind the lower flange.
+  const writerStockCatchTop = PITCH * 2.25
+  const writerStockCatchBottom = Math.max(0.08, CHARGE_POINT.y - BOTTOM_REEL.y)
+  const writerStockSpan = writerStockCatchTop + writerStockCatchBottom
+  const writerStockCatchY = CHARGE_POINT.y
+    + (writerStockCatchTop - writerStockCatchBottom) / 2
   for (const edgeZ of [-FILM_W / 2 + 0.025, FILM_W / 2 - 0.025]) {
     const edge = new THREE.Mesh(new THREE.PlaneGeometry(0.028, writerStockSpan), writerStockCatchMat)
     edge.rotation.y = Math.PI / 2
-    edge.position.set(writerStockCatchX, CHARGE_POINT.y, edgeZ)
+    edge.position.set(writerStockCatchX, writerStockCatchY, edgeZ)
     machineRoot.add(edge)
   }
   const perfOuterW = 0.105
@@ -1504,6 +1722,8 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const perfCatchGeometry = new THREE.ShapeGeometry(perfShape)
   const perfZ = FILM_W / 2 - PERF_MARGIN * 0.52
   for (let i = -9; i <= 9; i++) {
+    const perfY = CHARGE_POINT.y + i * PITCH / 4
+    if (perfY < BOTTOM_REEL.y + 0.035) continue
     const taper = Math.pow(Math.max(0, 1 - Math.abs(i) / 10), 1.7)
     const perfMat = writerStockCatchMat.clone()
     perfMat.alphaMap = null
@@ -1512,7 +1732,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     for (const z of [-perfZ, perfZ]) {
       const perf = new THREE.Mesh(perfCatchGeometry, perfMat)
       perf.rotation.y = Math.PI / 2
-      perf.position.set(writerStockCatchX + 0.002, CHARGE_POINT.y + i * PITCH / 4, z)
+      perf.position.set(writerStockCatchX + 0.002, perfY, z)
       machineRoot.add(perf)
     }
   }
@@ -1972,6 +2192,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     liveProjectionSource = false,
     mediaTimeSeconds = wrapMediaTime(id / SOURCE_FPS),
     terminalProgress = 0,
+    physicalFrameOverride: HTMLCanvasElement | null = null,
   ) {
     if (terminalProgress >= 0.999 && sc.terminalSettled) return false
     sc.terminalSettled = terminalProgress >= 0.999
@@ -2064,7 +2285,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       x.translate(58, 44)
       x.globalCompositeOperation = 'source-over'
       x.globalAlpha = 0.96
-      if (liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      if (physicalFrameOverride) {
+        drawImageCover(x, physicalFrameOverride, 0, 0, 524, 246)
+      } else if (liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
         drawImageCover(x, projectionVideo, 0, 0, 524, 246)
       } else {
         x.drawImage(frameArt(id, false), 0, 0, 524, 246)
@@ -2105,10 +2328,13 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // wall or partial head as the shared editorial id advances. Live mode
       // still uses the real Episode 1 video; deterministic review uses its
       // matching Mike still.
-      const portraitSource = liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
-        ? projectionVideo
-        : episodeFrames[0]!
-      if (portraitSource instanceof HTMLVideoElement || imageReady(portraitSource)) {
+      const portraitSource = physicalFrameOverride
+        ?? (liveProjectionSource && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+          ? projectionVideo
+          : episodeFrames[0]!)
+      if (portraitSource instanceof HTMLVideoElement
+        || portraitSource instanceof HTMLCanvasElement
+        || imageReady(portraitSource)) {
         drawImageCover(x, portraitSource, 38, 58, 264, 586)
       } else {
         const art = frameArt(id, false)
@@ -2135,8 +2361,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // edge into the soft white caterpillar seen in the one-times raster.
       x.lineWidth = 3.5
       x.strokeStyle = 'rgba(5,6,8,0.96)'
-      x.shadowColor = 'rgba(0,0,0,0.38)'
-      x.shadowBlur = 2
+      // The 3.5px hard underprint already separates the words from footage.
+      // A canvas blur plus scene bloom doubled the edge softness at oblique
+      // phone scale, so the subtitle looked less crisp than the product.
+      x.shadowColor = 'rgba(0,0,0,0)'
+      x.shadowBlur = 0
       captionLines.forEach((line, lineIndex) => {
         const gap = 9
         const widths = line.map((word) => x.measureText(word.text).width)
@@ -2156,7 +2385,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           // Inactive whites stay under the bloom threshold. Only the current
           // source word receives the product lime; persistent keyword color
           // made the karaoke state unreadable at homepage scale.
-          x.fillStyle = active ? '#ccff36' : 'rgba(216,216,211,0.99)'
+          // Keep the product's lime Active Word convention, below the scene's
+          // bloom threshold. Punch comes from timing, weight and the 8.5% hard
+          // scale—not from a fluorescent halo around the glyphs.
+          x.fillStyle = active ? '#a8cf42' : 'rgba(216,216,211,0.99)'
           x.fillText(word.text, -widths[lineWordIndex]! / 2, 0)
           x.restore()
           cursor += widths[lineWordIndex]! + gap
@@ -2456,13 +2688,95 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // ---- one opening drop --------------------------------------------------
   // There is deliberately no receptacle. The dashed membrane is the sole
   // input affordance; after crossing it, the file exists only as information.
+  const SOURCE_FOLDER_WIDTH = 1.88
+  const SOURCE_FOLDER_TOP = 1.12
+  const SOURCE_FOLDER_BOTTOM = -1
+  const SOURCE_FOLDER_BODY_TOP = 0.8
+  const SOURCE_SHELL_FACE_X = 0.028
+  const SOURCE_LABEL_FACE_X = 0.034
+  const SOURCE_LABEL_WIDTH = 1.52
+  const SOURCE_LABEL_HEIGHT = 1.58
+  const SOURCE_LABEL_CENTER_Y = -0.08
+  const SOURCE_LABEL_CENTER_Z = 0.02
+  // Solve contact from the desired impact centroid rather than aiming the toss
+  // at the plane center and letting its horizontal momentum carry the cloud
+  // past the horn. The folder still crosses the generous empty aperture
+  // diagonally, but its last digital row arrests exactly over the established
+  // bell. The shared mouth current can then peel the splayed plume without a
+  // whole-cloud translation or an artificial regrouping state.
+  const FILE_IMPACT_X = DROP.x - 0.28
+  const FILE_IMPACT_Z = 0.08
+  const FILE_IMPACT_YAW = -0.1
+  const FILE_TRAJECTORIES = {
+    'shallow-toss': {
+      desktop: { x: 25.4, z: -1.6, yaw: -0.16 },
+      mobile: { x: 23, z: -1.1, yaw: -0.15 },
+    },
+    'depth-swish': {
+      desktop: { x: 29, z: -4, yaw: -0.2 },
+      mobile: { x: 23.5, z: -1.8, yaw: -0.18 },
+    },
+    'frontal-toss': {
+      desktop: { x: 22.8, z: -0.55, yaw: -0.12 },
+      mobile: { x: 22.1, z: -0.45, yaw: -0.12 },
+    },
+  } as const
+  const activeFileEntrance = () => {
+    const trajectory = FILE_TRAJECTORIES[workshopOptions.entranceTrajectory]
+    return mobileLayout ? trajectory.mobile : trajectory.desktop
+  }
+  const fileHorizontalProgressAt = (at: number) => Math.max(
+    0,
+    (at - FILE_ENTRANCE_AT) / (FILE_CONTACT_AT - FILE_ENTRANCE_AT),
+  )
+  const fileGravity = () => (
+    (SOURCE_FOLDER_TOP - SOURCE_FOLDER_BOTTOM) * detailScale / FILE_TRANSIT_DISTANCE_FACTOR
+  )
+  const fileContactCenterY = () => PLANE_Y - SOURCE_FOLDER_BOTTOM * detailScale
+  const fileApexCenterY = () => (
+    fileContactCenterY() + 0.5 * fileGravity() * FILE_DESCENT_SECONDS ** 2
+  )
+  const fileImpactSolveRatio = FILE_TRANSIT_SECONDS / (FILE_CONTACT_AT - FILE_ENTRANCE_AT)
+  const fileContactX = () => (
+    (FILE_IMPACT_X + activeFileEntrance().x * fileImpactSolveRatio)
+      / (1 + fileImpactSolveRatio)
+  )
+  const fileContactZ = () => (
+    (FILE_IMPACT_Z + activeFileEntrance().z * fileImpactSolveRatio)
+      / (1 + fileImpactSolveRatio)
+  )
+  const fileContactYaw = () => (
+    (FILE_IMPACT_YAW + activeFileEntrance().yaw * fileImpactSolveRatio)
+      / (1 + fileImpactSolveRatio)
+  )
+  const fileCenterXAt = (at: number) => {
+    const entrance = activeFileEntrance()
+    return THREE.MathUtils.lerp(entrance.x, fileContactX(), fileHorizontalProgressAt(at))
+  }
+  const fileCenterYAt = (at: number) => {
+    const apexAge = at - FILE_APEX_AT
+    return fileApexCenterY() - 0.5 * fileGravity() * apexAge * apexAge
+  }
+  const fileCenterZAt = (at: number) => {
+    const entrance = activeFileEntrance()
+    return THREE.MathUtils.lerp(entrance.z, fileContactZ(), fileHorizontalProgressAt(at))
+  }
+  const fileYawAt = (at: number) => {
+    const entrance = activeFileEntrance()
+    return THREE.MathUtils.lerp(entrance.yaw, fileContactYaw(), fileHorizontalProgressAt(at))
+  }
+  const fileBirthTimeAt = (fraction: number) => (
+    FILE_CONTACT_AT + gravityTransitAgeAtFraction(fraction)
+  )
   const bootFileMat = new THREE.MeshStandardMaterial({
-    color: 0x8f5b54,
-    roughness: 0.94,
-    metalness: 0.02,
+    // Restrained manila stock establishes an immediately legible vanilla
+    // folder before the threshold converts it into Bitter-red information.
+    color: 0xd0ad70,
+    roughness: 0.96,
+    metalness: 0.005,
     transparent: true,
     opacity: 0,
-    emissive: 0xff8d78,
+    emissive: 0x75552f,
     emissiveIntensity: 0,
   })
   const bootSleeveUniforms = { uSleeveDissolve: { value: 0 } }
@@ -2528,17 +2842,17 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     sleeveShape.lineTo(-0.94, 0.8)
     sleeveShape.closePath()
     const sleeveGeometry = new THREE.ExtrudeGeometry(sleeveShape, {
-      depth: 0.04,
+      depth: 0.018,
       bevelEnabled: true,
-      bevelSegments: 2,
-      bevelSize: 0.022,
-      bevelThickness: 0.01,
+      bevelSegments: 1,
+      bevelSize: 0.008,
+      bevelThickness: 0.004,
       curveSegments: 10,
     })
     // Stand the sleeve in the y/z plane so its face remains readable while
     // its leading lower edge passes vertically through the horizontal border.
     sleeveGeometry.rotateY(Math.PI / 2)
-    sleeveGeometry.translate(0.02, 0, 0)
+    sleeveGeometry.translate(0.009, 0, 0)
     const sleeve = new THREE.Mesh(sleeveGeometry, bootFileMat)
     sleeve.castShadow = true
     sleeve.receiveShadow = true
@@ -2551,12 +2865,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     bootLabelCtx = lx
     const drawBootFileLabel = () => {
       lx.clearRect(0, 0, lc.width, lc.height)
-      // A flush, aligned contact-sheet inset. It is printed into the sleeve's
-      // grid rather than reading as a separate black card laid diagonally on
-      // top of it.
+      // A contact sheet tucked into an ordinary manila folder: restrained
+      // corner radius, a real stock margin on every side, and no floating
+      // glass-screen treatment.
       lx.fillStyle = 'rgba(15,16,21,0.97)'
       lx.beginPath()
-      lx.roundRect(8, 8, 624, 664, 28)
+      lx.roundRect(10, 10, 620, 660, 14)
       lx.fill()
       lx.strokeStyle = 'rgba(255,255,255,0.13)'
       lx.lineWidth = 2
@@ -2588,27 +2902,31 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       tile(36, 'MIKE', episodeFrames[0]!)
       tile(328, 'JOHN', episodeFrames[1]!)
 
-      // One primary source label and one quiet format chip.
+      // A literal Zoom/video-camera mark and wordmark establish the source at
+      // first glance. The format remains a subordinate archival annotation.
       lx.fillStyle = '#4f8cff'
       lx.beginPath()
-      lx.roundRect(34, 30, 58, 46, 12)
+      lx.roundRect(34, 28, 70, 54, 12)
       lx.fill()
       lx.fillStyle = '#fff'
       lx.beginPath()
-      lx.roundRect(46, 41, 26, 24, 6)
+      lx.roundRect(47, 41, 30, 28, 7)
       lx.fill()
       lx.beginPath()
-      lx.moveTo(72, 46)
-      lx.lineTo(83, 40)
-      lx.lineTo(83, 66)
-      lx.lineTo(72, 60)
+      lx.moveTo(76, 46)
+      lx.lineTo(91, 39)
+      lx.lineTo(91, 71)
+      lx.lineTo(76, 64)
       lx.closePath()
       lx.fill()
       lx.fillStyle = 'rgba(250,247,240,0.96)'
-      lx.font = '800 34px system-ui, sans-serif'
+      lx.font = '850 39px system-ui, sans-serif'
       lx.textAlign = 'left'
       lx.textBaseline = 'middle'
-      lx.fillText('ZOOM RECORDING', 108, 54)
+      lx.fillText('ZOOM', 122, 49)
+      lx.fillStyle = 'rgba(250,247,240,0.58)'
+      lx.font = '700 16px ui-monospace, monospace'
+      lx.fillText('RAW RECORDING', 123, 72)
       lx.fillStyle = '#f28f84'
       lx.beginPath()
       lx.roundRect(526, 30, 78, 46, 12)
@@ -2642,7 +2960,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       lx.textAlign = 'left'
       lx.fillText('58:14', 64, 616)
       lx.textAlign = 'right'
-      lx.fillText('episode-01.zoom.mp4', 604, 616)
+      lx.fillText('EPISODE 01 · MP4', 604, 616)
       canvasPixelCache.delete(lc)
       bootLabelRevision += 1
     }
@@ -2701,9 +3019,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       depthWrite: false,
       side: THREE.DoubleSide,
     })
-    const label = new THREE.Mesh(new THREE.PlaneGeometry(1.64, 1.74), bootLabelMat)
+    const label = new THREE.Mesh(
+      new THREE.PlaneGeometry(SOURCE_LABEL_WIDTH, SOURCE_LABEL_HEIGHT),
+      bootLabelMat,
+    )
     label.rotation.y = Math.PI / 2
-    label.position.set(0.11, 0, 0.07)
+    label.position.set(SOURCE_LABEL_FACE_X, SOURCE_LABEL_CENTER_Y, SOURCE_LABEL_CENTER_Z)
     label.renderOrder = 2
     bootFile.add(label)
   }
@@ -2713,7 +3034,13 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // empty; the moving breakup edge on the passing sleeve proves where the
   // transformation plane is without liquid, refraction, ripple, or impact.
   const PLANE_Y = lampY
-  let planeMat: THREE.MeshBasicMaterial
+  let planeMat: THREE.ShaderMaterial
+  const planeUniforms = {
+    uMap: { value: null as THREE.CanvasTexture | null },
+    uColor: { value: new THREE.Color(0xff9d8a) },
+    uDrawProgress: { value: 0 },
+    uOpacity: { value: 0 },
+  }
   const dropFilmMat = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
@@ -2778,7 +3105,70 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     px2.strokeRect(10, 10, 440, 320)
     const ptex = new THREE.CanvasTexture(pc)
     ptex.colorSpace = THREE.SRGBColorSpace
-    planeMat = new THREE.MeshBasicMaterial({ map: ptex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })
+    planeUniforms.uMap.value = ptex
+    planeMat = new THREE.ShaderMaterial({
+      uniforms: planeUniforms,
+      vertexShader: /* glsl */ `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform sampler2D uMap;
+        uniform vec3 uColor;
+        uniform float uDrawProgress;
+        uniform float uOpacity;
+        varying vec2 vUv;
+        void main() {
+          vec4 dash = texture2D(uMap, vUv);
+
+          // Arc length around the actual 6.9 x 4.8 world-space perimeter,
+          // beginning at the rear-left corner and proceeding clockwise. The
+          // nearest-edge test gives every border texel one stable path value;
+          // only the already-authored dashes are revealed.
+          const float insetX = 10.0 / 460.0;
+          const float insetY = 10.0 / 340.0;
+          const float edgeW = 6.9 * (1.0 - 2.0 * insetX);
+          const float edgeH = 4.8 * (1.0 - 2.0 * insetY);
+          const float perimeter = 2.0 * (edgeW + edgeH);
+          float dTop = abs(vUv.y - (1.0 - insetY));
+          float dRight = abs(vUv.x - (1.0 - insetX));
+          float dBottom = abs(vUv.y - insetY);
+          float dLeft = abs(vUv.x - insetX);
+          float nearest = min(min(dTop, dRight), min(dBottom, dLeft));
+          float path;
+          if (nearest == dTop) {
+            path = clamp((vUv.x - insetX) / (1.0 - 2.0 * insetX), 0.0, 1.0) * edgeW;
+          } else if (nearest == dRight) {
+            path = edgeW
+              + clamp(((1.0 - insetY) - vUv.y) / (1.0 - 2.0 * insetY), 0.0, 1.0) * edgeH;
+          } else if (nearest == dBottom) {
+            path = edgeW + edgeH
+              + clamp(((1.0 - insetX) - vUv.x) / (1.0 - 2.0 * insetX), 0.0, 1.0) * edgeW;
+          } else {
+            path = edgeW * 2.0 + edgeH
+              + clamp((vUv.y - insetY) / (1.0 - 2.0 * insetY), 0.0, 1.0) * edgeH;
+          }
+          float pathProgress = path / perimeter;
+          float reveal = 1.0 - smoothstep(
+            uDrawProgress - 0.009,
+            uDrawProgress + 0.009,
+            pathProgress
+          );
+          float head = (1.0 - smoothstep(0.0, 0.028, abs(pathProgress - uDrawProgress)))
+            * step(uDrawProgress, 0.995);
+          float alpha = dash.a * uOpacity * reveal * (1.0 + head * 0.22);
+          if (alpha < 0.002) discard;
+          gl_FragColor = vec4(uColor * (1.0 + head * 0.08), alpha);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    })
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(DROP.w, DROP.d), planeMat)
     plane.rotation.x = -Math.PI / 2
     plane.position.set(DROP.x, PLANE_Y, 0)
@@ -2802,7 +3192,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     microRadius: number
     targetFrame: number
     arrivalTime: number
-    startTime: number
+    captureTime: number
     birthTime: number
     slot: number
     sourceU: number
@@ -2897,10 +3287,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     return rgb
   }
   const sourceFaceCoordinates = (u: number, v: number) => {
-    const localY = THREE.MathUtils.lerp(1.12, -1, v)
-    const localZ = 0.02 - (u - 0.5) * 1.88
-    const labelU = 0.5 + (0.07 - localZ) / 1.64
-    const labelV = 0.5 - localY / 1.74
+    const localY = THREE.MathUtils.lerp(SOURCE_FOLDER_TOP, SOURCE_FOLDER_BOTTOM, v)
+    const localZ = SOURCE_LABEL_CENTER_Z - (u - 0.5) * SOURCE_FOLDER_WIDTH
+    const labelU = 0.5 + (SOURCE_LABEL_CENTER_Z - localZ) / SOURCE_LABEL_WIDTH
+    const labelV = 0.5 - (localY - SOURCE_LABEL_CENTER_Y) / SOURCE_LABEL_HEIGHT
     return {
       localY,
       localZ,
@@ -2917,7 +3307,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // dematerialized palette falsely claims the black contact sheet was the
     // whole object.
     const edgeShade = 0.94 + 0.06 * Math.sin((u * 17.3 + v * 11.9) * Math.PI)
-    return [0.56 * edgeShade, 0.36 * edgeShade, 0.33 * edgeShade]
+    return [0.71 * edgeShade, 0.55 * edgeShade, 0.35 * edgeShade]
   }
   const sourceImportanceAt = (u: number, v: number) => {
     let importance = 0.45
@@ -3009,6 +3399,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const bitsAlpha = new Float32Array(MAX_VISIBLE_FRAGMENTS)
   const bitsHaloAlpha = new Float32Array(MAX_VISIBLE_FRAGMENTS)
   const bitsShape = new Float32Array(MAX_VISIBLE_FRAGMENTS)
+  const bitsDigitalMemory = new Float32Array(MAX_VISIBLE_FRAGMENTS)
   const trailPos = new Float32Array(MAX_VISIBLE_FRAGMENTS * 6)
   const trailColor = new Float32Array(MAX_VISIBLE_FRAGMENTS * 6)
   const bitsSeed: ParticleSeed[] = []
@@ -3016,10 +3407,6 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const packet = packetBases[packetIndex]!
     const targetFrame = Math.floor(packetIndex / PARTICLES_PER_FRAME) + 1
     const arrivalTime = timeForFrame(targetFrame)
-    const cohortRamp = minJerk((targetFrame - 1) / 15)
-    const slotJourneyOffset = [0.03, 0, -0.03][packet.slot]!
-    const journey = THREE.MathUtils.lerp(1.42, 1.28, cohortRamp) + slotJourneyOffset
-    const startTime = arrivalTime - journey
     for (let microIndex = 0; microIndex < MAX_FRAGMENTS_PER_PACKET; microIndex++) {
       const index = packetIndex * MAX_FRAGMENTS_PER_PACKET + microIndex
       const microRing = Math.floor(microIndex / 3)
@@ -3047,7 +3434,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         microRadius,
         targetFrame,
         arrivalTime,
-        startTime,
+        captureTime: FILE_CLEAR_AT,
         birthTime: FILE_CONTACT_AT,
         slot: packet.slot,
         sourceU: 0.5,
@@ -3067,6 +3454,49 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   }
   let sourceMappingRevision = -1
   let sourceMappingStrategy: Iso4SamplingStrategy | null = null
+  const SCREEN_GRID_BODY_COLUMN_ORDER = [0, 7, 3, 10, 5, 1, 8, 4, 11, 6, 2, 9] as const
+  const SCREEN_GRID_TAB_COLUMN_ORDER = [0, 3, 5, 2, 4, 1] as const
+  const screenGridCoordinates = (packetIndex: number, microIndex: number) => {
+    // Each supported density preserves three local rows per packet family:
+    // 324 = 1 x 3, 648 = 2 x 3, 972 = 3 x 3. This lets density tests change
+    // spatial resolution without changing the folder silhouette or smuggling
+    // extra rows outside it at the nine-fragment ceiling.
+    const microColumns = workshopOptions.fragmentsPerPacket / 3
+    const subColumn = microIndex % microColumns
+    const subRow = Math.floor(microIndex / microColumns)
+    if (packetIndex < 96) {
+      // At the accepted six-fragment density, 96 packet families make a
+      // 24 x 24 screen-door field across the folder body. Every logical
+      // packet owns one local 2 x 3 tile neighborhood.
+      const macroColumn = SCREEN_GRID_BODY_COLUMN_ORDER[packetIndex % 12]!
+      const macroRow = Math.floor(packetIndex / 12)
+      const columns = 12 * microColumns
+      const column = macroColumn * microColumns + subColumn
+      const row = macroRow * 3 + subRow
+      const localY = -1 + ((row + 0.5) / 24) * 1.8
+      return {
+        u: (column + 0.5) / columns,
+        v: (1.12 - localY) / 2.12,
+      }
+    }
+    // The remaining twelve families form a narrower 12 x 6 field in the tab.
+    // Its upper row pinches with the physical silhouette rather than emitting
+    // square pixels from the empty corners of the folder's bounding box.
+    const tabPacket = packetIndex - 96
+    const macroColumn = SCREEN_GRID_TAB_COLUMN_ORDER[tabPacket % 6]!
+    const macroRow = Math.floor(tabPacket / 6)
+    const row = macroRow * 3 + subRow
+    const rowProgress = (row + 0.5) / 6
+    const uMin = THREE.MathUtils.lerp(0.055, 0.12, rowProgress)
+    const uMax = THREE.MathUtils.lerp(0.62, 0.55, rowProgress)
+    const columns = 6 * microColumns
+    const column = macroColumn * microColumns + subColumn
+    const localY = 0.8 + rowProgress * 0.3
+    return {
+      u: THREE.MathUtils.lerp(uMin, uMax, (column + 0.5) / columns),
+      v: (1.12 - localY) / 2.12,
+    }
+  }
   const assignSourceMappings = (force = false) => {
     if (!force
       && sourceMappingRevision === bootLabelRevision
@@ -3085,17 +3515,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       let importantV = uniformV
       let bestImportance = -Infinity
       // Preserve 75% low-discrepancy coverage. The remaining quarter may
-      // search the complete source in two dimensions, but only among pixels
-      // that break up before the packet's locked gathering clock. This makes
-      // the importance variant honest without sacrificing the 108 deadlines.
+      // search the complete source in two dimensions. Source ownership is a
+      // property of the recording, never of a later movement schedule.
       const allowGlobalImportance = packetIndex % 4 === 3
       for (let candidate = 0; candidate < 16; candidate++) {
         const u = fract(uniformU + (candidate - 5.5) * 0.071 + packetIndex * 0.013)
         const v = allowGlobalImportance
           ? THREE.MathUtils.clamp(fract((packetIndex + 1) * 0.5698402909980532 + candidate * 0.3819660112501051), 0.02, 0.98)
           : THREE.MathUtils.clamp(uniformV + (candidate - 7.5) * 0.0042, 0.02, 0.98)
-        const candidateBirth = FILE_CONTACT_AT + sourceBirthFraction(u, v) * FILE_TRANSIT_SECONDS
-        if (candidateBirth > bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET]!.startTime - 0.06) continue
         const score = sourceImportanceAt(u, v)
         if (score > bestImportance) {
           bestImportance = score
@@ -3116,14 +3543,19 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       for (let microIndex = 0; microIndex < MAX_FRAGMENTS_PER_PACKET; microIndex++) {
         const seed = bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET + microIndex]!
         if (!force && seed.sampledRevision >= 0) continue
-        const radius = 0.012 + 0.025 * Math.sqrt((microIndex + 0.5) / MAX_FRAGMENTS_PER_PACKET)
-        const angle = seed.microAngle + packetIndex * 0.37
-        seed.sourceU = fract(centerU + Math.cos(angle) * radius)
-        // A packet keeps a small recognizable source neighborhood. Vertical
-        // spread stays narrow so siblings leave within a few milliseconds.
-        seed.sourceV = THREE.MathUtils.clamp(centerV + Math.sin(angle) * 0.0036, 0.02, 0.98)
-        seed.birthTime = FILE_CONTACT_AT
-          + sourceBirthFraction(seed.sourceU, seed.sourceV) * FILE_TRANSIT_SECONDS
+        if (workshopOptions.samplingStrategy === 'screen-grid') {
+          const source = screenGridCoordinates(packetIndex, microIndex)
+          seed.sourceU = source.u
+          seed.sourceV = source.v
+        } else {
+          const radius = 0.012 + 0.025 * Math.sqrt((microIndex + 0.5) / MAX_FRAGMENTS_PER_PACKET)
+          const angle = seed.microAngle + packetIndex * 0.37
+          seed.sourceU = fract(centerU + Math.cos(angle) * radius)
+          // A packet keeps a small recognizable source neighborhood. Vertical
+          // spread stays narrow so siblings leave within a few milliseconds.
+          seed.sourceV = THREE.MathUtils.clamp(centerV + Math.sin(angle) * 0.0036, 0.02, 0.98)
+        }
+        seed.birthTime = fileBirthTimeAt(sourceBirthFraction(seed.sourceU, seed.sourceV))
         if (force) seed.sampledRevision = -1
       }
     }
@@ -3154,16 +3586,19 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   bitsGeo.setAttribute('aAlpha', new THREE.BufferAttribute(bitsAlpha, 1))
   bitsGeo.setAttribute('aHaloAlpha', new THREE.BufferAttribute(bitsHaloAlpha, 1))
   bitsGeo.setAttribute('aShape', new THREE.BufferAttribute(bitsShape, 1))
+  bitsGeo.setAttribute('aDigitalMemory', new THREE.BufferAttribute(bitsDigitalMemory, 1))
   const particleVertex = /* glsl */ `
     attribute float aSize;
     attribute float aAlpha;
     attribute float aHaloAlpha;
     attribute float aShape;
+    attribute float aDigitalMemory;
     attribute vec3 color;
     varying vec3 vColor;
     varying float vAlpha;
     varying float vHaloAlpha;
     varying float vShape;
+    varying float vDigitalMemory;
     uniform float uPointScale;
     uniform float uSizeScale;
     void main() {
@@ -3171,6 +3606,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       vAlpha = aAlpha;
       vHaloAlpha = aHaloAlpha;
       vShape = aShape;
+      vDigitalMemory = aDigitalMemory;
       vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
       gl_PointSize = max(1.0, aSize * uSizeScale * uPointScale / max(1.0, -mvPosition.z));
       gl_Position = projectionMatrix * mvPosition;
@@ -3187,19 +3623,34 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       varying vec3 vColor;
       varying float vAlpha;
       varying float vShape;
+      varying float vDigitalMemory;
       void main() {
         vec2 p = gl_PointCoord - 0.5;
-        float angle = vShape * 1.0472 + 0.34;
+        // At the threshold, the source becomes a field of restrained digital
+        // tiles. Their screen-stable square grammar keeps the sampled image
+        // legible; rotation, aspect variation and soft shard edges arrive only
+        // as the remembered folder relaxes into volumetric material.
+        float dispersed = 1.0 - vDigitalMemory;
+        float angle = (vShape * 1.0472 + 0.34) * dispersed;
         mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
         p = rotation * p;
-        float aspect = 0.58 + 0.12 * mod(vShape, 3.0);
+        float aspect = mix(1.0, 0.58 + 0.12 * mod(vShape, 3.0), dispersed);
         p.x /= aspect;
         float roundRadius = length(p) * 2.0;
         float shardRadius = max(abs(p.x) * 1.72, abs(p.y) * 1.42);
-        float radius = mix(roundRadius, shardRadius, 0.38);
+        float tileRadius = max(abs(p.x), abs(p.y)) * 2.0;
+        float particleRadius = mix(roundRadius, shardRadius, 0.38);
+        float radius = mix(tileRadius, particleRadius, dispersed);
         float body = 1.0 - smoothstep(0.46, 0.98, radius);
         float core = 1.0 - smoothstep(0.0, 0.42, radius);
-        float alpha = vAlpha * 0.65 * body + (0.08 + vAlpha * 0.75) * core;
+        float particleAlpha = vAlpha * 0.65 * body + (0.08 + vAlpha * 0.75) * core;
+        // A screen-door tile is a piece of information, not a tiny lamp. Give
+        // it a nearly flat, crisply bounded core; otherwise hundreds of soft
+        // radial ramps compound into the red fog bank this stage is meant to
+        // avoid. The familiar photographic falloff returns only at the neck.
+        float digitalBody = 1.0 - smoothstep(0.88, 0.98, tileRadius);
+        float digitalAlpha = min(0.38, 0.035 + vAlpha * 1.08) * digitalBody;
+        float alpha = mix(digitalAlpha, particleAlpha, dispersed);
         if (alpha < 0.006) discard;
         gl_FragColor = vec4(vColor, alpha);
       }
@@ -3380,6 +3831,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   let maxFreshGateExpectedTimelineError = 0
   let freshGatePresentedFrameError = 0
   let maxFreshGatePresentedFrameError = 0
+  let freshGateDecoderFrameError = 0
+  let maxFreshGateDecoderFrameError = 0
+  let gateProjectionCorrections = 0
   let gateProjectionPhaseError = 0
   const outputTextureTimes: number[] = []
   const renderFrameTimes: number[] = []
@@ -3398,14 +3852,6 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const decay = 1 - minJerk(age / 0.46)
     const tremor = 0.5 + 0.5 * Math.sin((age + seed) * 31.7) * Math.sin((age + seed) * 13.1)
     return 1 - decay * (0.035 + 0.095 * tremor)
-  }
-  const hermite = (a: number, tangentA: number, b: number, tangentB: number, u: number) => {
-    const u2 = u * u
-    const u3 = u2 * u
-    return (2 * u3 - 3 * u2 + 1) * a
-      + (u3 - 2 * u2 + u) * tangentA
-      + (-2 * u3 + 3 * u2) * b
-      + (u3 - u2) * tangentB
   }
   const quinticHermite = (
     a: number,
@@ -3429,28 +3875,34 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     return h00 * a + h10 * velocityA + h20 * accelerationA
       + h01 * b + h11 * velocityB + h21 * accelerationB
   }
-  const criticallyDamped = (
-    start: number,
-    initialVelocity: number,
-    target: number,
-    omega: number,
-    age: number,
-  ) => {
-    const delta = start - target
-    return target + (delta + (initialVelocity + omega * delta) * age) * Math.exp(-omega * age)
-  }
   // Source ownership -> suspended volume -> curved horn -> ordered stream.
-  // Every particle is born on the invisible threshold with the sleeve's
-  // downward velocity. A critically damped atmosphere removes that momentum
-  // into a filled Fibonacci cloud. The writer then gathers the cloud through
-  // one asymmetric, contracting volume rather than a frontal orbit around the
-  // reel. A rotation-minimizing Bishop frame keeps that volume from flipping
-  // or accumulating the arbitrary twist of a Frenet frame.
+  // Every particle is born on the invisible threshold with the folder's exact
+  // ballistic state. The completed information object then shatters against
+  // one arrest plane and continues as a living, time-dilated cloud while a
+  // broad intake current bends it through one asymmetric volume. A rotation-
+  // minimizing Bishop frame keeps that volume from flipping or accumulating
+  // the arbitrary twist of a Frenet frame.
   const CLOUD_CENTER_X = DROP.x - 0.28
   const CLOUD_CENTER_Y = PLANE_Y - 0.93
   const CLOUD_CENTER_Z = 0.08
-  const CLOUD_DAMPING = 3.25
+  // Crossing changes material state but not motion: every released block stays
+  // locked to the same accelerating folder until the last source row clears.
+  // That completed digital body then meets one common arrest plane. The impact
+  // is the shared release cue, so shatter reads as one causal event rather than
+  // 648 independently scheduled post-clear launches.
+  const DIGITAL_MEMORY_RELEASE_AT = FILE_CLEAR_AT
   const PARTICLE_HORN_END = 0.84
+  // The first 80% of the accepted horn is cadence-free. Every captured packet
+  // traverses it in the same physical duration; exact film timing is allowed
+  // to shape motion only after this deep-throat boundary.
+  // u=.72 maps to arc s≈.776 under the accepted endpoint-speed profile: deep
+  // enough for invisible cadence correction, but before the final neck. A
+  // 950ms common traverse preserves the calm peel and leaves the first cohort
+  // at least 280ms for its bounded registration seat.
+  const DEEP_THROAT_HORN_U = 0.72
+  const FIELD_TO_DEEP_THROAT_SECONDS = 0.95
+  const CADENCE_FREE_HORN_SECONDS = FIELD_TO_DEEP_THROAT_SECONDS / DEEP_THROAT_HORN_U
+  const MIN_REGISTRATION_SECONDS = 0.28
   const PARTICLE_HORN_TURNS = 0.42
   const PARTICLE_SHUTTER_SECONDS = 0.014
   const PARTICLE_FRONT_X = CHARGE_POINT.x + 0.058
@@ -3574,62 +4026,55 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     minJerk((s - 0.32) / 0.68),
   )
   const particleMachineP0 = new THREE.Vector3()
-  const cloudPositionAt = (sd: (typeof bitsSeed)[number], at: number, out: Float32Array, o: number) => {
-    const age = Math.max(0, at - sd.birthTime)
-    // Reconstruct the exact printed source point on the moving sleeve face.
-    // The plane is rotated into y/z, then the complete sleeve carries its
-    // restrained -0.1rad yaw. At sd.birthTime this source row is exactly on
-    // the empty threshold, so no generic side-emitter can detach the color
-    // from the material it came from.
+  const digitalTransitionAt = (sd: (typeof bitsSeed)[number], at: number) => {
+    void sd
+    // All 648 tiles share one impact clock. They keep the recognizable
+    // screen-door body through the fast impulse, then soften together while
+    // local time collapses. Later spatial capture cannot make the folder
+    // appear to dissolve before the common fracture has happened.
+    const age = at - DIGITAL_MEMORY_RELEASE_AT
+    const spread = minJerk((age - 0.08) / (FRACTURE_PLUME_HOLD_END - 0.08))
+    const materialSpread = minJerk((age - 0.24) / (FRACTURE_MEMORY_RELEASE_END - 0.24))
+    return {
+      memory: 1 - spread,
+      spread,
+      visualMemory: 1 - materialSpread,
+    }
+  }
+  const fileSourcePointAt = (
+    sd: (typeof bitsSeed)[number],
+    at: number,
+    out: Float32Array,
+    o: number,
+  ) => {
     const sourceFace = sourceFaceCoordinates(sd.sourceU, sd.sourceV)
-    const labelLocalX = (sourceFace.onLabel ? 0.11 : 0.045) * detailScale
-    const labelLocalY = sourceFace.localY * detailScale
-    const labelLocalZ = sourceFace.localZ * detailScale
-    const sleeveYaw = -0.1
-    const sleeveCos = Math.cos(sleeveYaw)
-    const sleeveSin = Math.sin(sleeveYaw)
-    const initialX = DROP.x - 0.1 + sleeveCos * labelLocalX + sleeveSin * labelLocalZ
-    const fileHalfHeight = 1.12 * detailScale
-    const contactY = PLANE_Y + fileHalfHeight
-    const inheritedVy = -(2 * fileHalfHeight) / FILE_TRANSIT_SECONDS
-    const fileCenterAtBirth = contactY + inheritedVy * (sd.birthTime - FILE_CONTACT_AT)
-    const initialY = fileCenterAtBirth + labelLocalY
-    const initialZ = 0.1 - sleeveSin * labelLocalX + sleeveCos * labelLocalZ
-    const packetBase = packetBases[sd.packetIndex]!
-    // Shredding exposes more surface before organization: children open around
-    // their zero-centroid parent without moving that parent, then C2-settle to
-    // the authored packet radius during the last 340ms before horn entry.
-    // This creates coverage through real separated cores rather than halo or
-    // luminance, while the horn still receives its original cross-section.
-    const familyOpened = minJerk(age / 0.32)
-    const familySettled = minJerk((at - (sd.startTime - 0.34)) / 0.34)
-    const familySupport = 1 + 3 * familyOpened * (1 - familySettled)
-    const microX = Math.cos(sd.microAngle) * sd.microRadius
-    const microY = Math.sin(sd.microAngle) * sd.microRadius * 0.72
-    const microZ = Math.sin(sd.microAngle) * sd.microRadius
-    const targetX = CLOUD_CENTER_X + (packetBase.x + microX * familySupport) * 0.82
-    // The fastest inherited fragment can still approach its anchor
-    // monotonically: targetY never sits above initialY-|v|/omega. That keeps
-    // the cloud suspended without a hidden vertical rebound.
-    const targetY = CLOUD_CENTER_Y + (packetBase.y + microY * familySupport) * 0.32
-    const targetZ = CLOUD_CENTER_Z + (packetBase.z + microZ * familySupport) * 1.08
-    const breathe = minJerk((age - 0.28) / 0.72)
-    out[o] = criticallyDamped(initialX, 0, targetX, CLOUD_DAMPING, age)
-      + breathe * 0.045 * Math.sin(age * 0.62 + sd.orbit * 1.7)
-    out[o + 1] = criticallyDamped(initialY, inheritedVy, targetY, CLOUD_DAMPING, age)
-      + breathe * 0.038 * Math.sin(age * 0.48 + sd.orbit * 0.8)
-    out[o + 2] = criticallyDamped(initialZ, 0, targetZ, CLOUD_DAMPING, age)
-      + breathe * 0.065 * Math.sin(age * 0.55 + sd.orbit * 1.25)
+    const localX = (
+      sourceFace.onLabel ? SOURCE_LABEL_FACE_X : SOURCE_SHELL_FACE_X
+    ) * detailScale
+    const localY = sourceFace.localY * detailScale
+    const localZ = sourceFace.localZ * detailScale
+    const yaw = fileYawAt(at)
+    const c = Math.cos(yaw)
+    const s = Math.sin(yaw)
+    out[o] = fileCenterXAt(at) + c * localX + s * localZ
+    out[o + 1] = fileCenterYAt(at) + localY
+    out[o + 2] = fileCenterZAt(at) - s * localX + c * localZ
   }
   const cloudStartP = new Float32Array(3)
-  const cloudPreviousP = new Float32Array(3)
-  const cloudBeforePreviousP = new Float32Array(3)
   const hornEndP = new Float32Array(3)
   const hornBeforeEndP = new Float32Array(3)
   const hornBeforeEnd2P = new Float32Array(3)
   const particleTransferSeconds = (sd: (typeof bitsSeed)[number]) => {
     void sd
     return 0.052
+  }
+  const hornArcAtFlowU = (u: number) => {
+    const uu = THREE.MathUtils.clamp(u, 0, 1)
+    const u2 = uu * uu
+    const u3 = u2 * uu
+    const u4 = u3 * uu
+    const u5 = u4 * uu
+    return minJerk(uu) + 0.45 * (-4 * u3 + 7 * u4 - 3 * u5)
   }
   const hornFlowAt = (
     sd: (typeof bitsSeed)[number],
@@ -3653,7 +4098,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const u3 = u2 * uu
     const u4 = u3 * uu
     const u5 = u4 * uu
-    const s = minJerk(uu) + 0.45 * (-4 * u3 + 7 * u4 - 3 * u5)
+    const s = hornArcAtFlowU(uu)
     sampleHornFrame(s)
     const dx = cloudStartP[0]! - HORN_P0.x
     const dy = cloudStartP[1]! - HORN_P0.y
@@ -3712,26 +4157,580 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       + cloudVz * momentumCarry
       + cloudAz * accelerationCarry
   }
+  type PacketFieldPath = {
+    positions: Float32Array
+    velocities: Float32Array
+    captureTime: number
+    capturePosition: Float32Array
+    captureVelocity: Float32Array
+    captureAcceleration: Float32Array
+    targetFrame: number
+    arrivalTime: number
+    slot: number
+    score: number
+    naturalCapture: boolean
+  }
+  type PacketImpactState = {
+    position: THREE.Vector3
+    incomingVelocity: THREE.Vector3
+    fracture: THREE.Vector3
+    predicted: THREE.Vector3
+    score: number
+    rank: number
+    targetFrame: number
+    arrivalTime: number
+    slot: number
+  }
+  let packetFieldPaths: PacketFieldPath[] = []
+  let packetFieldCacheKey = ''
+  let packetFieldPrecomputeMs = 0
+  const fieldMouthArc = 0.12
+  const fieldVelocityResponseSeconds = 0.22
+  const fieldFreeDrag = 0.82
+  const fieldScratchA = new Float32Array(3)
+  const fieldScratchB = new Float32Array(3)
+  const fractureRateAt = (age: number) => {
+    if (age <= FRACTURE_FULL_SPEED_SECONDS) return 1
+    if (age >= FRACTURE_TIME_COLLAPSE_END) return FRACTURE_SLOW_SCALE
+    return THREE.MathUtils.lerp(
+      1,
+      FRACTURE_SLOW_SCALE,
+      minJerk(
+        (age - FRACTURE_FULL_SPEED_SECONDS)
+          / (FRACTURE_TIME_COLLAPSE_END - FRACTURE_FULL_SPEED_SECONDS),
+      ),
+    )
+  }
+  const attractionEnvelopeAt = (age: number) => age <= 0
+    ? 0
+    : 1 - Math.exp(-Math.pow(age / workshopOptions.attractionTime, 3))
+  const packetImpactStateAt = (packetIndex: number) => {
+    const position = new THREE.Vector3()
+    const previous = new THREE.Vector3()
+    const fracture = new THREE.Vector3()
+    const sample = new Float32Array(3)
+    const prior = new Float32Array(3)
+    const packet = packetBases[packetIndex]!
+    let count = 0
+    for (let micro = 0; micro < workshopOptions.fragmentsPerPacket; micro++) {
+      const seed = bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET + micro]!
+      fileSourcePointAt(seed, FILE_CLEAR_AT, sample, 0)
+      // The incoming ballistic derivative is part of the physical initial
+      // condition, not the field integrator. Sample it at one fixed high-rate
+      // interval so 120/240Hz comparisons do not reorder otherwise identical
+      // packet ranks before integration has even begun.
+      fileSourcePointAt(seed, FILE_CLEAR_AT - 1 / 960, prior, 0)
+      position.add(new THREE.Vector3(sample[0]!, sample[1]!, sample[2]!))
+      previous.add(new THREE.Vector3(prior[0]!, prior[1]!, prior[2]!))
+      count += 1
+    }
+    position.multiplyScalar(1 / Math.max(1, count))
+    previous.multiplyScalar(1 / Math.max(1, count))
+    const incomingVelocity = position.clone().sub(previous).multiplyScalar(960)
+    const sourceRadialY = (position.y - fileCenterYAt(FILE_CLEAR_AT))
+      / (0.5 * (SOURCE_FOLDER_TOP - SOURCE_FOLDER_BOTTOM) * detailScale)
+    const sourceRadialZ = (position.z - fileCenterZAt(FILE_CLEAR_AT))
+      / (SOURCE_FOLDER_WIDTH * 0.5 * detailScale)
+    if (workshopOptions.fractureStyle === 'planar') {
+      fracture.set(
+        packet.x * 0.32,
+        // Preserve more of the folder plane's horizontal span in the frozen
+        // plume. Nearly equal vertical/transverse variance rounded the
+        // far-side residue into a closed crown under blur even though no
+        // centroid regrouped. A restrained planar anisotropy keeps the peel
+        // reading as an opening sheet without changing impulse magnitude.
+        sourceRadialY * 0.58 + packet.y * 0.24,
+        sourceRadialZ * 0.76 + packet.z * 0.24,
+      ).multiplyScalar(4.3)
+    } else if (workshopOptions.fractureStyle === 'depth-forward') {
+      fracture.set(
+        packet.x * 1.08 + 0.12,
+        sourceRadialY * 0.28 + packet.y * 0.48,
+        sourceRadialZ * 0.26 + packet.z * 0.62,
+      ).multiplyScalar(3.55)
+    } else {
+      fracture.set(
+        packet.x * 0.78 + 0.04,
+        sourceRadialY * 0.46 + packet.y * 0.48,
+        sourceRadialZ * 0.44 + packet.z * 0.62,
+      ).multiplyScalar(3.8)
+    }
+    return {
+      position,
+      incomingVelocity,
+      fracture,
+      predicted: new THREE.Vector3(),
+      score: 0,
+      rank: 0,
+      targetFrame: 1,
+      arrivalTime: timeForFrame(1),
+      slot: 0,
+    } satisfies PacketImpactState
+  }
+  const fieldCacheSignature = () => [
+    detailScale.toFixed(3),
+    workshopOptions.fragmentsPerPacket,
+    workshopOptions.samplingStrategy,
+    workshopOptions.fractureStyle,
+    workshopOptions.fieldKernel,
+    workshopOptions.tangentialRetention,
+    workshopOptions.attractionTime,
+    workshopOptions.mouthRadiusScale,
+    workshopOptions.fieldIntegrationHz,
+    ...bitsSeed
+      .filter((seed) => seed.microIndex < workshopOptions.fragmentsPerPacket)
+      .slice(0, 18)
+      .flatMap((seed) => [seed.sourceU.toFixed(4), seed.sourceV.toFixed(4)]),
+  ].join('|')
+  const ensurePacketFieldPaths = () => {
+    const signature = fieldCacheSignature()
+    if (packetFieldCacheKey === signature && packetFieldPaths.length === LOGICAL_PACKETS) return
+    const precomputeStarted = performance.now()
+
+    sampleHornFrame(fieldMouthArc)
+    const mouthCenter = hornFrameCenter.clone()
+    const mouthTangent = hornFrameTangent.clone()
+    const mouthNormal = hornFrameNormal.clone()
+    const mouthBinormal = hornFrameBinormal.clone()
+    const states = Array.from({ length: LOGICAL_PACKETS }, (_, packetIndex) => (
+      packetImpactStateAt(packetIndex)
+    ))
+    const meanFracture = states.reduce(
+      (sum, state) => sum.add(state.fracture),
+      new THREE.Vector3(),
+    ).multiplyScalar(1 / LOGICAL_PACKETS)
+    const referenceAge = FIELD_REFERENCE_AGE
+    const referenceTravel = fractureEffectiveAgeAt(referenceAge)
+    const longitudinalDistances: number[] = []
+    const transverseRadii: number[] = []
+    for (const state of states) {
+      state.fracture.sub(meanFracture)
+      const retainedIncoming = new THREE.Vector3(
+        state.incomingVelocity.x * workshopOptions.tangentialRetention,
+        state.incomingVelocity.y * 0.04,
+        state.incomingVelocity.z * workshopOptions.tangentialRetention,
+      )
+      state.fracture.add(retainedIncoming)
+      state.predicted.copy(state.position).addScaledVector(state.fracture, referenceTravel)
+      const toMouth = mouthCenter.clone().sub(state.predicted)
+      const longitudinal = toMouth.dot(mouthTangent)
+      const normalDistance = toMouth.dot(mouthNormal)
+      const binormalDistance = toMouth.dot(mouthBinormal)
+      const transverse = Math.hypot(normalDistance, binormalDistance)
+      const alignment = Math.max(0, state.fracture.clone().normalize().dot(mouthTangent))
+      state.score = 1 / (0.18 + Math.max(0, longitudinal))
+        + 0.32 * alignment
+        - 0.08 * transverse
+      longitudinalDistances.push(longitudinal)
+      transverseRadii.push(transverse)
+    }
+    const ranked = states.slice().sort((a, b) => b.score - a.score)
+    for (let rank = 0; rank < ranked.length; rank++) ranked[rank]!.rank = rank
+    for (let cohort = 0; cohort < FRAME_GROUPS; cohort++) {
+      const triplet = ranked.slice(
+        cohort * PARTICLES_PER_FRAME,
+        (cohort + 1) * PARTICLES_PER_FRAME,
+      ).sort((a, b) => a.predicted.z - b.predicted.z)
+      for (let slot = 0; slot < triplet.length; slot++) {
+        const state = triplet[slot]!
+        state.targetFrame = cohort + 1
+        state.arrivalTime = timeForFrame(cohort + 1)
+        state.slot = slot
+      }
+    }
+    for (let packetIndex = 0; packetIndex < states.length; packetIndex++) {
+      const state = states[packetIndex]!
+      for (let micro = 0; micro < MAX_FRAGMENTS_PER_PACKET; micro++) {
+        const seed = bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET + micro]!
+        seed.targetFrame = state.targetFrame
+        seed.arrivalTime = state.arrivalTime
+        seed.slot = state.slot
+        seed.sampledRevision = -1
+      }
+      packetBases[packetIndex]!.slot = state.slot
+    }
+
+    const rmsTransverse = Math.sqrt(
+      transverseRadii.reduce((sum, radius) => sum + radius * radius, 0)
+        / Math.max(1, transverseRadii.length),
+    )
+    const mouthRadius = Math.max(0.72, rmsTransverse * workshopOptions.mouthRadiusScale)
+    const meanLongitudinal = longitudinalDistances.reduce((sum, value) => sum + value, 0)
+      / Math.max(1, longitudinalDistances.length)
+    const longitudinalSpread = Math.sqrt(
+      longitudinalDistances.reduce(
+        (sum, value) => sum + (value - meanLongitudinal) ** 2,
+        0,
+      ) / Math.max(1, longitudinalDistances.length),
+    )
+    const fieldLength = Math.max(0.8, longitudinalSpread * 2.4)
+    const dt = 1 / workshopOptions.fieldIntegrationHz
+    // Spatial capture has one shared horizon. Per-frame exposure clocks cannot
+    // decide when the field stops integrating a packet or force it into the
+    // horn. Natural capture order is measured first; only then are neighboring
+    // triplets assigned to physical film cells.
+    const latestCapture = timeForFrame(FRAME_GROUPS)
+      - FIELD_TO_DEEP_THROAT_SECONDS
+      - MIN_REGISTRATION_SECONDS
+    packetFieldPaths = states.map((state) => {
+      const capacity = Math.ceil((latestCapture - FILE_CLEAR_AT) * workshopOptions.fieldIntegrationHz) + 2
+      const positions = new Float32Array(capacity * 3)
+      const velocities = new Float32Array(capacity * 3)
+      const p = state.position.clone()
+      const fieldVelocity = new THREE.Vector3()
+      const totalVelocity = state.fracture.clone()
+      const previousTotalVelocity = new THREE.Vector3()
+      const midpoint = new THREE.Vector3()
+      const midpointFieldVelocity = new THREE.Vector3()
+      const midpointTotalVelocity = new THREE.Vector3()
+      const desiredVelocity = new THREE.Vector3()
+      const fieldDelta = new THREE.Vector3()
+      const toMouth = new THREE.Vector3()
+      const edgeDirection = new THREE.Vector3()
+      const rankProximity = 1 - state.rank / Math.max(1, LOGICAL_PACKETS - 1)
+      // Proximity controls curvature, not merely cohort order. The far side
+      // must keep coasting while the writer-facing edge peels away; a high
+      // mobility floor translated the whole sheet into depth and made its
+      // projected residue read as a regrouped ball.
+      const mobility = THREE.MathUtils.lerp(0.18, 1.28, Math.pow(rankProximity, 1.15))
+      const freeScaleAtAge = (age: number) => fractureRateAt(age)
+        * Math.exp(-fieldFreeDrag * fractureEffectiveAgeAt(age))
+      const desiredFieldVelocityAt = (
+        position: THREE.Vector3,
+        age: number,
+        out: THREE.Vector3,
+      ) => {
+        toMouth.copy(mouthCenter).sub(position)
+        const longitudinal = toMouth.dot(mouthTangent)
+        const normalDistance = toMouth.dot(mouthNormal)
+        const binormalDistance = toMouth.dot(mouthBinormal)
+        const transverse = Math.hypot(normalDistance, binormalDistance)
+        const upstream = Math.max(0, longitudinal)
+        let kernel: number
+        if (workshopOptions.fieldKernel === 'compact') {
+          kernel = minJerk(1 - upstream / (fieldLength * 2.25))
+        } else if (workshopOptions.fieldKernel === 'gaussian') {
+          kernel = Math.exp(-0.5 * (upstream / fieldLength) ** 2)
+        } else {
+          // Screen the current without turning it into a near-singular point
+          // pull. The finite floor keeps the far side inside the same current.
+          const epsilon = 0.24
+          const screened = Math.exp(-upstream / fieldLength) * epsilon / (upstream + epsilon)
+          kernel = 0.16 + 0.84 * screened
+        }
+        const attraction = attractionEnvelopeAt(age)
+        out.copy(mouthTangent).multiplyScalar(attraction * kernel * 7.4 * mobility)
+        if (transverse > mouthRadius && transverse > 1e-6) {
+          edgeDirection.copy(mouthNormal).multiplyScalar(normalDistance)
+            .addScaledVector(mouthBinormal, binormalDistance)
+            .multiplyScalar(1 / transverse)
+          out.addScaledVector(
+            edgeDirection,
+            attraction * Math.min(2.2, (transverse - mouthRadius) * 3.2),
+          )
+        }
+        return out
+      }
+      let fieldTravel = 0
+      let captureIndex = capacity - 1
+      let captureTime = latestCapture
+      let capturePosition = new Float32Array(3)
+      let captureVelocity = new Float32Array(3)
+      let captureAcceleration = new Float32Array(3)
+      let captured = false
+      let previousSpeedMargin = Number.NaN
+      let previousTravelMargin = Number.NaN
+      let previousLongitudinalMargin = Number.NaN
+      let previousTransverseMargin = Number.NaN
+      const travelThreshold = 0.025 + 0.32 * Math.pow(1 - rankProximity, 1.35)
+      for (let sampleIndex = 0; sampleIndex < capacity; sampleIndex++) {
+        const at = FILE_CLEAR_AT + sampleIndex * dt
+        const age = at - FILE_CLEAR_AT
+        const i3 = sampleIndex * 3
+        positions[i3] = p.x
+        positions[i3 + 1] = p.y
+        positions[i3 + 2] = p.z
+        velocities[i3] = totalVelocity.x
+        velocities[i3 + 1] = totalVelocity.y
+        velocities[i3 + 2] = totalVelocity.z
+        toMouth.copy(mouthCenter).sub(p)
+        const longitudinal = toMouth.dot(mouthTangent)
+        const normalDistance = toMouth.dot(mouthNormal)
+        const binormalDistance = toMouth.dot(mouthBinormal)
+        const transverse = Math.hypot(normalDistance, binormalDistance)
+        // Track each sticky-mouth boundary as a signed continuous margin. When
+        // all four have crossed, solve the latest crossing inside this fixed
+        // step instead of snapping capture to the 120/240Hz grid.
+        const speedMargin = fieldVelocity.dot(mouthTangent) / 0.24 - 1
+        const travelMargin = fieldTravel / travelThreshold - 1
+        const longitudinalMargin = (0.035 - longitudinal) / Math.max(0.08, fieldLength * 0.1)
+        const transverseMargin = (mouthRadius * 1.2 - transverse) / Math.max(0.08, mouthRadius * 0.2)
+        if (sampleIndex > 0
+          && speedMargin >= 0
+          && travelMargin >= 0
+          && longitudinalMargin >= 0
+          && transverseMargin >= 0) {
+          captureIndex = sampleIndex
+          const crossingU = (previous: number, current: number) => {
+            if (!Number.isFinite(previous)) return 1
+            if (previous >= 0) return 0
+            return current > previous
+              ? THREE.MathUtils.clamp(-previous / (current - previous), 0, 1)
+              : 1
+          }
+          // Capture is the latest of the four continuous boundary crossings,
+          // not an interpolation of their minimum. The latter mixed different
+          // active constraints at adjacent samples and created rare half-step
+          // packet swaps between 120 and 240Hz.
+          const eventU = Math.max(
+            crossingU(previousSpeedMargin, speedMargin),
+            crossingU(previousTravelMargin, travelMargin),
+            crossingU(previousLongitudinalMargin, longitudinalMargin),
+            crossingU(previousTransverseMargin, transverseMargin),
+          )
+          captureTime = at - dt + eventU * dt
+          const i0 = (sampleIndex - 1) * 3
+          const u2 = eventU * eventU
+          const u3 = u2 * eventU
+          for (let axis = 0; axis < 3; axis++) {
+            const p0 = positions[i0 + axis]!
+            const p1 = positions[i3 + axis]!
+            const v0 = velocities[i0 + axis]!
+            const v1 = velocities[i3 + axis]!
+            capturePosition[axis] = (2 * u3 - 3 * u2 + 1) * p0
+              + (u3 - 2 * u2 + eventU) * dt * v0
+              + (-2 * u3 + 3 * u2) * p1
+              + (u3 - u2) * dt * v1
+            captureVelocity[axis] = (
+              (6 * u2 - 6 * eventU) * p0
+              + (3 * u2 - 4 * eventU + 1) * dt * v0
+              + (-6 * u2 + 6 * eventU) * p1
+              + (3 * u2 - 2 * eventU) * dt * v1
+            ) / dt
+          }
+          // The Hermite path is a render interpolant, not the governing ODE.
+          // Derive acceleration from the continuous field equation at the
+          // sub-step event so C2 carry is not integration-rate sensitive.
+          const captureAge = captureTime - FILE_CLEAR_AT
+          const freeScale = freeScaleAtAge(captureAge)
+          const derivativeEpsilon = 1e-4
+          const freeScaleDerivative = (
+            freeScaleAtAge(captureAge + derivativeEpsilon)
+              - freeScaleAtAge(Math.max(0, captureAge - derivativeEpsilon))
+          ) / (captureAge < derivativeEpsilon ? derivativeEpsilon : 2 * derivativeEpsilon)
+          midpoint.set(capturePosition[0]!, capturePosition[1]!, capturePosition[2]!)
+          midpointFieldVelocity
+            .set(captureVelocity[0]!, captureVelocity[1]!, captureVelocity[2]!)
+            .addScaledVector(state.fracture, -freeScale)
+          desiredFieldVelocityAt(midpoint, captureAge, desiredVelocity)
+          midpointTotalVelocity.copy(desiredVelocity)
+            .sub(midpointFieldVelocity)
+            .multiplyScalar(1 / fieldVelocityResponseSeconds)
+            .addScaledVector(state.fracture, freeScaleDerivative)
+          captureAcceleration = new Float32Array([
+            midpointTotalVelocity.x,
+            midpointTotalVelocity.y,
+            midpointTotalVelocity.z,
+          ])
+          captured = true
+          break
+        }
+        previousSpeedMargin = speedMargin
+        previousTravelMargin = travelMargin
+        previousLongitudinalMargin = longitudinalMargin
+        previousTransverseMargin = transverseMargin
+        if (sampleIndex === capacity - 1) break
+
+        previousTotalVelocity.copy(totalVelocity)
+        const previousFieldSpeed = fieldVelocity.length()
+        desiredFieldVelocityAt(p, age, desiredVelocity)
+        midpointFieldVelocity.copy(fieldVelocity).addScaledVector(
+          fieldDelta.copy(desiredVelocity).sub(fieldVelocity),
+          1 - Math.exp(-dt * 0.5 / fieldVelocityResponseSeconds),
+        )
+        const midpointAge = age + dt * 0.5
+        const midpointFreeScale = freeScaleAtAge(midpointAge)
+        midpointTotalVelocity.copy(state.fracture)
+          .multiplyScalar(midpointFreeScale)
+          .add(midpointFieldVelocity)
+        midpoint.copy(p).addScaledVector(midpointTotalVelocity, dt * 0.5)
+        desiredFieldVelocityAt(midpoint, midpointAge, desiredVelocity)
+        fieldVelocity.addScaledVector(
+          fieldDelta.copy(desiredVelocity).sub(fieldVelocity),
+          1 - Math.exp(-dt / fieldVelocityResponseSeconds),
+        )
+        const nextAge = age + dt
+        const freeScale = freeScaleAtAge(nextAge)
+        totalVelocity.copy(state.fracture).multiplyScalar(freeScale).add(fieldVelocity)
+        p.addScaledVector(previousTotalVelocity, dt * 0.5)
+          .addScaledVector(totalVelocity, dt * 0.5)
+        fieldTravel += (previousFieldSpeed + fieldVelocity.length()) * dt * 0.5
+      }
+      if (!captured) {
+        captureIndex = capacity - 1
+        captureTime = FILE_CLEAR_AT + captureIndex * dt
+        const last = captureIndex * 3
+        const before = Math.max(0, captureIndex - 1) * 3
+        capturePosition = positions.slice(last, last + 3)
+        captureVelocity = velocities.slice(last, last + 3)
+        // Match the actual left second derivative of the cubic-Hermite cache
+        // at the feasibility endpoint.
+        const captureAccelerationAt = (axis: number) => (
+          6 * positions[before + axis]!
+          - 6 * positions[last + axis]!
+          + 2 * dt * velocities[before + axis]!
+          + 4 * dt * velocities[last + axis]!
+        ) / (dt * dt)
+        captureAcceleration = new Float32Array([
+          captureAccelerationAt(0),
+          captureAccelerationAt(1),
+          captureAccelerationAt(2),
+        ])
+      }
+      return {
+        positions: positions.slice(0, (captureIndex + 1) * 3),
+        velocities: velocities.slice(0, (captureIndex + 1) * 3),
+        captureTime,
+        capturePosition,
+        captureVelocity,
+        captureAcceleration,
+        targetFrame: state.targetFrame,
+        arrivalTime: state.arrivalTime,
+        slot: state.slot,
+        score: state.score,
+        naturalCapture: captured,
+      }
+    })
+    // Mechanical accounting follows the field the simulation actually made,
+    // not the pre-field ballistic estimate used only to establish bounded
+    // mobility and runway. Capture-time neighbors fund the same physical cell;
+    // stable depth order assigns its three registration rails without crossing.
+    const capturedOrder = packetFieldPaths
+      .map((path, packetIndex) => ({ path, packetIndex }))
+      .sort((a, b) => a.path.captureTime - b.path.captureTime || b.path.score - a.path.score)
+    for (let cohort = 0; cohort < FRAME_GROUPS; cohort++) {
+      const triplet = capturedOrder
+        .slice(cohort * PARTICLES_PER_FRAME, (cohort + 1) * PARTICLES_PER_FRAME)
+        .sort((a, b) => a.path.capturePosition[2]! - b.path.capturePosition[2]!)
+      for (let slot = 0; slot < triplet.length; slot++) {
+        const { path, packetIndex } = triplet[slot]!
+        path.targetFrame = cohort + 1
+        path.arrivalTime = timeForFrame(cohort + 1)
+        path.slot = slot
+        packetBases[packetIndex]!.slot = slot
+        for (let micro = 0; micro < MAX_FRAGMENTS_PER_PACKET; micro++) {
+          const seed = bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET + micro]!
+          seed.targetFrame = path.targetFrame
+          seed.arrivalTime = path.arrivalTime
+          seed.slot = slot
+          seed.sampledRevision = -1
+        }
+      }
+    }
+    for (let packetIndex = 0; packetIndex < packetFieldPaths.length; packetIndex++) {
+      const captureTime = packetFieldPaths[packetIndex]!.captureTime
+      for (let micro = 0; micro < MAX_FRAGMENTS_PER_PACKET; micro++) {
+        bitsSeed[packetIndex * MAX_FRAGMENTS_PER_PACKET + micro]!.captureTime = captureTime
+      }
+    }
+    packetFieldCacheKey = signature
+    packetFieldPrecomputeMs = performance.now() - precomputeStarted
+  }
+  const samplePacketFieldPath = (
+    path: PacketFieldPath,
+    at: number,
+    out: Float32Array,
+    o: number,
+  ) => {
+    const sample = THREE.MathUtils.clamp(
+      (at - FILE_CLEAR_AT) * workshopOptions.fieldIntegrationHz,
+      0,
+      path.positions.length / 3 - 1,
+    )
+    const i0 = Math.min(path.positions.length / 3 - 1, Math.floor(sample))
+    const i1 = Math.min(path.positions.length / 3 - 1, i0 + 1)
+    const u = sample - i0
+    const dt = 1 / workshopOptions.fieldIntegrationHz
+    for (let axis = 0; axis < 3; axis++) {
+      const p0 = path.positions[i0 * 3 + axis]!
+      const p1 = path.positions[i1 * 3 + axis]!
+      const v0 = path.velocities[i0 * 3 + axis]! * dt
+      const v1 = path.velocities[i1 * 3 + axis]! * dt
+      const u2 = u * u
+      const u3 = u2 * u
+      out[o + axis] = (2 * u3 - 3 * u2 + 1) * p0
+        + (u3 - 2 * u2 + u) * v0
+        + (-2 * u3 + 3 * u2) * p1
+        + (u3 - u2) * v1
+    }
+  }
+  const packetJourneyProgressAt = (sd: ParticleSeed, at: number) => {
+    if (packetFieldPaths.length !== LOGICAL_PACKETS) ensurePacketFieldPaths()
+    if (at <= sd.captureTime) return 0
+    const throatTime = sd.captureTime + FIELD_TO_DEEP_THROAT_SECONDS
+    if (at <= throatTime) {
+      return PARTICLE_HORN_END * THREE.MathUtils.clamp(
+        (at - sd.captureTime) / FIELD_TO_DEEP_THROAT_SECONDS,
+        0,
+        1,
+      )
+    }
+    return PARTICLE_HORN_END + (1 - PARTICLE_HORN_END) * THREE.MathUtils.clamp(
+      (at - throatTime) / Math.max(1e-4, sd.arrivalTime - throatTime),
+      0,
+      1,
+    )
+  }
+  const packetTimeAtJourneyProgress = (sd: ParticleSeed, q: number) => {
+    const progress = THREE.MathUtils.clamp(q, 0, 1)
+    const throatTime = sd.captureTime + FIELD_TO_DEEP_THROAT_SECONDS
+    if (progress <= PARTICLE_HORN_END) {
+      return sd.captureTime
+        + FIELD_TO_DEEP_THROAT_SECONDS * progress / PARTICLE_HORN_END
+    }
+    return throatTime
+      + (sd.arrivalTime - throatTime)
+        * (progress - PARTICLE_HORN_END) / (1 - PARTICLE_HORN_END)
+  }
   const particleAt = (sd: (typeof bitsSeed)[number], at: number, out: Float32Array, o: number) => {
-    if (at < sd.birthTime || at > sd.arrivalTime + particleTransferSeconds(sd)) return false
-    if (at < sd.startTime) {
-      cloudPositionAt(sd, at, out, o)
+    if (at < sd.birthTime) return false
+    if (at > FILE_CLEAR_AT && packetFieldPaths.length !== LOGICAL_PACKETS) ensurePacketFieldPaths()
+    if (at > sd.arrivalTime + particleTransferSeconds(sd)) return false
+    if (at <= FILE_CLEAR_AT) {
+      fileSourcePointAt(sd, at, out, o)
       transformMachinePoint(particleMachineP0.set(out[o]!, out[o + 1]!, out[o + 2]!), at, particleMachineP0)
       out[o] = particleMachineP0.x
       out[o + 1] = particleMachineP0.y
       out[o + 2] = particleMachineP0.z
       return true
     }
-    const q = THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
-    cloudPositionAt(sd, sd.startTime, cloudStartP, 0)
-    cloudPositionAt(sd, sd.startTime - 0.01, cloudPreviousP, 0)
-    cloudPositionAt(sd, sd.startTime - 0.02, cloudBeforePreviousP, 0)
-    const cloudVx = (cloudStartP[0]! - cloudPreviousP[0]!) / 0.01
-    const cloudVy = (cloudStartP[1]! - cloudPreviousP[1]!) / 0.01
-    const cloudVz = (cloudStartP[2]! - cloudPreviousP[2]!) / 0.01
-    const cloudAx = (cloudStartP[0]! - 2 * cloudPreviousP[0]! + cloudBeforePreviousP[0]!) / 0.0001
-    const cloudAy = (cloudStartP[1]! - 2 * cloudPreviousP[1]! + cloudBeforePreviousP[1]!) / 0.0001
-    const cloudAz = (cloudStartP[2]! - 2 * cloudPreviousP[2]! + cloudBeforePreviousP[2]!) / 0.0001
+    const path = packetFieldPaths[sd.packetIndex]!
+    fileSourcePointAt(sd, FILE_CLEAR_AT, fieldScratchB, 0)
+    const fragmentOffsetX = fieldScratchB[0]! - path.positions[0]!
+    const fragmentOffsetY = fieldScratchB[1]! - path.positions[1]!
+    const fragmentOffsetZ = fieldScratchB[2]! - path.positions[2]!
+    const fractureOffsetScale = 1 + 0.4 * minJerk((at - FILE_CLEAR_AT) / 0.27)
+    if (at < path.captureTime) {
+      samplePacketFieldPath(path, at, fieldScratchA, 0)
+      out[o] = fieldScratchA[0]! + fragmentOffsetX * fractureOffsetScale
+      out[o + 1] = fieldScratchA[1]! + fragmentOffsetY * fractureOffsetScale
+      out[o + 2] = fieldScratchA[2]! + fragmentOffsetZ * fractureOffsetScale
+      transformMachinePoint(particleMachineP0.set(out[o]!, out[o + 1]!, out[o + 2]!), at, particleMachineP0)
+      out[o] = particleMachineP0.x
+      out[o + 1] = particleMachineP0.y
+      out[o + 2] = particleMachineP0.z
+      return true
+    }
+    const q = packetJourneyProgressAt(sd, at)
+    cloudStartP[0] = path.capturePosition[0]! + fragmentOffsetX * 1.4
+    cloudStartP[1] = path.capturePosition[1]! + fragmentOffsetY * 1.4
+    cloudStartP[2] = path.capturePosition[2]! + fragmentOffsetZ * 1.4
+    const cloudVx = path.captureVelocity[0]!
+    const cloudVy = path.captureVelocity[1]!
+    const cloudVz = path.captureVelocity[2]!
+    const cloudAx = path.captureAcceleration[0]!
+    const cloudAy = path.captureAcceleration[1]!
+    const cloudAz = path.captureAcceleration[2]!
     // Three monotone registration sites across the 16:9 film cell. Assignment
     // follows source z order within every cohort, preventing crossing paths.
     // The x coordinate stays on the camera side of both thumbnail and strip
@@ -3747,11 +4746,22 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     let py: number
     let pz: number
 
-    const totalJourney = sd.arrivalTime - sd.startTime
-    const hornDuration = totalJourney * PARTICLE_HORN_END
+    const throatTime = sd.captureTime + FIELD_TO_DEEP_THROAT_SECONDS
     if (q < PARTICLE_HORN_END) {
-      const u = q / PARTICLE_HORN_END
-      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, u, hornEndP, 0)
+      const u = DEEP_THROAT_HORN_U * q / PARTICLE_HORN_END
+      hornFlowAt(
+        sd,
+        cloudVx,
+        cloudVy,
+        cloudVz,
+        cloudAx,
+        cloudAy,
+        cloudAz,
+        CADENCE_FREE_HORN_SECONDS,
+        u,
+        hornEndP,
+        0,
+      )
       px = hornEndP[0]!
       py = hornEndP[1]!
       pz = hornEndP[2]!
@@ -3765,10 +4775,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       const registerSpan = 1 - PARTICLE_HORN_END
       const u = (q - PARTICLE_HORN_END) / registerSpan
       const epsilon = 0.0015
-      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1, hornEndP, 0)
-      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1 - epsilon, hornBeforeEndP, 0)
-      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, hornDuration, 1 - 2 * epsilon, hornBeforeEnd2P, 0)
-      const derivativeScale = registerSpan / PARTICLE_HORN_END
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, CADENCE_FREE_HORN_SECONDS, DEEP_THROAT_HORN_U, hornEndP, 0)
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, CADENCE_FREE_HORN_SECONDS, DEEP_THROAT_HORN_U - epsilon, hornBeforeEndP, 0)
+      hornFlowAt(sd, cloudVx, cloudVy, cloudVz, cloudAx, cloudAy, cloudAz, CADENCE_FREE_HORN_SECONDS, DEEP_THROAT_HORN_U - 2 * epsilon, hornBeforeEnd2P, 0)
+      const registerDuration = sd.arrivalTime - throatTime
+      const derivativeScale = registerDuration / CADENCE_FREE_HORN_SECONDS
       const secondDerivativeScale = derivativeScale * derivativeScale
       const endpointVelocity = (axis: number) => (
         (3 * hornEndP[axis]! - 4 * hornBeforeEndP[axis]! + hornBeforeEnd2P[axis]!)
@@ -3778,7 +4789,6 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         (hornEndP[axis]! - 2 * hornBeforeEndP[axis]! + hornBeforeEnd2P[axis]!)
         / (epsilon * epsilon)
       ) * secondDerivativeScale
-      const registerDuration = totalJourney * registerSpan
       const contactVelocityX = -0.5 * registerDuration
       px = quinticHermite(
         hornEndP[0]!,
@@ -3825,8 +4835,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // handoff plus a short birth-energy shoulder closes the former 31% luma
     // trough at half crossing; the shoulder settles before suspension so it
     // cannot inflate the cloud into a furnace.
-    const materialize = minJerk((at - sd.birthTime) / 0.09)
-    if (at < sd.startTime) {
+    // The gravitational crossing is intentionally fast. Complete the local
+    // source-to-block handoff in under three 60fps frames so the last row is
+    // present at impact instead of fading in after the digital body shatters.
+    // A bounded core exists on the exact birth sample. This closes the
+    // full-clear accounting hole where the final row technically existed but
+    // rendered with zero energy until the following frame.
+    const materialize = 0.34 + 0.66 * minJerk((at - sd.birthTime) / 0.045)
+    if (at < sd.captureTime) {
       const cloudBreath = 0.94 + 0.06 * Math.sin((at - sd.birthTime) * 0.72 + sd.orbit)
       const crossingShoulder = 1 - minJerk((at - (FILE_CLEAR_AT - 0.22)) / 0.22)
       const birthShoulder = 0.36
@@ -3834,8 +4850,15 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         * crossingShoulder
       return materialize * (0.36 + birthShoulder) * cloudBreath
     }
-    const q = THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
-    const coherence = 0.36 + 0.64 * minJerk(q / 0.8)
+    const q = packetJourneyProgressAt(sd, at)
+    // Organization is not extra energy. Hold the broad current near its
+    // suspended luminance, then release the conserved gain only inside the
+    // final compression/development interval. The former linear rise made the
+    // horn shoulder look like a regrouped hot ball even while its geometry
+    // remained wide.
+    const coherence = 0.36
+      + 0.12 * minJerk(q / 0.55)
+      + 0.52 * minJerk((q - 0.72) / 0.28)
     const transfer = at <= sd.arrivalTime ? 1 : 1 - minJerk((at - sd.arrivalTime) / transferSeconds)
     return materialize * coherence * transfer
   }
@@ -3867,9 +4890,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   const particleColorAt = (sd: ParticleSeed, at: number): [number, number, number] => {
     freezeSourceIdentity(sd)
     const age = Math.max(0, at - sd.birthTime)
-    const q = at < sd.startTime
-      ? 0
-      : THREE.MathUtils.clamp((at - sd.startTime) / (sd.arrivalTime - sd.startTime), 0, 1)
+    const q = packetJourneyProgressAt(sd, at)
     const suspension = minJerk(age / 0.42) * (1 - minJerk((q - 0.08) / 0.2))
     let pearlTarget = pearlWarmLab
     let pearlAmount = 0.2
@@ -3898,6 +4919,33 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     lab[0] = Math.min(0.92, lab[0] + compression * 0.065)
     lab[1] *= 1 - compression * 0.06
     lab[2] *= 1 - compression * 0.06
+    // Information first appears as a monochrome Bitter-red screen-door field.
+    // The source pixel contributes only restrained lightness, preserving a
+    // ghost of faces/type without breaking the one-hue conversion metaphor.
+    // Source/pearl chroma is admitted only after the folder silhouette opens.
+    const digital = digitalTransitionAt(sd, at)
+    const digitalLab: [number, number, number] = [
+      // Red-on-red tonal encoding must survive the full-size homepage, not
+      // merely a diagnostic crop. Preserve enough source contrast to read the
+      // two recorded faces, header and metadata as information regions while
+      // keeping every tile inside one Bitter-red hue family.
+      THREE.MathUtils.clamp(salmonLab[0] + (sd.sourceLab[0] - 0.5) * 0.32, 0.44, 0.78),
+      salmonLab[1],
+      salmonLab[2],
+    ]
+    if (workshopOptions.samplingStrategy === 'screen-grid' && workshopOptions.colorScript === 'information-red') {
+      // The source image survives as lightness structure only. Once released,
+      // the information remains in one Bitter-red hue family all the way down
+      // the horn; compression may raise energy, but never reintroduces manila,
+      // skin, blue, or rainbow chroma as a magic-dust tail.
+      const settledRed = mixLab(digitalLab, salmonLab, minJerk((digital.spread - 0.18) / 0.72))
+      const redCompression = minJerk((q - 0.76) / 0.24)
+      settledRed[0] = Math.min(0.9, settledRed[0] + redCompression * 0.09)
+      settledRed[1] *= 1 - redCompression * 0.14
+      settledRed[2] *= 1 - redCompression * 0.14
+      return oklabToRgb(settledRed)
+    }
+    lab = mixLab(digitalLab, lab, digital.spread)
     return oklabToRgb(lab)
   }
   // Density changes projected surface through normal-blended cores. Sizes are
@@ -3905,6 +4953,60 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // with area so integrated light remains approximately conserved.
   const fragmentSizeForDensity = () => ({ 3: 0.44, 6: 0.365, 9: 0.3 }[workshopOptions.fragmentsPerPacket])
   const fragmentAlphaForDensity = () => ({ 3: 0.18, 6: 0.135, 9: 0.11 }[workshopOptions.fragmentsPerPacket])
+  const fragmentOpticsAt = (sd: ParticleSeed, at: number) => {
+    const q = packetJourneyProgressAt(sd, at)
+    const contactSeat = minJerk((q - 0.68) / 0.32)
+    const shapeMemory = workshopOptions.samplingStrategy === 'screen-grid'
+      // Positional drift begins while the material is still unmistakably a
+      // field of square pixels. Blocks stay optically solid through the cloud
+      // and horn shoulder; edge softness belongs only to the final neck where
+      // information compresses into the emulsion.
+      ? 1 - minJerk((q - 0.68) / 0.18)
+      : digitalTransitionAt(sd, at).visualMemory
+    // Area and edge softness are separate controls. Preserve the small square
+    // information scale through the broad horn shoulder: enlarging hundreds of
+    // captured blocks together made a spatially broad current read as one hot
+    // ball. Size may resolve only after the gesture is already legible.
+    const sizeMemory = workshopOptions.samplingStrategy === 'screen-grid'
+      ? 1 - minJerk((q - 0.42) / 0.28)
+      : shapeMemory
+    const resolvedSizeFamily = workshopOptions.samplingStrategy === 'screen-grid'
+      ? Math.min(sd.sizeFamily, 0.46)
+      : sd.sizeFamily
+    const sizeFamily = THREE.MathUtils.lerp(0.91, resolvedSizeFamily, 1 - sizeMemory)
+    const digitalTileScale = workshopOptions.fragmentsPerPacket === 6 ? 0.24 : 0.28
+    const activeContact = 1 - minJerk((Math.abs(at - sd.arrivalTime) - 0.006) / 0.022)
+    const unrelatedThroat = minJerk((q - 0.5) / 0.22) * (1 - activeContact)
+    const size = fragmentSizeForDensity()
+      * THREE.MathUtils.lerp(digitalTileScale, sizeFamily, 1 - sizeMemory)
+      * (workshopOptions.samplingStrategy === 'screen-grid' ? 1.08 : 1)
+      // Preserve a readable solid footprint for each of the three active
+      // contact clusters. Halos disappear at the writer; the cores should not
+      // collapse into an indistinct one-pixel bead trail at homepage scale.
+      * (1 - contactSeat * 0.44)
+      * (1 - unrelatedThroat * 0.45)
+      * (1 + activeContact * 0.32)
+    const depthExtinction = 0.62 + 0.38 * sd.volumeRadius
+    const contactCore = 1 - contactSeat * 0.52
+    const digitalCoreCompensation = THREE.MathUtils.lerp(1.75, 1, 1 - sizeMemory)
+    // Projected surface and luminance are separate controls. Keep the larger
+    // solid cores that make dematerialization feel materially substantial,
+    // but restrain their optical weight through the early shoulder so the
+    // current does not overpower the still-planar residue into a flower/ball
+    // gestalt. Full energy returns only for final compression and exposure.
+    const earlyHornOpticalWeight = 1 - 0.38
+      * minJerk(q / 0.2)
+      * (1 - minJerk((q - 0.58) / 0.18))
+    const alpha = particleEnergy(sd, at)
+      * fragmentAlphaForDensity()
+      * digitalCoreCompensation
+      * depthExtinction
+      * contactCore
+      * earlyHornOpticalWeight
+      * (1 - unrelatedThroat * 0.7)
+      * (1 + activeContact * 0.12)
+    return { alpha, contactSeat, digitalMemory: shapeMemory, size }
+  }
   const seedIsConfigured = (seed: ParticleSeed) => seed.microIndex < workshopOptions.fragmentsPerPacket
   function update(t: number) {
     assignSourceMappings()
@@ -3956,62 +5058,47 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // ACT 1 — the rite of indexing: an upright file passes through an empty
     // dashed boundary. Its material inherits the same downward velocity as it
     // becomes a suspended cloud, then triplets peel into the writer.
-    const bx = DROP.x
     const framePhase = dist / PITCH
     const writePhase = t < BOOT.run ? 0 : Math.min(FRAME_GROUPS, 1 + framePhase)
     const chargeProgress = writePhase / FRAME_GROUPS
     let impactPulse = 0
     {
-      // Materialize below the CTA band. The earlier 9.6-world-unit corridor
-      // forced the readable file face through “Watch it work” on mobile.
-      const y0 = PLANE_Y + 6.2
-      const tau = t - BOOT.drop
       const crossAge = t - FILE_CONTACT_AT
-      const transitProgress = THREE.MathUtils.clamp(crossAge / FILE_TRANSIT_SECONDS, 0, 1)
+      const transitProgress = gravityTransitFractionAt(crossAge)
       const finalHit = timeForFrame(FRAME_GROUPS)
-      // Only the perimeter exists. It calmly locates the transformation plane
-      // and fades after the source has fully crossed; its empty interior never
-      // splashes, refracts, ripples, or glows.
-      const wake = THREE.MathUtils.smoothstep(t, BOOT.plane, BOOT.plane + 0.6)
+      // Only the perimeter exists. A single clockwise circuit draws in concert
+      // with the throw and is complete 180ms before contact, so the boundary
+      // feels prepared for the landing rather than passively pre-existing.
+      // Its empty interior never splashes, refracts, ripples, or glows.
+      const thresholdDraw = minJerk(
+        (t - THRESHOLD_DRAW_START) / (THRESHOLD_DRAW_END - THRESHOLD_DRAW_START),
+      )
       const borderOut = 1 - minJerk((t - (FILE_CLEAR_AT + 0.18)) / 0.72)
-      planeMat.opacity = wake * borderOut * 0.24
+      planeUniforms.uDrawProgress.value = thresholdDraw
+      planeUniforms.uOpacity.value = borderOut * 0.24
       dropFilmMat.uniforms.uTime!.value = motionTime
       dropFilmMat.uniforms.uImpact!.value = 0
       dropFilmMat.uniforms.uOpacity!.value = 0
-      // Approach with a Hermite velocity match, then cross at one constant
-      // speed. The threshold changes representation only: the sleeve and the
-      // particles on its far side have the same position and momentum.
-      const fileIn = minJerk(tau / 0.42)
+      // The folder now enters under visible momentum rather than fading into a
+      // waiting pose. Its natural apex supplies the recognition beat; the
+      // same ballistic translation and restrained yaw continue through the
+      // screen-door conversion until the complete body reaches arrest.
       const dissolve = transitProgress
-      if (tau > 0 && t < FILE_CLEAR_AT && dissolve < 0.9995) {
+      if (t >= FILE_ENTRANCE_AT && t < FILE_CLEAR_AT && dissolve < 0.9995) {
         bootFile.visible = true
-        const fileHalfHeight = 1.12 * detailScale
-        const contactY = PLANE_Y + fileHalfHeight
-        const transitVelocity = -(2 * fileHalfHeight) / FILE_TRANSIT_SECONDS
-        const approachU = THREE.MathUtils.clamp(tau / FILE_APPROACH_SECONDS, 0, 1)
-        const approachY = hermite(
-          y0,
-          0,
-          contactY,
-          transitVelocity * FILE_APPROACH_SECONDS,
-          approachU,
-        )
-        const fileY = crossAge <= 0
-          ? approachY
-          : contactY + transitVelocity * Math.min(FILE_TRANSIT_SECONDS, crossAge)
-        bootFile.position.set(bx - 0.1, fileY, 0.1)
+        bootFile.position.set(fileCenterXAt(t), fileCenterYAt(t), fileCenterZAt(t))
         bootFile.scale.setScalar(detailScale)
-        bootFile.rotation.set(0, -0.1, 0)
+        bootFile.rotation.set(0, fileYawAt(t), 0)
         // The last surviving geometry used to be the integrated folder tab,
         // which briefly read as a lid hovering over the cloud. Let the shell
         // finish with the same moving breakup front instead of leaving a clean
         // container-shaped cap after the printed face is gone.
         const shellOut = 1 - minJerk((dissolve - 0.82) / 0.14)
-        bootFileMat.opacity = fileIn * shellOut * 0.76
-        bootFileMat.emissiveIntensity = 0.1
+        bootFileMat.opacity = shellOut * 0.94
+        bootFileMat.emissiveIntensity = 0.035
         bootSleeveUniforms.uSleeveDissolve.value = dissolve
         if (bootLabelMat) {
-          bootLabelMat.uniforms.uOpacity!.value = fileIn
+          bootLabelMat.uniforms.uOpacity!.value = 1
           bootLabelMat.uniforms.uDissolve!.value = dissolve
         }
       } else {
@@ -4033,22 +5120,20 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
             bitsSize[k] = 0
             bitsAlpha[k] = 0
             bitsHaloAlpha[k] = 0
+            bitsDigitalMemory[k] = 0
             trailPos[i6 + 1] = -999
             trailPos[i6 + 4] = -999
             continue
           }
           const energy = particleEnergy(sd, t)
           const color = particleColorAt(sd, t)
-          const q = THREE.MathUtils.clamp(
-            (t - sd.startTime) / (sd.arrivalTime - sd.startTime),
-            0,
-            1,
-          )
+          const optics = fragmentOpticsAt(sd, t)
+          const digitalMemory = optics.digitalMemory
+          const q = packetJourneyProgressAt(sd, t)
           const contactSeat = minJerk((q - 0.68) / 0.32)
           // A cube-root volume distributes more points through the middle.
           // Attenuate its densest interior analytically so Beer-Lambert-like
           // overlap creates body without a white furnace.
-          const depthExtinction = 0.62 + 0.38 * sd.volumeRadius
           bitsColor[i3] = srgbToLinear(color[0])
           bitsColor[i3 + 1] = srgbToLinear(color[1])
           bitsColor[i3 + 2] = srgbToLinear(color[2])
@@ -4057,10 +5142,15 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           // carry each packet's density, so their footprint can contract while
           // compression energy moves into the emulsion. Diffraction falls off
           // faster than the solid cores as the fragments seat on the film face.
-          bitsSize[k] = fragmentSizeForDensity() * sd.sizeFamily * (1 - contactSeat * 0.58)
-          const contactCore = 1 - contactSeat * 0.52
-          bitsAlpha[k] = energy * fragmentAlphaForDensity() * depthExtinction * contactCore
-          bitsHaloAlpha[k] = bitsAlpha[k]! * (1 - contactSeat * 0.9)
+          // Pixel blocks hold a near-uniform optical pitch; bounded size
+          // families arrive only with the volumetric material so the threshold
+          // reads as a screen-door conversion rather than decorative confetti.
+          bitsSize[k] = optics.size
+          bitsDigitalMemory[k] = digitalMemory
+          bitsAlpha[k] = optics.alpha
+          bitsHaloAlpha[k] = bitsAlpha[k]!
+            * (1 - digitalMemory * 0.94)
+            * (1 - contactSeat * 0.98)
           if (energy > 0.04) visibleBits += 1
           // One analytic wake per logical packet. Multiplying trails with
           // microfragment count would turn added surface area into stress.
@@ -4101,6 +5191,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         bitsGeo.attributes.aSize!.needsUpdate = true
         bitsGeo.attributes.aAlpha!.needsUpdate = true
         bitsGeo.attributes.aHaloAlpha!.needsUpdate = true
+        bitsGeo.attributes.aDigitalMemory!.needsUpdate = true
         trailGeo.attributes.position!.needsUpdate = true
         trailGeo.attributes.color!.needsUpdate = true
         bits.visible = visibleBits > 0
@@ -4212,6 +5303,10 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           : 1
         for (let write = firstWrite; write <= completedFrames; write++) {
           writerSlot = stampFilmSlot(write - 1)
+          if (writerSlot < 0) {
+            movingMediaActive = false
+            break
+          }
         }
       }
       lastFilmFrame = filmFrame
@@ -4324,7 +5419,16 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         gateProjectionPhaseContractActive = t >= BOOT.proj
           && writeOrdinal >= 0
           && filmFrame === writeOrdinal + WRITER_TO_GATE_FRAMES
-        const expectedProjectionFrame = mediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+        // During a fresh first pass, compare against the exact source instant
+        // that funded this physical write ordinal. Sampling `t - delay` here
+        // folds up to one late RAF into the contract and can manufacture a
+        // two-frame error even when writer and presented output agree. The
+        // separate presented-frame check below still measures the live output
+        // head at this actual render instant. Recirculated cells retain the
+        // rolling timeline diagnostic.
+        const expectedProjectionFrame = gateProjectionPhaseContractActive
+          ? mediaFrameIndex(timeForFrame(writeOrdinal + 1))
+          : mediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
         if (lastGateSourceFrame >= 0) {
           const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
           let frameError = lastGateSourceFrame - expectedProjectionFrame
@@ -4337,9 +5441,49 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
               maxFreshGateExpectedTimelineError,
               Math.abs(frameError),
             )
-            let presentedFrameError = lastGateSourceFrame - presentedMediaFrameIndex(projectionVideo.currentTime)
-            if (presentedFrameError > frameCount / 2) presentedFrameError -= frameCount
-            if (presentedFrameError < -frameCount / 2) presentedFrameError += frameCount
+            let decoderFrameError = lastGateSourceFrame - presentedMediaFrameIndex(projectionVideo.currentTime)
+            if (decoderFrameError > frameCount / 2) decoderFrameError -= frameCount
+            if (decoderFrameError < -frameCount / 2) decoderFrameError += frameCount
+            freshGateDecoderFrameError = decoderFrameError
+            maxFreshGateDecoderFrameError = Math.max(
+              maxFreshGateDecoderFrameError,
+              Math.abs(decoderFrameError),
+            )
+            // Two independent HTMLVideoElements can straddle opposite native
+            // frame boundaries even while both satisfy their own semantic
+            // clocks. On a fresh first gate pass the persistent physical cell
+            // is the causal authority. If the decoder is two frames away,
+            // paint that exact live-stamped cell into all three output
+            // treatments for this single gate arrival, then let native 24fps
+            // updates continue. This is a visible phase correction, not a
+            // metric waiver or generated substitute.
+            let presentedFrameError = decoderFrameError
+            if (Math.abs(decoderFrameError) > 1) {
+              const correctionStarted = performance.now()
+              const correctionTime = wrapMediaTime((lastGateSourceFrame + 0.5) / SOURCE_FPS)
+              for (let i = 0; i < screenCtxs.length; i++) {
+                drawScreen(
+                  screenCtxs[i]!,
+                  lastGateSourceFrame,
+                  false,
+                  correctionTime,
+                  outputTerminalProgressAt(t, FAN[i]!.sequence),
+                  gateArt,
+                )
+              }
+              recordTiming(outputTexturePrepTimes, performance.now() - correctionStarted)
+              gateProjectionCorrections += 1
+              outputTextureRevision += 1
+              const correctionAt = performance.now() / 1000
+              if (Number.isFinite(lastOutputTextureAt)) {
+                longestOutputHold = Math.max(longestOutputHold, correctionAt - lastOutputTextureAt)
+              }
+              lastOutputTextureAt = correctionAt
+              outputTextureTimes.push(correctionAt)
+              lastProjectedVideoRevision = presentedMediaFrameIndex(projectionVideo.currentTime)
+              lastProjectionSourceFrame = lastGateSourceFrame
+              presentedFrameError = 0
+            }
             freshGatePresentedFrameError = presentedFrameError
             maxFreshGatePresentedFrameError = Math.max(
               maxFreshGatePresentedFrameError,
@@ -4348,11 +5492,13 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           } else {
             freshGateExpectedTimelineError = 0
             freshGatePresentedFrameError = 0
+            freshGateDecoderFrameError = 0
           }
         } else {
           gateProjectionPhaseContractActive = false
           freshGateExpectedTimelineError = 0
           freshGatePresentedFrameError = 0
+          freshGateDecoderFrameError = 0
           gateProjectionPhaseError = 0
         }
         if (!movingMediaActive || projectionVideo.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
@@ -4465,6 +5611,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     return values[Math.min(values.length - 1, Math.floor(values.length * 0.5))]!
   }
   const inspectMotion = (t: number): Iso4MotionDiagnostics => {
+    ensurePacketFieldPaths()
     const dt = 1 / 60
     const samples = [new Float32Array(3), new Float32Array(3), new Float32Array(3), new Float32Array(3)]
     const projected = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]
@@ -4477,6 +5624,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     let funnelingParticles = 0
     let registeringParticles = 0
     let transferringParticles = 0
+    let digitalMemoryFragments = 0
+    let sourceShapeRetentionTotal = 0
+    let sourceShapeRetentionSamples = 0
     let hornRadiusScaleTotal = 0
     let hornRadiusSamples = 0
     const rect = canvas.getBoundingClientRect()
@@ -4512,6 +5662,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       const energy = activeNow ? particleEnergy(seed, t) : 0
       if (activeNow && energy > 0.04) {
         visibleParticles += 1
+        const digitalMemory = digitalTransitionAt(seed, t).memory
+        if (digitalMemory > 0.25) digitalMemoryFragments += 1
+        if (t < seed.captureTime) {
+          sourceShapeRetentionTotal += digitalMemory
+          sourceShapeRetentionSamples += 1
+        }
         const currentRgb = particleColorAt(seed, t)
         const currentLab = rgbToOklab(currentRgb)
         sourceLabDistance += Math.hypot(
@@ -4526,22 +5682,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         if (seed.sourceRgb[2] > seed.sourceRgb[0] * 1.18) sourceBins.add('blue')
         if (seed.sourceRgb[0] > seed.sourceRgb[2] * 1.32 && seed.sourceRgb[0] > seed.sourceRgb[1] * 1.08) sourceBins.add('salmon')
         if (seed.sourceRgb[0] > seed.sourceRgb[1] && seed.sourceRgb[1] > seed.sourceRgb[2] && sourceLum >= 0.08 && sourceLum <= 0.55) sourceBins.add('skin-brown')
-        if (t < seed.startTime) {
+        if (t < seed.captureTime) {
           suspendedParticles += 1
         } else if (t <= seed.arrivalTime) {
-          const q = THREE.MathUtils.clamp(
-            (t - seed.startTime) / (seed.arrivalTime - seed.startTime),
-            0,
-            1,
-          )
+          const q = packetJourneyProgressAt(seed, t)
           if (q < PARTICLE_HORN_END) {
             funnelingParticles += 1
-            const u = q / PARTICLE_HORN_END
-            const u2 = u * u
-            const u3 = u2 * u
-            const u4 = u3 * u
-            const u5 = u4 * u
-            const s = minJerk(u) + 0.45 * (-4 * u3 + 7 * u4 - 3 * u5)
+            const u = DEEP_THROAT_HORN_U * q / PARTICLE_HORN_END
+            const s = hornArcAtFlowU(u)
             hornRadiusScaleTotal += hornRadiusScaleAt(s)
             hornRadiusSamples += 1
           } else {
@@ -4562,7 +5710,8 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       jerks.push(Math.hypot(p0.x - 3 * p1.x + 3 * p2.x - p3.x, p0.y - 3 * p1.y + 3 * p2.y - p3.y))
       const pointWorld = new THREE.Vector3(samples[0]![0]!, samples[0]![1]!, samples[0]![2]!)
       const viewPoint = pointWorld.clone().applyMatrix4(camera.matrixWorldInverse)
-      const pointDiameter = fragmentSizeForDensity() * seed.sizeFamily * detailScale
+      const optics = fragmentOpticsAt(seed, t)
+      const pointDiameter = optics.size * detailScale
         * rect.height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5)))
         / Math.max(1, -viewPoint.z)
       const pointRadius = Math.max(0.55, pointDiameter * 0.5)
@@ -4583,16 +5732,16 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       const densityY = Math.floor(p0.y / 28)
       const densityKey = densityY * 1000 + densityX
       densityBins.set(densityKey, (densityBins.get(densityKey) ?? 0) + 1)
-      if (activeNow && t < seed.startTime) suspendedScreenPoints.push(p0.clone())
-      if (activeNow && t >= seed.startTime) {
-        const q = (t - seed.startTime) / (seed.arrivalTime - seed.startTime)
+      if (activeNow && t < seed.captureTime) suspendedScreenPoints.push(p0.clone())
+      if (activeNow && t >= seed.captureTime) {
+        const q = packetJourneyProgressAt(seed, t)
         if (q > 0.46 && q <= 1) {
           const packetPoints = packetScreenPoints.get(seed.packetIndex) ?? []
           packetPoints.push(p0.clone())
           packetScreenPoints.set(seed.packetIndex, packetPoints)
         }
       }
-      const displayAlpha = energy * fragmentAlphaForDensity() * (0.62 + 0.38 * seed.volumeRadius)
+      const displayAlpha = optics.alpha
       const currentColor = particleColorAt(seed, t)
       particleRenderedLuminance += Math.PI * pointRadius * pointRadius
         * displayAlpha * rgbLuminance(currentColor)
@@ -4621,7 +5770,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         const trailPoint = new THREE.Vector3()
         toScreen(trailCurrent, trailCurrentPoint)
         toScreen(trailSample, trailPoint)
-        const q = (t - seed.startTime) / (seed.arrivalTime - seed.startTime)
+        const q = packetJourneyProgressAt(seed, t)
         const trailEnvelope = q < PARTICLE_HORN_END
           ? minJerk((q - 0.48) / 0.14)
             * (1 - minJerk((q - (PARTICLE_HORN_END - 0.1)) / 0.1))
@@ -4637,7 +5786,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         const points: THREE.Vector3[] = []
         for (let micro = 0; micro < workshopOptions.fragmentsPerPacket; micro++) {
           const seed = bitsSeed[packet * MAX_FRAGMENTS_PER_PACKET + micro]!
-          const at = seed.startTime + q * (seed.arrivalTime - seed.startTime)
+          const at = packetTimeAtJourneyProgress(seed, q)
           if (!particleAt(seed, at, position, 0)) continue
           const point = new THREE.Vector3()
           toScreen(position, point)
@@ -4656,14 +5805,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     }
     const sourceCorner = (u: number, v: number) => {
       const sourceFace = sourceFaceCoordinates(u, v)
-      const localX = 0.045 * detailScale
+      const localX = SOURCE_SHELL_FACE_X * detailScale
       const localY = sourceFace.localY * detailScale
       const localZ = sourceFace.localZ * detailScale
       const c = Math.cos(-0.1)
       const s = Math.sin(-0.1)
       const point = new THREE.Vector3(
         DROP.x - 0.1 + c * localX + s * localZ,
-        PLANE_Y + 1.12 * detailScale + localY,
+        PLANE_Y + SOURCE_FOLDER_TOP * detailScale + localY,
         0.1 - s * localX + c * localZ,
       )
       transformMachinePoint(point, FILE_CONTACT_AT, point)
@@ -4714,11 +5863,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       )
       packetCohesionSamples += 1
     }
-    const fileDissolve = THREE.MathUtils.clamp(
-      (t - FILE_CONTACT_AT) / FILE_TRANSIT_SECONDS,
-      0,
-      1,
-    )
+    const fileDissolve = gravityTransitFractionAt(t - FILE_CONTACT_AT)
     const yawDegrees = THREE.MathUtils.radToDeg(apparatusYawAt(t))
     const yawSpeedDegrees = THREE.MathUtils.radToDeg(
       (apparatusYawAt(t + dt) - apparatusYawAt(t - dt)) / (2 * dt),
@@ -4735,8 +5880,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       + writerDevelopment * (completedFrames ? PARTICLES_PER_FRAME : 0)
     let currentCellParticleEnergy = 0
     if (completedFrames >= 1) {
-      const firstPacket = (completedFrames - 1) * PARTICLES_PER_FRAME
-      for (let packet = firstPacket; packet < firstPacket + PARTICLES_PER_FRAME; packet++) {
+      const currentCellPackets = Array.from({ length: LOGICAL_PACKETS }, (_, packet) => packet)
+        .filter((packet) => (
+          bitsSeed[packet * MAX_FRAGMENTS_PER_PACKET]!.targetFrame === completedFrames
+        ))
+      for (const packet of currentCellPackets) {
         for (let micro = 0; micro < workshopOptions.fragmentsPerPacket; micro++) {
           currentCellParticleEnergy += particleEnergy(
             bitsSeed[packet * MAX_FRAGMENTS_PER_PACKET + micro]!,
@@ -4751,6 +5899,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         / PARTICLES_PER_FRAME
       : 0
     const tidy = (n: number) => Number(n.toFixed(3))
+    const captureTimes = packetFieldPaths.map((path) => path.captureTime).sort((a, b) => a - b)
     return {
       t: tidy(t),
       visibleParticles,
@@ -4779,10 +5928,31 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       logicalPackets: LOGICAL_PACKETS,
       configuredVisibleFragments: LOGICAL_PACKETS * workshopOptions.fragmentsPerPacket,
       visibleMicrofragments: visibleParticles,
+      digitalMemoryFragments,
+      sourceShapeRetention: tidy(
+        sourceShapeRetentionSamples ? sourceShapeRetentionTotal / sourceShapeRetentionSamples : 0,
+      ),
       fragmentsPerPacket: workshopOptions.fragmentsPerPacket,
       fragmentsPerFilmCell: workshopOptions.fragmentsPerPacket * PARTICLES_PER_FRAME,
       colorScript: workshopOptions.colorScript,
       samplingStrategy: workshopOptions.samplingStrategy,
+      entranceTrajectory: workshopOptions.entranceTrajectory,
+      fractureStyle: workshopOptions.fractureStyle,
+      fieldKernel: workshopOptions.fieldKernel,
+      tangentialRetention: workshopOptions.tangentialRetention,
+      attractionTime: workshopOptions.attractionTime,
+      mouthRadiusScale: workshopOptions.mouthRadiusScale,
+      capturedLogicalPackets: packetFieldPaths.filter((path) => path.captureTime <= t).length,
+      naturalCapturePackets: packetFieldPaths.filter((path) => path.naturalCapture).length,
+      captureTimeP50: tidy(captureTimes[Math.floor(captureTimes.length * 0.5)] ?? 0),
+      captureTimeP95: tidy(captureTimes[Math.floor(captureTimes.length * 0.95)] ?? 0),
+      captureTimeMax: tidy(captureTimes.at(-1) ?? 0),
+      deepThroatHornArcProgress: tidy(hornArcAtFlowU(DEEP_THROAT_HORN_U)),
+      minRegistrationRunwaySeconds: tidy(Math.min(...packetFieldPaths.map(
+        (path) => path.arrivalTime - path.captureTime - FIELD_TO_DEEP_THROAT_SECONDS,
+      ))),
+      fieldPrecomputeMs: tidy(packetFieldPrecomputeMs),
+      fieldIntegrationHz: workshopOptions.fieldIntegrationHz,
       sourceColorCoverage: tidy(sourceBins.size / 5),
       sourceToCloudOklabDistance: tidy(sourceLabSamples ? sourceLabDistance / sourceLabSamples : 0),
       projectedAreaVsSleeve: tidy((occupiedCells.size * occupancyCell * occupancyCell) / sleeveArea),
@@ -4854,6 +6024,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       maxFreshGateExpectedTimelineErrorFrames: maxFreshGateExpectedTimelineError,
       freshGatePresentedFrameErrorFrames: freshGatePresentedFrameError,
       maxFreshGatePresentedFrameErrorFrames: maxFreshGatePresentedFrameError,
+      freshGateDecoderFrameErrorFrames: freshGateDecoderFrameError,
+      maxFreshGateDecoderFrameErrorFrames: maxFreshGateDecoderFrameError,
+      gateProjectionCorrections,
       gateProjectionPhaseErrorFrames: gateProjectionPhaseError,
       movingMediaPlaying,
       terminalMediaPaused,
@@ -4912,22 +6085,68 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       const fragments = options.fragmentsPerPacket ?? workshopOptions.fragmentsPerPacket
       const colorScript = options.colorScript ?? workshopOptions.colorScript
       const samplingStrategy = options.samplingStrategy ?? workshopOptions.samplingStrategy
+      const entranceTrajectory = options.entranceTrajectory ?? workshopOptions.entranceTrajectory
+      const fractureStyle = options.fractureStyle ?? workshopOptions.fractureStyle
+      const fieldKernel = options.fieldKernel ?? workshopOptions.fieldKernel
+      const tangentialRetention = options.tangentialRetention ?? workshopOptions.tangentialRetention
+      const attractionTime = options.attractionTime ?? workshopOptions.attractionTime
+      const mouthRadiusScale = options.mouthRadiusScale ?? workshopOptions.mouthRadiusScale
+      const fieldIntegrationHz = options.fieldIntegrationHz ?? workshopOptions.fieldIntegrationHz
       if (![3, 6, 9].includes(fragments)) throw new Error('fragmentsPerPacket must be 3, 6, or 9')
-      if (!['archival-warm', 'spectral-pearl', 'bichromatic-field'].includes(colorScript)) {
+      if (!['archival-warm', 'spectral-pearl', 'bichromatic-field', 'information-red'].includes(colorScript)) {
         throw new Error('unknown ISO4 color script')
       }
-      if (!['uniform', 'importance', 'hybrid'].includes(samplingStrategy)) {
+      if (!['uniform', 'importance', 'hybrid', 'screen-grid'].includes(samplingStrategy)) {
         throw new Error('unknown ISO4 sampling strategy')
       }
-      workshopOptions = { fragmentsPerPacket: fragments, colorScript, samplingStrategy }
+      if (!['shallow-toss', 'depth-swish', 'frontal-toss'].includes(entranceTrajectory)) {
+        throw new Error('unknown ISO4 entrance trajectory')
+      }
+      if (!['planar', 'depth-forward', 'balanced'].includes(fractureStyle)) {
+        throw new Error('unknown ISO4 fracture style')
+      }
+      if (!['screened', 'compact', 'gaussian'].includes(fieldKernel)) {
+        throw new Error('unknown ISO4 field kernel')
+      }
+      if (![0.15, 0.22, 0.3].includes(tangentialRetention)) {
+        throw new Error('tangentialRetention must be 0.15, 0.22, or 0.3')
+      }
+      if (![0.58, 0.68, 0.78].includes(attractionTime)) {
+        throw new Error('attractionTime must be 0.58, 0.68, or 0.78')
+      }
+      if (![1.05, 1.12, 1.2].includes(mouthRadiusScale)) {
+        throw new Error('mouthRadiusScale must be 1.05, 1.12, or 1.2')
+      }
+      if (![120, 240].includes(fieldIntegrationHz)) {
+        throw new Error('fieldIntegrationHz must be 120 or 240')
+      }
+      workshopOptions = {
+        fragmentsPerPacket: fragments,
+        colorScript,
+        samplingStrategy,
+        entranceTrajectory,
+        fractureStyle,
+        fieldKernel,
+        tangentialRetention,
+        attractionTime,
+        mouthRadiusScale,
+        fieldIntegrationHz,
+      }
       for (const seed of bitsSeed) seed.sampledRevision = -1
       sourceMappingRevision = -1
       sourceMappingStrategy = null
+      packetFieldCacheKey = ''
+      packetFieldPaths = []
       assignSourceMappings(true)
       if (!running) draw(elapsed)
     },
     start() {
       if (running) return
+      // Build the deterministic centroid cache during scene startup, before
+      // the impact beat. Deferring this work until the first post-impact
+      // particle update creates a visible main-thread hitch at the exact
+      // moment the fracture should feel effortless.
+      ensurePacketFieldPaths()
       // Software WebGL cannot sustain even the mechanically safe 324 tier on
       // the reference SwiftShader path. Present the same completed, source-
       // grounded reduced-motion tableau instead of playing a two-fps sequence
@@ -4968,6 +6187,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       maxFreshGateExpectedTimelineError = 0
       freshGatePresentedFrameError = 0
       maxFreshGatePresentedFrameError = 0
+      freshGateDecoderFrameError = 0
+      maxFreshGateDecoderFrameError = 0
+      gateProjectionCorrections = 0
       gateProjectionPhaseError = 0
       projectionPresentedRevision = 0
       projectionPresentedMediaTime = 0
@@ -5040,6 +6262,18 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     },
     inspect(t: number) {
       return inspectMotion(t)
+    },
+    packetCentroidsInFilmWidths(t: number) {
+      const position = new Float32Array(3)
+      const result: number[] = []
+      for (let packetIndex = 0; packetIndex < LOGICAL_PACKETS; packetIndex++) {
+        if (!packetCentroidAt(packetIndex, t, position, 0)) {
+          result.push(Number.NaN, Number.NaN, Number.NaN)
+          continue
+        }
+        result.push(position[0]! / IMG_W, position[1]! / IMG_W, position[2]! / IMG_W)
+      }
+      return result
     },
     temporal() {
       return inspectTemporal()

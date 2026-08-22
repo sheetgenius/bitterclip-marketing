@@ -14,6 +14,8 @@ let reducedMotion = false
 let hardware = false
 let recordVideo = true
 let recordSize = null
+let forceFallbackMedia = false
+let cpuThrottleRate = 1
 for (let i = 1; i < args.length; i++) {
   if (args[i] === '--viewport') {
     const [width, height] = args[++i].split('x').map(Number)
@@ -22,6 +24,8 @@ for (let i = 1; i < args.length; i++) {
   else if (args[i] === '--duration') durationSeconds = Number(args[++i])
   else if (args[i] === '--reduced-motion') reducedMotion = true
   else if (args[i] === '--hardware') hardware = true
+  else if (args[i] === '--fallback-media') forceFallbackMedia = true
+  else if (args[i] === '--cpu-throttle') cpuThrottleRate = Number(args[++i])
   else if (args[i] === '--no-video') recordVideo = false
   else if (args[i] === '--record-size') {
     const [width, height] = args[++i].split('x').map(Number)
@@ -41,6 +45,13 @@ const context = await browser.newContext({
   ...(recordVideo ? { recordVideo: { dir: dirname(output), size: recordSize ?? viewport } } : {}),
 })
 const page = await context.newPage()
+if (cpuThrottleRate > 1) {
+  const cdp = await context.newCDPSession(page)
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: cpuThrottleRate })
+}
+if (forceFallbackMedia) {
+  await page.route('**/clips/ep1-loop.mp4', (route) => route.abort('failed'))
+}
 const errors = []
 page.on('pageerror', (error) => errors.push(error.message))
 // Playwright starts recording at about:blank, whose browser-default white
@@ -51,7 +62,7 @@ if (recordVideo) {
   await page.goto('data:text/html,<style>html{background:%2308090a}</style>')
 }
 const startedAt = performance.now()
-await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'load' })
+await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'domcontentloaded' })
 await page.waitForFunction(() => !!window.__iso, null, { timeout: 15000 })
 const sceneReadyAtMs = performance.now() - startedAt
 const samples = []
@@ -92,6 +103,8 @@ await writeFile(`${output}.json`, `${JSON.stringify({
   recordVideo,
   recordSize: recordSize ?? (recordVideo ? viewport : null),
   reducedMotion,
+  forceFallbackMedia,
+  cpuThrottleRate,
   durationSeconds,
   sceneReadyAtMs,
   gpu,

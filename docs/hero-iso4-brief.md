@@ -1,7 +1,7 @@
 # ISO4 — the facing projector. A standalone build brief.
 
 Route to create: **`/lab/iso4`** (new files: `app/pages/lab/iso4.vue`,
-`app/components/HeroIso4.client.vue`, `app/lib/hero-iso4/scene.ts`).
+`app/components/HeroIso4.vue`, `app/lib/hero-iso4/scene.ts`).
 Predecessor to LEAVE UNTOUCHED and to mine for parts: **`/lab/iso3`**
 (`app/lib/hero-iso3/scene.ts` — ~1,100 lines of three.js that already solved
 most of your problems; steal from it shamelessly).
@@ -28,12 +28,77 @@ points. The accepted material renders **six frozen-identity microfragments per
 logical packet: 648 visible fragments total**. Three logical packets still fund
 one physical film cell, so **18 visible fragments reconvene into three packet
 clusters and strike the existing three emulsion anchors**. The 324-visible
-candidate (three fragments per packet) was too sparse to preserve sleeve mass;
-the 972-visible candidate (nine per packet) added powder/stress and GPU work
-without useful silhouette gain. Keep the accepted 648 density, spectral-pearl
-OKLab colour progression, balanced hybrid source sampling, zero-centroid family
-opening with C2 return, core/halo balance, and static software-renderer final
-tableau locked unless new homepage evidence proves a regression.
+candidate (three fragments per packet) became vertically striped and
+under-resolved; the 972-visible candidate (nine per packet) added edge chatter,
+powder/stress, and GPU work without a clearer source object. Keep the accepted
+648 density, zero-centroid family opening with C2 return, contained final-neck
+halo, and static software-renderer final tableau locked unless new homepage
+evidence proves a regression.
+
+**Binding opening-scene material ruling (2026-08-21).** The input is one
+paper-thin, canonical vanilla-manila file folder with a flush Zoom recording
+contact sheet and real paper margin. Crossing converts material state before
+shape: a deterministic **screen-door field** replaces each crossed source
+location in place, while the un-crossed folder remains continuous above the
+empty threshold. At 648 density, 96 packet families form a 24x24 body field and
+12 families form the folder tab; each packet owns one local 2x3 neighborhood.
+The field is monochrome Bitter red—source pixels survive only as restrained
+OKLab lightness structure—because this moment represents the recording becoming
+pure information, not coloured confetti. Every fragment still has a frozen
+source UV and corresponding birth location; live video can never repaint
+released material. After the folder clears, all 648 square cores finish their
+inherited coast through a 360ms minimum-jerk brake and come fully to rest as one
+recognizable red folder. Only then do the seams begin to open; the earliest
+packet gets a roughly 170ms suspended anticipation before a 360ms decisive
+gather reaches the locked first exposure at 3.800s. Tiles remain crisp and
+non-additive through the held silhouette and most of the horn shoulder;
+photographic softness and restrained halo return only during final-neck
+compression and energy transfer. This information-red screen-grid ruling
+supersedes the earlier spectral-pearl/balanced-hybrid selection for the
+canonical homepage, while archival-warm, spectral-pearl, bichromatic-field,
+uniform, importance, and hybrid remain diagnostic comparison scripts only.
+
+**Binding continuous-field physics ruling (2026-08-22).** This ruling
+supersedes the opening-scene addendum's post-clear `coast -> full rest ->
+scheduled gather` language, while preserving its folder, screen-door,
+monochrome Bitter-red, source-identity, horn, registration, and mechanical
+decisions. The full-clear collision at `2.160s` is now the only post-threshold
+movement discontinuity. It retains `.22` of the incoming tangential velocity,
+removes nearly all normal velocity without bounce, and redirects the remaining
+energy into a zero-mean, broad planar/depth fracture. Bullet time reduces the
+fracture clock to a permanent `6%` residual rate rather than settling it to
+zero. A separate wall-clock attraction envelope rises continuously with a
+`.68s` characteristic time, so the red information sheet remains alive and its
+writer-facing edge begins bending before the far edge has surrendered.
+
+Post-impact motion is computed for **108 packet centroids**; the six visible
+microfragments of each packet remain one bounded, correlated local material
+family. No packet or fragment owns a visible launch clock. A wide anisotropic
+Gaussian capture mouth preserves the plume's transverse extent while advecting
+nearer material toward the accepted horn; a monotone C2 spatial capture blend
+then turns that current into the existing Bishop-frame J path without a point
+magnet, global regrouping, or branch recapture. Natural capture order—not
+packet index—forms the 36 adjacent cohorts of three. Exact exposure cadence may
+influence motion only after horn arc progress `.776`, where a C2 quintic
+arc-length solve has at least `.309s` of mobile and `.341s` of wide registration
+runway. The fixed-step centroid field is precomputed at 240Hz, Hermite-sampled
+for deterministic seeks, and must remain within `.02` film widths of the 120Hz
+audit path. The accepted homepage path measures `.01531` film widths maximum
+divergence, captures all 108 packets through the shared field, and retains zero
+within-triplet registration spread.
+
+**Binding cold-load and provenance addendum (2026-08-21).** The homepage must
+server-render a camera-matched static apparatus prepaint at mobile, tablet,
+wide, and tall-desktop sizes. It remains under the live canvas until ISO4 has
+rendered a real first frame, then crossfades without advancing or shortening
+the opening ritual. A physical film cell may claim live-video provenance only
+when the decoder frame actually available to the writer is within one native
+24fps frame of that cell's expected source instant. If not, ISO4 enters its
+deterministic real-Episode-1 fallback atomically *before* stamping the cell;
+assigning `video.currentTime` is not proof that the requested frame has decoded.
+Canonical nominal and 2x-slow-GPU telemetry must therefore keep both fresh-gate
+phase maxima at one frame or less, including when the honest answer is a
+deterministic fallback.
 
 - The machine is a **large, vertically stacked dual-reel projector** occupying
   roughly 85% of the available composition. It remains a supporting character
@@ -169,10 +234,10 @@ tableau locked unless new homepage evidence proves a regression.
   luminous slabs.
 - The LinkedIn Active Word texture is authored at twice its logical resolution
   and downsampled with anisotropic filtering. Inactive caption whites stay
-  below the global bloom threshold while the exact lime active word may carry
-  the restrained emphasis. Prefer a few short, stable lines over shrinking a
-  long sentence or using bloom to manufacture legibility. Source word starts
-  remain authoritative, but adjacent hits closer than 200ms receive a local
+  below the global bloom threshold while the lower-energy lime active word
+  stays optically crisp. Prefer a few short, stable lines over shrinking a long
+  sentence or using bloom to manufacture legibility. Source word starts remain
+  authoritative, but adjacent hits closer than 340ms receive a local
   minimum dwell so the 160ms punch can resolve; later words return to their
   exact source clock instead of accumulating drift. After the last spoken word
   the phrase holds with no word active.
@@ -205,9 +270,12 @@ tableau locked unless new homepage evidence proves a regression.
   12-second projection head reaches its first visible wrap at scene `14.00s`.
   Both decoded media heads then pause and CanvasTexture uploads stop. After the
   third result appears, the shared film/reel drive follows one C2 coast from
-  16fps at `13.00s` to an exact cell-boundary stop at `13.85s`; lamp, beam, and
-  time-driven optical textures settle with it. Reduced motion and deterministic
-  fallback land directly on the same motionless `13.9s` terminal tableau.
+  16fps at `13.00s` to a centered single-camera cell at approximately
+  `13.96s`. This is a held Geneva phase, not an integer transport tick: both
+  fixed apertures must contain one complete thumbnail rather than straddling a
+  frame line. Lamp, beam, and time-driven optical textures settle with it.
+  Reduced motion and deterministic fallback land directly on the same
+  motionless post-stop tableau.
 - Pausing the decoders never changes ownership of developed physical cells.
   Once a film slot has source art, the strip and gate continue drawing that
   persisted art regardless of media playback state.
@@ -446,7 +514,7 @@ verbatim from `app/lib/hero-iso3/scene.ts`:
 ## 8. Technical foundation (all proven in iso3 — copy the patterns)
 
 - three.js via **dynamic import from the lab route only** — it must never
-  enter the homepage bundle. `HeroIso4.client.vue` mirrors
+  enter the homepage bundle. `HeroIso4.vue` mirrors
   `HeroIso3.client.vue`: IntersectionObserver start/stop, reduced-motion
   still, and it MUST expose the renderer as `window.__iso` so the screenshot
   harness works unchanged.

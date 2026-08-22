@@ -11,6 +11,9 @@ let dpr = 1
 let start = 0
 let end = 12
 let fps = 60
+let hardware = false
+let entranceTrajectory = 'depth-swish'
+let fractureStyle = 'planar'
 for (let i = 1; i < args.length; i++) {
   if (args[i] === '--viewport') {
     const [width, height] = args[++i].split('x').map(Number)
@@ -19,19 +22,27 @@ for (let i = 1; i < args.length; i++) {
   else if (args[i] === '--start') start = Number(args[++i])
   else if (args[i] === '--end') end = Number(args[++i])
   else if (args[i] === '--fps') fps = Number(args[++i])
+  else if (args[i] === '--hardware') hardware = true
+  else if (args[i] === '--entrance') entranceTrajectory = args[++i]
+  else if (args[i] === '--fracture') fractureStyle = args[++i]
 }
 
 await mkdir(outputDir, { recursive: true })
-const browser = await chromium.launch()
+const browser = await chromium.launch(hardware
+  ? { headless: false, channel: 'chrome', args: ['--use-angle=metal'] }
+  : undefined)
 const page = await browser.newPage({ viewport, deviceScaleFactor: dpr })
-await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'load' })
-await page.waitForFunction(() => !!window.__iso, null, { timeout: 15000 })
-await page.waitForFunction(() => window.__iso.sourceReady?.() ?? true, null, { timeout: 15000 })
-await page.evaluate(() => window.__iso.configure({
+await page.goto(process.env.ISO_URL || 'http://localhost:4180/', { waitUntil: 'domcontentloaded' })
+const sceneTimeoutMs = Number(process.env.ISO_SCENE_TIMEOUT_MS || 15000)
+await page.waitForFunction(() => !!window.__iso, null, { timeout: sceneTimeoutMs })
+await page.waitForFunction(() => window.__iso.sourceReady?.() ?? true, null, { timeout: sceneTimeoutMs })
+await page.evaluate(({ entranceTrajectory, fractureStyle }) => window.__iso.configure({
   fragmentsPerPacket: 6,
-  colorScript: 'spectral-pearl',
-  samplingStrategy: 'hybrid',
-}))
+  colorScript: 'information-red',
+  samplingStrategy: 'screen-grid',
+  entranceTrajectory,
+  fractureStyle,
+}), { entranceTrajectory, fractureStyle })
 const count = Math.round((end - start) * fps) + 1
 for (let frame = 0; frame < count; frame++) {
   const t = start + frame / fps
