@@ -2557,3 +2557,91 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/mobile-pass2-hardware-cpu4.webm.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/deterministic/mobile-t13.80.png`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/iphone-simulator/deterministic/desktop-t13.80.png`
+
+## Round 52 — mobile stage, practical light, and true cold paint
+
+The next actual-device review found that the accepted output triangle was not
+the only mobile composition problem. During accumulation the machine occupied
+the middle-left band, its top reel sat directly beneath the fine-print veil,
+and its lower reel ended well above the browser chrome. The result spent the
+bottom quarter of the stage as undifferentiated black while making the film
+mechanism feel tucked behind the proposition. The terminal fan later occupied
+that space, but the preceding physical-film beat remained under-composed.
+
+Three controlled vertical camera offsets were compared on the homepage at
+440x956 while folder motion, threshold, field, horn, machine geometry, timing,
+and output fan remained unchanged:
+
+- `-6%` canvas height: improved separation but left the apparatus timid.
+- `-8%`: materially better use of the stage, with no protected-region contact.
+- `-10%`: selected. The complete optical system fills the lower stage, the
+  upper reel clears the fine print, and the lower reel approaches the natural
+  browser-chrome boundary without clipping.
+
+The camera crop moves the physical machine, folder, threshold, particles, and
+film together, preserving every world-space relationship. The three projected
+deliverables were counter-lifted by `1.55` world units so the accepted clockwise
+triangle does not inherit the machine's lower crop. Deterministic homepage
+inspection at the entrance, full-clear impact, early write, final write,
+projector strike, first output, and terminal state reports zero copy, CTA, and
+viewport collisions.
+
+Lighting was then separated into material practicals rather than a global
+exposure increase. On the mobile camera, the existing cool reel-edge source,
+warm archive source, and coil glint now rise continuously with accumulated
+information. No light or geometry is added and the t=0 light state remains
+identical to the prior accepted prepaint. The lower reel ember receives only a
+small phase-linked baseline lift. This makes the flanges, wound stock, and
+moving film readable without lifting page blacks or putting a luminous machine
+behind the copy.
+
+The projector gate now has a restrained ready state beginning before the first
+registration and reaching full readiness over 1.35s. Ignition grows out of that
+practical instead of switching from a black housing to a hard yellow edge. The
+terminal lamp settles to 32% rather than 18%, while the ready-state residue
+also decays. The final machine is therefore delineated but motionless; it does
+not read as a continuously hot writer. Film texture, 16fps cadence, reels,
+gate, activation times, terminal wording, and output order remain unchanged.
+
+A true Xcode Simulator cold launch also exposed several browser-default white
+frames before Nuxt's external stylesheet arrived. A minimal SSR-inline root
+shell now establishes `#08090a` and `color-scheme: dark` on the first document
+paint. This is global paint hygiene, not a homepage layout edit. The 440x956
+mobile prepaint was translated by the exact selected 96px view offset and
+re-encoded losslessly; because the scene's t=0 lighting remains unchanged, the
+poster and canvas retain the same opening pose rather than recreating the old
+skinny-to-wide or left-nudge defect.
+
+Rejected alternatives:
+
+- Moving individual reel, film, gate, or writer geometry: would break the
+  accepted physical system and merely hide a camera-composition problem.
+- `-6%` and `-8%` offsets: safe, but they did not make full use of the mobile
+  stage.
+- Letting the output fan follow the `-10%` crop: pushed the lower deliverables
+  toward the browser boundary and weakened the accepted terminal triangle.
+- Global ambient, exposure, bloom, or halo inflation: would flatten the noir
+  hierarchy, contaminate page blacks, and still fail to explain the machine's
+  materials.
+- A bright persistent gate: read as a screen or status LED rather than a
+  physical lamp room.
+
+Repository verification on 2026-08-22: `git diff --check` passed, `bun run
+generate` completed with the existing non-fatal sourcemap warnings, and `bun
+run qa:smoke` passed all 44 tests in 1.2 minutes. The scene changes add no draw
+calls, textures, uploads, or simulated bodies; they alter only the mobile view
+offset, settled target coordinates, and scalar intensities on existing lights.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r52-baseline/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r53-offset06/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r54-offset08/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r55-offset10/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r56-offset10-outputlift/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-local-continuous.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-local-cold.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-cold-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r58-prepaint/shifted.png`

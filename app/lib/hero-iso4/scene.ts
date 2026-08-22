@@ -625,7 +625,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // Move the complete optical system farther into the left side of the
       // phone frame. This gives the output fan the full canvas rather than
       // making the apparatus and all three deliverables huddle on the right.
-      camera.setViewOffset(W, H, Math.round(W * 0.15), 0, W, H)
+      camera.setViewOffset(W, H, Math.round(W * 0.15), Math.round(H * -0.10), W, H)
     }
     camera.updateProjectionMatrix()
     camera.updateMatrixWorld()
@@ -2689,7 +2689,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // upper-right edge of the clear field, Podcast/RSS remains lower-right,
       // and the portrait anchors the left. This changes only the landing
       // planes; projector, beam order, timing, and machine framing stay fixed.
-      const mobileY = mobileLayout ? [-2.7, -0.72, -0.35][i]! : 0
+      const mobileY = mobileLayout ? [-1.15, 0.83, 1.2][i]! : 0
       const mobileScale = mobileLayout ? [1.18, 1.14, 1.12][i]! : 1
       const target = new THREE.Vector3(
         d.x,
@@ -5251,10 +5251,21 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const chargingActive = completedFrames >= 1 && t <= finalHit + 0.28
     const writerEnvelope = chargingActive ? 1 - minJerk((t - finalHit) / 0.28) : 0
     const chargeRelease = 1 - minJerk((t - finalHit) / Math.max(0.1, BOOT.proj - finalHit + 0.18))
+    // The phone shot previously buried the unlit reel stack in the same
+    // values as the background. Let its existing cool edge and warm archive
+    // practicals wake as information accumulates. This is a material read,
+    // not a global exposure lift: desktop keeps its accepted rig and the
+    // local sources never reach the DOM copy above the machine.
+    const archiveWake = minJerk((t - (FILE_CLEAR_AT + 0.18)) / 3.8)
+    const phonePractical = mobileLayout ? 1 : 0
+    wheelKiss.intensity = 4 + phonePractical * 1.2 * archiveWake
+    archiveGlow.intensity = 2.4 + phonePractical * 0.7 * archiveWake
+    coilGlint.intensity = 1.4 + phonePractical * 0.4 * archiveWake
     for (const mat of lowerChargeMats) {
       mat.emissiveIntensity = 0.005 + chargeProgress * chargeRelease * 0.055 + impactPulse * 0.035
     }
-    lowerReelEmber.intensity = 0.025 + chargeProgress * chargeRelease * 0.22 + impactPulse * 0.18
+    lowerReelEmber.intensity = 0.025 + 0.03 * archiveWake
+      + chargeProgress * chargeRelease * 0.24 + impactPulse * 0.18
     chargeLight.intensity = writerEnvelope * (chargeProgress * 0.06 + writerImpact * 1.25)
     // The writer is persistent neutral hardware. It resolves before the first
     // contact, then only its emissive response pulses; the old disappearing
@@ -5372,12 +5383,25 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         ? 1 + 0.022 * Math.sin(Math.PI * 2 * 0.37 * motionTime)
           + 0.01 * Math.sin(Math.PI * 2 * 0.53 * motionTime + 1.7)
         : 1
-      const terminalLamp = 1 - terminalMachineSettle * 0.82
-      gateGlow.intensity = 2.3 * igf * strike * lampBreath * terminalLamp
-      headGlow.intensity = 2.15 * igf * strike * (1 + (lampBreath - 1) * 0.55) * terminalLamp
-      gateLipMat.emissiveIntensity = 0.008 + 0.034 * igf * lampBreath * terminalLamp
-      payoffTopRimMat.opacity = 0.032 * igf * terminalLamp
-      payoffLowerRimMat.opacity = 0.052 * igf * terminalLamp
+      const terminalLamp = 1 - terminalMachineSettle * 0.68
+      // A projector does not materialize from black on ignition. The decoded
+      // carrier first establishes a restrained ready-state inside the lamp
+      // room; the strike then grows from that practical. Retaining a low,
+      // static residue after wind-down keeps the final machine silhouette
+      // separate from the black stage without suggesting continued activity.
+      const opticalStandby = minJerk((t - (FIRST_ACTIVATION_AT - 0.18)) / 1.35)
+      const standbySettle = 1 - terminalMachineSettle * 0.46
+      gateGlow.intensity = 0.24 * opticalStandby * standbySettle
+        + 2.3 * igf * strike * lampBreath * terminalLamp
+      headGlow.intensity = 0.34 * opticalStandby * standbySettle
+        + 2.15 * igf * strike * (1 + (lampBreath - 1) * 0.55) * terminalLamp
+      gateLipMat.emissiveIntensity = 0.008
+        + 0.007 * opticalStandby * standbySettle
+        + 0.034 * igf * lampBreath * terminalLamp
+      payoffTopRimMat.opacity = 0.007 * opticalStandby * standbySettle
+        + 0.032 * igf * terminalLamp
+      payoffLowerRimMat.opacity = 0.011 * opticalStandby * standbySettle
+        + 0.052 * igf * terminalLamp
       if (gateFrameMat) {
         // The moving film texture already owns the decoded frame. This second
         // optical layer is only a restrained density lift inside the aperture;
