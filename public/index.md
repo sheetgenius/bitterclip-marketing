@@ -70,10 +70,11 @@ finished work, and it gets there by being told what to change.
 
 The BitterClip editor shows the transcript and the source media together.
 Select words, delete them, and the video changes with them. Cuts resolve
-against the actual audio. The homepage shows the editor as a real screenshot:
-open it to check the tape. The agent can still make the cut. You ask for what
-you want — with the built-in agent, or with Claude, ChatGPT, or anything that
-speaks MCP — and any cut is checkable against the exact moment it came from.
+against the actual audio. The homepage How it works section shows the same
+day-one cut as the clip above, open in that editor. Open it to check the
+tape. The agent can still make the cut. You ask for what you want — with
+the built-in agent, or with Claude, ChatGPT, or anything that speaks MCP —
+and any cut is checkable against the exact moment it came from.
 
 The homepage's first section after the fold is titled "Find the Hidden
 Gems." It plays a portrait cut from day one of the Mike and John show.

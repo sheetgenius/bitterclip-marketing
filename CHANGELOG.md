@@ -89,6 +89,12 @@ under a dated entry.
 
 ### Website
 
+- Replaced the How it works screenshot. The section still reads "First, the
+  session is in view," but the picture is now the actual BitterClip editor
+  open on the same day-one cut as `#demo`: Mike on camera, the takes on
+  the filmstrip, and the transcript of him quitting his job. The old
+  clip-demo waveform widget is gone. Copy points at that cut instead of
+  saying the editor is real.
 - Replaced the single-line `#demo` proof ("A line you'd post") with a
   portrait cut from day one of the Mike and John show. The heading is
   "Find the Hidden Gems." The clip is a full-length Zoom, the founder

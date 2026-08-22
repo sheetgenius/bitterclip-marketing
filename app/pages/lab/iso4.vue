@@ -151,26 +151,28 @@ const signupUrl = computed(() => buildSignupUrl({
     </section>
 
     <!-- =================== BELOW THE FOLD · 2: HOW IT WORKS ===================
-         The editor is a REAL screenshot framed as the place you check the
-         tape. The agent can still make the cut. The intro names the
+         Same day-one cut as #demo, open in the actual editor. Aspirin: the
+         tape is checkable. Time: cuts land on the word. The intro names the
          browser recorder so the page cannot be read as "cannot record." -->
     <section id="how" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
-      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
       <!-- Full-width bands, not left-hugging clumps (owner, 2026-08-20): the
            H2 and intro share a two-column header band above the card, and the
            caption splits into two halves spanning the card's width below it. -->
       <div class="substrate-head">
-        <h2 class="font-display max-w-[19ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">First, the session is in view</h2>
+        <div>
+          <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
+          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">First, the session is in view</h2>
+        </div>
         <p class="substrate-intro agent-measure text-base leading-relaxed text-zinc-400">
-          Raw video is a wall of pixels and a waveform. Shoot on a phone, in Zoom, or with BitterClip's own browser recorder, and BitterClip transcribes it, timestamps every word, and splits the voices. After a recording is ready, it reviews the Episode. Cuts land on the word.
+          That clip is still attached to the Zoom it came from. Shoot on a phone, in Zoom, or with BitterClip's own browser recorder, and BitterClip transcribes it, timestamps every word, and splits the voices. Cuts land on the word.
         </p>
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/transcript-editor.png" alt="The BitterClip transcript editor: each speaker's words laid over the audio waveform, with a clip selection dragged across the transcript" class="block w-full" loading="lazy" width="2880" height="880">
+          <img src="/images/hero/sizzle-editor.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" loading="lazy" width="2720" height="1480">
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
-          <p>The editor is real — transcript-driven, frame-accurate. <span class="text-zinc-300">Open it to check the tape.</span></p>
+          <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>
           <p>The agent can still make the cut. You ask for what you want; any cut is checkable against the exact moment it came from.</p>
         </figcaption>
       </figure>
@@ -307,16 +309,17 @@ const signupUrl = computed(() => buildSignupUrl({
   margin-top: 1.25rem;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 80rem) {
   .substrate-head {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    column-gap: 4rem;
+    grid-template-columns: auto minmax(22rem, 1fr);
+    column-gap: 3.25rem;
     align-items: end;
   }
 
   .substrate-intro {
     margin-top: 0;
+    max-width: 34rem;
   }
 }
 
