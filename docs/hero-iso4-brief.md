@@ -110,6 +110,51 @@ Canonical nominal and 2x-slow-GPU telemetry must therefore keep both fresh-gate
 phase maxima at one frame or less, including when the honest answer is a
 deterministic fallback.
 
+**Binding Artifact delivery ruling (2026-08-23).** ISO4 now has one editable
+scene and two deliberate delivery modes. Development keeps the live Three.js
+scene on the canonical homepage, including deterministic seeking and release
+diagnostics. A production build imports no Three.js scene code: it server-renders
+the exact opening poster, selects one immutable responsive H.264 generation,
+plays it once behind the real HTML proposition, and hands off to the exact
+terminal poster before releasing the decoder. If that poster cannot decode, the
+ended video and decoder remain parked on the same terminal frame rather than
+flashing back to the opening. It never loops, restarts during a
+visit, or substitutes a production-only animation. Reduced motion presents the
+terminal poster; data-saver and autoplay/decode failure preserve the opening
+poster. The poster, movie, and terminal image must share one camera geometry,
+and the first movie frame must be presented before the 180ms opacity exchange.
+
+Release rendering uses the homepage WebGL backing store, not an element
+screenshot and not `/lab/iso4`. The renderer installs all 288 native 24fps
+Episode 1 frames as lossless content-addressed atlases before frame zero. An
+asynchronous `renderFrame(t)` resolves only after the requested source revision,
+the analytically reconstructed 36-slot film history, gate/output canvases,
+CanvasTextures, and WebGL finish agree. The accepted 60fps generation contains
+841 scene samples from `0` through `14.000s`, followed by 21 byte-identical
+terminal samples: 862 frames and `14.366667s` total. Routine `still(t)` remains a
+fast fallback-media QA hook and is never release evidence.
+
+The accepted web encode is silent H.264 High Profile in MP4, constant 60fps,
+`yuv420p`, BT.709, `+faststart`, a two-second GOP, slow preset, and CRF 18.
+Opening and terminal posters are lossless WebP decoded from the selected H.264
+frames through a metadata-free RGB bridge; this avoids the color-managed WebP
+darkening found during the workshop. Six camera masters remain: mobile, tablet,
+tall, classic, standard, and ultrawide. All coded dimensions are explicit and
+even; the 1817px tall acceptance viewport uses an 1818px master with a centered
+half-pixel edge crop rather than silent encoder truncation. The ultrawide master serves the accepted
+wide/panoramic/ultrawide band only; it may not replace the distinct tall,
+classic, or standard compositions.
+
+Generated media never enters this repository. A small checked-in manifest may
+select only a ready, accepted BitterClip Artifact generation at immutable
+content-addressed URLs. Definition fingerprints include declared scene/media
+inputs, renderer/browser identity, canvas/DPR/fps/timeline settings, and encode
+configuration. An unchanged fingerprint reuses its generation. Publication is
+create-only and validation precedes acceptance; failure leaves the existing
+manifest and accepted generation untouched. Rollback selects a previous ready
+generation and never rerenders. This addendum supersedes the later historical
+claim that Three.js is dynamically imported from a lab route only.
+
 - The machine is a **large, vertically stacked dual-reel projector** occupying
   roughly 85% of the available composition. It remains a supporting character
   through darkness and selective practical light, not through small scale.

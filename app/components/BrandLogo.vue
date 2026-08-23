@@ -14,37 +14,3 @@ defineProps<{ tag?: string }>()
     <span v-if="tag" class="brand__tag">{{ tag }}</span>
   </NuxtLink>
 </template>
-
-<style scoped>
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-.brand__icon {
-  width: 1.4rem;
-  height: 1.4rem;
-  color: #f28f84;
-  transition: color 0.3s;
-}
-.brand:hover .brand__icon {
-  color: #ffb9af;
-}
-.brand__word {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #f4f4f5;
-}
-.brand__tag {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #f28f84;
-  border: 1px solid rgba(242, 143, 132, 0.3);
-  border-radius: 9999px;
-  padding: 0.1rem 0.45rem;
-}
-</style>

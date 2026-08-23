@@ -25,6 +25,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 
 export interface Iso4Scene {
   prepare(): void
+  prepareRelease(options: Iso4ReleaseMediaOptions): Promise<Iso4ReleaseMediaReceipt>
+  renderFrame(t: number): Promise<Iso4RenderedFrameReceipt>
   start(): void
   stop(): void
   still(t?: number): void
@@ -35,6 +37,34 @@ export interface Iso4Scene {
   temporal(): Iso4TemporalDiagnostics
   resize(): void
   destroy(): void
+}
+
+export interface Iso4ReleaseMediaOptions {
+  atlasUrls: string[]
+  atlasColumns: number
+  atlasRows: number
+  frameWidth: number
+  frameHeight: number
+  frameCount: number
+  sourceFps: number
+}
+
+export interface Iso4ReleaseMediaReceipt {
+  atlasCount: number
+  frameCount: number
+  sourceFps: number
+  frameWidth: number
+  frameHeight: number
+}
+
+export interface Iso4RenderedFrameReceipt {
+  timelineSeconds: number
+  sourceFrame: number
+  projectionFrame: number
+  writtenFrames: number
+  gateSourceFrame: number
+  canvasWidth: number
+  canvasHeight: number
 }
 
 export type Iso4ColorScript = 'archival-warm' | 'spectral-pearl' | 'bichromatic-field' | 'information-red'
@@ -743,6 +773,13 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   let temporalMediaResetRequested = true
   let refreshBootFileLabel: (() => void) | undefined
   let refreshStaticOutput: (() => void) | undefined
+  type ReleaseMediaBundle = Required<Iso4ReleaseMediaOptions> & {
+    atlases: HTMLImageElement[]
+    framesPerAtlas: number
+  }
+  let releaseMedia: ReleaseMediaBundle | null = null
+  let releaseMediaRevision = 0
+  const releaseFrameCanvasCache = new Map<number, HTMLCanvasElement>()
   const episodeFrames = EPISODE_FRAME_URLS.map((src) => {
     const image = new Image()
     image.decoding = 'async'
@@ -986,6 +1023,69 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
   }
 
+  const releaseMediaFrameIndex = (seconds: number) => {
+    if (!releaseMedia) return mediaFrameIndex(seconds)
+    const duration = releaseMedia.frameCount / releaseMedia.sourceFps
+    const wrapped = ((seconds % duration) + duration) % duration
+    return Math.floor(wrapped * releaseMedia.sourceFps + 1e-4) % releaseMedia.frameCount
+  }
+  const drawReleaseFrameCover = (
+    ctx: CanvasRenderingContext2D,
+    frameIndex: number,
+    dx: number,
+    dy: number,
+    dw: number,
+    dh: number,
+  ) => {
+    const bundle = releaseMedia
+    if (!bundle) return false
+    const normalized = ((Math.round(frameIndex) % bundle.frameCount) + bundle.frameCount) % bundle.frameCount
+    const atlasIndex = Math.floor(normalized / bundle.framesPerAtlas)
+    const frameInAtlas = normalized % bundle.framesPerAtlas
+    const atlas = bundle.atlases[atlasIndex]
+    if (!atlas || !imageReady(atlas)) return false
+    const column = frameInAtlas % bundle.atlasColumns
+    const row = Math.floor(frameInAtlas / bundle.atlasColumns)
+    const sourceAspect = bundle.frameWidth / bundle.frameHeight
+    const targetAspect = dw / dh
+    let sx = column * bundle.frameWidth
+    let sy = row * bundle.frameHeight
+    let sw = bundle.frameWidth
+    let sh = bundle.frameHeight
+    if (sourceAspect > targetAspect) {
+      sw = bundle.frameHeight * targetAspect
+      sx += (bundle.frameWidth - sw) / 2
+    } else {
+      sh = bundle.frameWidth / targetAspect
+      sy += (bundle.frameHeight - sh) / 2
+    }
+    ctx.drawImage(atlas, sx, sy, sw, sh, dx, dy, dw, dh)
+    return true
+  }
+  const releaseFrameCanvas = (frameIndex: number) => {
+    const bundle = releaseMedia
+    if (!bundle) return null
+    const normalized = ((Math.round(frameIndex) % bundle.frameCount) + bundle.frameCount) % bundle.frameCount
+    let frame = releaseFrameCanvasCache.get(normalized)
+    if (!frame) {
+      frame = document.createElement('canvas')
+      frame.width = bundle.frameWidth
+      frame.height = bundle.frameHeight
+      const frameCtx = frame.getContext('2d')!
+      frameCtx.imageSmoothingEnabled = false
+      if (!drawReleaseFrameCover(frameCtx, normalized, 0, 0, frame.width, frame.height)) return null
+      releaseFrameCanvasCache.set(normalized, frame)
+      // Film history retains its own 36 persistent canvases. A small decoded
+      // source cache is enough for the current folder, gate and output frame
+      // while keeping a full 288-frame release bundle comfortably bounded.
+      if (releaseFrameCanvasCache.size > 48) {
+        const oldest = releaseFrameCanvasCache.keys().next().value as number
+        releaseFrameCanvasCache.delete(oldest)
+      }
+    }
+    return frame
+  }
+
   // ---- the shared frame renderer -----------------------------------------
   // One function draws a frame's real Episode 1 coverage, and BOTH the
   // filmstrip and the wall screens call it, so what
@@ -994,7 +1094,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // THE SHOW IS ALWAYS THE SAME SHOW (owner: "stick with the original theme
   // — Mike and John, episode one"). Every frame is coverage of one two-person
   // session: two-shot, Mike close-up, John close-up, and the title card.
-  function renderFrameContent(g2: CanvasRenderingContext2D, w: number, h: number, id: number, captioned: boolean) {
+  function renderFrameContent(
+    g2: CanvasRenderingContext2D,
+    w: number,
+    h: number,
+    id: number,
+    captioned: boolean,
+    mediaFrameOverride: number | null = null,
+  ) {
     const hsh = Math.abs(Math.imul(id | 0, 2654435761)) >>> 0
     const j1 = ((hsh >> 3) % 100) / 100
     // Deterministic stills retain the three editorial angles used throughout
@@ -1005,6 +1112,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     const mike = episodeFrames[0]!
     const john = episodeFrames[1]!
     const johnAlt = episodeFrames[2]!
+    const releaseFrame = releaseMedia
+      ? mediaFrameOverride ?? releaseMediaFrameIndex(id / SOURCE_FPS)
+      : -1
+    const releaseReady = releaseFrame >= 0
+      && Boolean(releaseMedia?.atlases.every((atlas) => imageReady(atlas)))
     const movingMikeReady = movingMediaIsActive()
       && episodeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
     const selected = movingMikeReady
@@ -1014,9 +1126,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         : variant === 1
           ? john
           : johnAlt
-    const canDrawReal = !movingMikeReady && variant === 3
+    const canDrawReal = releaseReady || (!movingMikeReady && variant === 3
       ? imageReady(mike) && imageReady(john)
-      : selected instanceof HTMLVideoElement ? movingMikeReady : imageReady(selected)
+      : selected instanceof HTMLVideoElement ? movingMikeReady : imageReady(selected))
     if (canDrawReal) {
       g2.save()
       g2.imageSmoothingEnabled = true
@@ -1026,7 +1138,9 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // but the previous sepia/desaturation made every exposed frame inherit
       // the stock's ochre edge and cost the real footage useful colour detail.
       g2.filter = 'sepia(0.06) saturate(0.84) contrast(1.12) brightness(0.84)'
-      if (!movingMikeReady && variant === 3) {
+      if (releaseReady) {
+        drawReleaseFrameCover(g2, releaseFrame, 0, 0, w, h)
+      } else if (!movingMikeReady && variant === 3) {
         drawImageCover(g2, mike, 0, 0, w / 2, h)
         drawImageCover(g2, john, w / 2, 0, w / 2, h)
       } else {
@@ -1104,14 +1218,15 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
   // paint it once at fixed resolution, blit forever (the per-frame gradient
   // and blob path-work was a real CPU cost at 60fps)
   const artCache = new Map<string, HTMLCanvasElement>()
-  function frameArt(id: number, captioned: boolean): HTMLCanvasElement {
-    const key = `${episodeMediaRevision}:${movingMediaIsActive() ? 'm' : 's'}:${id}${captioned ? 'c' : 'r'}`
+  function frameArt(id: number, captioned: boolean, mediaFrameOverride: number | null = null): HTMLCanvasElement {
+    const releaseKey = releaseMedia ? `release-${releaseMediaRevision}-${mediaFrameOverride ?? 'clock'}` : 'interactive'
+    const key = `${episodeMediaRevision}:${releaseKey}:${movingMediaIsActive() ? 'm' : 's'}:${id}${captioned ? 'c' : 'r'}`
     let c = artCache.get(key)
     if (!c) {
       c = document.createElement('canvas')
       c.width = 240
       c.height = 136
-      renderFrameContent(c.getContext('2d')!, 240, 136, id, captioned)
+      renderFrameContent(c.getContext('2d')!, 240, 136, id, captioned, mediaFrameOverride)
       artCache.set(key, c)
       if (artCache.size > 48) {
         const first = artCache.keys().next().value as string
@@ -1168,6 +1283,32 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     filmSlotWriteOrdinals[slot] = transportFrame
     filmSlotSourceFrames[slot] = availableSourceFrame
     return slot
+  }
+  const rebuildReleaseFilmSlots = (t: number) => {
+    filmSlotReady.fill(false)
+    filmSlotSourceFrames.fill(-1)
+    filmSlotWriteOrdinals.fill(-1)
+    const completed = writtenFramesAt(t)
+    let latestSlot = -1
+    for (let write = 1; write <= completed; write++) {
+      const transportFrame = write - 1
+      const sourceFrame = releaseMediaFrameIndex(timeForFrame(write))
+      const slot = filmSlot(writerPathCell, transportFrame)
+      const c = filmSlotArt[slot]!
+      renderFrameContent(
+        c.getContext('2d')!,
+        c.width,
+        c.height,
+        writerPathCell - transportFrame,
+        false,
+        sourceFrame,
+      )
+      filmSlotReady[slot] = true
+      filmSlotWriteOrdinals[slot] = transportFrame
+      filmSlotSourceFrames[slot] = sourceFrame
+      latestSlot = slot
+    }
+    return latestSlot
   }
 
   function drawFilm(dist: number, chargedDistance: number) {
@@ -2902,14 +3043,14 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       lx.lineWidth = 2
       lx.stroke()
 
-      const tile = (tx: number, name: string, image: HTMLImageElement) => {
+      const tile = (tx: number, name: string, image: HTMLImageElement | HTMLCanvasElement) => {
         lx.save()
         lx.beginPath()
         lx.roundRect(tx, 124, 276, 310, 13)
         lx.clip()
         lx.fillStyle = '#25262d'
         lx.fillRect(tx, 124, 276, 310)
-        if (imageReady(image)) {
+        if (image instanceof HTMLCanvasElement || imageReady(image)) {
           lx.filter = 'sepia(0.1) saturate(0.8) brightness(0.86)'
           drawImageCover(lx, image, tx, 124, 276, 310)
           lx.filter = 'none'
@@ -2925,8 +3066,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         lx.textBaseline = 'middle'
         lx.fillText(name, tx + 14, 414)
       }
-      tile(36, 'MIKE', episodeFrames[0]!)
-      tile(328, 'JOHN', episodeFrames[1]!)
+      const releasePrimary = releaseFrameCanvas(0)
+      const releaseSecondary = releaseMedia
+        ? releaseFrameCanvas(Math.floor(releaseMedia.frameCount / 2))
+        : null
+      tile(36, 'MIKE', releasePrimary ?? episodeFrames[0]!)
+      tile(328, 'JOHN', releaseSecondary ?? episodeFrames[1]!)
 
       // A literal Zoom/video-camera mark and wordmark establish the source at
       // first glance. The format remains a subordinate archival annotation.
@@ -3597,7 +3742,11 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     // handful of stars that visually dominates the whole source palette.
     seed.sourceLab[0] = THREE.MathUtils.clamp(seed.sourceLab[0], 0.22, 0.82)
     seed.sourceRgb = oklabToRgb(seed.sourceLab)
-    const target = frameArt(seed.targetFrame, false)
+    const target = frameArt(
+      seed.targetFrame,
+      false,
+      releaseMedia ? releaseMediaFrameIndex(timeForFrame(seed.targetFrame)) : null,
+    )
     const targetCtx = target.getContext('2d', { willReadFrequently: true })!
     seed.targetRgb = sampleCanvasRgb(target, targetCtx, seed.sourceU, seed.sourceV)
     seed.targetLab = rgbToOklab(seed.targetRgb)
@@ -5059,6 +5208,12 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       temporalMediaResetRequested = false
     }
     let movingMediaActive = movingMediaIsActive()
+    const releaseMediaActive = Boolean(releaseMedia)
+    let releaseWriterSlot = -1
+    if (releaseMediaActive) {
+      movingMediaActive = false
+      releaseWriterSlot = rebuildReleaseFilmSlots(t)
+    }
     if (movingMediaActive) syncMediaClocks(t)
     const dist = transportDist(t)
     // A real projector holds each frame at the gate, then pulls the strip down
@@ -5333,7 +5488,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           movingMediaActive = false
         }
       }
-      let writerSlot = -1
+      let writerSlot = releaseWriterSlot
       if (movingMediaActive && completedFrames >= 1) {
         const firstWrite = Number.isFinite(lastWrittenFrame)
           ? Math.max(1, lastWrittenFrame + 1)
@@ -5361,6 +5516,7 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
           chargeThumbCanvas.height,
           stableId(writerPathCell, off, filmDist),
           false,
+          releaseMediaActive ? releaseMediaFrameIndex(t) : null,
         )
       }
       chargeThumbTex.needsUpdate = true
@@ -5477,15 +5633,19 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         // head at this actual render instant. Recirculated cells retain the
         // rolling timeline diagnostic.
         const expectedProjectionFrame = gateProjectionPhaseContractActive
-          ? mediaFrameIndex(timeForFrame(writeOrdinal + 1))
-          : mediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+          ? (releaseMediaActive
+              ? releaseMediaFrameIndex(timeForFrame(writeOrdinal + 1))
+              : mediaFrameIndex(timeForFrame(writeOrdinal + 1)))
+          : (releaseMediaActive
+              ? releaseMediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+              : mediaFrameIndex(t - PROJECTION_DELAY_SECONDS))
         if (lastGateSourceFrame >= 0) {
           const frameCount = Math.round(SOURCE_DURATION * SOURCE_FPS)
           let frameError = lastGateSourceFrame - expectedProjectionFrame
           if (frameError > frameCount / 2) frameError -= frameCount
           if (frameError < -frameCount / 2) frameError += frameCount
           gateProjectionPhaseError = frameError
-          if (gateProjectionPhaseContractActive) {
+          if (gateProjectionPhaseContractActive && !releaseMediaActive) {
             freshGateExpectedTimelineError = frameError
             maxFreshGateExpectedTimelineError = Math.max(
               maxFreshGateExpectedTimelineError,
@@ -5553,19 +5713,30 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
         }
         if (!movingMediaActive || projectionVideo.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
           const outputPrepStarted = performance.now()
-          const haveProjectionFrame = projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
-          const outputMediaTime = haveProjectionFrame
-            ? wrapMediaTime(projectionVideo.currentTime)
-            : wrapMediaTime(elapsed - PROJECTION_DELAY_SECONDS)
+          const releaseProjectionFrame = releaseMediaActive
+            ? releaseMediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+            : -1
+          const releaseProjectionArt = releaseProjectionFrame >= 0
+            ? releaseFrameCanvas(releaseProjectionFrame)
+            : null
+          const haveProjectionFrame = !releaseMediaActive
+            && projectionVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
+          const outputMediaTime = releaseMediaActive
+            ? ((t - PROJECTION_DELAY_SECONDS) % SOURCE_DURATION + SOURCE_DURATION) % SOURCE_DURATION
+            : haveProjectionFrame
+              ? wrapMediaTime(projectionVideo.currentTime)
+              : wrapMediaTime(elapsed - PROJECTION_DELAY_SECONDS)
           for (let i = 0; i < screenCtxs.length; i++) {
             drawScreen(
               screenCtxs[i]!,
-              id,
+              releaseMediaActive ? releaseProjectionFrame : id,
               haveProjectionFrame,
               outputMediaTime,
               outputTerminalProgressAt(t, FAN[i]!.sequence),
+              releaseProjectionArt,
             )
           }
+          if (releaseMediaActive) lastProjectionSourceFrame = releaseProjectionFrame
           recordTiming(outputTexturePrepTimes, performance.now() - outputPrepStarted)
         }
       }
@@ -5629,9 +5800,21 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // its short physical coast at TERMINAL_STOP_AT; no hidden animation or
       // video loop remains alive behind the receipts.
       if (!terminalMediaPaused && t >= OUTPUT_TERMINAL_COMPLETE) {
-        const sourceFrame = presentedMediaFrameIndex(projectionVideo.currentTime)
+        const sourceFrame = releaseMediaActive
+          ? releaseMediaFrameIndex(t - PROJECTION_DELAY_SECONDS)
+          : presentedMediaFrameIndex(projectionVideo.currentTime)
+        const releaseTerminalArt = releaseMediaActive ? releaseFrameCanvas(sourceFrame) : null
         for (let i = 0; i < screenCtxs.length; i++) {
-          drawScreen(screenCtxs[i]!, sourceFrame, true, projectionVideo.currentTime, 1)
+          drawScreen(
+            screenCtxs[i]!,
+            sourceFrame,
+            !releaseMediaActive,
+            releaseMediaActive
+              ? ((t - PROJECTION_DELAY_SECONDS) % SOURCE_DURATION + SOURCE_DURATION) % SOURCE_DURATION
+              : projectionVideo.currentTime,
+            1,
+            releaseTerminalArt,
+          )
         }
         terminalMediaPaused = true
         movingMediaPlaying = false
@@ -6141,8 +6324,172 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
       // before takeover, but the live entrance no longer pays shader cost.
       draw(FILE_APEX_AT)
     },
+    async prepareRelease(options: Iso4ReleaseMediaOptions) {
+      this.stop()
+      const atlasColumns = Math.trunc(options.atlasColumns)
+      const atlasRows = Math.trunc(options.atlasRows)
+      const frameWidth = Math.trunc(options.frameWidth)
+      const frameHeight = Math.trunc(options.frameHeight)
+      const frameCount = Math.trunc(options.frameCount)
+      const sourceFps = Number(options.sourceFps)
+      const framesPerAtlas = atlasColumns * atlasRows
+      if (!(atlasColumns > 0 && atlasRows > 0 && frameWidth > 0 && frameHeight > 0)) {
+        throw new Error('release atlas geometry must be positive')
+      }
+      if (!(frameCount > 0 && sourceFps > 0)) {
+        throw new Error('release media frameCount and sourceFps must be positive')
+      }
+      const requiredAtlases = Math.ceil(frameCount / framesPerAtlas)
+      if (options.atlasUrls.length !== requiredAtlases) {
+        throw new Error(`release media requires exactly ${requiredAtlases} atlases`)
+      }
+      const atlases = await Promise.all(options.atlasUrls.map((src, index) => new Promise<HTMLImageElement>((resolve, reject) => {
+        const image = new Image()
+        image.decoding = 'async'
+        image.addEventListener('load', () => {
+          const expectedWidth = atlasColumns * frameWidth
+          const expectedHeight = atlasRows * frameHeight
+          if (image.naturalWidth !== expectedWidth || image.naturalHeight !== expectedHeight) {
+            reject(new Error(
+              `release atlas ${index} is ${image.naturalWidth}x${image.naturalHeight}; expected ${expectedWidth}x${expectedHeight}`,
+            ))
+            return
+          }
+          // `load` proves the bytes and dimensions are available, but Chrome
+          // may still defer the WebP decode until the first drawImage call.
+          // That made the first hardware visit to a media-heavy frame differ
+          // subtly from repeat visits. The release contract must not let lazy
+          // decode become hidden timeline state.
+          void image.decode().then(() => resolve(image), reject)
+        }, { once: true })
+        image.addEventListener('error', () => reject(new Error(`release atlas ${index} failed to load`)), { once: true })
+        image.src = src
+      })))
+      releaseMedia = {
+        atlasUrls: [...options.atlasUrls],
+        atlasColumns,
+        atlasRows,
+        frameWidth,
+        frameHeight,
+        frameCount,
+        sourceFps,
+        atlases,
+        framesPerAtlas,
+      }
+      releaseMediaRevision += 1
+      releaseFrameCanvasCache.clear()
+      artCache.clear()
+      useMovingMedia = false
+      movingMediaPlaying = false
+      hasLiveMediaHistory = false
+      terminalMediaPaused = false
+      temporalMediaResetRequested = true
+      mediaPlayAttempt += 1
+      episodeVideo.pause()
+      projectionVideo.pause()
+      cancelProjectionFrame()
+      refreshBootFileLabel?.()
+      for (const seed of bitsSeed) seed.sampledRevision = -1
+      sourceMappingRevision = -1
+      assignSourceMappings(true)
+      // Prime every persistent physical slot, emitted source identity, output
+      // treatment, and hardware shader/texture variant from the analytic
+      // terminal state before exposing frame zero. Without this pass, the
+      // first visit to a fully developed film loop could differ subtly from a
+      // later out-of-order visit because those persistent canvases had not yet
+      // carried all 36 exact source frames. Release seeking must not require a
+      // hidden chronological walk.
+      elapsed = TERMINAL_STOP_AT
+      layout()
+      shadowTick = 0
+      draw(TERMINAL_STOP_AT)
+      renderer.getContext().finish()
+
+      terminalMediaPaused = false
+      temporalMediaResetRequested = true
+      lastFilmFrame = Number.NaN
+      lastWrittenFrame = Number.NaN
+      lastGateId = Number.NaN
+      lastProjectedVideoRevision = Number.NaN
+      lastProjectionSourceFrame = -1
+      screenCtxs.forEach((screen) => { screen.terminalSettled = false })
+      lastOutputTextureAt = Number.NaN
+      firstOutputTextureLatency = Number.NaN
+      firstBeamObserved = false
+      longestOutputHold = 0
+      outputTextureRevision = 0
+      missedProjectionFrames = 0
+      missedMechanicalTicks = 0
+      gateProjectionPhaseContractActive = false
+      projectionPresentationTimes.length = 0
+      outputTextureTimes.length = 0
+      renderFrameTimes.length = 0
+      updateWallTimes.length = 0
+      renderWallTimes.length = 0
+      filmTexturePrepTimes.length = 0
+      outputTexturePrepTimes.length = 0
+      elapsed = 0
+      layout()
+      shadowTick = 0
+      draw(0)
+      renderer.getContext().finish()
+      return {
+        atlasCount: atlases.length,
+        frameCount,
+        sourceFps,
+        frameWidth,
+        frameHeight,
+      }
+    },
+    async renderFrame(t: number) {
+      if (!releaseMedia) throw new Error('prepareRelease must complete before renderFrame')
+      if (!Number.isFinite(t) || t < 0) throw new Error('renderFrame time must be a finite non-negative number')
+      this.stop()
+      useMovingMedia = false
+      movingMediaPlaying = false
+      hasLiveMediaHistory = false
+      // Run one complete, unobserved materialization pass before the
+      // authoritative pass. Persistent film/output canvases are intentionally
+      // reused in the live scene; on hardware their first full rewrite can
+      // settle one upload later than geometry. Reconstituting the same
+      // analytic state twice removes that hidden first-visit distinction while
+      // retaining arbitrary seek order. This is offline-only and advances no
+      // timeline clock: every pass uses the identical `t`.
+      for (let pass = 0; pass < 2; pass++) {
+        terminalMediaPaused = false
+        temporalMediaResetRequested = true
+        lastFilmFrame = Number.NaN
+        lastWrittenFrame = Number.NaN
+        lastGateId = Number.NaN
+        lastProjectedVideoRevision = Number.NaN
+        screenCtxs.forEach((screen) => { screen.terminalSettled = false })
+        elapsed = t
+        layout()
+        shadowTick = 0
+        draw(t)
+        renderer.getContext().finish()
+        draw(t)
+        renderer.getContext().finish()
+      }
+      // The release contract resolves only after CanvasTextures have been
+      // uploaded and the compositor has finished the requested backing-store
+      // frame. This is an offline bake path, so a deliberate GPU fence is
+      // preferable to a race against the next animation callback.
+      renderer.getContext().finish()
+      return {
+        timelineSeconds: Number(t.toFixed(6)),
+        sourceFrame: releaseMediaFrameIndex(t),
+        projectionFrame: releaseMediaFrameIndex(t - PROJECTION_DELAY_SECONDS),
+        writtenFrames: writtenFramesAt(t),
+        gateSourceFrame: lastGateSourceFrame,
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+      }
+    },
     sourceReady() {
-      return episodeFrames.every((image) => imageReady(image))
+      return releaseMedia
+        ? releaseMedia.atlases.every((image) => imageReady(image))
+        : episodeFrames.every((image) => imageReady(image))
     },
     configure(options: Partial<Iso4WorkshopOptions>) {
       const fragments = options.fragmentsPerPacket ?? workshopOptions.fragmentsPerPacket
@@ -6347,6 +6694,8 @@ export function createIso4(canvas: HTMLCanvasElement): Iso4Scene {
     },
     destroy() {
       this.stop()
+      releaseMedia = null
+      releaseFrameCanvasCache.clear()
       episodeVideo.removeAttribute('src')
       episodeVideo.load()
       projectionVideo.removeAttribute('src')

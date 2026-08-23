@@ -4,7 +4,7 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await page.goto('/')
 
   await expect(page.locator('link[rel="canonical"][href="https://bitterclip.com/"]')).toHaveCount(1)
-  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/index.md"]')).toHaveCount(1)
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/index.md"]')).toHaveAttribute('title', 'BitterClip homepage Markdown')
   const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
   expect(jsonLd).toContain('SoftwareApplication')
   expect(jsonLd).toContain('FAQPage')
@@ -46,7 +46,10 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
     'Bring one recording. Leave with the episode.',
   ])
   await expect(page.locator('#demo').getByRole('heading', { name: 'Find the Hidden Gems' })).toBeVisible()
-  await expect(page.locator('#demo video[title^="Watch:"] source')).toHaveAttribute('src', /day-1-sizzle\.mp4/)
+  const proofVideo = page.locator('#demo video[title^="Watch:"]')
+  await expect(proofVideo).toHaveAttribute('data-deferred-src', /day-1-sizzle\.mp4/)
+  await proofVideo.scrollIntoViewIfNeeded()
+  await expect(proofVideo.locator('source')).toHaveAttribute('src', /day-1-sizzle\.mp4/)
   await expect(page.locator('#demo').getByRole('button', { name: 'v2 now' })).toHaveCount(0)
   await expect(page.locator('#demo').getByRole('button', { name: 'v1 first cut' })).toHaveCount(0)
   await expect(page.getByText('getting anyone to know or care about your product')).toBeVisible()
@@ -55,7 +58,10 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
   await expect(page.getByText('Open it to check the tape.')).toBeVisible()
-  await expect(page.locator('#how img')).toHaveAttribute('src', /sizzle-editor-2/)
+  const editorImage = page.locator('#how img')
+  await expect(editorImage).toHaveAttribute('data-deferred-src', /sizzle-editor-2/)
+  await editorImage.scrollIntoViewIfNeeded()
+  await expect(editorImage).toHaveAttribute('src', /sizzle-editor-2/)
   await expect(page.getByText('The editor is real')).toHaveCount(0)
   await expect(page.getByText('reviews the Episode')).toHaveCount(0)
   await expect(page.getByText('Intro drags. Start on the squat.')).toBeVisible()
@@ -87,6 +93,11 @@ test('keeps the pre-swap homepage soaking at /classic, noindexed', async ({ page
 
 test('records a sitewide signup CTA event without navigating', async ({ page }) => {
   await page.goto('/?utm_source=newsletter&utm_campaign=summer_launch')
+
+  const signupCta = page.getByRole('link', { name: /Start free/ }).first()
+  // Seeing the client-owned campaign URL proves hydration and the analytics
+  // plugin have installed before this synthetic click races the capture hook.
+  await expect(signupCta).toHaveAttribute('href', /utm_source=newsletter/)
 
   await page.evaluate(() => {
     const anchor = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))

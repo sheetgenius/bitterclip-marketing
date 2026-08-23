@@ -24,6 +24,9 @@ test.describe('pricing section', () => {
     await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
 
     const heroCta = page.getByRole('link', { name: /Start free/ }).first()
+    // The static HTML intentionally carries the unattributed fallback. Wait for
+    // Nuxt to own the route query before asserting the client-side handoff.
+    await expect(heroCta).toHaveAttribute('href', /utm_source=google/)
     const initialUrl = new URL(String(await heroCta.getAttribute('href')))
     expect(initialUrl.searchParams.get('utm_source')).toBe('google')
     expect(initialUrl.searchParams.get('utm_medium')).toBe('cpc')

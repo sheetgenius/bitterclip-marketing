@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import ibmPlexMonoLatinUrl from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url'
 
 // The one top bar for the whole site — marketing pages and the docs shell both
 // mount this, so the pill, the type, the glass, and the link set cannot drift.
@@ -43,6 +44,16 @@ const menuOpen = defineModel<boolean>('menuOpen', { default: false })
 
 const route = useRoute()
 const currentPath = computed(() => route.path.replace(/\/+$/, '') || '/')
+
+useHead({
+  link: [{
+    rel: 'preload',
+    as: 'font',
+    type: 'font/woff2',
+    href: ibmPlexMonoLatinUrl,
+    crossorigin: 'anonymous',
+  }],
+})
 
 // Match on the path only, and never on '/'. vue-router marks /#demo and
 // /#pricing active together on every homepage visit, which would light up two

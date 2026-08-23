@@ -135,7 +135,7 @@ const structuredData = [
 useHead({
   link: [
     { rel: 'canonical', href: 'https://bitterclip.com/' },
-    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/index.md', title: 'BitterClip Markdown' },
+    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/index.md', title: 'BitterClip homepage Markdown' },
   ],
   meta: [
     { property: 'og:url', content: 'https://bitterclip.com/' },
@@ -205,18 +205,17 @@ useHead({
       <div class="proof-stage">
         <figure class="proof-player">
           <div class="proof-frame agent-card overflow-hidden rounded-2xl border">
-            <video
+            <DeferredVideo
               class="block aspect-[9/16] w-full bg-black"
               poster="/clips/day-1-sizzle-poster.jpg"
+              src="/clips/day-1-sizzle.mp4"
+              type="video/mp4"
               controls
               playsinline
-              preload="metadata"
               width="1080"
               height="1920"
               title="Watch: Michael Ruescher on quitting to build bitter.sh"
-            >
-              <source src="/clips/day-1-sizzle.mp4" type="video/mp4">
-            </video>
+            />
           </div>
           <figcaption class="proof-caption">
             The rest of the hours are still on the tape.
@@ -228,7 +227,7 @@ useHead({
               &ldquo;I built BitterClip for myself because I realized <span class="text-white">the most important thing about being a founder is getting anyone to know or care about your product.</span>&rdquo;
             </blockquote>
             <figcaption>
-              <img src="/images/michael_ruescher.jpg" alt="Michael Ruescher" width="48" height="48" loading="lazy">
+              <DeferredImage src="/images/michael_ruescher.jpg" alt="Michael Ruescher" width="48" height="48" />
               <div>
                 <span class="proof-quote-name">Michael Ruescher</span>
                 <span class="proof-quote-role">Founder · <a href="https://bitter.sh/" target="_blank" rel="noopener">Bitter.sh</a></span>
@@ -240,7 +239,7 @@ useHead({
               &ldquo;Working through session footage is <span class="text-white">the worst three hours of my week &mdash; and the most important.</span> It&rsquo;s how I remember exactly what happened with a client and build on it next session.&rdquo;
             </blockquote>
             <figcaption>
-              <img src="/images/andrew_williams_strength_and_positions_coach.jpg" alt="Andrew Williams" width="48" height="48" loading="lazy">
+              <DeferredImage src="/images/andrew_williams_strength_and_positions_coach.jpg" alt="Andrew Williams" width="48" height="48" />
               <div>
                 <span class="proof-quote-name">Andrew Williams</span>
                 <span class="proof-quote-role">Head Coach · <a href="https://www.strengthandpositions.com/coaches" target="_blank" rel="noopener">Strength &amp; Positions</a></span>
@@ -252,7 +251,7 @@ useHead({
               &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
             </blockquote>
             <figcaption>
-              <img src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" loading="lazy">
+              <DeferredImage src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" />
               <div>
                 <span class="proof-quote-name">Rohan Karunakaran</span>
                 <span class="proof-quote-role">Founder · <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener">Frontier Studio</a></span>
@@ -280,7 +279,7 @@ useHead({
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/sizzle-editor-2.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the clip description beside him, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" loading="lazy" width="2720" height="1480">
+          <DeferredImage src="/images/hero/sizzle-editor-2.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the clip description beside him, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" width="2720" height="1480" />
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>

@@ -13,9 +13,16 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "artifact:bake": "node qa/iso4-artifact-bake.mjs",
+    "artifact:encode": "node qa/iso4-artifact-encode.mjs",
+    "artifact:packet": "node qa/iso4-artifact-packet.mjs",
+    "qa:lighthouse-static": "node qa/lighthouse-static.mjs",
     "qa:smoke": "playwright test"
   },
   "dependencies": {
+    "@fontsource-variable/caveat": "5.3.0",
+    "@fontsource-variable/manrope": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
     "@nuxt/content": "^3.14.0",
     "better-sqlite3": "^12.11.1",
     "nuxt": "^4.4.4",

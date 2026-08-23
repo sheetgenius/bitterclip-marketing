@@ -89,6 +89,17 @@ under a dated entry.
 
 ### Website
 
+- Split the ISO4 homepage cinematic into one live authoring scene and one
+  production delivery shell. Development keeps the deterministic Three.js
+  workshop; public builds use one responsive, non-looping video over an exact
+  opening poster, then release the decoder behind an exact motionless terminal
+  poster. Navigation, proposition, calls to action, and accessibility structure
+  remain HTML rather than being baked into the movie.
+- Deferred the homepage's below-fold proof video, customer portraits, and
+  editor screenshot until they approach the viewport. Local versioned fonts,
+  inlined opening-frame styles, precompressed static assets, and a smaller
+  visually equivalent editor image reduce cold-load contention without hiding
+  useful above-fold content.
 - Replaced the How it works screenshot. The section still reads "First, the
   session is in view," but the picture is now the actual BitterClip editor
   open on the same day-one cut as `#demo`: Mike on camera, the clip
@@ -311,6 +322,15 @@ under a dated entry.
 - Added `https://bitterclip.com/terms` and `https://bitterclip.com/terms.md`
   so provider app registration and public users have discoverable terms for the
   website, app, connector, billing, and publishing integrations.
+
+### Deployment
+
+- Added a deliberate ISO4 release baker and publication contract. It renders
+  exact 60fps homepage WebGL frames from all 288 native source-video frames,
+  compares web encodes, packages responsive media and posters with hashes and
+  probe receipts, and selects only immutable content-addressed generation URLs.
+  Generated movies remain outside this public repository and are reused across
+  unrelated website deploys.
 
 ### Repository Metadata
 

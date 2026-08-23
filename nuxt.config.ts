@@ -11,6 +11,9 @@ const gaMeasurementId = 'G-JRVVJM49G7'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
+  features: {
+    inlineStyles: true,
+  },
 
   modules: [
     '@nuxt/content',
@@ -42,6 +45,10 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'static',
+    // Emit immutable gzip/brotli sidecars for the production nginx/CDN path.
+    // Lighthouse against an uncompressed toy server materially understates
+    // the actual static delivery contract.
+    compressPublicAssets: true,
   },
 
   app: {
@@ -74,15 +81,8 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', href: '/icon.png' },
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms.txt', title: 'BitterClip agent index' },
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms-full.txt', title: 'BitterClip full Markdown context' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap' },
       ],
       script: [
-        {
-          src: `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`,
-          async: true,
-        },
         {
           innerHTML: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -91,7 +91,19 @@ gtag('set', 'linker', {
   decorate_forms: true,
 });
 gtag('js', new Date());
-gtag('config', '${gaMeasurementId}');`,
+gtag('config', '${gaMeasurementId}');
+function loadBitterClipAnalytics(){
+  if (document.querySelector('script[data-bitterclip-analytics]')) return;
+  var script = document.createElement('script');
+  script.async = true;
+  script.dataset.bitterclipAnalytics = 'true';
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}';
+  document.head.appendChild(script);
+}
+window.addEventListener('load', function(){
+  if ('requestIdleCallback' in window) requestIdleCallback(loadBitterClipAnalytics, { timeout: 2000 });
+  else setTimeout(loadBitterClipAnalytics, 500);
+}, { once: true });`,
         },
       ],
     },

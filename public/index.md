@@ -30,6 +30,11 @@ podcast/RSS. Directly under the fold is a portrait cut from a full-length
 Zoom: Michael Ruescher quit a twelve-year job to build bitter.sh. Then
 how it works.
 
+That opening is also a BitterClip Artifact. The WebGL scene remains editable in
+the workshop; an accepted release is baked once into immutable responsive video
+generations for the public homepage. It plays once and rests on its finished
+frame instead of asking every visitor's browser to run the simulation.
+
 Free to start — 60 minutes of footage a month. Everything runs in your browser;
 ChatGPT and Claude are optional, over the same work.
 

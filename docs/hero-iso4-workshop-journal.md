@@ -2682,3 +2682,182 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/hostile/contact.png`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/mobile-hardware-rerun.webm.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/mobile-hardware-cpu4.webm.json`
+
+## Round 53 — Artifact-delivery baseline and release-fidelity gap
+
+The production-delivery workshop began from the canonical homepage rather than
+the lab. A Nuxt development audit scored 27 and transferred 11.87MB across 283
+Vite requests, with 4.79s FCP, 9.01s modeled LCP, and 1027ms TBT. That report is
+retained only as development-server evidence; it is not a production score.
+The generated static poster-only homepage immediately scored 96 on desktop with
+925ms FCP, 1.199s LCP, zero TBT, and `.000474` CLS, proving that live Three.js
+construction—not the HTML proposition—owned the avoidable public cost.
+
+Inspection also found a release correctness gap. `window.__iso.still(t)` was
+deterministic for geometry but intentionally substituted three curated JPEG
+angles for moving media. Element screenshots also included later DOM layers.
+Neither path could be used to claim a faithful movie. The accepted release
+surface is therefore the homepage WebGL backing store, and the release contract
+must wait for exact source media and GPU completion.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/performance/lighthouse-desktop-live-2026-08-23.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/lighthouse-static-poster-r1/desktop/`
+
+## Round 54 — deterministic native-media renderer
+
+A release-only media path now extracts all 288 native 640x360, 24fps Episode 1
+frames into twelve lossless WebP atlases before frame zero. `renderFrame(t)`
+selects the exact native frame analytically and uses it for the source folder,
+writer exposure, persistent film history, gate, YouTube output, LinkedIn output,
+and subtitle clock. The 36 film slots are reconstructed from requested time;
+out-of-order renders do not depend on prior RAF callbacks or a video element
+claiming that an asynchronous seek has finished.
+
+The asynchronous hook resolves only after media revision, all film/output
+canvases, CanvasTextures, the WebGL render, and `gl.finish()` agree. Repeating a
+requested time and asking frames sequentially or out of order produces identical
+pixels in the deterministic headless release environment. A hardware Metal
+probe exposed minute near-black state drift, so hardware remains the real-time
+visual witness while the fixed headless renderer is the canonical content hash.
+Routine `still(t)` remains unchanged for fast fallback-media QA.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-artifact-bake-proof-headless-r17/`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-artifact-bake-proof-hardware-r12/`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-artifact-bake-proof-hardware-r13/`
+
+## Round 55 — baker, timeline, poster, and codec selection
+
+The release baker now opens `/`, installs exact media before frame zero, captures
+only the WebGL backing store, and samples exactly 60fps. The frozen timeline is
+841 scene samples from 0 through 14.000s plus 21 byte-identical terminal samples:
+862 frames and 14.366667s. The accepted exploratory wide FFV1 master is
+107,124,131 bytes with SHA-256 prefix `cb50e8`; the 21 terminal frames are exact.
+This exploratory master predates the final clean source revision and is retained
+as pipeline/codec evidence, not the generation selected for publication.
+
+Three controlled H.264 encodes were compared from that master:
+
+- CRF 15: 3,152,574 bytes, SSIM `.999358`, VMAF `96.652`.
+- CRF 18: 2,237,637 bytes, SSIM `.999069`, VMAF `96.114` — selected.
+- CRF 21: 1,576,165 bytes, SSIM `.998675`, VMAF `95.334`.
+
+At 2x inspection CRF 21 began smoothing near-black halos and small subtitle/
+perforation edges. CRF 15 cost another 0.9MB without a visible normal-distance
+gain. The selected encode is silent H.264 High Profile, constant 60fps,
+`yuv420p`, BT.709, `+faststart`, slow preset, and a two-second GOP.
+
+Opening and terminal poster experiments found a separate color-management bug:
+PNG intermediates carrying decoder gamma metadata made nominally lossless WebP
+posters visibly darker. A metadata-free PPM bridge now verifies exact decoded
+RGB identity. The exploratory opening poster is 32,282 bytes; the terminal is
+84,464 bytes. Smaller quality-92 posters were rejected because global dark-image
+metrics and direct fades revealed subtle black-level movement.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/wide-1600x900-r3/release-receipt.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/wide-encodes-r1/encode-receipt.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/wide-compression-review-r1/`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/poster-debug-r1/`
+
+## Round 56 — production shell and responsive master boundary
+
+`HeroIso4.vue` is now one delivery shell. Development defaults to the live scene
+and keeps deterministic hooks; a development-only diagnostic can compare local
+movie/poster candidates. Production cannot opt into the scene. It SSRs the
+opening picture, selects exactly one responsive movie in JavaScript, waits for a
+presented video frame before the 180ms exchange, plays once, pauses offscreen,
+resumes at the same time, hands off to the exact terminal poster, releases the
+decoder, and never restarts during the visit. Reduced motion goes directly to
+the terminal poster; data-saver, autoplay denial, and decode failure keep the
+opening poster. `isolation:isolate` is binding: without it the opaque movie
+escaped the local z-stack and covered the real proposition and CTA.
+
+Eight accepted prepaint camera families were compared by crop rather than by
+filename. Tall versus classic measured SSIM `.9436`; wide versus standard
+`.9422`, proving those compositions are not interchangeable. Panoramic versus
+wide measured `.9934`, and ultrawide versus panoramic `.9973`. The release
+inventory therefore collapses only the wide/panoramic/ultrawide band and keeps
+six masters: mobile 440x956, tablet 768x900, tall 1817x1454, classic 1400x1000,
+standard 1600x1000, and ultrawide 1920x900.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/responsive-prepaint-review-r1/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/wide-packet-r1/`
+
+## Round 57 — loading, compression, and Lighthouse closure
+
+The initial generated mobile audit looked worse than the page actually painted:
+Chrome observed the heading at roughly 113ms, but Lantern modeled LCP above five
+seconds because the toy server and current production path served raw HTML/CSS.
+Nitro now emits gzip and Brotli sidecars; nginx serves them with `Vary:
+Accept-Encoding` and a bounded dynamic-gzip fallback. The Lighthouse harness
+fails closed unless both the document and a real JS/CSS asset are compressed.
+It also rejects a Vite/Nuxt development response by default.
+
+Two render-blocking component sheets were moved byte-for-byte into the already
+inlined global critical CSS. The three IBM Plex Mono weight requests were
+reduced to one bounded Latin face. A 505KB lossless below-fold editor screenshot
+was conservatively re-encoded at quality 84 with `sharp_yuv`: 121,216 bytes,
+SSIM `.995539`, with no visible face, timeline, or transcript-edge loss at its
+display scale. More aggressive 76/80 candidates were smaller but unnecessary.
+
+A controlled request-block audit then isolated the final modeled LCP cost:
+five below-fold proof/editor assets were competing inside Chrome's broad native
+lazy-load horizon. Removing them diagnostically produced Performance 97 and
+2.23s LCP. The production correction is not request blocking: those assets now
+SSR as dimensioned placeholders and load through an IntersectionObserver 200px
+before view. The same media, alt text, controls, and intrinsic sizes remain.
+
+Final three-run generated-static medians before publication media is added:
+
+- Mobile: Performance 97, FCP 1.729s, LCP 2.479s, TBT 15ms, CLS 0, 351,745
+  transferred bytes, 27 requests.
+- Desktop: Performance 100, FCP 423ms, LCP 564ms, TBT 0, CLS 0, 460,809
+  transferred bytes, 39 requests.
+
+Inlining Manrope, replacing it with the system font, and further analytics
+delay were rejected: none improved the modeled LCP and each either increased
+document bytes or weakened typography. Compression and intentional below-fold
+custody solved the actual network problem without delaying meaningful hero
+content.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/image-compression/full-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/image-compression/detail-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/lighthouse/mobile-critical-css-r1/`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/lighthouse/no-below-images-diagnostic/`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/lighthouse/mobile-deferred-media-r1/summary.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/lighthouse/desktop-deferred-media-r1/summary.json`
+
+## Round 58 — minimum real BitterClip Artifact custody
+
+The product slice is deliberately narrower than a universal runtime. BitterClip
+now models account-owned immutable Artifact definitions and content-addressed
+generations, with declared sources, responsive assets, opening/terminal posters,
+probe receipts, ready/failed/ambiguous state, accepted-generation selection,
+generation reuse, and rollback. It reuses the good custody properties of the
+identity-moment bake without inheriting mandatory audio or one-second opener
+semantics. No arbitrary scene execution, host-DOM access, editor-only animation,
+or IdentityMomentBake behavior was added.
+
+The publication path performs all local preflight before claiming an attempt,
+uses create-only conditional S3 writes, adopts a pre-existing object only after
+exact byte/hash verification, fences stale attempts, and moves uncertain remote
+effects into explicit reconcile-first ambiguity. Database triggers guard
+registration, custody state transitions, and acceptance selection; acceptance
+uses an integer CAS and returns closed typed outcomes. The independent final
+fencing audit found no unresolved P0/P1 issue. The focused Artifact/S3/account
+deletion matrix passed 119 runs and 980 assertions; Zeitwerk, RuboCop, migration
+parity, and `git diff --check` passed. Publication and acceptance remain separate
+operations so an uploaded candidate cannot silently replace the homepage.
+
+Product contract:
+
+- `/Users/c3po/co/bitterclip/docs/build/artifact-generation-custody-contract-2026-08-23.md`
