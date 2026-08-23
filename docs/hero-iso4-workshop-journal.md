@@ -2603,14 +2603,18 @@ also decays. The final machine is therefore delineated but motionless; it does
 not read as a continuously hot writer. Film texture, 16fps cadence, reels,
 gate, activation times, terminal wording, and output order remain unchanged.
 
-A true Xcode Simulator cold launch also exposed several browser-default white
-frames before Nuxt's external stylesheet arrived. A minimal SSR-inline root
-shell now establishes `#08090a` and `color-scheme: dark` on the first document
-paint. This is global paint hygiene, not a homepage layout edit. The 440x956
-mobile prepaint was translated by the exact selected 96px view offset and
-re-encoded losslessly; because the scene's t=0 lighting remains unchanged, the
-poster and canvas retain the same opening pose rather than recreating the old
-skinny-to-wide or left-nudge defect.
+A true Xcode Simulator cold launch also exposed browser-default white before
+the first response. A minimal SSR-inline root shell now establishes `#08090a`
+and `color-scheme: dark` as soon as homepage HTML arrives, preventing a second
+response-to-stylesheet white paint. This is global paint hygiene, not a
+homepage layout edit. It cannot recolor Safari's pre-response canvas: a
+force-quit production launch still showed that browser-owned white interval
+before the server response, and this remains an honest P2 platform boundary.
+Once product HTML lands, its first frame is dark. The 440x956 mobile prepaint
+was translated by the exact selected 96px view offset and re-encoded losslessly;
+because the scene's t=0 lighting remains unchanged, the poster and canvas
+retain the same opening pose rather than recreating the old skinny-to-wide or
+left-nudge defect.
 
 Rejected alternatives:
 
@@ -2632,6 +2636,30 @@ run qa:smoke` passed all 44 tests in 1.2 minutes. The scene changes add no draw
 calls, textures, uploads, or simulated bodies; they alter only the mobile view
 offset, settled target coordinates, and scalar intensities on existing lights.
 
+Production commit `159f31d` deployed through BitterGrid and `/up` returned
+`ok`. Deterministic production homepage captures at 440x956 DPR2, 1600x900,
+and 1817x1454 completed every mechanical beat and all three terminal outputs
+with zero copy, CTA, or viewport collisions. The 10fps Simulator handoff sheet
+shows the translated prepaint and live t=0 machine holding one pose; no reel
+width change or horizontal nudge is visible.
+
+Apple M2 Max / Metal production telemetry at 440x956 DPR2 remained inside the
+previous acceptance envelope. A clean nominal rerun reached scene readiness in
+`1439.4ms`, sustained `117.335–120fps`, and measured `1.9ms` maximum rolling
+render p95 and `2.0ms` maximum rolling update p95. The 4x CPU pass reached
+readiness in `1553.9ms`, sustained `112.513–120fps`, and measured `7.9ms`
+maximum rolling render p95 and `6.7ms` update p95. Both completed 36 writes,
+three outputs, terminal media pause, and zero mechanical or projection misses,
+errors, quality fallback, or protected-region collisions. One earlier nominal
+cold run invoked the deterministic media safeguard at 5.54s despite zero
+mechanical misses; an immediate identical rerun stayed on live media. The
+safeguard preserved the sequence, but that provider/browser startup variance
+is recorded rather than hidden.
+
+Grayscale, 46% brightness, quality-38 JPEG compression, and 4.4px device-space
+blur preserve the three terminal planes, primary labels, machine silhouette,
+and clockwise hierarchy. Compression does not reveal rectangular glow edges.
+
 Evidence:
 
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r52-baseline/contact.png`
@@ -2645,3 +2673,12 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-local-cold.mp4`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r57-practical-light/simulator-cold-contact.png`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/r58-prepaint/shifted.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/mobile/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/wide/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/tall/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/simulator/cold-homepage.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/simulator/cold-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/simulator/handoff-contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/hostile/contact.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/mobile-hardware-rerun.webm.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/mobile-cinematography/production/mobile-hardware-cpu4.webm.json`
