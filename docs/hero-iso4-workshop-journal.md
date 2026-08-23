@@ -1746,10 +1746,15 @@ with a reverse-noise lift on the closer. No beat. Captions were moved
 off the face into the lower third and recut so the line stays white
 except one or two lime punch words.
 
-Later rounds of that cut (density, word-clipping, freeze-frame, chill-hop
-bed, the ffmpeg scratch pipeline) are sealed as case
-`docs/cases/2026-08-21-day-one-sizzle-ffmpeg/`, including the finished
-specimen. Do not fold that after-action into this ISO4 motion ledger.
+Later rounds replaced the dense FFmpeg smash reel with the current
+BitterClip-authored day-one cut. The discarded scratch pipeline exposed the
+important durable failures: transcript timestamps were treated as edit
+boundaries, filter-graph mistakes clipped words, density substituted for
+coherent thoughts, and a manually assembled MP4 could not prove the product it
+was selling. The accepted lesson is to preserve complete thoughts, inspect
+supported word edges, and keep the homepage proof source-backed by BitterClip.
+The redundant local specimen, stills, and scripts were intentionally removed
+on 2026-08-23; the canonical demo remains `public/clips/day-1-sizzle.mp4`.
 
 ## Round 42 — the opening file becomes pure information
 

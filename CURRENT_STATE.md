@@ -60,21 +60,6 @@ publication, rollback, and validation.
   static output into nginx.
 - `/up` is the production health check.
 
-## Protected local work at this snapshot
-
-The following untracked paths were already present when this current-state file
-was written. They are not part of the documentation reorganization and must not
-be staged, moved, deleted, or absorbed without explicit ownership:
-
-- `docs/cases/`
-- `docs/day-one-sizzle-before-mcp.md`
-- `public/clips/day-1-sizzle-v1-poster.jpg`
-- `public/clips/day-1-sizzle-v1.mp4`
-- `public/clips/day-1-sizzle-v2.mp4`
-
-The first path contains local/generated visual evidence, including binary media.
-Tracked evidence belongs under ignored `tmp/`, not under `docs/`.
-
 ## Normal verification
 
 ```bash
