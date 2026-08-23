@@ -30,6 +30,12 @@ under a dated entry.
 
 ### Product Context
 
+- Aligned current public pricing language with the canonical offer: the Creator
+  trial lasts exactly seven days and requires a card; it is $0 today, then
+  $24/month unless canceled before the displayed trial end. Producer is $99/month,
+  there is no recurring Free plan, and existing work stays available after
+  cancellation. Calls to action now say "Start Creator trial." Older dated pricing
+  history remains unchanged.
 - Corrected homepage speaker and clipper claims against shipped behavior.
   Voices are split; unnamed speakers stay Speaker 1, Speaker 2 until named in
   the project, and later recognition needs a saved voice and can fail. Search
@@ -83,9 +89,9 @@ under a dated entry.
 - Added an objection-handling answer for people who have tried AI clippers and
   concluded the category does not work, since that skepticism is the acquisition
   wedge rather than an education problem.
-- Left the offer layer untouched. Plans, prices, allowances, plan parameters, and
-  every pricing claim remain exactly as shipped; no part of the pending
-  commercial plan appears in public copy.
+- The preceding homepage product-context pass deliberately left the then-shipped
+  offer unchanged. The pricing-alignment entry above records the later public
+  offer update.
 
 ### Website
 

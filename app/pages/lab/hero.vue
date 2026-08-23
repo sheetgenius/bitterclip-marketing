@@ -24,10 +24,10 @@ useHead({
       </h1>
 
       <a
-        href="https://app.bitterclip.com/sign_up"
+        href="https://app.bitterclip.com/sign_up?plan=clip"
         class="inline-flex items-center gap-2 rounded-full border border-[#f28f84]/60 bg-transparent px-8 py-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#ffd0c7] transition hover:border-[#f28f84] hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       >
-        Get started
+        Start Creator trial
         <span aria-hidden="true">→</span>
       </a>
     </div>

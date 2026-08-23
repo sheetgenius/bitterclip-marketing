@@ -6,7 +6,7 @@ competitorUrl: https://www.capcut.com
 reviewed: 2026-08-17
 competitorStrength: A free, deep, genuinely fun phone editor wired straight into TikTok.
 heroLede: "Stay with CapCut if you make short videos on your phone — the templates, effects, and one tap to TikTok are the point, and much of it is free. Come to BitterClip if you record people talking for an hour or two and the hard part is turning that into a finished episode plus clips, again next week. Record the session in the browser or bring the file you already shot, then edit by deleting words in the transcript, or by asking for the change in ChatGPT or Claude."
-verdictBitterclip: "Pick BitterClip when the hard part is finishing the recording, not shooting it. Record camera and mic straight into the project from a browser, or bring footage from your phone, Zoom, Riverside, or a camera, cut it by deleting words in the transcript, and every clip remembers where it came from — one click jumps back to that spot in the full recording. $0, $9, or $99 a month, monthly only."
+verdictBitterclip: "Pick BitterClip when the hard part is finishing the recording, not shooting it. Record camera and mic straight into the project from a browser, or bring footage from your phone, Zoom, Riverside, or a camera, cut it by deleting words in the transcript, and every clip remembers where it came from — one click jumps back to that spot in the full recording. Creator starts with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed end; Producer is $99/month."
 verdictCompetitor: "Pick CapCut when the video starts on your phone and the look is the point. The template, effects, and sound library is enormous, much of it free, and TikTok is one tap away. The March 2026 restructure put Pro at $19.99/month; the new Standard tier's price appears only in the in-app subscription page."
 rows:
   - axis: Cutting a rambling tangent
@@ -91,8 +91,8 @@ rows:
     edge: competitor
   - axis: Knowing what you'll pay
     bitterclip:
-      lead: Three prices, printed.
-      detail: $0, $9, or $99 a month, with the export and footage limits stated on the plan.
+      lead: Trial terms, printed.
+      detail: Creator shows $0 today, the exact seven-day end, and the scheduled $24 first charge; Producer is $99/month.
     competitor:
       lead: Look in the app.
       detail: Pro is $19.99/month or $179.99/year; Standard's price appears only in-app and varies by region.
@@ -103,7 +103,7 @@ chooseUs:
   - You want to ask for the edit — in ChatGPT, in Claude, or in the editor — and get back an ordinary edit you can keep changing by hand or undo exactly.
   - You want to prop your phone up and record straight into the project — one person, from the browser, with the take already transcribed when you stop — as well as bring in sessions you shot elsewhere.
   - You shoot two to five cameras and want them composed, with clean switching, without exporting to Premiere.
-  - "You want the price on the page: $0, $9, or $99 a month, counted in exports and source-hours — the amount of raw footage you can bring in each month."
+  - "You want trial terms on the page: card required, $0 today, the exact seven-day end, and $24/month afterward unless you cancel before that displayed end."
 chooseThem:
   - You make short videos on your phone. CapCut's mobile and tablet apps are the real thing, and one-tap TikTok publishing lives only there.
   - You want the templates, effects, stock, and sound in one place. The library is enormous and much of it is free.
@@ -141,7 +141,7 @@ faq:
   - q: Is CapCut still owned by ByteDance?
     a: In the U.S., partly. CapCut's U.S. operations were folded into the TikTok USDS Joint Venture, which closed on January 22, 2026 — majority U.S.-owned, with Oracle, Silver Lake, and MGX each holding about 15% and ByteDance retaining 19.9%. The joint venture's data and oversight safeguards explicitly extend to CapCut.
   - q: Is BitterClip free?
-    a: "Yes: the free plan gives you 10 watermarked 1080p exports a month. Clip at $9/month drops the watermark and covers 150 exports and 10 source-hours of footage brought in; Pro at $99/month covers 1,000 exports, 40 source-hours, and priority rendering. All plans are monthly."
+    a: "There is no permanent free plan. Creator begins with a card-required, exact seven-day trial: $0 today, then $24/month unless canceled before the displayed end. Bring one session of up to two hours and receive an Editor's Read, a crafted First Cut, questions, one revision of the same Clip, the Deep agent, and a watermarked Export."
 sources:
   - label: CapCut homepage
     url: https://www.capcut.com/
@@ -199,4 +199,4 @@ Nothing scores your moments, either. CapCut's shorts tool watches for changes in
 
 CapCut is a good editor and it is free. For short video made on a phone — trending templates, effects, sound, one tap to TikTok — it is the default for real reasons, and none of the above is an argument against it. If that is the work, stay where you are.
 
-The switch is worth considering when the shape of the week changes: you are not making one short any more, you are finishing a recording, and then another recording. Bring a single session to the free plan, or record one straight into a project, and see what comes out the other side. Ten watermarked 1080p exports a month at $0; the paid plans are $9 and $99 a month, monthly only.
+The switch is worth considering when the shape of the week changes: you are not making one short any more, you are finishing a recording, and then another recording. Creator's card-required seven-day trial lets you bring one session of up to two hours and leave with an Editor's Read, a crafted First Cut, questions, one revision of that same Clip, and a watermarked Export. It is $0 today, then $24/month unless canceled before the displayed end.

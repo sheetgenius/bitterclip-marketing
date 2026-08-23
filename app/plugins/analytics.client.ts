@@ -200,7 +200,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     if (url.origin === APP_ORIGIN && url.pathname === '/sign_up') {
       sendEvent('signup_click', {
         ...marketingBase,
-        plan: url.searchParams.get('plan') || 'free',
+        plan: url.searchParams.get('plan') || 'unknown',
         marketing_surface: url.searchParams.get('bc_surface') || 'unknown',
         marketing_stage: url.searchParams.get('bc_stage') || 'default',
       })

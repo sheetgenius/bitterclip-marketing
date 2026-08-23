@@ -36,9 +36,9 @@ useHead({
         </p>
         <div class="mt-7 flex items-center gap-5">
           <a
-            href="#"
+            href="https://app.bitterclip.com/sign_up?plan=clip"
             class="inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
-          >Start free <span aria-hidden="true">→</span></a>
+          >Start Creator trial <span aria-hidden="true">→</span></a>
           <a href="#" class="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Watch it work <span aria-hidden="true">▶</span></a>
         </div>
         <!-- mobile: the machine (full-bleed behind) owns this gap -->

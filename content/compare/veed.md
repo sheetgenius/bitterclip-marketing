@@ -91,8 +91,8 @@ rows:
     edge: bitterclip
   - axis: What a month costs
     bitterclip:
-      lead: "Nine dollars drops the watermark."
-      detail: "Free $0 with 10 watermarked exports, Clip $9 with 150, Pro $99 with 1,000."
+      lead: "Seven days to prove the fit."
+      detail: "Creator is $0 today, then $24/month unless canceled before the displayed trial end; Producer is $99/month."
     competitor:
       lead: "Depends who is in the workspace."
       detail: "Plan price multiplies by editor, and AI credits and transcription minutes never roll over."
@@ -102,7 +102,7 @@ chooseUs:
   - "You would rather say 'tighten the intro and cut the tangent at fourteen twenty' than go hunting for it on a timeline. That works from ChatGPT, Claude, or the panel beside the editor, and what comes back is a normal edit you can keep changing by hand."
   - You have been burned by cuts that clip the first word. These land on the word, because they are matched against the actual audio.
   - You shoot two or three angles and want to cut between them without wrecking the audio.
-  - You want the price that is on the page — free, $9, or $99 a month — counted in exports and source hours rather than in seats and credits.
+  - You want the terms on the page — a card-required exact seven-day Creator trial at $0 today, then $24/month unless canceled before the displayed end; Producer is $99/month.
 chooseThem:
   - Your month is many different video jobs rather than one recurring one. A dub here, a captioned ad there, a screen walkthrough, a talking-head explainer. VEED covers all of it and BitterClip covers almost none of it.
   - "You need subtitles or translation across a lot of languages. Read VEED's own per-language matrix first: the transcription list and the translation list are not the same list, and both draw down the same pool of minutes."
@@ -134,7 +134,7 @@ faq:
   - q: Does VEED train AI on my videos?
     a: "On the free plan, yes. VEED's privacy policy applies its Development and Improvement Processing — training and developing artificial intelligence models — to content uploaded by users on a Free subscription, with content from its mobile apps carved out. Paid plans are outside that clause, but the Terms of Sale separately take a non-exclusive, irrevocable, royalty-free, worldwide licence to reproduce and use the content you submit. Read both documents before you upload a client's footage."
   - q: Does VEED have a free trial?
-    a: "Not on the self-serve plans. VEED's pricing page offers a trial to enterprise customers only, with a three-user minimum, so an individual evaluates on the watermarked free tier — which is the tier whose content is licensed for AI training. BitterClip's free plan is watermarked too, at 10 exports a month, and the watermark comes off at $9 a month on the Clip plan."
+    a: "Not on the self-serve plans. VEED's pricing page offers a trial to enterprise customers only, with a three-user minimum, so an individual evaluates on the watermarked free tier — which is the tier whose content is licensed for AI training. BitterClip instead offers a card-required seven-day Creator trial with one watermarked Export; paid Creator begins at $24/month with clean Exports."
   - q: Can VEED edit a two-hour podcast?
     a: "It can hold one, but it is not built around one. VEED advises keeping a project under five gigabytes and around four to five hours, the browser recorder stops at sixty minutes on every plan, and Clips needs a source with between one minute and three hours of speech. BitterClip is built for 20-minute-to-2-hour sessions and treats the whole assembly — cut, cameras, captions, opener, vertical — as one job."
   - q: Does BitterClip record, or do I have to bring footage?
@@ -192,4 +192,4 @@ VEED has real transcript editing too; Edit by Script is on every plan. What diff
 
 Anything you can click, you can ask for. From ChatGPT, Claude, the editor, or the command line: tighten the intro, cut the tangent at fourteen twenty. What comes back is a normal edit you can keep changing by hand. VEED is moving this way too — OpenEdit is genuinely agent-driven — but it is a beta that runs on your own machine, on recent Apple Silicon Macs only.
 
-The prices are on the page: free with ten watermarked exports, $9 for 150 exports and 10 source-hours, $99 for 1,000 and 40. Monthly only. Source-hours are footage you bring in; exports are finished files you download. If your week is many small video jobs, stay with VEED. If it is one recording that has to come out finished, bring one over.
+The terms are on the page: Creator's card-required seven-day trial is $0 today, then $24/month unless canceled before the displayed end. Paid Creator includes 10 production hours, $10 of agent balance, clean Exports, and 4 GB files; Producer is $99/month with 40 hours, $40, clean Exports, 20 GB files, and priority service. If your week is many small video jobs, stay with VEED. If it is one recording that has to come out finished, bring one over.

@@ -39,6 +39,7 @@ const matchups = ordered
 const signupUrl = computed(() => buildSignupUrl({
   baseUrl: SIGNUP_BASE_URL,
   query: route.query,
+  plan: 'clip',
   surface: 'comparison',
   landingPath: route.path,
 }))
@@ -183,7 +184,7 @@ useHead({
             Bring a session. Leave with the finished cut.
           </h2>
           <p class="text-zinc-400 max-w-xl leading-relaxed">
-            Free to start — 10 exports a month, no card. Upload something you already recorded and see what comes back.
+            Start Creator with one recording. The card-required trial is $0 today, lasts exactly seven days, and becomes $24/month unless you cancel before the displayed end.
           </p>
         </div>
         <a

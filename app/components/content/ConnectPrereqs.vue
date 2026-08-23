@@ -9,7 +9,11 @@ withDefaults(defineProps<{ publishing?: boolean }>(), { publishing: false })
   <div class="docs-snippet">
     <p>A couple of things to have ready first:</p>
     <ul>
-      <li>A BitterClip account. It's free to start.</li>
+      <li>
+        A BitterClip account. The Creator trial lasts exactly seven days and requires a
+        card: $0 today, then $24/month unless canceled before the displayed trial end.
+        Producer is $99/month.
+      </li>
       <li>A recording you've uploaded, so you have something to clip.</li>
       <li v-if="publishing">A clip you've already exported.</li>
       <li v-if="publishing">A connected channel to send it to.</li>

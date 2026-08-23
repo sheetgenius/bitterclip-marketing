@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
-import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
+import { buildSignupUrl } from '~/utils/signup-attribution'
 
 const route = useRoute()
-const signupBaseUrl = SIGNUP_BASE_URL
 const demoClipUrl = 'https://app.bitterclip.com/demo/day-1-opening-watermarked.mp4'
 type HeroTheme = 'dark' | 'light'
 const DEFAULT_HERO_THEME: HeroTheme = 'dark'
@@ -63,8 +62,8 @@ const demoStageRank: Record<string, number> = {
 
 const demoSignupStage = ref('default')
 
-// Paid pricing CTAs carry ?plan= so the app's signup hands off to
-// /billing?plan=… after account creation; every other CTA stays plan-less.
+// Every acquisition CTA enters through Creator unless it explicitly chooses
+// Producer. The durable app keys remain clip/pro.
 const signupUrlFor = (plan?: string) => {
   return buildSignupUrl({
     query: route.query,
@@ -75,8 +74,6 @@ const signupUrlFor = (plan?: string) => {
   })
 }
 const signupUrl = computed(() => signupUrlFor())
-const signupUrlClip = computed(() => signupUrlFor('clip'))
-const signupUrlPro = computed(() => signupUrlFor('pro'))
 
 const resolveHeroTheme = (value: string | null): HeroTheme => (
   value === 'light' ? 'light' : DEFAULT_HERO_THEME
@@ -94,7 +91,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Create the free account, then upload a recording or record one in the browser. BitterClip transcribes it, separates the speakers, and opens the editor with the agent already in it. Ask for what you want, check it against the recording, adjust it, export.',
+    a: 'Choose Creator and add a card. Checkout shows $0 due today, your exact trial end, and the scheduled $24 first charge before you confirm. Then bring one recording. BitterClip reads the whole session, makes a crafted First Cut, and lets you direct one revision of that same cut during the seven-day trial.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -114,7 +111,7 @@ const faqItems = [
   },
   {
     q: 'What can I upload?',
-    a: 'Podcasts, interviews, calls, training sessions — audio or video, in files up to 4 GB (20 GB on Pro). Bring several angles of the same session and BitterClip keeps them in sync; the picture can cut between up to five at a time while the audio stays whole.',
+    a: 'Podcasts, interviews, calls, and training sessions — audio or video. The Creator trial accepts one central session up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Bring several angles of the same session and BitterClip keeps them together as one production rather than charging each camera as another session.',
   },
   {
     q: 'Do I have to learn a new editor?',
@@ -122,7 +119,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Your paid plan runs through the period you already paid for, then your account moves to Free. Your files stay downloadable, so canceling never strands your work.',
+    a: 'Cancel before the exact trial boundary shown at checkout and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, and completed Exports stay available; new processing may require an active plan.',
   },
 ]
 
@@ -158,12 +155,13 @@ const structuredData = [
     description: 'Record a session in the browser or bring footage you already shot, and BitterClip finishes it: the full-length episode and the short cuts from that same edit, made by changing the transcript, with an agent you can direct and revise.',
     offers: {
       '@type': 'AggregateOffer',
-      lowPrice: '0',
+      lowPrice: '24',
       highPrice: '99',
       priceCurrency: 'USD',
-      offerCount: 3,
-      url: signupBaseUrl,
+      offerCount: 2,
+      url: 'https://bitterclip.com/#pricing',
       availability: 'https://schema.org/InStock',
+      description: 'Creator is $24/month after a seven-day card-backed trial with $0 due today. Producer is $99/month.',
     },
   },
   {
@@ -425,7 +423,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Free to start — 60 minutes of footage a month. Everything runs in your browser; ChatGPT and Claude are optional, over the same work.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Card required · $0 today · $24/month after seven days unless canceled before the displayed trial end.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -648,7 +646,7 @@ onBeforeUnmount(() => {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
               </a>
-              <span class="text-[11px] text-zinc-500">Free — 60 minutes a month</span>
+              <span class="text-[11px] text-zinc-500">7-day Creator trial · card required · $0 today</span>
             </div>
 
             <!-- ChatGPT/Claude, demoted out of the hero to here. Per the
@@ -887,90 +885,26 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with the episode.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Upload a podcast, interview, or session and work it into something you would actually publish — with the agent in the editor, or from ChatGPT or Claude if you would rather. Start free; upgrade when an hour a month stops being enough.
+            Creator starts with a seven-day card-backed trial: $0 today, then $24/month unless you cancel before the exact boundary shown at checkout. Producer is $99/month for higher-volume work.
           </p>
         </div>
 
-
-        <!-- the ladder: Free / Clip / Pro. Clip carries the accent + the only filled
-             CTA (it's the plan we steer to; $99 Pro anchors the price). Paid CTAs
-             carry ?plan= so signup hands off to /billing with the plan highlighted. -->
-        <div class="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto items-stretch text-left">
-
-          <!-- FREE (second in the stack on mobile — Clip leads there) -->
-          <div class="relative rounded-2xl glass-panel p-6 flex flex-col max-md:order-2">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Free</p>
-            <p class="font-display text-3xl font-bold text-white">$0</p>
-            <p class="text-zinc-400 text-xs mt-1.5 mb-5">Try it for real.</p>
-            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>60 minutes of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 clip exports at 1080p (watermarked)</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
-            </ul>
+        <div class="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-white/[0.09] bg-white/[0.025] p-7 text-center sm:p-9">
+          <p class="text-sm leading-relaxed text-zinc-400">
+            The canonical pricing page carries the current trial scope, production allowances, agent balance, Export treatment, and cancellation terms. This noindexed archive does not maintain a second feature grid.
+          </p>
+          <div class="flex flex-col items-center gap-3 sm:flex-row">
             <a
               :href="signupUrl"
-              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >Start free</a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Resets every month — not a trial</p>
+              class="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
+            >Start my 7-day trial</a>
+            <NuxtLink
+              to="/#pricing"
+              class="inline-flex min-h-11 items-center justify-center rounded-lg border border-zinc-700 px-5 py-2.5 font-mono text-xs font-bold text-zinc-200 transition duration-200 hover:border-[#f28f84]/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
+            >See current pricing</NuxtLink>
           </div>
-
-          <!-- CLIP — the recommended plan carries the accent and the only filled CTA.
-               On mobile it jumps to the top of the stack so it's the first card a
-               phone visitor sees. -->
-          <div class="relative rounded-2xl glass-panel-accented glass-reflection corner-ticks p-6 flex flex-col overflow-hidden max-md:order-1">
-            <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f28f84]/70 to-transparent pointer-events-none"></div>
-            <p class="absolute top-6 right-6 font-mono text-[10px] uppercase tracking-widest text-[#f28f84] border border-[#f28f84]/40 rounded-full px-2.5 py-1">Recommended</p>
-            <p class="font-mono text-[10px] uppercase tracking-widest text-[#f28f84] mb-2">Clip</p>
-            <p class="font-display text-3xl font-bold text-white">$9<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
-            <p class="text-zinc-400 text-xs mt-1.5 mb-5">For a weekly show or regular interviews.</p>
-            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>10 hours of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>No watermark — 150 clip exports at 1080p</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 4 GB</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Embed clips on your own site</li>
-            </ul>
-            <a
-              :href="signupUrlClip"
-              class="mt-auto bg-[#f28f84] text-zinc-950 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:bg-[#ffa89e] active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <span>Start clipping</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
-          </div>
-
-          <!-- PRO — plain panel: the $99 price anchors on its own; the accent lives
-               on Clip, the plan we steer to. -->
-          <div class="relative rounded-2xl glass-panel p-6 flex flex-col max-md:order-3">
-            <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-400 mb-2">Pro</p>
-            <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg text-zinc-400 font-semibold">/month</span></p>
-            <p class="text-zinc-400 text-xs mt-1.5 mb-5">When footage is your business.</p>
-            <ul class="space-y-2 text-[13px] text-zinc-300 leading-snug mb-7">
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 hours of footage a month</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>1,000 clip exports at 1080p</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Upload files up to 20 GB</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Front-of-queue processing</li>
-              <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 mt-1 text-[#f28f84] shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Visual analysis workflows</li>
-            </ul>
-            <a
-              :href="signupUrlPro"
-              class="mt-auto border border-zinc-700 text-zinc-200 font-mono text-xs font-bold px-5 py-2.5 rounded-lg transition duration-200 hover:border-[#f28f84]/60 hover:text-white active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-11 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              <span>Go Pro</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </a>
-            <p class="text-center text-[11px] text-zinc-500 mt-2.5">Month to month · cancel anytime</p>
-          </div>
-
+          <p class="text-xs text-zinc-500">Trial Exports are watermarked. Existing work stays available after cancellation or lapse; new processing may require an active plan.</p>
         </div>
-
-        <p class="text-center text-xs text-zinc-400 mt-7">
-          Your files stay downloadable on every plan — canceling never strands your work.
-        </p>
       </section>
 
     </main>

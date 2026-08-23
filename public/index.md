@@ -30,8 +30,9 @@ podcast/RSS. Directly under the fold is a portrait cut from a full-length
 Zoom: Michael Ruescher quit a twelve-year job to build bitter.sh. Then
 how it works.
 
-Free to start — 60 minutes of footage a month. Everything runs in your browser;
-ChatGPT and Claude are optional, over the same work.
+Start Creator with a card-backed seven-day trial: $0 due today, then $24/month
+unless canceled before the exact trial end shown at checkout. ChatGPT and Claude
+are optional, over the same work.
 
 ## Product Loop
 
@@ -144,10 +145,10 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
 
 ## Common Questions
 
-- What happens after signup: create the free account, then upload a recording or
-  record one in the browser. BitterClip transcribes it, separates the speakers,
-  and opens the editor with the agent already in it. Ask for what you want,
-  check it against the recording, adjust it, export.
+- What happens after signup: choose Creator and add a card. Checkout shows $0 due
+  today, your exact trial end, and the scheduled $24 first charge before you
+  confirm. Bring one recording. BitterClip reads the session, makes a crafted
+  First Cut, and lets you direct one revision of that same cut during the trial.
 - Does BitterClip record for you: it can record; it cannot have the conversation
   for you. Every project has a recorder in the browser — camera and mic on a
   laptop or phone, or the screen in desktop Chrome, up to 1080p, uploading while
@@ -174,32 +175,36 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
   For Instagram, send the finished clip to your phone and post it from the
   Instagram app. A client invited to the same session can pull their own cuts —
   upload once, everyone works from it.
-- Uploads: podcasts, interviews, calls, training sessions — audio or video,
-  files up to 4 GB (20 GB on Pro). Several angles of one session stay in sync,
-  and the picture can cut between up to five at a time.
+- Uploads: podcasts, interviews, calls, and training sessions — audio or video.
+  The Creator trial accepts one central session up to two hours. Paid Creator
+  supports files up to 4 GB; Producer supports files up to 20 GB. Several
+  angles of the same session stay together as one production.
 - No new editor to learn: change the transcript and the video changes with it, or
   say what you want changed. The same editor works in the browser and in
   supported assistant hosts.
-- Canceling: the paid plan runs through the current paid period, then the account
-  moves to Free. Files stay downloadable.
+- Canceling: cancel before the exact trial boundary shown at checkout and the
+  first $24 charge is prevented. After a paid period begins, cancellation stops
+  renewal at the end of that period. Sources, evidence, edits, revision history,
+  and completed Exports stay available; new processing may require an active plan.
 
 ## Pricing
 
-Three plans, one uniform price list:
+Two public plans:
 
-- Free — $0. 60 minutes of footage a month, 10 clip exports at 1080p
-  (watermarked), file uploads up to 4 GB. Resets every month — not a trial.
-- Clip (recommended) — $9/month. 10 hours of footage a month, file uploads up
-  to 4 GB, clips can be embedded on your own site, and 150 clip exports at
-  1080p with no watermark. For a weekly show or regular interviews. Start on
-  Clip.
-- Pro — $99/month. 40 hours of footage a month, 1,000 clip exports at 1080p,
-  file uploads up to 20 GB, front-of-queue processing, and visual analysis
-  workflows. For people whose footage is their business.
+- Creator (recommended) — card required, $0 due today, then $24/month after an
+  exact seven-day trial unless canceled before the displayed trial end. Bring
+  one intake up to two hours and receive an Editor's Read, a crafted First Cut,
+  bounded questions, one revision of the same Clip, the Deep agent, and a
+  watermarked Export. After the first payment: 10 production hours,
+  $10 included agent balance, Deep and Fast agents, clean Exports, and files up
+  to 4 GB.
+- Producer — $99/month. 40 production hours, $40 included agent balance, Deep
+  and Fast agents, clean Exports, files up to 20 GB, and priority service.
 
-Paid plans are month to month and can be canceled at any time. Your files stay
-downloadable, so canceling never strands your work.
+Canceling stops renewal at the end of the current paid period. Existing sources,
+evidence, edits, revision history, and completed Exports stay available; new
+processing may require an active plan.
 
-Signup: https://app.bitterclip.com/sign_up (Clip:
-https://app.bitterclip.com/sign_up?plan=clip · Pro:
+Signup: https://app.bitterclip.com/sign_up?plan=clip (Creator:
+https://app.bitterclip.com/sign_up?plan=clip · Producer:
 https://app.bitterclip.com/sign_up?plan=pro)

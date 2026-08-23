@@ -83,8 +83,8 @@ rows:
     edge: competitor
   - axis: What you pay each month
     bitterclip:
-      lead: One number, every month.
-      detail: $9 buys 150 exports and 10 source-hours, meaning ten hours of footage in the project.
+      lead: Production plus agent work.
+      detail: Paid Creator is $24/month with 10 production hours and $10 of agent balance after its seven-day trial.
     competitor:
       lead: A balance to keep watching.
       detail: Video runs 6 to 92 credits a clip, and monthly credits reset with no rollover.
@@ -128,7 +128,7 @@ faq:
   - q: Does BitterClip record podcasts?
     a: "Yes, within limits. Every project has a browser recorder — \"Record in browser\" on the Sources tab, or \"Record here\" in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record so transcription starts the moment you press stop. The boundary: one person, one device, signed in. No remote guests, no guest recording links, no separate per-participant tracks. For getting a guest on tape over the internet, Podcastle's studio is the better tool — and bringing over footage you shot on a phone, in Zoom, or on a camera is still completely normal."
   - q: Which costs less, BitterClip or Podcastle?
-    a: "BitterClip, at the entry paid tier: the Clip plan is $9/month against Podcastle's Storyteller at $19.99/month ($11.99/month billed annually). They count different things, though — BitterClip counts exports and source-hours, flat; Podcastle counts recording hours, transcription hours, and AI credits that reset monthly. Price what a real month of yours uses, not the sticker."
+    a: "BitterClip Creator is $24/month after its card-required seven-day trial, against Podcastle's Storyteller at $19.99/month ($11.99/month billed annually). They count different things, though — paid Creator includes 10 production hours and $10 of agent balance; Podcastle counts recording hours, transcription hours, and AI credits that reset monthly. Price what a real month of yours uses, not the sticker."
   - q: Is Podcastle still Podcastle, or is it Async now?
     a: It's Async. The rebrand landed January 28, 2026, and podcastle.ai now redirects to async.com. The company says accounts, projects, pricing, and billing carry over unchanged, with enterprise positioning and a developer voice API added on top.
 sources:
@@ -178,4 +178,4 @@ What matters more is what comes back. Say "cut the tangent at 14:20 and tighten 
 
 Async charges for AI work in credits. A video clip runs 6 to 92 of them, monthly credits reset with nothing carried over, and top-ups on a monthly plan expire after two months. Fine for occasional generation. Annoying for a weekly show, where the work is the same every week and the bill shouldn't be a variable.
 
-BitterClip counts two things: exports, and source-hours — the hours of footage in your projects, recorded here or brought in. Free is $0 with 10 watermarked exports a month. Clip is $9/month for 150 exports and 10 source-hours, no watermark. Pro is $99/month for 1,000 exports, 40 source-hours, and priority rendering. Monthly, flat, done. Finish every session and you can still do the year's math in your head.
+BitterClip Creator starts with a card-required seven-day trial: bring one session of up to two hours for $0 today, then pay $24/month unless canceled before the displayed end. Paid Creator includes 10 production hours, $10 of agent balance, Deep and Fast models, clean Exports, and 4 GB files. Producer is $99/month with 40 production hours, $40 of balance, clean Exports, 20 GB files, and priority service. Finish every session and you can still do the year's math in your head.

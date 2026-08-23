@@ -6,7 +6,7 @@ competitorUrl: https://riverside.fm
 reviewed: 2026-08-17
 competitorStrength: "The best way there is to record a remote guest."
 heroLede: "If getting a remote guest recorded cleanly is the hard part, use Riverside. BitterClip does record — one person, camera and mic, straight from a browser into the project — but the reason to pick it is what happens after, when the recording lands and three hours of editing are waiting for you. Plenty of people use both — record the session there, bring the file here, finish it."
-verdictBitterclip: "Pick BitterClip when the session is already shot and finishing it is the part you dread. It does record — prop your phone up, hit record in the browser, and the take lands in the project already transcribed — but that's one person on one device, not a remote studio. Usually you bring the file in and cut it by selecting words in the transcript, or by asking for the change in ChatGPT, Claude, or the editor, and every cut lands on the word. Two things get counted on your plan: source-hours, meaning the footage you bring in, and exports, meaning the finished files you take out."
+verdictBitterclip: "Pick BitterClip when the session is already shot and finishing it is the part you dread. It does record — prop your phone up, hit record in the browser, and the take lands in the project already transcribed — but that's one person on one device, not a remote studio. Usually you bring the file in and cut it by selecting words in the transcript, or by asking for the change in ChatGPT, Claude, or the editor, and every cut lands on the word. Paid plans include production hours and agent balance for that finishing work."
 verdictCompetitor: "Pick Riverside when the recording is the hard part. Each guest is recorded locally, up to 4K, on their own track, which is why one person's bad wifi doesn't wreck the take — nothing here matches that. Just know what's metered: separate-track downloads, footage you upload from elsewhere, and AI credits that expire."
 rows:
   - axis: Getting the recording in the first place
@@ -20,7 +20,7 @@ rows:
   - axis: Footage you shot somewhere else
     bitterclip:
       lead: "That's the front door."
-      detail: "Outside footage is the normal case, counted in source-hours: 10 a month on Clip, 40 on Pro."
+      detail: "Outside footage is the normal case: the trial accepts one central session up to two hours; paid Creator includes 10 production hours and Producer 40."
     competitor:
       lead: "Metered, and invisible."
       detail: "2 hours a month on Free, 15 on paid self-serve — with no way to see what you've used."
@@ -83,8 +83,8 @@ rows:
     edge: competitor
   - axis: What the monthly bill buys
     bitterclip:
-      lead: "Pays for finished clips."
-      detail: "$0 gets 10 watermarked exports; $9 gets 150 and 10 source-hours; $99 gets 1,000 and 40."
+      lead: "Pays for production and agent work."
+      detail: "Creator is $24/month with 10 production hours and $10 of agent balance after its trial; Producer is $99 with 40 hours and $40."
     competitor:
       lead: "Pays for the recorder."
       detail: "$29 Pro covers 4K capture and 15 hours of separate-track downloads; $39 Grow adds livestreaming and hosting."
@@ -128,7 +128,7 @@ faq:
   - q: Does BitterClip record podcasts or meetings?
     a: "Yes, within a narrow lane. Every project has a recorder — 'Record in browser' on the Sources tab, or 'Record here' in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record, so transcription starts the moment you press stop. What it is not: one person, one device, signed in — no remote guests, no guest recording links, no separate track per participant, no 4K. For recording a guest over the internet, keep Riverside in front of it."
   - q: Is BitterClip cheaper than Riverside?
-    a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads. BitterClip's $9 Clip buys 150 finished exports and 10 source hours of footage; $99 Pro buys 1,000 exports and 40 source hours with priority rendering. Compare what each dollar actually produces."
+    a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads. BitterClip's $24 Creator buys 10 production hours and $10 of agent balance after a card-required seven-day trial; $99 Producer buys 40 hours, $40 of balance, and priority service. Compare what each dollar actually produces."
   - q: Does BitterClip have something like Magic Clips?
     a: No, and that's on purpose. Nothing scores your moments and tells you which ones are good — you choose them, or you ask for them. Once a landscape cut exists, the vertical version is one tap with captions and timing carried across. If you want highlights picked for you, Magic Clips does that on Riverside's Free plan without spending AI credits.
 sources:

@@ -51,7 +51,10 @@ export function buildSignupUrl({
   landingPath = '/',
 }: SignupUrlOptions): string {
   const url = new URL(baseUrl)
-  if (plan) url.searchParams.set('plan', plan)
+  // Creator is the public acquisition entry. Keep the durable `clip`/`pro`
+  // handles at the app boundary, but never let an inbound query resurrect the
+  // retired plan-less/Free funnel or choose a paid tier on the visitor's behalf.
+  url.searchParams.set('plan', plan === 'pro' ? 'pro' : 'clip')
 
   let hasInboundAcquisition = false
   for (const name of ACQUISITION_PARAM_NAMES) {

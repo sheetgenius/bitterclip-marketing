@@ -130,7 +130,7 @@ faq:
   - q: Can BitterClip make vertical shorts like Klap?
     a: It can. The 9:16 version of any landscape cut is one tap, with captions and timing carried across and fill-or-fit framing around a focal point. The difference is that the short stays tied to the full cut, and to the exact moment in the recording it came from.
   - q: Which is cheaper, BitterClip or Klap?
-    a: "Neither, cleanly — they charge for different things. BitterClip is monthly only: $0 for 10 watermarked exports, $9 for 150 exports and 10 source-hours (that's how much raw recording you can bring in each month), $99 for 1,000 exports, 40 source-hours, and priority rendering. Klap's advertised rates are billed yearly — $14/month for 100 clips, $39 for 300, $94 for 1,000 — with no watermark, resolution, or rollover terms published to compare against."
+    a: "Neither, cleanly — they charge for different things. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed end; paid Creator includes 10 production hours and $10 of agent balance. Producer is $99/month with 40 hours, $40 of balance, and priority service. Klap's advertised rates are billed yearly — $14/month for 100 clips, $39 for 300, $94 for 1,000 — with no watermark, resolution, or rollover terms published to compare against."
 sources:
   - label: Klap homepage
     url: https://klap.app/
@@ -170,4 +170,4 @@ Klap treats your long video as raw material. Shorts come out, and while the API 
 
 Most people recording twenty minutes to two hours of real work — a podcast, a coaching session, a training — need the session itself finished. Tangents gone. Two or three cameras cut together without the sound going sideways. Misheard words fixed in the captions. An opener on the front, music cues you listen to before you commit to them. In BitterClip the full cut is the thing you're making, and the vertical version is one tap away, carrying its captions and timing with it. One recording, one finished package. Months later, when you need that one exchange from March, you search everything you've recorded — by what was said, who said it, or what was on screen.
 
-If you left Klap because the picks kept missing and the editor stopped just short of the fix, that's the gap you were feeling. Try it on your last recording. The free plan is $0 and gives you ten watermarked exports a month.
+If you left Klap because the picks kept missing and the editor stopped just short of the fix, that's the gap you were feeling. Try it on one recording of up to two hours. Creator's card-required seven-day trial is $0 today and includes an Editor's Read, a crafted First Cut, questions, one revision of the same Clip, the Deep agent, and a watermarked Export; cancel before the displayed end to avoid the $24 first charge.

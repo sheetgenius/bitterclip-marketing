@@ -39,6 +39,7 @@ onBeforeUnmount(() => observer?.disconnect())
   <img
     ref="image"
     v-bind="$attrs"
+    :style="{ aspectRatio: `${width} / ${height}` }"
     :src="renderedSrc"
     :data-deferred-src="src"
     :alt="alt"

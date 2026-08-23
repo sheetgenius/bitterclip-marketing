@@ -7,7 +7,7 @@ ogImage: /images/blog/pi-vs-deepseek-harness/pi-vs-deepseek-harness-og.png
 heroImage: /images/blog/pi-vs-deepseek-harness/pi-vs-deepseek-harness.svg
 heroAlt: BitterClip's embedded-agent architecture, with the editor speaking ACP to Pi and Pi limited to BitterClip MCP tools, beside DeepSeek Harness as a larger plugin platform.
 ctaTitle: Put the agent to work on a real recording
-ctaLine: BitterClip is free to start. Upload a recording and ask for a moment, a Clip, or a Render—then inspect exactly what changed before you export.
+ctaLine: 'The Creator trial lasts exactly seven days and requires a card: $0 today, then $24/month unless you cancel before the displayed trial end. Upload a recording and ask for a moment, a Clip, or a Render—then inspect exactly what changed before you export.'
 tags:
   - Pi
   - DeepSeek Harness

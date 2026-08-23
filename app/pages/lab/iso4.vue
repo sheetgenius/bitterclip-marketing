@@ -67,7 +67,7 @@ const signupUrl = computed(() => buildSignupUrl({
           <a
             :href="signupUrl"
             class="hero-cta inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
-          >Start free <span aria-hidden="true">→</span></a>
+          >Start Creator trial <span aria-hidden="true">→</span></a>
         </div>
         <!-- deliverables strip: outputs, not features (owner draft 2026-08-20).
              Closes the copy column directly under the CTAs — both outside eyes

@@ -5,7 +5,7 @@ navigation:
   label: FAQ
   order: 1
 section: help
-updated: '2026-08-01'
+updated: '2026-08-23'
 tags:
   - faq
   - help
@@ -15,9 +15,12 @@ tags:
 
 Short answers to the things people ask before they get started. If your question isn't here, the [troubleshooting guide](/docs/help/troubleshooting) covers the common snags, and you can always reach a human.
 
-## Is it free to start?
+## What does BitterClip cost?
 
-Yes. Signing up is free, and you land in a workspace you can use right away.
+The Creator trial lasts exactly seven days and requires a card: $0 today, then $24/month
+unless you cancel before the displayed trial end. Producer is $99/month. There is no
+recurring Free plan. If you cancel, your existing work stays available so you can return
+without losing it; new processing may require an active plan.
 
 ::signup-cta
 ::

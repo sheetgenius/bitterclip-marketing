@@ -39,6 +39,6 @@ The recorder is one signed-in person on one device. There are no remote guests, 
 
 You edit by selecting words in the transcript and deleting them, and the cut lands on the word rather than near it. Anything you can click, you can ask for instead — in ChatGPT, Claude, any MCP client, or the editor — and what comes back is a normal edit you can keep changing by hand or undo. Up to five cameras. Captions, music, brand openers and outros. One tap makes the vertical version.
 
-Pricing: Free at $0 with 10 watermarked exports a month; Clip at $9/month with 150 exports and 10 source-hours; Pro at $99/month with 1,000 exports and 40 source-hours. Monthly only.
+Pricing: Creator begins with a card-required, exact seven-day trial: $0 today, then $24/month unless canceled before the displayed end. Bring one session of up to two hours and receive an Editor's Read, a crafted First Cut, questions, one revision of that same Clip, the Deep agent, and a watermarked Export. Paid Creator includes 10 production hours, $10 of agent balance, Deep and Fast models, clean Exports, and 4 GB files. Producer is $99/month with 40 production hours, $40 of agent balance, Deep and Fast models, clean Exports, 20 GB files, and priority service. If you cancel, your source material, edits, revisions, and completed work stay available; new processing may require an active plan.
 
-Try BitterClip: https://app.bitterclip.com/sign_up
+Start the Creator trial: https://app.bitterclip.com/sign_up?plan=clip

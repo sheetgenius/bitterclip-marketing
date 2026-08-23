@@ -1,5 +1,61 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { iso4Release, iso4ReleaseReady } from '../app/lib/hero-iso4/release'
+import { buildSignupUrl } from '../app/utils/signup-attribution'
+
+test.describe('signup URL commercial intent', () => {
+  test('defaults acquisition to Creator while preserving attribution', () => {
+    const url = new URL(buildSignupUrl({
+      query: { utm_source: 'newsletter', utm_campaign: 'founder_series' },
+      surface: 'smoke',
+      stage: 'hero',
+      landingPath: '/from-email',
+    }))
+
+    expect(url.searchParams.get('plan')).toBe('clip')
+    expect(url.searchParams.get('utm_source')).toBe('newsletter')
+    expect(url.searchParams.get('utm_campaign')).toBe('founder_series')
+    expect(url.searchParams.get('bc_surface')).toBe('smoke')
+    expect(url.searchParams.get('bc_stage')).toBe('hero')
+    expect(url.searchParams.get('bc_landing_path')).toBe('/from-email')
+  })
+
+  test('preserves an explicit Producer choice', () => {
+    const url = new URL(buildSignupUrl({
+      plan: 'pro',
+      surface: 'pricing',
+    }))
+
+    expect(url.searchParams.get('plan')).toBe('pro')
+  })
+
+  test('does not let inbound query parameters choose or override a plan', () => {
+    const defaultUrl = new URL(buildSignupUrl({
+      query: { plan: 'pro', utm_source: 'partner' },
+      surface: 'homepage',
+    }))
+    const producerUrl = new URL(buildSignupUrl({
+      query: { plan: 'clip', utm_source: 'partner' },
+      plan: 'pro',
+      surface: 'homepage',
+    }))
+
+    expect(defaultUrl.searchParams.get('plan')).toBe('clip')
+    expect(producerUrl.searchParams.get('plan')).toBe('pro')
+  })
+})
+
+test('keeps the OG source and shipped legacy card aligned with the current Creator trial', () => {
+  const source = readFileSync(new URL('../app/assets/og/bitterclip-og.svg', import.meta.url), 'utf8')
+  const shippedLegacyCard = readFileSync(new URL('../public/images/bitterclip-og.png', import.meta.url))
+
+  expect(source).toContain('7-day trial · $0 today · card required')
+  expect(source).not.toContain('150 exports')
+  expect(createHash('sha256').update(shippedLegacyCard).digest('hex')).toBe(
+    'a56cbbfd05c3b37a7b6e78ff80420d0ce0ec16bfdce89321f80ff74f2537b050',
+  )
+})
 
 test('renders the footage-in episodes-out hero and the bottom funnel', async ({ page }) => {
   await page.goto('/')
@@ -9,6 +65,14 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
   expect(jsonLd).toContain('SoftwareApplication')
   expect(jsonLd).toContain('FAQPage')
+  const softwareApplication = (JSON.parse(jsonLd!) as Array<Record<string, any>>)
+    .find((entry) => entry['@type'] === 'SoftwareApplication')
+  expect(softwareApplication?.offers).toMatchObject({
+    '@type': 'AggregateOffer',
+    lowPrice: '24',
+    highPrice: '99',
+    offerCount: 2,
+  })
   await expect(page.locator('meta[property="og:image"][content="https://bitterclip.com/images/bitterclip-og-iso4.png"]')).toHaveCount(1)
   await expect(page.locator('meta[name="twitter:card"][content="summary_large_image"]')).toHaveCount(1)
   await expect(page.locator('meta[name="robots"][content*="noindex"]')).toHaveCount(0)
@@ -57,12 +121,14 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.getByText('knows your content')).toBeVisible()
   await expect(page.getByText('Precision Edits')).toBeVisible()
   await expect(page.getByText('the good parts, finished')).toBeVisible()
-  await expect(page.getByText('Everything runs in your browser')).toBeVisible()
+  await expect(page.getByText('Card required · $0 today · $24/month after seven days unless canceled before the displayed trial end.')).toBeVisible()
   // The page must not be readable as "BitterClip cannot record": the how
   // intro names the browser recorder alongside the footage people already have.
   await expect(page.getByText("with BitterClip's own browser recorder")).toBeVisible()
   await expect(page.getByText('Does BitterClip record for me?')).toBeVisible()
-  await expect(page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start free' }).first()).toBeVisible()
+  const heroTrialCta = page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start my 7-day trial' }).first()
+  await expect(heroTrialCta).toBeVisible()
+  await expect(heroTrialCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
   const navCta = page.locator('header a[href="https://app.bitterclip.com/sign_in"]').filter({ hasText: 'Sign in' })
   await expect(navCta).toBeVisible()
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
@@ -106,9 +172,13 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await faq.getByText('Where can the finished work go?').click()
   await expect(faq.getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
   await expect(page.getByText('30-day refund')).toHaveCount(0)
-  await expect(page.locator('#pricing').getByRole('link', { name: 'Start free' })).toBeVisible()
-  await expect(page.locator('#pricing').getByRole('link', { name: 'Start on Clip' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Go Pro' })).toBeVisible()
+  const creatorCta = page.locator('#pricing').getByRole('link', { name: 'Start my 7-day trial' })
+  await expect(creatorCta).toBeVisible()
+  await expect(creatorCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
+  const producerCta = page.locator('#pricing').getByRole('link', { name: 'Choose Producer' })
+  await expect(producerCta).toBeVisible()
+  await expect(producerCta).toHaveAttribute('href', /[?&]plan=pro(?:&|$)/)
+  await expect(page.locator('#pricing').getByText('Free', { exact: true })).toHaveCount(0)
   await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
@@ -120,19 +190,29 @@ test('keeps the pre-swap homepage soaking at /classic, noindexed', async ({ page
   await expect(page.locator('meta[name="robots"][content="noindex, nofollow"]')).toHaveCount(1)
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
   await expect(page.getByRole('heading', { level: 1, name: /You record it\./ })).toBeVisible()
+  const trialCta = page.getByRole('link', { name: 'Start my 7-day trial' }).last()
+  await expect(trialCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
+  await expect(page.getByRole('link', { name: 'See current pricing' })).toHaveAttribute('href', '/#pricing')
+  await expect(page.locator('main')).not.toContainText('$9/month')
+  await expect(page.locator('main')).not.toContainText('150 clip exports')
+  await expect(page.locator('main')).not.toContainText('moves to Free')
+  const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
+  const softwareApplication = (JSON.parse(jsonLd!) as Array<Record<string, any>>)
+    .find((entry) => entry['@type'] === 'SoftwareApplication')
+  expect(softwareApplication?.offers).toMatchObject({ lowPrice: '24', highPrice: '99', offerCount: 2 })
 })
 
 test('records a sitewide signup CTA event without navigating', async ({ page }) => {
   await page.goto('/?utm_source=newsletter&utm_campaign=summer_launch')
 
-  const signupCta = page.getByRole('link', { name: /Start free/ }).first()
+  const signupCta = page.getByRole('link', { name: /Start my 7-day trial/ }).first()
   // Seeing the client-owned campaign URL proves hydration and the analytics
   // plugin have installed before this synthetic click races the capture hook.
   await expect(signupCta).toHaveAttribute('href', /utm_source=newsletter/)
 
   await page.evaluate(() => {
     const anchor = Array.from(document.querySelectorAll<HTMLAnchorElement>('a'))
-      .find((candidate) => candidate.href.includes('/sign_up') && candidate.textContent?.includes('Start free'))
+      .find((candidate) => candidate.href.includes('/sign_up') && candidate.textContent?.includes('Start my 7-day trial'))
     if (!anchor) throw new Error('signup CTA missing')
     anchor.addEventListener('click', (event) => event.preventDefault(), { once: true })
     anchor.click()
@@ -142,7 +222,8 @@ test('records a sitewide signup CTA event without navigating', async ({ page }) 
     (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
       event.name === 'signup_click' &&
       event.params.page_path === '/' &&
-      event.params.marketing_surface === 'homepage',
+      event.params.marketing_surface === 'homepage' &&
+      event.params.plan === 'clip',
     ),
   )
 })
@@ -282,7 +363,9 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip Blog' })).toBeVisible()
   await expect(page.getByRole('link', { name: /Your show has a signature now/ })).toBeVisible()
   await expect(page.getByAltText('Signature Studio full-screen lab showing a BitterClip wordmark opener mid-animation on a dark stage.').first()).toBeVisible()
-  await expect(page.getByRole('link', { name: "It's free to start" })).toBeVisible()
+  const blogIndexTrial = page.getByRole('main').getByRole('link', { name: 'Start Creator trial' })
+  await expect(blogIndexTrial).toBeVisible()
+  await expect(blogIndexTrial).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
 
   await page.getByRole('link', { name: /Your show has a signature now/ }).click()
   await page.waitForURL('**/blog/your-show-has-a-signature-now')
@@ -307,9 +390,9 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   await expect(page.getByRole('link', { name: 'Strength & Positions' })).toBeVisible()
   await expect(page.getByText('Read my mind. MVP for a podcast: 30-sec sizzle intro hook')).toBeVisible()
   await expect(page.getByText(/min read/)).toBeVisible()
-  const startFree = page.getByLabel('Get started with BitterClip').getByRole('link', { name: 'Start free' })
-  await expect(startFree).toBeVisible()
-  await expect(startFree).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
+  const creatorTrial = page.getByLabel('Get started with BitterClip').getByRole('link', { name: 'Start Creator trial' })
+  await expect(creatorTrial).toBeVisible()
+  await expect(creatorTrial).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up\?plan=clip(?:&|$)/)
   await expect(page.getByRole('link', { name: 'Use it with your assistant' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible()
 })

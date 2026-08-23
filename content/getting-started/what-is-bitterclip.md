@@ -5,7 +5,7 @@ navigation:
   label: What is BitterClip?
   order: 0
 section: getting-started
-updated: '2026-06-24'
+updated: '2026-08-23'
 tags:
   - overview
   - concepts
@@ -20,7 +20,11 @@ If you make long videos or podcasts and want short clips out of them, this page 
 ::what-is-bitter-clip
 ::
 
-You don't need to set anything up first. It's free to start, and when you create an account you land in a working space right away.
+You don't need to connect an assistant or configure anything before starting. The Creator
+trial lasts exactly seven days and requires a card: $0 today, then $24/month unless you
+cancel before the displayed trial end. Producer is $99/month. There is no recurring Free
+plan; if you cancel, your existing work stays available and new processing may require an
+active plan.
 
 ## The three things you'll work with
 

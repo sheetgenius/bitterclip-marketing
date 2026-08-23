@@ -4,13 +4,13 @@ import { buildSignupUrl } from '~/utils/signup-attribution'
 
 // End-of-post conversion card. Rendered by app/pages/blog/[slug].vue after the
 // prose so every post ends with a real pathway (never a heading that looks
-// like a link). Reads signup_url from _data/site.yml — quotes NO price.
+// like a link). Reads signup_url from _data/site.yml.
 withDefaults(defineProps<{
   title?: string
   line?: string
 }>(), {
   title: 'Give your show its signature',
-  line: 'BitterClip is free to start. Upload a recording and open the FX tab — or connect ChatGPT or Claude and just describe the look you want.',
+  line: 'The Creator trial lasts exactly seven days and requires a card: $0 today, then $24/month unless you cancel before the displayed trial end. Upload a recording and open the FX tab — or connect ChatGPT or Claude and describe the look you want.',
 })
 
 const { data: site } = await useAsyncData('site', () =>
@@ -42,7 +42,7 @@ const signupUrl = computed(() => buildSignupUrl({
         :href="signupUrl"
         class="inline-flex items-center rounded-full bg-[#f28f84] px-5 py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
       >
-        Start free
+        Start Creator trial
       </a>
       <NuxtLink
         to="/docs/assistants/overview"

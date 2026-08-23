@@ -83,8 +83,8 @@ rows:
     edge: competitor
   - axis: What a month actually costs
     bitterclip:
-      lead: $9, no watermark.
-      detail: 150 exports and 10 source-hours — hours you record in-browser or upload — every month.
+      lead: $24 after a seven-day trial.
+      detail: Paid Creator includes 10 production hours, $10 of agent balance, Deep and Fast models, clean Exports, and 4 GB files.
     competitor:
       lead: $15 for 150 credits.
       detail: One credit is one source minute, charged on the whole upload, and credits expire after 60 days.
@@ -132,7 +132,7 @@ faq:
   - q: Can BitterClip post directly to TikTok and Instagram?
     a: "No. BitterClip publishes straight to YouTube with a confirm step, then hands off everything else: private links anyone can watch without an account, 1080p MP4 downloads, and expiring download links any scheduler can pick up. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?
-    a: BitterClip counts two things — exports, meaning finished videos you download or publish, and source-hours, the hours of recording you make in the browser or bring in. OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip's $9 Clip plan is 150 exports and 10 source-hours with no watermark, $99 Pro is 1,000 exports and 40 source-hours with priority rendering, and every plan is monthly.
+    a: OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed end; paid Creator includes 10 production hours and $10 of agent balance. Producer is $99/month with 40 production hours, $40 of balance, and priority service.
 sources:
   - label: OpusClip homepage
     url: https://www.opus.pro/
@@ -178,4 +178,4 @@ Anything you can click, you can ask for. The editor, ChatGPT, Claude, the comman
 
 Be honest about the job. If it's throughput — one long upload into a stack of scored, captioned vertical shorts, scheduled across six platforms with barely any of your time — OpusClip is the most complete machine for it. It takes videos up to ten hours, clips footage that isn't people talking, and its scheduler saves you a second tool. It's no fading startup either: it raised a round from SoftBank and is expanding from clipping into a full AI video-agent platform.
 
-BitterClip is for the other job. You have a recording — twenty minutes to two hours, recorded straight into the project from your browser or shot on a phone, Zoom, Riverside, or a camera and brought in — and every time you need the finished thing: the full episode, the vertical version, captions with the misheard names fixed, and a way to search everything you've recorded when you need that one moment from March back. The Free plan is $0 for ten watermarked 1080p exports a month — enough to run one real session through and see whether it fits the way you work.
+BitterClip is for the other job. You have a recording — twenty minutes to two hours, recorded straight into the project from your browser or shot on a phone, Zoom, Riverside, or a camera and brought in — and every time you need the finished thing: the full episode, the vertical version, captions with the misheard names fixed, and a way to search everything you've recorded when you need that one moment from March back. Creator's card-required seven-day trial is $0 today and covers one session of up to two hours, an Editor's Read, a crafted First Cut, questions, one revision of that same Clip, the Deep agent, and a watermarked Export.

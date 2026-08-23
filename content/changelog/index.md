@@ -5,7 +5,7 @@ navigation:
   label: What's new
   order: 1
 section: changelog
-updated: '2026-07-08'
+updated: '2026-08-23'
 tags:
   - changelog
   - updates
@@ -16,6 +16,13 @@ tags:
 This is a running list of the changes worth knowing about. Newest is at the top, and we keep each entry short so you can skim the page in a minute.
 
 ## Recent updates
+
+### Creator trial and paid plans
+
+The Creator trial now lasts exactly seven days and requires a card: $0 today, then $24/month
+unless you cancel before the displayed trial end. Producer is $99/month. There is no
+recurring Free plan. If you cancel, your existing work stays available so you can return
+without losing it; new processing may require an active plan.
 
 ### Give your show a signature look
 
@@ -76,8 +83,9 @@ proper links now — back, refresh, and sharing a tab URL all behave.
 ### A guide site for creators
 These help pages are new. They walk you through making your first clip, connecting ChatGPT or Claude, and getting clips out to YouTube, X, LinkedIn, and Instagram. Plain language, written for creators. Start with [your first clip](/docs/getting-started/your-first-clip).
 
-### Free to start
-Signing up is free, and you land in a workspace you can use right away. There's no checkout before you can start, and no clock counting down on you. See the [signup page](/docs/getting-started/your-first-clip) for what a free account covers.
+### Earlier: free to start
+Earlier signup opened a workspace without checkout or a trial clock. That offer has since
+been replaced by the Creator trial described above.
 
 ### Post clips to your channels
 You can connect YouTube, X, and LinkedIn and send finished clips straight to them. Per project, you choose whether a clip waits for your approval or goes out automatically once it's ready. See the connect guides for [YouTube](/docs/connect/youtube), [X](/docs/connect/x), and [LinkedIn](/docs/connect/linkedin).

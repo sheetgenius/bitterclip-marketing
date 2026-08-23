@@ -75,8 +75,8 @@ rows:
     edge: competitor
   - axis: What the bill actually counts
     bitterclip:
-      lead: Only what you take out.
-      detail: "10 watermarked exports a month free, 150 on Clip at $9, 1,000 on Pro at $99."
+      lead: Production plus agent work.
+      detail: "Paid Creator includes 10 production hours and $10 of agent balance; Producer includes 40 hours and $40."
     competitor:
       lead: The upload, not the clips.
       detail: One credit per uploaded minute, charged the same whether you keep twenty clips or two.
@@ -100,7 +100,7 @@ chooseThem:
   - You post on a schedule across TikTok, Instagram, LinkedIn, X, Facebook, and YouTube. BitterClip publishes to YouTube only.
   - "You push a lot of footage every month: Creator starts at 600 upload-minutes for $29/month, or $174 billed yearly."
   - You clip on your phone and want a real iOS or Android app instead of a browser tab.
-  - "You like to try the free tier first: Vizard gives you 60 upload-minutes a month at 720p with a watermark, against BitterClip's 10 watermarked 1080p exports."
+  - "You need a permanent free tier: Vizard gives you 60 upload-minutes a month at 720p with a watermark; BitterClip instead offers one card-required seven-day Creator trial."
 gotchas:
   - title: The meter runs when you upload, not when you export
     body: One credit is one minute of uploaded video, taken when the project is processed — once per project, however many clips you end up keeping. Two keepers out of a 90-minute recording cost the same 90 credits as twenty.
@@ -188,6 +188,6 @@ BitterClip works the other way around. Every edit the editor can make — trims,
 
 If your output is volume — daily verticals across six platforms, cut from talking-head footage, and you're happy letting the machine choose first — stay on Vizard. It's priced and shaped for exactly that, and Spark 1.0 is good at it, though prompt-based extraction caps at 10 prompts per project and isn't switched on for everyone yet.
 
-If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — try BitterClip free. Ten exports a month, in a browser, nothing to install. Paid plans count two things you'll meet at checkout: exports, the finished files you take out, and source-hours, the footage you bring in.
+If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — start with BitterClip's card-required seven-day Creator trial. Bring one session of up to two hours for $0 today and receive an Editor's Read, a crafted First Cut, questions, one revision of that same Clip, the Deep agent, and a watermarked Export; cancel before the displayed end to avoid the $24 first charge.
 
 Bring one recording you already regret uploading somewhere else. The first almost-right cut you fix instead of redo will tell you which side you're on.

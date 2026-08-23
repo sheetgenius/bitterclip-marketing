@@ -1,29 +1,27 @@
 import { test, expect } from '@playwright/test'
 
 // Pricing-section truth: every claim here must be live product behavior, and
-// the paid CTAs must carry their plan so signup hands off to /billing.
+// both public-plan CTAs must carry their durable key into signup and Billing.
 test.describe('pricing section', () => {
-  test('paid CTAs carry plan params; free stays plan-less', async ({ page }) => {
+  test('Creator and Producer CTAs carry their plan params', async ({ page }) => {
     await page.goto('/')
     const pricing = page.locator('#pricing')
 
-    const clipCta = pricing.getByRole('link', { name: /Start on Clip/ })
-    await expect(clipCta).toBeVisible()
-    expect(await clipCta.getAttribute('href')).toContain('plan=clip')
+    const creatorCta = pricing.getByRole('link', { name: /Start my 7-day trial/ })
+    await expect(creatorCta).toBeVisible()
+    expect(await creatorCta.getAttribute('href')).toContain('plan=clip')
 
-    const proCta = pricing.getByRole('link', { name: /Go Pro/ })
-    await expect(proCta).toBeVisible()
-    expect(await proCta.getAttribute('href')).toContain('plan=pro')
+    const producerCta = pricing.getByRole('link', { name: /Choose Producer/ })
+    await expect(producerCta).toBeVisible()
+    expect(await producerCta.getAttribute('href')).toContain('plan=pro')
 
-    const freeCta = pricing.getByRole('link', { name: /Start free/ })
-    await expect(freeCta).toBeVisible()
-    expect(await freeCta.getAttribute('href')).not.toContain('plan=')
+    await expect(pricing.getByRole('link', { name: /Start free/ })).toHaveCount(0)
   })
 
   test('paid campaign attribution survives the marketing-to-app handoff', async ({ page }) => {
     await page.goto('/?utm_source=google&utm_medium=cpc&utm_campaign=clip_launch&utm_content=ad_a&gclid=audit-click-id')
 
-    const heroCta = page.getByRole('link', { name: /Start free/ }).first()
+    const heroCta = page.getByRole('link', { name: /Start my 7-day trial/ }).first()
     // The static HTML intentionally carries the unattributed fallback. Wait for
     // Nuxt to own the route query before asserting the client-side handoff.
     await expect(heroCta).toHaveAttribute('href', /utm_source=google/)
@@ -33,6 +31,7 @@ test.describe('pricing section', () => {
     expect(initialUrl.searchParams.get('utm_campaign')).toBe('clip_launch')
     expect(initialUrl.searchParams.get('utm_content')).toBe('ad_a')
     expect(initialUrl.searchParams.get('gclid')).toBe('audit-click-id')
+    expect(initialUrl.searchParams.get('plan')).toBe('clip')
     expect(initialUrl.searchParams.get('bc_surface')).toBe('homepage')
     expect(initialUrl.searchParams.get('bc_stage')).toBe('default')
   })
@@ -47,12 +46,53 @@ test.describe('pricing section', () => {
     expect(pricingText).not.toContain('annual')
     expect(pricingText).not.toContain('30-day refund')
 
-    expect(pricingText).toContain('$9')
+    expect(pricingText).not.toContain('$9/month')
+    expect(pricingText).not.toContain('Free')
+    expect(pricingText).toContain('7 days')
+    expect(pricingText).toContain('$24/month')
     expect(pricingText).toContain('$99')
-    expect(pricingText).toContain('10 hours of footage a month')
-    expect(pricingText).toContain('No watermark — 150 clip exports at 1080p')
-    expect(pricingText).toContain('1,000 clip exports at 1080p')
-    expect(pricingText).toContain('Front-of-queue processing')
-    expect(pricingText).toContain('Embed clips on your own site')
+    expect(pricingText).toContain('Card required; $0 due today')
+    expect(pricingText).toContain('One intake up to 2 hours of central material')
+    expect(pricingText).toContain("Editor's Read + crafted First Cut")
+    expect(pricingText).toContain('Questions + one revised cut on the same Clip')
+    expect(pricingText).toContain('Deep agent + watermarked Export')
+    expect(pricingText).toContain('10 production hours · $10 agent balance')
+    expect(pricingText).toContain('Deep + Fast · clean Exports · 4 GB files')
+    expect(pricingText).toContain('40 production hours per billing period')
+    expect(pricingText).toContain('$40 included agent balance')
+    expect(pricingText).toContain('Clean Exports · 20 GB files')
+    expect(pricingText).toContain('Priority service · add balance anytime')
+  })
+
+  test('keeps both public plans usable on a narrow viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/#pricing')
+
+    const pricing = page.locator('#pricing')
+    await expect(pricing.getByRole('link', { name: /Start my 7-day trial/ })).toBeVisible()
+    await pricing.getByRole('link', { name: /Choose Producer/ }).scrollIntoViewIfNeeded()
+    await expect(pricing.getByRole('link', { name: /Choose Producer/ })).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  })
+
+  test('keeps the pricing anchor stable while deferred media loads', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/')
+
+    const editorImage = page.locator('#how img')
+    const reservedBox = await editorImage.boundingBox()
+    expect(reservedBox).not.toBeNull()
+    expect(reservedBox!.width / reservedBox!.height).toBeCloseTo(2720 / 1480, 2)
+
+    await page.getByLabel('Primary').getByRole('link', { name: 'Pricing' }).click()
+    await expect(editorImage).toHaveAttribute('src', /sizzle-editor-2\.webp/)
+    await expect.poll(async () => {
+      const top = await page.locator('#pricing').evaluate((element) => element.getBoundingClientRect().top)
+      return Math.round(top)
+    }).toBe(112)
+
+    const loadedBox = await editorImage.boundingBox()
+    expect(loadedBox).not.toBeNull()
+    expect(Math.abs(loadedBox!.height - reservedBox!.height)).toBeLessThanOrEqual(1)
   })
 })
