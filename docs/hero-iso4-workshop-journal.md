@@ -2953,3 +2953,37 @@ Evidence:
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/webkit-wide-final/playback-report.json`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/iphone-simulator-pass.mp4`
 - `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/cpu4-trace/long-tasks.json`
+
+## Round 60 — deployed homepage acceptance
+
+The accepted generation is now selected on `https://bitterclip.com/`; the live
+homepage reports Artifact generation `artg_m4v4oeiuvgi8geltufb1` in production
+video mode. Production Chromium and WebKit passes verified the same one-source,
+one-play, exact-terminal, decoder-release, visibility-resume, offscreen-resume,
+reduced-motion, and autoplay-denial contracts exercised against the generated
+site. The wide Chromium run dropped zero frames. The screenshot-heavy mobile
+Chromium harness reported one dropped frame per run, but three clean DPR2
+production probes without synchronous screenshots each ended once with zero
+dropped or corrupt frames; the screenshot itself, not playback, was the load.
+
+Three-run Lighthouse audits against the deployed URL, with compression required,
+closed the production performance contract:
+
+- desktop: Performance 100, Accessibility 95, Best Practices 100, SEO 100,
+  FCP 371ms, LCP 593ms, Speed Index 508ms, TBT 0ms, CLS 0, 2,674,290 bytes;
+- mobile: Performance 98, Accessibility 95, Best Practices 100, SEO 100,
+  FCP 1.249s, LCP 2.432s, Speed Index 1.276s, TBT 10.5ms, CLS 0,
+  1,646,845 bytes.
+
+Both audits passed their binding thresholds. The remaining production costs are
+the selected responsive H.264 asset and Google Tag Manager; neither reintroduces
+Three.js, shader compilation, or live ISO4 simulation.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/lighthouse-desktop/summary.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/lighthouse-mobile/summary.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/wide-chromium/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/mobile-webkit/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/wide-webkit/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/production/clean-playback-result.json`
