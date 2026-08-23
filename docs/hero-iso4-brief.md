@@ -1,5 +1,10 @@
 # ISO4 — the facing projector. A standalone build brief.
 
+> **Status: current binding design authority.** Start with
+> [`CURRENT_STATE.md`](../CURRENT_STATE.md) and the
+> [ISO4 authoring runbook](runbooks/iso4-authoring.md). Later owner rulings in
+> this brief supersede conflicting historical workshop entries.
+
 Route to create: **`/lab/iso4`** (new files: `app/pages/lab/iso4.vue`,
 `app/components/HeroIso4.vue`, `app/lib/hero-iso4/scene.ts`).
 Predecessor to LEAVE UNTOUCHED and to mine for parts: **`/lab/iso3`**

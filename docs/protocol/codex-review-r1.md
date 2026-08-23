@@ -1,5 +1,8 @@
 # Codex review r1 - creator docs content
 
+> **Status: historical adversarial review.** Reconfirm any finding before
+> treating it as a current defect.
+
 Scope reviewed: `content/**/*.md`, `app/components/content/`, `content/_data/*.yml`,
 `docs/protocol/grounding-brief.md`, and `docs/protocol/frontiers.md`.
 Product evidence came from `/Users/c3po/co/bitterclip/apps/bitterclip-rails`

@@ -1,5 +1,10 @@
 # Documentation build — run log (compounding)
 
+> **Status: historical evidence with a useful current-practice section.** The
+> shipped substrate and operating path are described in the
+> [public-content runbook](../runbooks/public-content.md). Reverify old product
+> facts before carrying them forward.
+
 The meta-artifact. Each run records what we did, what improved, and how to work better next
 time. **Read "Current best practice" before starting a run; update it after.** The point is
 for each run to start smarter than the last.

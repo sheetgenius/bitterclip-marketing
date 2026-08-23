@@ -2,58 +2,108 @@
 
 ## Scope
 
-This repo owns the public marketing site for `bitterclip.com`.
+This public repository owns the marketing site for `bitterclip.com`. Product
+application code, customer data, private operations, and media-processing
+services live elsewhere.
 
-The repo is intentionally public. Treat README copy, page copy, metadata,
-robots, and sitemap content as product and discoverability assets. Do not commit secrets,
-private media, private runbooks, provider payloads, or generated build output.
+## Read order
 
-The README should keep a clear semantic description of Bitter and explain how
-BitterClip fits into the Bitter constellation. Keep that material factual and
-product-structural rather than promotional.
+Before changing the repository, read:
 
-Use the README as the pattern for other public Bitter constellation repos:
+1. `CURRENT_STATE.md` for the deployed/runtime truth and protected worktree notes.
+2. `docs/README.md` for document authority and task routing.
+3. The task-specific runbook linked from that map.
+4. `README.md` and `CONTRIBUTING.md` when changing public repository context.
 
-1. Name the product or system directly.
-2. State what it is in one concrete sentence.
-3. Explain how it fits into Bitter.
-4. Define the repo boundary and what lives elsewhere.
-5. Link the canonical public surfaces.
-6. Document deployment without exposing secrets.
-7. Preserve public, indexable context that will still make sense later.
+Do not treat an older spec, review, workshop prompt, or journal entry as current
+authority merely because it is detailed. The status registry in `docs/README.md`
+decides how each internal document may be used.
 
-The shared public marketing repository standard lives outside this repo in
-Factory. Do not add generic cross-repo standards docs here. Keep
-`CONTRIBUTING.md`, `SECURITY.md`, `.github/release.yml`, and
-`.github/pull_request_template.md` specific to BitterClip.
+## Public repository boundary
 
-Maintain `CHANGELOG.md` as the public semantic change history. Entries should
-explain product-context, website, deployment, repository metadata, and public
-hygiene changes in terms that will still make sense outside the commit log.
-GitHub release-note grouping lives in `.github/release.yml`; keep its
-categories aligned with the changelog categories.
+Treat README copy, page copy, metadata, robots, sitemap content, and generated
+AI-readable surfaces as public product assets. Do not commit secrets, private
+media, private runbooks, provider payloads, customer data, rendered clips, or
+generated build/evidence output.
 
-Every public route should have a Markdown twin in `public/*.md`. When editing
-`app/pages/index.vue`, `app/pages/docs.vue`, or `app/pages/mcp.vue`, update the
-matching Markdown file, `public/llms.txt`, page-head Markdown alternate links,
-`public/llms-full.txt`, `public/sitemap.xml`, and smoke tests together.
-Markdown twins should be served with canonical HTTP `Link` headers pointing back
-to the matching HTML route.
+The README is the durable public description of BitterClip and its place in the
+Bitter constellation. Keep it factual and product-structural. Maintain
+`CHANGELOG.md` as the public semantic change history; keep its categories aligned
+with `.github/release.yml`.
 
-When changing repository context, update the README first, then propagate any
-durable public claims into `public/llms.txt`, `public/llms-full.txt`,
-`CHANGELOG.md`, and the public repository standard when applicable.
+The shared public-marketing repository standard lives in Factory. Do not copy a
+generic cross-repo standard into this repository. Keep `CONTRIBUTING.md`,
+`SECURITY.md`, `.github/release.yml`, and the pull-request template specific to
+BitterClip.
 
-Do not commit provider keys, OAuth secrets, deploy tokens, registry credentials,
-`.env` files, private recordings, transcripts, rendered clips, provider
-payloads, customer data, internal DNS/mailbox/billing/incident runbooks, or
-generated output from `.nuxt`, `.output`, `dist`, test reports, and local
-agent/tooling directories.
+Never commit provider keys, OAuth secrets, deploy tokens, registry credentials,
+`.env` files, private recordings or transcripts, customer data, provider
+payloads, internal DNS/mailbox/billing/incident runbooks, or output from
+`.nuxt`, `.output`, `dist`, `tmp`, test reports, and local agent/tooling folders.
+
+## Public content contract
+
+Public creator documentation is authored in `content/`; public blog and compare
+pages are authored in their corresponding `content/` collections. Build-time
+generation in `modules/generated-surfaces.ts` emits docs Markdown twins,
+`llms.txt`, `llms-full.txt`, sitemap entries, and feeds. Do not hand-edit those
+generated outputs.
+
+Vue-owned marketing routes such as the homepage and legal pages retain their
+checked-in Markdown alternates under `public/`. Follow
+`docs/runbooks/public-content.md` before changing routes, public claims, or
+content collections.
+
+When repository context changes, update `README.md` first, then propagate any
+durable public claim to the authored public sources and `CHANGELOG.md` as
+applicable.
+
+## Homepage and ISO4
+
+The actual homepage `/` is the acceptance surface. `/lab/iso4` is diagnostic
+only. ISO3 and its routes are historical predecessors and must not be modified
+as part of ISO4 work.
+
+Production serves an immutable responsive ISO4 Artifact video generation;
+development keeps the canonical Three.js scene editable. Before touching the
+cinematic, read:
+
+- `docs/runbooks/iso4-authoring.md`
+- `docs/hero-iso4-brief.md`
+- the latest relevant entries in `docs/hero-iso4-workshop-journal.md`
+
+Before rendering or changing the production selection, also read
+`docs/runbooks/iso4-release.md`. Run `bun run artifact:status` first. Ordinary
+site deploys must reuse the accepted generation when cinematic renderer inputs
+are unchanged; they must never bake the movie implicitly.
+
+Prefer keeping homepage delivery changes inside `HeroIso4.vue`. Editing
+`app/pages/index.vue` changes both the HTML homepage and its public semantic
+surface; follow the homepage and public-content runbooks rather than casually
+normalizing adjacent work.
+
+## Worktree discipline
+
+The worktree may contain active work from other people or agents. Inspect it
+before acting. Preserve unrelated changes and use path-specific staging. Do not
+reset, restore, stash, rename, absorb, or reformat files you do not own.
+
+Keep generated evidence and release media under ignored `tmp/`. In particular,
+large visual studies, contact sheets, frame sequences, and rendered movies do
+not belong under tracked `docs/` or `public/` paths unless they are deliberately
+selected public website assets.
+
+Do not start a development server unless the human asks. If one is already
+running, use it rather than starting another.
 
 ## Commands
 
 - Install dependencies: `bun install`
+- Check internal documentation: `bun run docs:audit`
+- Check whether ISO4 renderer inputs differ from the accepted bake:
+  `bun run artifact:status`
 - Generate static output: `bun run generate`
 - Run smoke tests: `bun run qa:smoke`
 
-Do not start a dev server unless the human asks for it.
+Run `git diff --check` before handoff. Use the narrower verification commands in
+the relevant runbook when the change affects ISO4 delivery or public content.

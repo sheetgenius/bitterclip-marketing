@@ -1,5 +1,8 @@
 # BitterClip landing editor conversion journal
 
+> **Status: historical evidence ledger for a prior homepage/editor workshop.**
+> It is not a current task queue.
+
 Date started: 2026-06-11  
 Goal thread: `019eb816-863d-7bb1-81b1-25e4c48dfdc7`  
 Primary surfaces: `bitterclip.com` landing page and `app.bitterclip.com/embed/*` demo hosts

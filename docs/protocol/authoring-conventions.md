@@ -1,12 +1,16 @@
 # Authoring conventions — the BitterClip docs substrate
 
-This is the contract for everyone who writes docs pages after the skeleton lands. The
-substrate is `@nuxt/content` **v3** (Nuxt 4). Follow these rules and nothing drifts: edit
+> **Status: current authoring convention.** For source-versus-generated
+> boundaries and release checks, start with the
+> [public-content runbook](../runbooks/public-content.md).
+
+This is the contract for everyone who writes docs pages. The substrate is
+`@nuxt/content` **v3** (Nuxt 4). Follow these rules and nothing drifts: edit
 one snippet or one `.yml` row and every page updates (O(1), not O(pages)).
 
-> Phase status: the skeleton is **build-green** with STUB content. Snippet components and
-> `_data/*.yml` rows contain clearly-marked `TODO` placeholders. Replace the placeholders;
-> do not change the mechanism.
+> Phase status: the creator docs substrate is shipped. Build-time generation in
+> `modules/generated-surfaces.ts` emits the public Markdown/discovery surfaces;
+> do not hand-maintain those outputs.
 
 ---
 

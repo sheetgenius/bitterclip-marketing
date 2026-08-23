@@ -1,5 +1,8 @@
 # Homepage copy R&D journal
 
+> **Status: historical research evidence.** Reverify product and market facts
+> before using a settled item as current copy authority.
+
 Started 2026-08-21. Long-horizon pass: market brief (LinkedIn/Reddit/Canny) ×
 shipped BitterClip (`/Users/c3po/co/bitterclip`) × live marketing homepage.
 

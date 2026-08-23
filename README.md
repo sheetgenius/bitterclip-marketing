@@ -87,8 +87,8 @@ This repository owns:
 - Markdown alternates for every public page route
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - public blog RSS at `/blog/rss.xml`
-- public, non-secret ChatGPT app submission context on the `/mcp` page
-- crawlable routes in `public/sitemap.xml`
+- public AI-assistant and MCP guidance under `/docs/assistants`
+- the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
 ## Links
@@ -100,8 +100,8 @@ This repository owns:
 - BitterClip blog: [bitterclip.com/blog](https://bitterclip.com/blog)
 - Blog RSS: [bitterclip.com/blog/rss.xml](https://bitterclip.com/blog/rss.xml)
 - MCP and AI assistant workflow:
-  [bitterclip.com/mcp](https://bitterclip.com/mcp)
-  (remote MCP, ChatGPT submission posture, and review boundaries)
+  [bitterclip.com/docs/assistants/overview](https://bitterclip.com/docs/assistants/overview)
+  (`/mcp` remains a compatibility redirect)
 - Privacy policy: [bitterclip.com/privacy](https://bitterclip.com/privacy)
 - Terms of service: [bitterclip.com/terms](https://bitterclip.com/terms)
 - Markdown page mirrors:
@@ -109,9 +109,10 @@ This repository owns:
   [docs.md](https://bitterclip.com/docs.md),
   [blog.md](https://bitterclip.com/blog.md),
   [your-show-has-a-signature-now.md](https://bitterclip.com/blog/your-show-has-a-signature-now.md),
-  [mcp.md](https://bitterclip.com/mcp.md),
+  [assistants/overview.md](https://bitterclip.com/docs/assistants/overview.md),
   [privacy.md](https://bitterclip.com/privacy.md),
-  [terms.md](https://bitterclip.com/terms.md)
+  [terms.md](https://bitterclip.com/terms.md),
+  [data-deletion.md](https://bitterclip.com/data-deletion.md)
 - AI crawler entry points:
   [llms.txt](https://bitterclip.com/llms.txt),
   [llms-full.txt](https://bitterclip.com/llms-full.txt)
@@ -147,12 +148,17 @@ this repository.
 
 ```bash
 bun install
+bun run docs:audit
+bun run artifact:status
 bun run generate
 bun run qa:smoke
 ```
 
 Useful files:
 
+- `CURRENT_STATE.md` - concise deployed/runtime truth and protected local work
+- `docs/README.md` - internal documentation map, authority registry, and task routing
+- `docs/runbooks/` - homepage, public-content, and ISO4 operating procedures
 - `app/pages/index.vue` - home page
 - `app/pages/docs/[...slug].vue` - documentation page renderer
 - `app/pages/blog/index.vue` - blog index page
@@ -160,15 +166,14 @@ Useful files:
 - `content/blog/` - blog post Markdown
 - `app/pages/privacy.vue` - privacy policy page
 - `app/pages/terms.vue` - terms of service page
-- `public/index.md`, `public/privacy.md`, `public/terms.md`, and generated
-  docs/blog `.md` files - Markdown twins for public pages
-- `public/llms.txt` - AI crawler entry point that links canonical pages and
-  Markdown alternates
-- `public/llms-full.txt` - compact bundled Markdown context for one-fetch AI
-  ingestion
+- `content/` - authored creator docs, blog, comparison pages, and shared public data
+- `modules/generated-surfaces.ts` - build-time generator for docs Markdown twins,
+  discovery files, sitemap entries, and feeds
+- `public/index.md`, `public/compare.md`, `public/privacy.md`,
+  `public/terms.md`, and `public/data-deletion.md` - authored Markdown twins for
+  Vue-owned public routes
 - `public/images/blog/` - public blog images and social cards
 - `nuxt.config.ts` - site metadata and Nuxt configuration
-- `public/sitemap.xml` - crawlable public routes
 - `CHANGELOG.md` - public semantic change history
 - `CONTRIBUTING.md` - public change checklist for humans and agents
 - `SECURITY.md` - sensitive-reporting and public-boundary policy
@@ -187,10 +192,17 @@ search engines, and AI systems that index public repositories.
 Public text in this repository should stay factual, structural, and aligned
 with the live BitterClip product.
 
-Every public HTML page should have a corresponding Markdown alternate served
-from `public/*.md`, advertised with a `rel="alternate"` Markdown link in the
-page head, and listed in `public/sitemap.xml`.
+Every public HTML page should have a corresponding Markdown alternate,
+advertised with a `rel="alternate"` Markdown link in the page head and listed in
+the generated sitemap. Content-collection twins and discovery surfaces are
+generated during `bun run generate`; Vue-owned route twins remain authored in
+`public/`.
 
 Markdown alternates should return canonical HTTP `Link` headers pointing back to
 their HTML pages in production. The bundled `llms-full.txt` file should stay
 compact, factual, and aligned with the current public page copy.
+
+For contributors, [`CURRENT_STATE.md`](CURRENT_STATE.md) is the quickest view of
+what is deployed and [`docs/README.md`](docs/README.md) routes each kind of work
+to its current authority. Older specs and workshop journals remain available as
+history but do not silently outrank those entrypoints.

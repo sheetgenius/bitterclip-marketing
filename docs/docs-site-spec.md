@@ -1,5 +1,10 @@
 # BitterClip docs site — spec
 
+> **Status: historical design spec; implemented and evolved.** Current routing
+> and authoring live in [`docs/README.md`](README.md) and the
+> [public-content runbook](runbooks/public-content.md). The original status line
+> below is preserved as historical evidence.
+
 **Status:** design / spec (2026-06-23). Not yet built.
 **Repo:** `bitterclip-marketing` (Nuxt 4, Tailwind v4, Kamal deploy).
 **Lives at:** `bitterclip.com/docs` — natively, inside the existing static marketing site.

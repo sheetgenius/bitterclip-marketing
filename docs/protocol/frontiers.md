@@ -1,5 +1,9 @@
 # Frontiers of excellence (review rubric)
 
+> **Status: current review rubric for public creator documentation.** Pair it
+> with the [public-content runbook](../runbooks/public-content.md) and reverify
+> any product fact that may have changed.
+
 We round-robin adversarial reviews across these dimensions. A page — and the set — is
 "baked" only when each frontier passes. Refine these criteria every run (see `run-log.md`).
 

@@ -1,4 +1,9 @@
-# BitterClip docs — grounding & voice brief (authoritative)
+# BitterClip docs — grounding & voice brief
+
+> **Status: historical product and voice snapshot.** This is not current
+> authority. Reverify terminology, tools, pricing, and connection behavior
+> against the product before reuse; begin with the
+> [public-content runbook](../runbooks/public-content.md).
 
 Every writer/reviewer reads this first. Two jobs: (1) the facts must be TRUE, (2) the voice
 must be friendly and human.

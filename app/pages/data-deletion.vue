@@ -19,6 +19,7 @@ useHead({
   ],
   link: [
     { rel: 'canonical', href: 'https://bitterclip.com/data-deletion' },
+    { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/data-deletion.md', title: 'BitterClip data deletion Markdown' },
   ],
 })
 

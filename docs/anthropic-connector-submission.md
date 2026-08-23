@@ -1,5 +1,9 @@
 # BitterClip — Anthropic Connectors Directory submission packet
 
+> **Status: submission snapshot.** Reverify current provider requirements,
+> public URLs, and product capabilities before submission. Never add reviewer
+> credentials or secrets.
+
 Working packet for listing BitterClip in **Anthropic's Connectors Directory** (the
 catalog users browse and "Add" inside Claude.ai / Claude Desktop / Claude Code). This
 is distinct from the ChatGPT app directory packet

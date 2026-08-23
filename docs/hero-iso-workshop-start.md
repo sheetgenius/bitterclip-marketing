@@ -1,5 +1,8 @@
 # The Hero ISO Workshop — start message
 
+> **Status: historical workshop prompt.** Do not paste this to begin current
+> ISO4 work; use the [ISO4 authoring runbook](runbooks/iso4-authoring.md).
+
 *(Paste this whole document to Claude to open a workshop session. It assumes the
 repo at `~/co/bitterclip-marketing`; it survives context loss — everything it
 references is committed.)*

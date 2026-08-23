@@ -7,8 +7,10 @@ context. Changes should keep the site accurate, crawlable, and safe to index.
 
 Read:
 
-- `README.md` for product and repository context.
 - `AGENTS.md` for maintainer rules.
+- `CURRENT_STATE.md` for current deployed/runtime truth.
+- `docs/README.md` for document authority and task routing.
+- `README.md` for public product and repository context.
 
 The shared public marketing repository standard is maintained outside this
 product repo in Factory policy. This file only covers BitterClip-specific
@@ -18,10 +20,13 @@ contribution expectations.
 
 For page changes:
 
-- Update the Vue page and the matching `public/*.md` Markdown twin together.
-- Update `public/llms.txt` and `public/llms-full.txt` if the public claim,
-  product model, route list, pricing, or integration surface changed.
-- Update `public/sitemap.xml` when adding or removing public routes.
+- Follow `docs/runbooks/public-content.md`.
+- Author docs, blog, and comparison content under `content/`; their Markdown
+  twins, discovery entries, sitemap entries, and feeds are generated at build
+  time. Do not patch generated output.
+- For Vue-owned routes, update the page and its authored `public/*.md` twin
+  together when the public claim changes.
+- Update the source route inventory when adding or removing public routes.
 - Update `qa/smoke.spec.ts` when the public route contract changes.
 
 For repository-context changes:
@@ -44,6 +49,7 @@ Run:
 
 ```bash
 bun install
+bun run docs:audit
 bun run generate
 bun run qa:smoke
 ```

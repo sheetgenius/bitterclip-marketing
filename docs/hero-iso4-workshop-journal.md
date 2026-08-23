@@ -1,5 +1,10 @@
 # ISO4 motion workshop journal
 
+> **Status: current append-only evidence ledger.** The binding design authority
+> is [`hero-iso4-brief.md`](hero-iso4-brief.md); the current operating paths are
+> in the [ISO4 authoring](runbooks/iso4-authoring.md) and
+> [release](runbooks/iso4-release.md) runbooks.
+
 This is the working ledger for the current ISO4 hill climb. Durable product
 intent lives in `docs/hero-iso4-brief.md`; this file records hypotheses,
 evidence, revisions, and unresolved defects so each pass begins from observed

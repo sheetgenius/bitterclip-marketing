@@ -345,6 +345,16 @@ under a dated entry.
 
 ### Repository Metadata
 
+- Added a current-state entrypoint, a complete internal-document authority map,
+  and focused homepage, public-content, ISO4 authoring, and ISO4 release
+  runbooks. Historical specs and workshop records now identify themselves as
+  evidence rather than silently competing with current instructions. A docs
+  audit enforces the registry and public/generated-content boundary, while an
+  informational Artifact status command reports exact cinematic renderer-input
+  drift without rerendering or blocking ordinary website deploys.
+- Added the missing Markdown alternate and canonical response contract for the
+  public data-deletion instructions, bringing that provider-facing route under
+  the same HTML/Markdown discovery contract as the rest of the site.
 - Updated the README's semantic description and product model to match the
   episode-first object chain: an Episode is the session workspace and its primary
   full-length Program, a Clip is an editable derivative of an Episode, a Render is

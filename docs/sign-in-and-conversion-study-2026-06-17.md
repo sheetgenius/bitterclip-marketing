@@ -1,5 +1,8 @@
 # BitterClip Sign-In And Conversion Study
 
+> **Status: historical study of the June 2026 homepage.** Reinspect the current
+> homepage before carrying a recommendation forward.
+
 Date: 2026-06-17
 Scope: `bitterclip.com` public landing page, top navigation, first-screen CTA
 clarity, and the handoff to `app.bitterclip.com`.

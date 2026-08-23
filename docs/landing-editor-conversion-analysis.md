@@ -1,5 +1,8 @@
 # The live editor on bitterclip.com — deep inventory & improvement vectors
 
+> **Status: historical study of a prior homepage/editor surface.** Confirm the
+> current homepage and product behavior before acting on any finding.
+
 **Date:** 2026-06-11 · **Audience:** product owners working on the marketing site / embed surfaces
 **Scope:** the interactive editor experiences on the landing page (hero phone, mid-page editor, handoff clip card): what every control actually does today, where the experience breaks, and the prioritized avenues for making it convert. Backed by a code-level audit of both repos and a sourced research pass (sources + evidence-quality flags in the appendix).
 

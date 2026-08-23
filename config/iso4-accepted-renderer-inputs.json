@@ -1,0 +1,116 @@
+{
+  "schema": "bitterclip.iso4-accepted-renderer-inputs.v1",
+  "acceptedAt": "2026-08-23T13:28:31.440Z",
+  "sourceRevision": "02afb23e1c502aaf53347920215409ac731a71ab",
+  "definitionPublicId": "artd_zykh9cbhehwelho6lhct",
+  "generationPublicId": "artg_m4v4oeiuvgi8geltufb1",
+  "generationFingerprint": "4e8c690670d979a763dd0d790fb29c66d84edbc193625f7823aab7bb5ff10ea0",
+  "rendererInputs": {
+    "schema": "bitterclip.iso4-renderer-inputs.v1",
+    "files": [
+      {
+        "path": "app/app.vue",
+        "role": "source",
+        "byte_size": 700,
+        "sha256": "64c9071788bd27af6586744be1cc6a067b50a819f92dc68de4246d6acba88353"
+      },
+      {
+        "path": "app/assets/css/main.css",
+        "role": "source",
+        "byte_size": 18269,
+        "sha256": "7528aae98c752ddbf85e9665d294ec65dcdbcdc7395c8076f48c65a6d0b078ba"
+      },
+      {
+        "path": "app/components/HeroIso4.vue",
+        "role": "source",
+        "byte_size": 15887,
+        "sha256": "89087c2f9e422a303dcda6ead85afa7a8084fc521f0b4812706cc0af83749109"
+      },
+      {
+        "path": "app/layouts/default.vue",
+        "role": "source",
+        "byte_size": 7785,
+        "sha256": "5f6a27b227e9662c494c0897d40c29894e84c9e98093ef6b84c84b214545b036"
+      },
+      {
+        "path": "app/lib/hero-iso4/scene.ts",
+        "role": "source",
+        "byte_size": 303118,
+        "sha256": "d89caed20328879043b82d593d61eb233daadec3c58da369cef16a85c80ccf7c"
+      },
+      {
+        "path": "app/pages/index.vue",
+        "role": "source",
+        "byte_size": 40290,
+        "sha256": "0e60810e2438bd6fba17279283451680eeb69b6c06ab0f976c7a5ae77defa788"
+      },
+      {
+        "path": "bun.lock",
+        "role": "dependency",
+        "byte_size": 263372,
+        "sha256": "621b438585ca064e70934290ed4b02b7d937b9931809134f29a68c46d9fae48e"
+      },
+      {
+        "path": "nuxt.config.ts",
+        "role": "dependency",
+        "byte_size": 4392,
+        "sha256": "52125ebe0c5e2764e253b08ea487d017540f42898fbbdca608882f434fdafb44"
+      },
+      {
+        "path": "package.json",
+        "role": "dependency",
+        "byte_size": 1227,
+        "sha256": "1a2d49b1da250bf555b6f5d52330ad18dc4876e97c19aad94239743f5aec0050"
+      },
+      {
+        "path": "public/clips/ep1-john.jpg",
+        "role": "media",
+        "byte_size": 35213,
+        "sha256": "63fd7e4bc3d4d57b9718e7222c99bb9ee60b19646d703374cd1d18a9f028ed4e"
+      },
+      {
+        "path": "public/clips/ep1-john2.jpg",
+        "role": "media",
+        "byte_size": 35783,
+        "sha256": "6cb69d7e7b6710fab24023480fa33b9228232444768fe4ea9d49bcd7265dcc20"
+      },
+      {
+        "path": "public/clips/ep1-loop.mp4",
+        "role": "media",
+        "byte_size": 262587,
+        "sha256": "c5f200be1f783bc3199fd10482b249d1fb893b60951ba0fe93eac06ec9f1c027"
+      },
+      {
+        "path": "public/clips/ep1-michael.jpg",
+        "role": "media",
+        "byte_size": 17308,
+        "sha256": "15e33f84eff8d55643af02d7aba794ca20f1ad3f77dc145d1630c769766e743d"
+      },
+      {
+        "path": "qa/iso4-artifact-bake.mjs",
+        "role": "dependency",
+        "byte_size": 34866,
+        "sha256": "46c8bc3c9dc1aae68d2c8935dd156232c82442b9422573c58382d868e260092d"
+      },
+      {
+        "path": "qa/iso4-artifact-encode.mjs",
+        "role": "dependency",
+        "byte_size": 11411,
+        "sha256": "8a5c24b86ee002d9315a4362be98a672a7d5a146f19540c7af3caa6dd8785d26"
+      },
+      {
+        "path": "qa/iso4-artifact-packet.mjs",
+        "role": "dependency",
+        "byte_size": 80263,
+        "sha256": "9acd4c5964d4905ed8ccd6a132be31a02a0769e6487360e3ebf7e7defbb3b24c"
+      },
+      {
+        "path": "qa/iso4-artifact-provenance.mjs",
+        "role": "dependency",
+        "byte_size": 5928,
+        "sha256": "005cff69df35ea679bc94a11266880e445eeaccd77115aeced2bd853cf59815a"
+      }
+    ],
+    "contentSha256": "55f6039517f86d40420b1dae222ef31b3146c83a962f666353ea6f94a43bd533"
+  }
+}

@@ -1,5 +1,8 @@
 # Hero ISO — nit ledger
 
+> **Status: historical predecessor evidence.** This ledger predates the current
+> ISO4 authority and is retained to avoid repeating old mistakes.
+
 Findings from the tri-eye protocol (me = Claude session · grok · agy), tagged
 by who saw them, with dispositions. Corroboration rule: 2-of-3 = act; solo =
 zoom/measure first. Append, date, never rewrite history.

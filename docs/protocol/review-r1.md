@@ -1,5 +1,9 @@
 # Docs review R1 — fix list
 
+> **Status: historical pre-publication review.** Findings document the state at
+> review time and are not an open task list unless reconfirmed against current
+> content and product behavior.
+
 > Not ready to publish as-is, but close — the content prose is largely solid and on-voice; the blocking issues are concentrated and fixable in a focused pass. Four must-fix items dominate: (1) the default-export-shape contradiction (your-first-clip.md says vertical, find-and-share says widescreen; product truth = source aspect / 16:9 landscape fallback) — a factual error on the single most-followed page; (2) the public agent/crawler files (llms.txt, llms-full.txt, docs.md, index.md) still teach the retired 'Moment' model and ignore the new docs entirely; (3) the sitemap omits all 17 new docs pages, leaving the site invisible to crawlers; (4) 8 callouts render as broken plain text because they use the retired GitHub-blockquote syntax instead of the committed ::callout component. After those, a second tier of clarity/completeness fixes matters for a non-technical audience: stop surfacing snake_case tool names as the thing 'to know', close the missing Claude-paid-plan prerequisite and the ChatGPT/Claude URL-field gap, surface the Pro/embed prerequisite before its walkthrough, and reconcile the verification-gate and 'Outputs' naming inconsistencies. The remaining items are voice de-templating and DRY/generation hygiene. Verified the four high-severity claims directly against the repo; dropped nothing as wrong — the input reports were accurate, and I merged the duplicate export-default finding (raised independently by 4 frontiers) into one fix plus a cross-cutting note. Estimated effort: ~half a day for the four blockers, another half for the clarity/completeness tier.
 
 ## Fixes by file

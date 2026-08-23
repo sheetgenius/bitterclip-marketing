@@ -486,6 +486,17 @@ test('renders the terms of service page', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'hello@bitterclip.com' }).first()).toBeVisible()
 })
 
+test('renders the data deletion page and its Markdown alternate', async ({ page }) => {
+  await page.goto('/data-deletion')
+
+  await expect(page.locator(
+    'link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/data-deletion.md"]',
+  )).toHaveCount(1)
+  await expect(page.getByRole('heading', { level: 2, name: 'Delete your data.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Disconnect the integration (instant)' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Delete your whole account' })).toBeVisible()
+})
+
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Footage in. Episode out.' },
@@ -509,6 +520,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     },
     { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
+    { path: '/data-deletion.md', text: 'Disconnect the integration' },
   ]
 
   for (const markdownPage of markdownPages) {
@@ -536,6 +548,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/blog/pi-vs-deepseek-harness')
   expect(sitemapText).toContain('https://bitterclip.com/privacy')
   expect(sitemapText).toContain('https://bitterclip.com/terms')
+  expect(sitemapText).toContain('https://bitterclip.com/data-deletion')
   expect(sitemapText).toContain('https://bitterclip.com/docs/help/troubleshooting')
 
   const rss = await request.get('/blog/rss.xml')

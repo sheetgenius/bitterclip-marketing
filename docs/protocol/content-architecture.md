@@ -1,5 +1,9 @@
 # DRY content architecture (the maintainability frontier)
 
+> **Status: historical design rationale.** This document explains choices that
+> led to the shipped substrate. Current operating guidance lives in the
+> [public-content runbook](../runbooks/public-content.md).
+
 The APIs will keep evolving. The cost of a change must be **O(1), not O(pages)** — a
 contributor updates one place and nothing drifts. Rules:
 

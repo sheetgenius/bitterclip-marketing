@@ -1,5 +1,9 @@
 # Review — BitterClip docs site spec
 
+> **Status: historical adversarial review.** It describes the repository before
+> the current content-driven docs system shipped. Use it as rationale, not as a
+> current implementation inventory.
+
 **Reviewer:** senior staff eng, adversarial pass · **Date:** 2026-06-23
 **Target:** `docs/docs-site-spec.md` · **Repo grounded against:** `package.json`, `nuxt.config.ts`, `nginx.conf`, `Dockerfile`, `config/deploy.yml`, `app/pages/{docs,mcp}.vue`, `app/assets/css/main.css`, `public/`.
 

@@ -1,5 +1,11 @@
 # BitterClip docs build plan
 
+> **Status: historical implementation plan.** The docs site has shipped and the
+> current file/command contract lives in the
+> [public-content runbook](../runbooks/public-content.md) and
+> [`authoring-conventions.md`](authoring-conventions.md). Do not interpret
+> unchecked plan language below as present runtime truth.
+
 Machine-readable plan: [`build-plan.json`](./build-plan.json). This is the human-readable rendering of the adversarially-reviewed content + DRY architecture plan the drafting workflow consumes. Honor the guardrails at the bottom (drawn from the adversarial critique) when drafting.
 
 ## Pages

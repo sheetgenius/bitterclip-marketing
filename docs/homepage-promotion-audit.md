@@ -1,5 +1,9 @@
 # Homepage promotion audit — `/lab/iso4` → `/`
 
+> **Status: historical completed migration.** ISO4 is already the homepage and
+> `/` is now the canonical acceptance surface. See the
+> [homepage runbook](runbooks/homepage.md) for current work.
+
 2026-08-20. The owner ruled: the ISO4 page becomes the homepage. This is the
 side-by-side inventory and the ticket list for the cut-over. Push-to-main
 auto-deploys prod, so the swap must land as ONE complete commit — no

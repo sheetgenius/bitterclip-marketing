@@ -1,10 +1,15 @@
 # BitterClip — ChatGPT app directory submission packet
 
+> **Status: submission snapshot.** Reverify current provider requirements,
+> public URLs, and product capabilities before submission. Never add reviewer
+> credentials or secrets.
+
 Working packet for listing BitterClip in the **ChatGPT app directory** (OpenAI Apps
 SDK). Companion to [anthropic-connector-submission.md](anthropic-connector-submission.md)
 — same server, same verified facts, different store, form, and review flow. The
-`/mcp` page's "Submission readiness" section targets this store; this doc supersedes
-it as the working checklist.
+The public assistant overview now lives at `/docs/assistants/overview`; `/mcp`
+is a compatibility redirect. This packet remains the working public checklist
+only after its provider facts have been reverified.
 
 - **Submission portal:** https://platform.openai.com/apps-manage (after testing in
   ChatGPT Developer Mode)

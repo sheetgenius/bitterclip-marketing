@@ -1,5 +1,9 @@
 # The isometric hero — design brief
 
+> **Status: historical ISO predecessor.** Do not apply this brief to current
+> ISO4 or alter ISO3 from it. Current authority is
+> [`hero-iso4-brief.md`](hero-iso4-brief.md).
+
 Prototype route: **`/lab/iso`**
 Renderer: **`app/lib/hero-iso/renderer.ts`** (~830 lines, Canvas 2D, no dependencies)
 Mount: `app/components/HeroIso.client.vue` · Page: `app/pages/lab/iso.vue`
