@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // Root shell. Per-route chrome lives in layouts/ (default = marketing chrome,
 // docs = the three-pane documentation shell). Pages opt in via definePageMeta.
-// This tiny SSR-inline shell owns the browser's very first paint. Mobile
-// Safari can otherwise show its default white canvas before the external Nuxt
-// stylesheet arrives, which is especially conspicuous beside ISO4's noir
-// prepaint and makes a cold page load feel broken.
+// This tiny SSR-inline shell owns the first product paint once HTML arrives.
+// Mobile Safari can otherwise repaint its default white canvas before the
+// external Nuxt stylesheet loads, which is especially conspicuous beside
+// ISO4's noir prepaint and makes a cold page load feel broken.
 useHead({
   style: [
     {
