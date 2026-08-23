@@ -2782,8 +2782,9 @@ filename. Tall versus classic measured SSIM `.9436`; wide versus standard
 `.9422`, proving those compositions are not interchangeable. Panoramic versus
 wide measured `.9934`, and ultrawide versus panoramic `.9973`. The release
 inventory therefore collapses only the wide/panoramic/ultrawide band and keeps
-six masters: mobile 440x956, tablet 768x900, tall 1817x1454, classic 1400x1000,
-standard 1600x1000, and ultrawide 1920x900.
+six masters: mobile 440x956, tablet 768x900, tall 1818x1454 coded for the
+1817x1454 CSS acceptance viewport, classic 1400x1000, standard 1600x1000, and
+wide-band 1920x900.
 
 Evidence:
 
@@ -2861,3 +2862,94 @@ operations so an uploaded candidate cannot silently replace the homepage.
 Product contract:
 
 - `/Users/c3po/co/bitterclip/docs/build/artifact-generation-custody-contract-2026-08-23.md`
+
+## Round 59 — accepted generation, production playback, and release closure
+
+The scene was frozen at marketing source commit
+`02afb23e1c502aaf53347920215409ac731a71ab`. Its declared renderer inputs hash
+is `55f6039517f86d40420b1dae222ef31b3146c83a962f666353ea6f94a43bd533`;
+the immutable source bundle is
+`921c8755c4f17a309de929f171f3694d1126fc8bc2ea8f81b8fdc61d5167c26c`.
+BitterClip published and accepted definition `artd_zykh9cbhehwelho6lhct`,
+generation `artg_m4v4oeiuvgi8geltufb1`, fingerprint
+`4e8c690670d979a763dd0d790fb29c66d84edbc193625f7823aab7bb5ff10ea0`,
+at acceptance version 1. All 18 public generation objects passed exact hash,
+size, content-type, immutable-cache, and content-encoding checks; every MP4
+also returned the expected HTTP 206 byte range. The product custody release is
+deployed at BitterClip commit `d8d2271205b4ba06acb1baad9bd5eeadc1038ad1`.
+
+The accepted H.264 CRF 18 inventory is:
+
+- mobile 440x956: 1,276,245 bytes, 0.711Mbps, SSIM `.997953`;
+- tablet 768x900: 1,312,037 bytes, 0.731Mbps, SSIM `.998886`;
+- tall 1818x1454: 3,443,278 bytes, 1.917Mbps, SSIM `.999221`;
+- classic 1400x1000: 2,169,611 bytes, 1.208Mbps, SSIM `.999083`;
+- standard 1600x1000: 2,410,811 bytes, 1.342Mbps, SSIM `.999101`;
+- wide-band 1920x900: 2,324,374 bytes, 1.294Mbps, SSIM `.999222`.
+
+CRF 15 was rejected at 3,152,574 bytes for the exploratory wide render because
+its `.999358` SSIM and `96.652` VMAF did not produce a normal-distance gain over
+CRF 18. CRF 21 was rejected at 1,576,165 bytes because its `.998675` SSIM and
+`95.334` VMAF accompanied visible smoothing of near-black halos, subtitle
+edges, and film perforations. The accepted CRF 18 comparison measured
+`.999069` SSIM and `96.114` VMAF.
+
+The production shell was exercised against the freshly generated `/` in all
+six camera families, Chromium and WebKit mobile/wide, reduced motion, autoplay
+denial, tab hide/show, offscreen pause/resume, and 4x CPU slowdown. Each
+isolated ordinary run selected one MP4, received HTTP 206, reported zero
+dropped or corrupt frames, ended once, never restarted, held exact terminal
+pixels, released the decoder, and exposed neither canvas nor `window.__iso`.
+A concurrent tablet+tall stress probe dropped one tall frame; the isolated tall
+rerun returned to zero and is the accepted result. Under 4x CPU slowdown the
+movie still dropped zero frames. Trace attribution assigns the >50ms work to
+navigation and Google Tag Manager before hero playback, not the video shell.
+
+The apparent mobile poster/video jump raised during adversarial review was an
+evidence-timing error: a screenshot named for handoff completed 228ms after
+playback began. Fresh decoding of the accepted CDN opening WebP and H.264 frame
+zero produced identical RGB24 and RGBA hashes, zero differing pixels, MSE 0,
+SSIM 1, and infinite PSNR. The playback harness now waits for the actual
+responsive opening image to decode and receive two paint opportunities before
+capturing its opening witness. Telemetry independently records handoff at
+media time zero within the `1/120s` contract and with zero geometry delta.
+
+Final generated-static Lighthouse medians:
+
+- desktop: Performance 100, Accessibility 95, Best Practices 100, SEO 100,
+  FCP 464ms, LCP 526ms, Speed Index 467ms, TBT 0ms, CLS 0, 2,681,875 bytes;
+- mobile: Performance 97, Accessibility 95, Best Practices 100, SEO 100,
+  FCP 1.880s, LCP 2.187s, Speed Index 1.880s, TBT 11.5ms, CLS 0,
+  1,651,054 bytes.
+
+Grok initially returned no-ship on the stale SEO 92 report and the mistimed
+mobile screenshot. After reading the corrected pixel audit, post-robots
+Lighthouse reports, all six final Chromium runs, and final WebKit mobile/wide
+runs, it retracted that verdict and issued SHIP with no P0/P1. Fresh 5s
+homepage checkpoints also record the particle/film body of the cinematic at
+wide and mobile rather than relying only on transition and terminal stills.
+The resumable Claude/Fable session remained unavailable because the provider
+account had reached its monthly spend limit, so no Fable opinion is claimed.
+The internal adversarial reviewer independently issued SHIP after the fresh
+Lighthouse runs, also with no P0/P1. Remaining P2 choices are deferring Google
+Tag Manager under severe CPU throttling, adding accessibility margin above the
+accepted 95, defining master reselection on device rotation, and a later mobile
+terminal-card contrast/edge-spacing taste pass.
+
+Evidence:
+
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/release-packet/packet/packet-build-receipt.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/publication-verification/publication-verification.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/accepted-promotion/marketing-manifest.accepted.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/mobile-opening-frame-zero-audit.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/grok-final-review.md`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/lighthouse-desktop-final/summary.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/lighthouse-mobile-final/summary.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/responsive-mobile-final/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/responsive-mobile-final/midplay-homepage.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/responsive-wide-final/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/responsive-wide-final/midplay-homepage.png`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/webkit-mobile-final/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/webkit-wide-final/playback-report.json`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/final-02afb23/acceptance/static/iphone-simulator-pass.mp4`
+- `/Users/c3po/co/bitterclip-marketing/tmp/iso4-homepage-workshop/artifact-delivery/cpu4-trace/long-tasks.json`

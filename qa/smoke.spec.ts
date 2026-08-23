@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { iso4Release, iso4ReleaseReady } from '../app/lib/hero-iso4/release'
 
 test('renders the footage-in episodes-out hero and the bottom funnel', async ({ page }) => {
   await page.goto('/')
@@ -14,10 +15,40 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
 
   const iso4Prepaint = page.locator('picture.iso4__prepaint')
   await expect(iso4Prepaint).toHaveCount(1)
-  await expect(iso4Prepaint.locator('source')).toHaveCount(7)
-  await expect(iso4Prepaint.locator('source[srcset="/images/hero/iso4-prepaint-panoramic.webp"]')).toHaveCount(1)
-  await expect(iso4Prepaint.locator('img')).toHaveAttribute('src', '/images/hero/iso4-prepaint-ultrawide.webp')
-  await expect(page.locator('link[rel="preload"][as="image"][href*="iso4-prepaint-"]')).toHaveCount(8)
+  if (iso4ReleaseReady) {
+    const sources = iso4Release.variants.slice(0, -1)
+    await expect(iso4Prepaint.locator('source')).toHaveCount(
+      iso4Release.variants.length + sources.length,
+    )
+    for (const variant of iso4Release.variants) {
+      await expect(iso4Prepaint.locator(
+        `source[media="(prefers-reduced-motion: reduce) and ${variant.media}"]`,
+      )).toHaveAttribute('srcset', variant.terminalPosterUrl)
+    }
+    for (const variant of sources) {
+      await expect(iso4Prepaint.locator(`source[media="${variant.media}"]`)).toHaveAttribute('srcset', variant.openingPosterUrl)
+    }
+    const fallback = iso4Release.variants.at(-1)!
+    await expect(iso4Prepaint.locator('img')).toHaveAttribute('src', fallback.openingPosterUrl)
+    for (const variant of iso4Release.variants) {
+      await expect(page.locator(
+        `link[rel="preload"][as="image"][href="${variant.openingPosterUrl}"]`,
+      )).toHaveCount(1)
+      await expect(page.locator(
+        `link[rel="preload"][as="image"][href="${variant.terminalPosterUrl}"]`,
+      )).toHaveCount(1)
+    }
+  } else {
+    await expect(iso4Prepaint.locator('source')).toHaveCount(15)
+    await expect(iso4Prepaint.locator(
+      'source[media="(min-width: 960px) and (min-aspect-ratio: 29/16) and (max-aspect-ratio: 2/1)"][srcset="/images/hero/iso4-prepaint-panoramic.webp"]',
+    )).toHaveCount(1)
+    await expect(iso4Prepaint.locator(
+      'source[media="(prefers-reduced-motion: reduce) and (min-width: 960px) and (min-aspect-ratio: 29/16) and (max-aspect-ratio: 2/1)"][srcset="/images/hero/iso4-prepaint-panoramic.webp"]',
+    )).toHaveCount(1)
+    await expect(iso4Prepaint.locator('img')).toHaveAttribute('src', '/images/hero/iso4-prepaint-ultrawide.webp')
+    await expect(page.locator('link[rel="preload"][as="image"][href*="iso4-prepaint-"]')).toHaveCount(16)
+  }
 
   const h1 = page.getByRole('heading', { level: 1 })
   await expect(h1).toContainText('Footage in')
@@ -402,6 +433,12 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     expect(response.ok()).toBeTruthy()
     expect(await response.text()).toContain(markdownPage.text)
   }
+
+  const robots = await request.get('/robots.txt')
+  expect(robots.ok()).toBeTruthy()
+  const robotsText = await robots.text()
+  expect(robotsText).toContain('Sitemap: https://bitterclip.com/sitemap.xml')
+  expect(robotsText).not.toMatch(/^LLMs:/m)
 
   const sitemap = await request.get('/sitemap.xml')
   expect(sitemap.ok()).toBeTruthy()

@@ -116,13 +116,18 @@ scene on the canonical homepage, including deterministic seeking and release
 diagnostics. A production build imports no Three.js scene code: it server-renders
 the exact opening poster, selects one immutable responsive H.264 generation,
 plays it once behind the real HTML proposition, and hands off to the exact
-terminal poster before releasing the decoder. If that poster cannot decode, the
-ended video and decoder remain parked on the same terminal frame rather than
-flashing back to the opening. It never loops, restarts during a
-visit, or substitutes a production-only animation. Reduced motion presents the
-terminal poster; data-saver and autoplay/decode failure preserve the opening
-poster. The poster, movie, and terminal image must share one camera geometry,
-and the first movie frame must be presented before the 180ms opacity exchange.
+terminal poster before releasing the decoder. The mounted terminal layer itself
+must decode and report the expected intrinsic dimensions before it owns pixels;
+if that fails, the ended video and decoder remain parked on the same terminal
+frame rather than flashing back to the opening. It never loops, restarts during
+a visit, or substitutes a production-only animation. Reduced motion presents
+the terminal poster from SSR onward, including when the preference changes while
+the movie is priming or playing; data-saver and autoplay/decode failure preserve
+the opening poster. Opening and terminal preloads are strict, disjoint preference
+branches so only the surface a visitor can see is requested. The poster, movie,
+and terminal image must share one camera geometry. A hidden prime frame may
+prove decode readiness, but the compositor must rewind and present encoded frame
+zero within `1/120s` before the 180ms opacity exchange.
 
 Release rendering uses the homepage WebGL backing store, not an element
 screenshot and not `/lab/iso4`. The renderer installs all 288 native 24fps
@@ -139,10 +144,11 @@ The accepted web encode is silent H.264 High Profile in MP4, constant 60fps,
 Opening and terminal posters are lossless WebP decoded from the selected H.264
 frames through a metadata-free RGB bridge; this avoids the color-managed WebP
 darkening found during the workshop. Six camera masters remain: mobile, tablet,
-tall, classic, standard, and ultrawide. All coded dimensions are explicit and
+tall, classic, standard, and wide-band. All coded dimensions are explicit and
 even; the 1817px tall acceptance viewport uses an 1818px master with a centered
-half-pixel edge crop rather than silent encoder truncation. The ultrawide master serves the accepted
-wide/panoramic/ultrawide band only; it may not replace the distinct tall,
+half-pixel edge crop rather than silent encoder truncation. The 1920x900
+wide-band master serves the accepted wide/panoramic/ultrawide band only; it may
+not replace the distinct tall,
 classic, or standard compositions.
 
 Generated media never enters this repository. A small checked-in manifest may
@@ -154,6 +160,17 @@ create-only and validation precedes acceptance; failure leaves the existing
 manifest and accepted generation untouched. Rollback selects a previous ready
 generation and never rerenders. This addendum supersedes the later historical
 claim that Three.js is dynamically imported from a lab route only.
+
+The first accepted production selection is Artifact definition
+`artd_zykh9cbhehwelho6lhct`, generation `artg_m4v4oeiuvgi8geltufb1`, with
+fingerprint
+`4e8c690670d979a763dd0d790fb29c66d84edbc193625f7823aab7bb5ff10ea0`
+at acceptance version 1. Those identifiers are provenance, not a mutable
+"latest" alias. Releasing a later cinematic must create or reuse a complete
+ready generation, verify all public bodies and MP4 range responses, accept it
+with the recorded compare-and-swap version, and only then replace the marketing
+manifest. The current generation remains the rollback target until a later
+selection has independently passed the homepage acceptance suite.
 
 - The machine is a **large, vertically stacked dual-reel projector** occupying
   roughly 85% of the available composition. It remains a supporting character

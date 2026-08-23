@@ -95,6 +95,11 @@ under a dated entry.
   opening poster, then release the decoder behind an exact motionless terminal
   poster. Navigation, proposition, calls to action, and accessibility structure
   remain HTML rather than being baked into the movie.
+- Published the first responsive ISO4 Artifact generation at immutable,
+  content-addressed media URLs. Six camera-matched H.264 masters preserve the
+  homepage composition from mobile through wide desktop; each plays once,
+  respects reduced motion and page visibility, and ends on an exact still
+  rather than looping or leaving a decoder active.
 - Deferred the homepage's below-fold proof video, customer portraits, and
   editor screenshot until they approach the viewport. Local versioned fonts,
   inlined opening-frame styles, precompressed static assets, and a smaller

@@ -69,7 +69,7 @@ const GENERATION_SCHEMA = 'bitterclip.artifact_generation_manifest.v1'
 const SOURCE_BUNDLE_SCHEMA = 'bitterclip.iso4-source-bundle.v1'
 const MARKETING_SCHEMA = 'bitterclip.programmable_artifact_generation.v1'
 const VARIANT_SPEC_SCHEMA = 'bitterclip.iso4-artifact-variant-spec.v1'
-const ACCOUNT_PATTERN = /^acct_[a-z0-9]{20}$/
+const ACCOUNT_PATTERN = /^acct_(?:[a-z0-9]{12}|[a-z0-9]{20})$/
 const NAME_PATTERN = /^[a-z0-9][a-z0-9-]{0,95}$/
 const COMPONENT_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$/
 const SHA256_PATTERN = /^[a-f0-9]{64}$/
@@ -94,7 +94,7 @@ const usage = `Usage:
   node qa/iso4-artifact-packet.mjs [required options]
 
 Required:
-  --account-public-id ID    BitterClip account public ID (acct_ + 20 chars)
+  --account-public-id ID    BitterClip account public ID (acct_ + 12 or 20 chars)
   --output DIR              New dedicated output directory below tmp/
   --source-file PATH        Repeat for authored ISO4 source files
   --media-file PATH         Repeat for source media; must include bake source
@@ -1715,6 +1715,12 @@ function runSelfTest() {
     definitionKey: 'homepage-iso4',
     definitionName: 'ISO4 homepage cinematic',
   }
+  assert(
+    ACCOUNT_PATTERN.test('acct_000000000000')
+      && ACCOUNT_PATTERN.test('acct_00000000000000000000')
+      && !ACCOUNT_PATTERN.test('acct_0000000000000'),
+    'historical and current account public IDs are accepted exactly',
+  )
   assertRejects(
     () => validateCli(baseCli),
     /cannot be combined/,

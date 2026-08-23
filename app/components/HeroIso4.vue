@@ -35,6 +35,29 @@ const PREPAINT_VARIANTS: PosterVariant[] = [
   { key: 'ultrawide', media: '(min-width: 960px) and (min-aspect-ratio: 2/1)', width: 1920, height: 900, openingPosterUrl: '/images/hero/iso4-prepaint-ultrawide.webp', terminalPosterUrl: '/images/hero/iso4-prepaint-ultrawide.webp', mp4Url: '' },
 ]
 
+// The canonical picture/video queries deliberately retain their broadly
+// compatible inclusive bounds. A picture selects the first matching source,
+// but independent preload links would fetch both neighbors at an exact aspect
+// boundary. These stricter MQ4 ranges are progressive-enhancement hints only:
+// an older browser may skip the preload and still choose the correct picture
+// and video through the canonical queries below.
+const PRELOAD_MEDIA_BY_KEY: Readonly<Record<string, string>> = Object.freeze({
+  mobile: '(max-width: 599px)',
+  tablet: '(min-width: 600px) and (max-width: 959px)',
+  tall: '(min-width: 960px) and (aspect-ratio <= 4/3)',
+  classic: '(min-width: 960px) and (aspect-ratio > 4/3) and (aspect-ratio <= 3/2)',
+  standard: '(min-width: 960px) and (aspect-ratio > 3/2) and (aspect-ratio <= 17/10)',
+  wide: '(min-width: 960px) and (aspect-ratio > 17/10) and (aspect-ratio <= 29/16)',
+  panoramic: '(min-width: 960px) and (aspect-ratio > 29/16) and (aspect-ratio <= 2/1)',
+  ultrawide: '(min-width: 960px) and (aspect-ratio > 2/1)',
+  'wide-band': '(min-width: 960px) and (aspect-ratio > 17/10)',
+})
+
+const motionMedia = (
+  variant: PosterVariant,
+  preference: 'no-preference' | 'reduce',
+) => `(prefers-reduced-motion: ${preference}) and ${PRELOAD_MEDIA_BY_KEY[variant.key] ?? variant.media}`
+
 const route = useRoute()
 // The query is deliberately development-only. Production cannot opt back into
 // shaders or workshop controls, even if the same query string is present.
@@ -66,9 +89,11 @@ const diagnosticVariant = computed<PosterVariant | null>(() => {
 const releaseVariants = computed<PosterVariant[]>(() => (
   diagnosticVariant.value
     ? [diagnosticVariant.value]
-    : iso4ReleaseReady
-      ? iso4Release.variants
-      : PREPAINT_VARIANTS
+    : liveAuthoring
+      ? PREPAINT_VARIANTS
+      : iso4ReleaseReady
+        ? iso4Release.variants
+        : PREPAINT_VARIANTS
 ))
 const deliveryReady = computed(() => Boolean(diagnosticVariant.value || iso4ReleaseReady))
 const fallbackVariant = computed(() => releaseVariants.value.at(-1)!)
@@ -78,6 +103,7 @@ const activePosterVariant = computed(() => selectedVariant.value ?? fallbackVari
 // same candidate needlessly reparses the picture and can cause a visible
 // poster handoff on cold load.
 const openingSourceVariants = computed(() => releaseVariants.value.slice(0, -1))
+const reducedMotionSourceVariants = computed(() => releaseVariants.value)
 
 useHead(() => ({
   link: [
@@ -92,7 +118,14 @@ useHead(() => ({
       rel: 'preload',
       as: 'image',
       href: variant.openingPosterUrl,
-      media: variant.media,
+      media: motionMedia(variant, 'no-preference'),
+      fetchpriority: 'high',
+    })),
+    ...releaseVariants.value.map((variant) => ({
+      rel: 'preload',
+      as: 'image',
+      href: variant.terminalPosterUrl,
+      media: motionMedia(variant, 'reduce'),
       fetchpriority: 'high',
     })),
   ],
@@ -101,6 +134,7 @@ useHead(() => ({
 const host = ref<HTMLDivElement | null>(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
 const prepaintImage = ref<HTMLImageElement | null>(null)
+const terminalPosterImage = ref<HTMLImageElement | null>(null)
 const deliveryVideo = ref<HTMLVideoElement | null>(null)
 const painted = ref(false)
 const phase = ref<DeliveryPhase>('opening')
@@ -116,7 +150,10 @@ let finishing = false
 let preparingVideo = false
 let heroVisible = true
 let decoderReleaseTimer = 0
+let reducedMotionPromise: Promise<void> | null = null
 const TAKEOVER_MS = 180
+const FRAME_ZERO_EPSILON_SECONDS = 1 / 120
+const PRESENTATION_TIMEOUT_MS = 1_200
 const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 const mark = (name: string) => performance.mark(`iso4:${name}`)
@@ -126,34 +163,93 @@ const selectReleaseVariant = () => (
   ?? fallbackVariant.value
 )
 
-const waitForPresentedFrame = async (video: HTMLVideoElement) => {
-  type VideoWithFrameCallback = HTMLVideoElement & {
-    requestVideoFrameCallback?: (callback: () => void) => number
-    cancelVideoFrameCallback?: (handle: number) => void
+interface PresentedFrame {
+  compositor: boolean
+  mediaTime: number
+}
+
+type VideoWithFrameCallback = HTMLVideoElement & {
+  requestVideoFrameCallback?: (
+    callback: (now: number, metadata: { mediaTime: number }) => void,
+  ) => number
+  cancelVideoFrameCallback?: (handle: number) => void
+}
+
+const waitForMediaEvent = (
+  video: HTMLVideoElement,
+  event: 'loadeddata' | 'seeked',
+  timeoutMs: number,
+) => new Promise<boolean>((resolve) => {
+  let settled = false
+  const finish = (received: boolean) => {
+    if (settled) return
+    settled = true
+    window.clearTimeout(timeout)
+    video.removeEventListener(event, receivedEvent)
+    resolve(received)
   }
+  const receivedEvent = () => finish(true)
+  const timeout = window.setTimeout(() => finish(false), timeoutMs)
+  video.addEventListener(event, receivedEvent, { once: true })
+})
+
+const waitForPresentedFrame = async (
+  video: HTMLVideoElement,
+  timeoutMs = PRESENTATION_TIMEOUT_MS,
+): Promise<PresentedFrame | null> => {
   const callbackVideo = video as VideoWithFrameCallback
   if (callbackVideo.requestVideoFrameCallback) {
-    return await new Promise<boolean>((resolve) => {
+    return await new Promise<PresentedFrame | null>((resolve) => {
       let settled = false
-      const finish = (presented: boolean) => {
+      const finish = (presented: PresentedFrame | null) => {
         if (settled) return
         settled = true
         window.clearTimeout(timeout)
         if (!presented) callbackVideo.cancelVideoFrameCallback?.(handle)
         resolve(presented)
       }
-      const handle = callbackVideo.requestVideoFrameCallback?.(() => finish(true)) ?? 0
-      const timeout = window.setTimeout(() => finish(false), 750)
+      const handle = callbackVideo.requestVideoFrameCallback?.((_now, metadata) => finish({
+        compositor: true,
+        mediaTime: metadata.mediaTime,
+      })) ?? 0
+      const timeout = window.setTimeout(() => finish(null), timeoutMs)
     })
   }
-  if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-    await nextFrame()
+  if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+    && !await waitForMediaEvent(video, 'loadeddata', timeoutMs)) {
+    return null
+  }
+  // `seeked` guarantees the media position in older Safari. Two paints then
+  // give its compositor a bounded opportunity to adopt that decoded frame.
+  await nextFrame()
+  await nextFrame()
+  return { compositor: false, mediaTime: video.currentTime }
+}
+
+const rewindToPresentedFrameZero = async (
+  video: HTMLVideoElement,
+  primed: PresentedFrame,
+) => {
+  video.pause()
+  if (Math.abs(video.currentTime) <= FRAME_ZERO_EPSILON_SECONDS
+    && Math.abs(primed.mediaTime) <= FRAME_ZERO_EPSILON_SECONDS) {
     return true
   }
-  return await Promise.race([
-    new Promise<boolean>((resolve) => video.addEventListener('loadeddata', () => resolve(true), { once: true })),
-    wait(500).then(() => false),
-  ])
+
+  const callbackVideo = video as VideoWithFrameCallback
+  const presentedFrame = callbackVideo.requestVideoFrameCallback
+    ? waitForPresentedFrame(video)
+    : null
+  const seeked = waitForMediaEvent(video, 'seeked', PRESENTATION_TIMEOUT_MS)
+  video.currentTime = 0
+  if (video.seeking && !await seeked) return false
+
+  const presented = presentedFrame
+    ? await presentedFrame
+    : await waitForPresentedFrame(video)
+  return Boolean(presented
+    && Math.abs(video.currentTime) <= FRAME_ZERO_EPSILON_SECONDS
+    && Math.abs(presented.mediaTime) <= FRAME_ZERO_EPSILON_SECONDS)
 }
 
 const releaseDecoder = () => {
@@ -169,15 +265,31 @@ const prepareTerminalPoster = async () => {
   if (terminalPosterReady.value) return true
   const terminal = selectedVariant.value?.terminalPosterUrl
   if (!terminal) return false
-  const image = new Image()
-  image.decoding = 'async'
-  image.src = terminal
+  const paintedImage = prepaintImage.value
+  const terminalUrl = new URL(terminal, document.baseURI).href
+  const image = paintedImage?.currentSrc === terminalUrl ? paintedImage : new Image()
+  if (image !== paintedImage) {
+    image.decoding = 'async'
+    image.src = terminal
+  }
   try {
     await image.decode()
     terminalPosterReady.value = true
     await nextTick()
+    // The preloader and the visible terminal layer are separate image
+    // elements. Decode the element that will actually own the pixels before
+    // beginning the terminal crossfade; cache warmth alone is not a paint
+    // guarantee on Safari or under decoder pressure.
+    const terminalImage = terminalPosterImage.value
+    if (!terminalImage) throw new Error('terminal poster layer did not mount')
+    await terminalImage.decode()
+    if (!terminalImage.complete || terminalImage.naturalWidth < 1 || terminalImage.naturalHeight < 1) {
+      throw new Error('terminal poster layer did not decode')
+    }
     return true
   } catch {
+    terminalPosterReady.value = false
+    await nextTick()
     return false
   }
 }
@@ -207,6 +319,38 @@ const handleDeliveryError = () => {
   releaseDecoder()
 }
 
+const enterReducedMotion = () => {
+  if (liveAuthoring) {
+    sceneCtl?.stop()
+    sceneCtl?.still()
+    return Promise.resolve()
+  }
+  if (completed) return reducedMotionPromise ?? Promise.resolve()
+  if (reducedMotionPromise) return reducedMotionPromise
+
+  // Reduced motion is a one-way decision for this visit. If the preference
+  // changes while the hidden decoder is priming or while the movie is playing,
+  // stop immediately and transfer ownership to the exact terminal still.
+  // Falling back to the responsive opening picture is safe here because its
+  // reduced-motion <source> is itself the exact terminal poster.
+  completed = true
+  deliveryVideo.value?.pause()
+  reducedMotionPromise = (async () => {
+    if (await prepareTerminalPoster()) {
+      phase.value = 'terminal'
+      decoderReleaseTimer = window.setTimeout(releaseDecoder, TAKEOVER_MS + 80)
+    } else {
+      phase.value = 'opening'
+      releaseDecoder()
+    }
+  })()
+  return reducedMotionPromise
+}
+
+const handleMotionPreferenceChange = (event: MediaQueryListEvent) => {
+  if (event.matches) void enterReducedMotion()
+}
+
 const beginVideoDelivery = async () => {
   const video = deliveryVideo.value
   if (!video || preparingVideo || completed || phase.value !== 'opening') return
@@ -215,20 +359,28 @@ const beginVideoDelivery = async () => {
   video.pause()
   try {
     video.currentTime = 0
-    const play = video.play()
-    const [, presented] = await Promise.all([play, waitForPresentedFrame(video)])
+    // Register before `play()` so CPU pressure cannot let the hidden decoder
+    // advance past the first composited frame before we observe it.
+    const [presented] = await Promise.all([waitForPresentedFrame(video), video.play()])
     if (!presented) throw new Error('video first-frame presentation timed out')
-    video.pause()
+    if (!await rewindToPresentedFrameZero(video, presented)) {
+      throw new Error('video could not rewind to presented frame zero')
+    }
     phase.value = 'handoff'
     await wait(TAKEOVER_MS)
-    if (completed || calm?.matches) return
+    if (calm?.matches) {
+      await enterReducedMotion()
+      return
+    }
+    if (completed) return
     if (!heroVisible || document.hidden) {
       phase.value = 'playing'
       return
     }
     await video.play()
     phase.value = 'playing'
-  } catch {
+  } catch (error) {
+    if (import.meta.dev) console.warn('[iso4] video delivery failed', error)
     // Autoplay denial or decode failure preserves the already-painted opening
     // poster. Never flash black and never substitute the live scene.
     handleDeliveryError()
@@ -246,9 +398,10 @@ const syncDeliveryPlayback = () => {
 
 const mountDelivery = async () => {
   calm = window.matchMedia('(prefers-reduced-motion: reduce)')
+  calm.addEventListener('change', handleMotionPreferenceChange)
   selectedVariant.value = selectReleaseVariant()
   if (calm.matches) {
-    if (await prepareTerminalPoster()) phase.value = 'terminal'
+    await enterReducedMotion()
     return
   }
   if (!deliveryReady.value || !selectedVariant.value.mp4Url) return
@@ -361,6 +514,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.clearTimeout(decoderReleaseTimer)
+  calm?.removeEventListener('change', handleMotionPreferenceChange)
   document.removeEventListener('visibilitychange', syncDeliveryPlayback)
   ro?.disconnect()
   io?.disconnect()
@@ -386,6 +540,12 @@ onBeforeUnmount(() => {
     aria-hidden="true"
   >
     <picture class="iso4__poster iso4__poster--opening iso4__prepaint">
+      <source
+        v-for="variant in reducedMotionSourceVariants"
+        :key="`terminal-reduced-${variant.key}`"
+        :media="`(prefers-reduced-motion: reduce) and ${variant.media}`"
+        :srcset="variant.terminalPosterUrl"
+      >
       <source
         v-for="variant in openingSourceVariants"
         :key="`opening-${variant.key}`"
@@ -423,6 +583,7 @@ onBeforeUnmount(() => {
       />
       <picture v-if="terminalPosterReady" class="iso4__poster iso4__poster--terminal">
         <img
+          ref="terminalPosterImage"
           :src="activePosterVariant.terminalPosterUrl"
           alt=""
           :width="activePosterVariant.width"

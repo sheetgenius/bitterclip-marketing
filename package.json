@@ -16,6 +16,9 @@
     "artifact:bake": "node qa/iso4-artifact-bake.mjs",
     "artifact:encode": "node qa/iso4-artifact-encode.mjs",
     "artifact:packet": "node qa/iso4-artifact-packet.mjs",
+    "artifact:promote": "node qa/iso4-artifact-promote.mjs",
+    "qa:artifact-playback": "node qa/iso4-artifact-playback.mjs",
+    "qa:artifact-promote": "node --test qa/iso4-artifact-promote.test.mjs",
     "qa:lighthouse-static": "node qa/lighthouse-static.mjs",
     "qa:smoke": "playwright test"
   },

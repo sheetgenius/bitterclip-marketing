@@ -15,11 +15,21 @@ const SCENE_SENTINELS = [
   'prepareRelease must complete before renderFrame',
   '/clips/ep1-loop.mp4',
 ]
+const RESPONSIVE_BOUNDARY_CASES = [
+  { width: 1600, height: 1200, expectedKey: 'tall', label: '4:3' },
+  { width: 1601, height: 1200, expectedKey: 'classic', label: 'above 4:3' },
+  { width: 1500, height: 1000, expectedKey: 'classic', label: '3:2' },
+  { width: 1501, height: 1000, expectedKey: 'standard', label: 'above 3:2' },
+  { width: 1700, height: 1000, expectedKey: 'standard', label: '17:10' },
+  { width: 1701, height: 1000, expectedKey: 'wide-band', label: 'above 17:10' },
+] as const
 
 const artifactUrl = (url: string) => new URL(url, TEST_ORIGIN).href
 
 interface ArtifactHarness {
   releaseVideo(): void
+  openingPosterRequests: string[]
+  terminalPosterRequests: string[]
   videoRequests: string[]
 }
 
@@ -37,6 +47,8 @@ async function routeArtifactFixtures(
   )))
   const posterUrls = new Set([...openingPosterUrls, ...terminalPosterUrls])
   const allUrls = new Set([...videoUrls, ...posterUrls])
+  const openingPosterRequests: string[] = []
+  const terminalPosterRequests: string[] = []
   const videoRequests: string[] = []
   let openGate = () => {}
   const videoGate = gateVideo
@@ -56,9 +68,12 @@ async function routeArtifactFixtures(
       return
     }
     if (options.failTerminal && terminalPosterUrls.has(url)) {
+      terminalPosterRequests.push(url)
       await route.fulfill({ status: 404, contentType: 'text/plain', body: 'missing terminal poster' })
       return
     }
+    if (openingPosterUrls.has(url)) openingPosterRequests.push(url)
+    if (terminalPosterUrls.has(url)) terminalPosterRequests.push(url)
     await route.fulfill({
       status: 200,
       contentType: 'image/webp',
@@ -68,15 +83,17 @@ async function routeArtifactFixtures(
 
   return {
     releaseVideo: openGate,
+    openingPosterRequests,
+    terminalPosterRequests,
     videoRequests,
   }
 }
 
 async function instrumentMedia(
   page: Page,
-  options: { denyPlay?: boolean, visibilityShim?: boolean } = {},
+  options: { denyPlay?: boolean, visibilityShim?: boolean, disableFrameCallback?: boolean } = {},
 ) {
-  await page.addInitScript(({ denyPlay, visibilityShim }) => {
+  await page.addInitScript(({ denyPlay, visibilityShim, disableFrameCallback }) => {
     const state = globalThis as typeof globalThis & {
       __isoMediaEvents?: Array<Record<string, unknown>>
       __isoTestHidden?: boolean | null
@@ -87,6 +104,13 @@ async function instrumentMedia(
     const originalLoad = HTMLMediaElement.prototype.load
     const originalPause = HTMLMediaElement.prototype.pause
     const originalPlay = HTMLMediaElement.prototype.play
+    const originalFrameCallback = HTMLVideoElement.prototype.requestVideoFrameCallback
+    if (disableFrameCallback) {
+      Object.defineProperty(HTMLVideoElement.prototype, 'requestVideoFrameCallback', {
+        configurable: true,
+        value: undefined,
+      })
+    }
 
     HTMLMediaElement.prototype.load = function load() {
       events.push({
@@ -107,6 +131,18 @@ async function instrumentMedia(
       }
       events.push({ type: 'play', currentTime: this.currentTime })
       return originalPlay.call(this)
+    }
+    if (originalFrameCallback && !disableFrameCallback) {
+      HTMLVideoElement.prototype.requestVideoFrameCallback = function requestVideoFrameCallback(callback) {
+        return originalFrameCallback.call(this, (now, metadata) => {
+          events.push({
+            type: 'presented-frame',
+            currentTime: this.currentTime,
+            mediaTime: metadata.mediaTime,
+          })
+          callback(now, metadata)
+        })
+      }
     }
 
     if (visibilityShim) {
@@ -206,8 +242,95 @@ test.describe('ISO4 production delivery shell', () => {
     expect(unique(urls)).toHaveLength(urls.length)
   })
 
+  test('reduced-motion SSR paints the terminal source before hydration', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      reducedMotion: 'reduce',
+      viewport: { width: 1600, height: 900 },
+    })
+    const page = await context.newPage()
+    try {
+      const artifacts = await routeArtifactFixtures(page)
+      const expected = iso4Release.variants.find((variant) => variant.key === 'wide-band')!
+      await page.goto(TEST_ORIGIN, { waitUntil: 'load' })
+
+      await expect(page.locator('.iso4')).toHaveAttribute('data-iso4-phase', 'opening')
+      await expect(page.locator(
+        `picture.iso4__prepaint source[media*="prefers-reduced-motion: reduce"][srcset="${expected.terminalPosterUrl}"]`,
+      )).toHaveCount(1)
+      expect(await page.locator('picture.iso4__prepaint img').evaluate((image) => image.currentSrc)).toBe(
+        artifactUrl(expected.terminalPosterUrl),
+      )
+      expect(artifacts.openingPosterRequests).toEqual([])
+      expect(unique(artifacts.terminalPosterRequests)).toEqual([
+        artifactUrl(expected.terminalPosterUrl),
+      ])
+      expect(artifacts.videoRequests).toEqual([])
+    } finally {
+      await context.close()
+    }
+  })
+
+  for (const targetPhase of ['handoff', 'playing'] as const) {
+    test(`a reduced-motion change during ${targetPhase} settles on the terminal poster`, async ({ page }) => {
+      await instrumentMedia(page)
+      const artifacts = await routeArtifactFixtures(page, true)
+      await page.goto('/', { waitUntil: 'domcontentloaded' })
+      const host = page.locator('.iso4')
+      await beginPhaseRecording(page)
+      artifacts.releaseVideo()
+      await expect(host).toHaveAttribute('data-iso4-phase', 'handoff')
+      if (targetPhase === 'playing') {
+        await expect(host).toHaveAttribute('data-iso4-phase', 'playing')
+      }
+
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await expect(host).toHaveAttribute('data-iso4-phase', 'terminal')
+      await expect(page.locator('picture.iso4__poster--terminal img')).toBeVisible()
+      await expect(page.locator('video.iso4__video')).toHaveCount(0, { timeout: 2_000 })
+
+      const expected = await selectedVariant(page)
+      expect(unique(artifacts.terminalPosterRequests)).toEqual([
+        artifactUrl(expected.terminalPosterUrl),
+      ])
+      expect(await page.evaluate(() => (
+        (globalThis as typeof globalThis & { __isoDeliveryPhases?: string[] })
+          .__isoDeliveryPhases ?? []
+      ))).not.toContain('terminal-video')
+    })
+  }
+
+  for (const boundary of RESPONSIVE_BOUNDARY_CASES) {
+    test(`preloads one poster and selects one video at ${boundary.label}`, async ({ page }) => {
+      await page.setViewportSize({ width: boundary.width, height: boundary.height })
+      const artifacts = await routeArtifactFixtures(page, true)
+      await page.goto('/', { waitUntil: 'domcontentloaded' })
+      const expected = iso4Release.variants.find((variant) => variant.key === boundary.expectedKey)!
+      const video = page.locator('video.iso4__video')
+
+      await expect(video).toHaveAttribute('src', expected.mp4Url)
+      await expect.poll(() => unique(artifacts.openingPosterRequests)).toEqual([
+        artifactUrl(expected.openingPosterUrl),
+      ])
+      await expect.poll(() => unique(artifacts.videoRequests)).toEqual([
+        artifactUrl(expected.mp4Url),
+      ])
+      expect(artifacts.terminalPosterRequests).toEqual([])
+      expect(await page.locator('link[rel="preload"][as="image"]').evaluateAll((links) => (
+        links
+          .filter((link) => window.matchMedia((link as HTMLLinkElement).media).matches)
+          .map((link) => (link as HTMLLinkElement).href)
+      ))).toEqual([artifactUrl(expected.openingPosterUrl)])
+
+      artifacts.releaseVideo()
+      await expect.poll(() => video.evaluate((element) => element.readyState)).toBeGreaterThanOrEqual(2)
+    })
+  }
+
   test('hands opening poster to one non-looping video, then to the terminal poster and releases the decoder', async ({ page }) => {
-    test.setTimeout(15_000)
+    test.setTimeout(25_000)
+    const cdp = await page.context().newCDPSession(page)
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 6 })
     await instrumentMedia(page)
     const artifacts = await routeArtifactFixtures(page, true)
     await page.goto('/', { waitUntil: 'domcontentloaded' })
@@ -225,9 +348,38 @@ test.describe('ISO4 production delivery shell', () => {
     expect(await page.evaluate(() => Boolean((globalThis as { __iso?: unknown }).__iso))).toBe(false)
 
     const expected = await selectedVariant(page)
+    await expect.poll(() => unique(artifacts.openingPosterRequests)).toEqual([
+      artifactUrl(expected.openingPosterUrl),
+    ])
+    expect(artifacts.terminalPosterRequests).toEqual([])
     await beginPhaseRecording(page)
+    await page.evaluate(() => {
+      const state = globalThis as typeof globalThis & {
+        __isoHandoffMediaTime?: number
+        __isoHandoffPresentedMediaTime?: number
+        __isoMediaEvents?: Array<Record<string, unknown>>
+      }
+      const host = document.querySelector<HTMLElement>('.iso4')
+      const observer = new MutationObserver(() => {
+        if (host?.dataset.iso4Phase !== 'handoff') return
+        state.__isoHandoffMediaTime = document.querySelector<HTMLVideoElement>('video.iso4__video')?.currentTime
+        const lastPresented = state.__isoMediaEvents
+          ?.filter((event) => event.type === 'presented-frame')
+          .at(-1)
+        state.__isoHandoffPresentedMediaTime = Number(lastPresented?.mediaTime)
+        observer.disconnect()
+      })
+      if (host) observer.observe(host, { attributes: true, attributeFilter: ['data-iso4-phase'] })
+    })
     artifacts.releaseVideo()
     await expect(host).toHaveAttribute('data-iso4-phase', 'playing', { timeout: 5_000 })
+    expect(await page.evaluate(() => (
+      (globalThis as typeof globalThis & { __isoHandoffMediaTime?: number }).__isoHandoffMediaTime
+    ))).toBeLessThanOrEqual(1 / 120)
+    expect(await page.evaluate(() => (
+      (globalThis as typeof globalThis & { __isoHandoffPresentedMediaTime?: number })
+        .__isoHandoffPresentedMediaTime
+    ))).toBeLessThanOrEqual(1 / 120)
     await expect(opening).toHaveCSS('opacity', '0')
     await expect(video).toHaveCSS('opacity', '1')
     expect(await video.evaluate((element) => ({
@@ -241,6 +393,7 @@ test.describe('ISO4 production delivery shell', () => {
       muted: true,
       playsInline: true,
     })
+    expect(artifacts.terminalPosterRequests).toEqual([])
 
     await video.evaluate((element) => { element.playbackRate = 16 })
     await expect(host).toHaveAttribute('data-iso4-phase', 'terminal', { timeout: 5_000 })
@@ -258,7 +411,87 @@ test.describe('ISO4 production delivery shell', () => {
     expect((await mediaEvents(page)).some((event) => (
       event.type === 'load' && event.hasSrc === false
     ))).toBe(true)
+    expect(unique(artifacts.terminalPosterRequests)).toEqual([
+      artifactUrl(expected.terminalPosterUrl),
+    ])
     expect(unique(artifacts.videoRequests)).toEqual([artifactUrl(expected.mp4Url)])
+  })
+
+  test('older Safari without video-frame callbacks still hands off from encoded frame zero', async ({ page }) => {
+    await instrumentMedia(page, { disableFrameCallback: true })
+    const artifacts = await routeArtifactFixtures(page, true)
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+
+    const host = page.locator('.iso4')
+    const video = page.locator('video.iso4__video')
+    await expect(host).toHaveAttribute('data-iso4-phase', 'opening')
+    await page.evaluate(() => {
+      const state = globalThis as typeof globalThis & { __isoFallbackHandoffMediaTime?: number }
+      const hero = document.querySelector<HTMLElement>('.iso4')
+      const observer = new MutationObserver(() => {
+        if (hero?.dataset.iso4Phase !== 'handoff') return
+        state.__isoFallbackHandoffMediaTime = document.querySelector<HTMLVideoElement>('video.iso4__video')?.currentTime
+        observer.disconnect()
+      })
+      if (hero) observer.observe(hero, { attributes: true, attributeFilter: ['data-iso4-phase'] })
+    })
+    artifacts.releaseVideo()
+    await expect.poll(() => video.evaluate((element) => element.readyState)).toBeGreaterThanOrEqual(2)
+    await video.dispatchEvent('loadeddata')
+    await expect(host).toHaveAttribute('data-iso4-phase', 'playing', { timeout: 5_000 })
+    expect(await page.evaluate(() => (
+      (globalThis as typeof globalThis & { __isoFallbackHandoffMediaTime?: number })
+        .__isoFallbackHandoffMediaTime
+    ))).toBeLessThanOrEqual(1 / 120)
+    expect((await mediaEvents(page)).some((event) => event.type === 'presented-frame')).toBe(false)
+  })
+
+  test('the ended video retains pixel ownership until the mounted terminal layer decodes', async ({ page }) => {
+    test.setTimeout(15_000)
+    await page.addInitScript(() => {
+      const state = globalThis as typeof globalThis & {
+        __terminalDecodeReached?: boolean
+        __releaseTerminalDecode?: () => void
+      }
+      const originalDecode = HTMLImageElement.prototype.decode
+      let releaseGate = () => {}
+      const gate = new Promise<void>((resolve) => { releaseGate = resolve })
+      state.__releaseTerminalDecode = releaseGate
+      HTMLImageElement.prototype.decode = async function decode() {
+        if (this.closest('.iso4__poster--terminal')) {
+          state.__terminalDecodeReached = true
+          await gate
+        }
+        return await originalDecode.call(this)
+      }
+    })
+    const artifacts = await routeArtifactFixtures(page)
+    await page.goto('/', { waitUntil: 'domcontentloaded' })
+    const host = page.locator('.iso4')
+    const video = page.locator('video.iso4__video')
+    await expect(host).toHaveAttribute('data-iso4-phase', 'playing')
+
+    await video.evaluate(async (element) => {
+      const ended = new Promise<void>((resolve) => (
+        element.addEventListener('ended', () => resolve(), { once: true })
+      ))
+      element.playbackRate = 16
+      await ended
+    })
+    await expect.poll(() => page.evaluate(() => Boolean(
+      (globalThis as typeof globalThis & { __terminalDecodeReached?: boolean })
+        .__terminalDecodeReached,
+    ))).toBe(true)
+    await expect(host).toHaveAttribute('data-iso4-phase', 'playing')
+    await expect(video).toHaveCount(1)
+
+    await page.evaluate(() => (
+      globalThis as typeof globalThis & { __releaseTerminalDecode?: () => void }
+    ).__releaseTerminalDecode?.())
+    await expect(host).toHaveAttribute('data-iso4-phase', 'terminal')
+    await expect(page.locator('picture.iso4__poster--terminal img')).toBeVisible()
+    await expect(video).toHaveCount(0, { timeout: 2_000 })
+    expect(unique(artifacts.videoRequests)).toHaveLength(1)
   })
 
   test('terminal poster failure holds the ended video frame without restarting or releasing its decoder', async ({ page }) => {
@@ -311,6 +544,10 @@ test.describe('ISO4 production delivery shell', () => {
     )
     await expect(page.locator('video.iso4__video')).toHaveCount(0)
     await expect(page.locator('canvas.iso4__gl')).toHaveCount(0)
+    expect(artifacts.openingPosterRequests).toEqual([])
+    expect(unique(artifacts.terminalPosterRequests)).toEqual([
+      artifactUrl(expected.terminalPosterUrl),
+    ])
     expect(artifacts.videoRequests).toEqual([])
     expect(await page.evaluate(() => Boolean((globalThis as { __iso?: unknown }).__iso))).toBe(false)
   })
@@ -394,6 +631,31 @@ test.describe('ISO4 production delivery shell', () => {
     await expect(host).toHaveAttribute('data-iso4-phase', 'playing')
     expect(await video.evaluate((element) => element.currentSrc)).toBe(artifactUrl(expected.mp4Url))
     expect(unique(artifacts.videoRequests)).toEqual([artifactUrl(expected.mp4Url)])
+  })
+
+  test('development keeps local authoring prepaints while its video diagnostic uses the release', async ({ page }) => {
+    const developmentOrigin = process.env.ISO4_DEV_ORIGIN
+    test.skip(!developmentOrigin, 'set ISO4_DEV_ORIGIN to exercise the existing development server')
+    if (!developmentOrigin) return
+
+    const artifacts = await routeArtifactFixtures(page, true)
+    await page.goto(new URL('/', developmentOrigin).href, { waitUntil: 'domcontentloaded' })
+    await expect(page.locator('.iso4')).toHaveAttribute('data-iso4-mode', 'live')
+    expect(await page.locator('picture.iso4__prepaint img').evaluate((image) => image.currentSrc)).toContain(
+      '/images/hero/iso4-prepaint-wide.webp',
+    )
+
+    await page.goto(new URL('/?iso4Delivery=video', developmentOrigin).href, { waitUntil: 'domcontentloaded' })
+    const expected = iso4Release.variants.find((variant) => variant.key === 'wide-band')!
+    await expect(page.locator('.iso4')).toHaveAttribute('data-iso4-mode', 'video')
+    await expect(page.locator('picture.iso4__prepaint img')).toHaveAttribute(
+      'src',
+      expected.openingPosterUrl,
+    )
+    await expect.poll(() => unique(artifacts.videoRequests)).toEqual([
+      artifactUrl(expected.mp4Url),
+    ])
+    artifacts.releaseVideo()
   })
 
   test('production cannot request or activate the live Three.js scene', async ({ page }) => {
