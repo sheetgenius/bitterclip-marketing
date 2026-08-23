@@ -395,11 +395,23 @@ test.describe('ISO4 production delivery shell', () => {
     })
     expect(artifacts.terminalPosterRequests).toEqual([])
 
+    await page.evaluate(() => {
+      const state = globalThis as typeof globalThis & { __isoVideoFadeEndOpacity?: string }
+      const deliveryVideo = document.querySelector<HTMLVideoElement>('video.iso4__video')
+      deliveryVideo?.addEventListener('transitionend', (event) => {
+        if (event.propertyName === 'opacity') {
+          state.__isoVideoFadeEndOpacity = getComputedStyle(deliveryVideo).opacity
+        }
+      }, { once: true })
+    })
     await video.evaluate((element) => { element.playbackRate = 16 })
     await expect(host).toHaveAttribute('data-iso4-phase', 'terminal', { timeout: 5_000 })
     const terminal = page.locator('.iso4__poster--terminal')
     await expect(terminal).toHaveCSS('opacity', '1')
-    await expect(video).toHaveCSS('opacity', '0')
+    await expect.poll(() => page.evaluate(() => (
+      (globalThis as typeof globalThis & { __isoVideoFadeEndOpacity?: string })
+        .__isoVideoFadeEndOpacity
+    ))).toBe('0')
     expect(await terminal.locator('img').evaluate((image) => image.currentSrc)).toBe(
       artifactUrl(expected.terminalPosterUrl),
     )
