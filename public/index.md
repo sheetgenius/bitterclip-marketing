@@ -31,7 +31,8 @@ Zoom: Michael Ruescher quit a twelve-year job to build bitter.sh. Then
 how it works.
 
 Start Creator with a card-backed seven-day trial: $0 due today, then $24/month
-unless canceled before the exact trial end shown at checkout. ChatGPT and Claude
+unless canceled before the exact trial end shown in Billing as soon as the trial
+starts. ChatGPT and Claude
 are optional, over the same work.
 
 ## Product Loop
@@ -145,9 +146,9 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
 
 ## Common Questions
 
-- What happens after signup: choose Creator and add a card. Checkout shows $0 due
-  today, your exact trial end, and the scheduled $24 first charge before you
-  confirm. Bring one recording. BitterClip reads the session, makes a crafted
+- What happens after signup: choose Creator and add a card. $0 is due today, and
+  the exact trial end and scheduled $24 first charge appear as soon as the trial
+  starts. Bring one recording. BitterClip reads the session, makes a crafted
   First Cut, and lets you direct one revision of that same cut during the trial.
 - Does BitterClip record for you: it can record; it cannot have the conversation
   for you. Every project has a recorder in the browser — camera and mic on a
@@ -182,8 +183,8 @@ plan and workspace policy. Connecting one is a choice, not a setup step.
 - No new editor to learn: change the transcript and the video changes with it, or
   say what you want changed. The same editor works in the browser and in
   supported assistant hosts.
-- Canceling: cancel before the exact trial boundary shown at checkout and the
-  first $24 charge is prevented. After a paid period begins, cancellation stops
+- Canceling: cancel before the exact trial boundary shown in Billing as soon as
+  the trial starts and the first $24 charge is prevented. After a paid period begins, cancellation stops
   renewal at the end of that period. Sources, evidence, edits, revision history,
   and completed Exports stay available; new processing may require an active plan.
 

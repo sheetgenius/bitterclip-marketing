@@ -36,7 +36,7 @@ const signupUrlPro = computed(() => signupUrlFor('pro'))
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. Checkout shows $0 due today, your exact trial end, and the scheduled $24 first charge before you confirm. Then bring one recording. BitterClip reads the whole session, makes a crafted First Cut, and lets you direct one revision of that same cut during the seven-day trial.',
+    a: 'Choose Creator and add a card. $0 is due today, and the exact trial end and scheduled $24 first charge appear as soon as the trial starts. Then bring one recording. BitterClip reads the whole session, makes a crafted First Cut, and lets you direct one revision of that same cut during the seven-day trial.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -76,7 +76,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Cancel before the exact trial boundary shown at checkout and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, evidence, edits, revision history, and completed Exports stay available; new processing may require an active plan.',
+    a: 'Cancel before the exact trial boundary shown in Billing as soon as your trial starts and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, evidence, edits, revision history, and completed Exports stay available; new processing may require an active plan.',
   },
 ]
 
@@ -427,7 +427,7 @@ useHead({
       </div>
 
       <p class="mt-7 text-center text-xs text-zinc-400">
-        Card required for the Creator trial. Checkout shows $0 today, the exact cancel-before time, and the scheduled first charge. Your sources, evidence, edits, revisions, and completed work remain yours.
+        Card required for the Creator trial: $0 today, then $24/month. The exact cancel-before time appears in Billing as soon as the trial starts. Your sources, evidence, edits, revisions, and completed work remain yours.
       </p>
     </section>
   </main>
