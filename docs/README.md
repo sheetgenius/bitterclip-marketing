@@ -61,6 +61,7 @@ document. Public creator documentation lives in `content/`, not here.
 | `docs/hero-iso-workshop-start.md` | Historical workshop prompt | Earlier ISO workshop launch message. |
 | `docs/homepage-promotion-audit.md` | Historical completed migration | Audit used to promote ISO4 to `/`. |
 | `docs/homepage-copy-rd-journal.md` | Historical evidence | Homepage copy research and settled decisions at that time. |
+| `docs/copy-truth-audit-2026-08-24.md` | Historical audit evidence | Copy-to-product-truth findings captured on 2026-08-24; reverify before applying. |
 | `docs/landing-editor-conversion-analysis.md` | Historical study | Prior embedded-editor conversion analysis. |
 | `docs/landing-editor-conversion-journal.md` | Historical evidence | Prior conversion workshop ledger. |
 | `docs/sign-in-and-conversion-study-2026-06-17.md` | Historical study | Sign-in discovery findings from the prior homepage. |

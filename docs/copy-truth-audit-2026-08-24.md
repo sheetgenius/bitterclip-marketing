@@ -1,5 +1,8 @@
 # Copy–truth audit — the grounded pass (2026-08-24)
 
+> **Status: historical audit evidence.** Reverify every finding against current
+> product code and the canonical pricing plan before applying it.
+
 Seventy copy blocks audited against the pricing plan
 (`bitterclip/docs/product/pricing-and-market-plan.md`), the billing code
 (`billing_plans.yml`, `creator_trial_lifecycle.rb`, `creator_proof.rb`,
