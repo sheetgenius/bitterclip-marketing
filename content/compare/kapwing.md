@@ -100,7 +100,7 @@ chooseThem:
   - "You want caption looks by the hundred: 100+ styled templates, per-word animation, per-speaker styling, and translation into 100+ languages."
   - Two or three people need to be in the same project at once — shared workspaces, comments on the transcript, and a brand kit that keeps everyone's styling matched.
   - "You need 4K: Kapwing Pro exports watermark-free up to 4K, while BitterClip delivers 1080p."
-  - You post to TikTok and Facebook straight from the editor. Kapwing does both; BitterClip publishes direct to YouTube only, with review and download links for everywhere else.
+  - You post to TikTok and Facebook straight from the editor. Kapwing does both; BitterClip can prepare connected YouTube, LinkedIn, and X destinations, but every send waits for your final confirmation. Review links and downloads cover the rest.
 gotchas:
   - title: Credits reset on the first of the month, not your billing date
     body: AI features on every Kapwing plan draw from monthly credits — auto-subtitling costs 1 credit per minute, lip sync 30. Unused credits don't roll over, and they reset on the first of each month no matter when you were billed. Only Business-plan workspaces can buy more.
@@ -130,7 +130,7 @@ faq:
   - q: Can I edit Kapwing's AI-generated clips?
     a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you finish each clip yourself on a timeline."
   - q: Does Kapwing watermark free exports?
-    a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial with one watermarked Export; paid Creator begins at $24/month with clean Exports.
+    a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial with watermarked exports; paid Creator begins at $24/month with clean exports.
   - q: Does Kapwing have an API?
     a: No — Kapwing advertises no public developer API, no Zapier app, and no agent integration; extensibility means in-editor plugins pulling stock from providers like Unsplash and Giphy. In BitterClip, anything you can click you can also ask for from ChatGPT, Claude, or the editor's own panel, and the result is an ordinary edit.
 sources:
@@ -172,6 +172,6 @@ There's no score deciding which moments are good, either. That's on purpose. If 
 
 ## The money is shaped differently
 
-Kapwing bills each member of a Pro workspace separately, which is the honest shape when three people share a project. BitterClip's paid Creator plan is $24/month with 10 production hours, $10 of agent balance, Deep and Fast models, clean Exports, and 4 GB files. Producer is $99/month with 40 hours, $40 of balance, clean Exports, 20 GB files, and priority service. Price the production and agent work your real month needs, not just the sticker.
+Kapwing bills each member of a Pro workspace separately, which is the honest shape when three people share a project. BitterClip's paid Creator plan is $24/month with 10 source-footage hours, $10 of included agent work, clean exports, and 4 GB files. Producer is $99/month with 40 source-footage hours, $40 of included agent work, clean exports, 20 GB files, and priority rendering. Price the footage and agent work your real month needs, not just the sticker.
 
 If your work is one-off social videos made with a team in the browser, stay where you are; Kapwing is good at that. If your work is the same show, finished properly, every week, bring one recording over and see what comes back out.

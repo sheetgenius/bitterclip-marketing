@@ -4,208 +4,134 @@ Canonical HTML page: https://bitterclip.com/
 
 Markdown version: https://bitterclip.com/index.md
 
-BitterClip turns a recorded conversation into the finished full-length episode
-and the shorter cuts that come out of that same edit. You record it:
-someone has to show up and have the real conversation. Everything after that —
-the cutting, the captions, the music, the opener and outro, the camera changes,
-the vertical version — is BitterClip's job. Any cut can be checked against the
-moment in the recording it came from, and a person confirms the result before it
-goes anywhere.
+BitterClip is a directable video workbench. It understands the whole recording,
+makes one coherent cut, and keeps the source attached so you can question,
+revise, verify, or undo the result.
 
-It is built for sessions of roughly twenty minutes to two hours: podcasts,
-interviews, coaching sessions, founder calls, and workshops.
+The built-in agent is the shortest path into the workbench. Claude, ChatGPT,
+and other MCP clients are optional peer operators of the same recordings,
+edits, and history.
 
 ## Hero
 
 Footage in. Episode out.
 
-- Deep Video Intelligence — knows your content.
-- Precision Edits — the good parts, finished.
+BitterClip watches the whole recording, makes one cut worth sending, and lets
+you keep directing it.
 
-The homepage opens with an animated 3D projector performing the pipeline: a
-recorded session drops in, the machine indexes it onto film, and three
-finished artifacts project out — a landscape episode for YouTube, a portrait
-captioned clip for LinkedIn, and a waveform-and-transcript panel for
-podcast/RSS. Directly under the fold is a portrait cut from a full-length
-Zoom: Michael Ruescher quit a twelve-year job to build bitter.sh. Then
-how it works.
+Start my 7-day trial: https://app.bitterclip.com/sign_up?plan=clip
 
-Start Creator with a card-backed seven-day trial: $0 due today, then $24/month
-unless canceled before the exact trial end shown in Billing as soon as the trial
-starts. ChatGPT and Claude
-are optional, over the same work.
+Card required. $0 today. Creator becomes $24/month after seven days. The trial
+includes $5 of agent work for whole-recording analysis, the First Cut, and the
+directions you give from there.
 
-## Product Loop
+## Hours of tape. One cut.
 
-1. Recording: record the session in the browser, or upload what you already
-   shot, including several synchronized angles.
-2. Speakers: voices are split. Until you name someone they stay Speaker 1,
-   Speaker 2. Name them in this project; later recognition needs a saved voice
-   and can fail.
-3. Episode: the full-length primary program you and the agent work in.
-4. Edit: change the transcript, direct the agent, revise the same cut.
-5. Verify: check any decision against the source it came from.
-6. Export: an exact rendered version of the episode, and the shorter cuts.
-7. Deliver: publish to a connected channel, or hand off a link — after you
-   confirm it.
+The homepage proof starts with a full-length Zoom recording and the portrait
+cut made from it. The remaining hours stay attached to the tape. The same cut
+then appears inside the real BitterClip editor, where its source and edit
+history remain available.
 
-## What Makes It Different
+BitterClip is not a scored pile of disconnected highlights. It works from who
+is speaking, what came before, what came after, and what is on screen, then
+commits to a cut you can keep directing.
 
-Clipping is table stakes. The difference is the relationship to the work:
+## Direct the cut until it is right
 
-- it works from the whole session, not a scored pile of leftover phrases;
-  search can find a neighborhood, it does not pick the cut;
-- it commits to a specific editorial choice and can explain it;
-- it can show you the moment in the recording that choice came from;
-- the result stays editable work you keep changing, not a flat file you have to
-  redo;
-- it accepts direction in plain language and revises the same edit, keeping the
-  previous version; and
-- named speakers stay named in that project; later recognition needs a saved
-  voice and can fail.
+Use BitterClip's built-in agent to ask why a moment belongs, tighten the
+opening, try another direction, or revert. You can also edit the transcript by
+hand: delete words and the video changes with them.
 
-The narrow claim is not that BitterClip solves every kind of video editing. It
-does one job: it turns long recorded conversations and session footage into
-finished work, and it gets there by being told what to change.
+Every word is timestamped. Cuts resolve against the source audio. Any decision
+can be checked against the exact moment it came from. The result is ordinary,
+controllable work rather than a flat file that must be regenerated from
+scratch.
 
-## Live Product Surface
+## Use BitterClip's agent—or yours
 
-The BitterClip editor shows the transcript and the source media together.
-Select words, delete them, and the video changes with them. Cuts resolve
-against the actual audio. The homepage How it works section shows the same
-day-one cut as the clip above, open in that editor. Open it to check the
-tape. The agent can still make the cut. You ask for what you want — with
-the built-in agent, or with Claude, ChatGPT, or anything that speaks MCP —
-and any cut is checkable against the exact moment it came from.
+Nothing else needs to be connected. BitterClip's agent is already inside the
+editor.
 
-The homepage's first section after the fold is titled "Find the Hidden
-Gems." It plays a portrait cut from day one of the Mike and John show.
-The source was a full-length Zoom. Michael Ruescher quit a twelve-year
-job to build [bitter.sh](https://bitter.sh/). The rest of the hours are
-still on the tape; this is the cut you'd send. His quote sits with the
-player. Andrew Williams and Rohan Karunakaran stay as signed social
-proof beside it.
+If you prefer Claude, ChatGPT, or another MCP client, it can operate the same
+workbench under the same source, entitlement, and edit rules. The cockpit can
+change; the recording, cut, history, and manual controls stay the same.
 
-## Why It Works
+## What you can bring
 
-A good edit depends on more than interesting words. It depends on who said them,
-what came before, what came after, what is on screen, and whether the moment
-stands on its own.
+BitterClip is built for podcasts, interviews, calls, coaching sessions,
+workshops, and recurring shows. Record one person in the browser or upload
+audio or video captured on a phone, camera, Zoom, Riverside, or another
+recorder. Several synchronized angles of one session stay together as one
+production.
 
-BitterClip structures the session with:
+## Creator trial
 
-- speaker-aware transcript context
-- what is on screen, read alongside the words
-- picture that can cut between several synchronized angles while the audio stays
-  whole
-- every cut checkable against the moment it came from
-- a person confirms before anything is sent
-- named speakers stay named in the project; later recognition needs a saved
-  voice
+Try one real recording:
 
-## Speaker-Aware Editing
+- seven days;
+- card required;
+- $0 charged today;
+- then $24/month unless canceled before the exact charge date shown at
+  checkout;
+- one recording up to two hours;
+- $5 of agent work for whole-recording analysis, the First Cut, and direction;
+- keep asking, revising, trying alternatives, and reverting while balance
+  remains;
+- add more agent work during the trial without starting the subscription
+  early;
+- watermarked exports during the trial; and
+- clean exports after the first paid charge.
 
-Editorial choices depend on who said what. BitterClip splits the voices and
-works from the shape of the conversation, not a flat transcript blob. Speakers
-start unnamed. You name them in the project.
+There is no revision counter or trial export counter. Agent work is the economic
+boundary. If the balance reaches zero, playback, manual editing, source custody,
+and existing work remain available.
 
-Example selected moment:
+## Paid plans
 
-- Michael: "We kept thinking the product was the picker."
-- John: "But the actual value is trust, right? You know who said it, where it
-  happened, and why the clip works."
-- Michael: "Exactly. The clip only works if the source is still attached."
+- Creator — $24/month. 10 source-footage hours per billing period, $10 of
+  included agent work, clean exports, and files up to 4 GB.
+- Producer — $99/month. 40 source-footage hours per billing period, $40 of
+  included agent work, clean exports, files up to 20 GB, and priority
+  rendering.
 
-## Built For Real Conversations
+More agent work can be added at any time while a trial or paid plan is active.
+Purchased agent work persists if the plan later lapses. Existing recordings,
+edits, and completed work remain in the Studio after cancellation.
 
-BitterClip is built for founder calls, interviews, podcasts, demos, expert
-conversations, coaching sessions, workshops, and recurring shows — sessions of
-roughly twenty minutes to two hours.
+## Common questions
 
-Use cases include:
+### What happens after I sign up?
 
-- turning a recorded interview into the full-length episode plus the short cuts
-  that promote it
-- building a recurring show without rebuilding the same production every week
-- finding and defending strong exchanges in podcasts and expert interviews
-- turning coaching and personal-training sessions into a concise recap for the
-  client
-- giving agencies and editors faster discovery with human control
-- building show memory from speakers, topics, and prior work
+Choose Creator and add a card. Checkout shows $0 due today, your exact charge
+date, and the scheduled $24 monthly price before you confirm. Bring one
+recording; the trial includes $5 of agent work for the whole-recording analysis,
+First Cut, and the directions and alternatives you try during those seven days.
 
-## Agent Cockpits
+### Why is this different from an AI clipper?
 
-The agent is built into the editor. That is the shortest path, and it is
-available to every signed-in workspace.
+BitterClip works from the whole recording and commits to one coherent cut. It
+does not hand you a scored pile of disconnected moments. When the cut is wrong,
+direct the one you have instead of asking a clip generator for ten more guesses.
 
-ChatGPT and Claude are optional peer cockpits over the same work: connect one and
-you are on the same episode, the same revisions, and the same exports, with the
-editor opening in the conversation. Claude supports custom connectors on every
-Claude plan. In ChatGPT, custom-app access and available actions depend on the
-plan and workspace policy. Connecting one is a choice, not a setup step.
+### Can I keep changing the cut?
 
-## Common Questions
+Yes. Ask questions, give another direction, try an alternative, revert, or
+edit the transcript by hand while agent work remains. There is no revision
+counter.
 
-- What happens after signup: choose Creator and add a card. $0 is due today, and
-  the exact trial end and scheduled $24 first charge appear as soon as the trial
-  starts. Bring one recording. BitterClip reads the session, makes a crafted
-  First Cut, and lets you direct one revision of that same cut during the trial.
-- Does BitterClip record for you: it can record; it cannot have the conversation
-  for you. Every project has a recorder in the browser — camera and mic on a
-  laptop or phone, or the screen in desktop Chrome, up to 1080p, uploading while
-  you record so transcription starts the moment you stop. It captures one
-  signed-in person on one device: no remote guests, no guest recording links, no
-  separate track per person. Most people bring footage they already shot on a
-  phone, a camera, Zoom, or Riverside, and that stays completely normal.
-- Why this differs from an AI clipper: it does not hand you a scored pile of
-  leftovers. It works from the whole session and commits to a cut it can show
-  the source for. Search can find a neighborhood; it does not pick the cut.
-  When it is wrong, you say what is wrong and it revises that same cut instead
-  of returning ten more options.
-- Who is talking: voices are split. Until you name someone they stay Speaker 1,
-  Speaker 2. Name them in this project and they stay named there. Later
-  recognition needs a saved voice, and it can fail.
-- Invented context: no. The source clock is the authority. Any cut can be
-  opened in the editor and checked against the moment in the recording it came
-  from.
-- Do you need ChatGPT or Claude: no. The agent is built into the editor. The
-  hosts are optional.
-- Publishing: nothing is sent automatically. Every send is bound to one exact
-  export, one destination, one account, and a final confirmation from a person.
-- Destinations: publish to YouTube, X, or LinkedIn, or grab a shareable link.
-  For Instagram, send the finished clip to your phone and post it from the
-  Instagram app. A client invited to the same session can pull their own cuts —
-  upload once, everyone works from it.
-- Uploads: podcasts, interviews, calls, and training sessions — audio or video.
-  The Creator trial accepts one central session up to two hours. Paid Creator
-  supports files up to 4 GB; Producer supports files up to 20 GB. Several
-  angles of the same session stay together as one production.
-- No new editor to learn: change the transcript and the video changes with it, or
-  say what you want changed. The same editor works in the browser and in
-  supported assistant hosts.
-- Canceling: cancel before the exact trial boundary shown in Billing as soon as
-  the trial starts and the first $24 charge is prevented. After a paid period begins, cancellation stops
-  renewal at the end of that period. Sources, evidence, edits, revision history,
-  and completed Exports stay available; new processing may require an active plan.
+### Do I need ChatGPT or Claude?
 
-## Pricing
+No. BitterClip has an agent built into the editor. External agents are optional.
 
-Two public plans:
+### Where can finished work go?
 
-- Creator (recommended) — card required, $0 due today, then $24/month after an
-  exact seven-day trial unless canceled before the displayed trial end. Bring
-  one intake up to two hours and receive an Editor's Read, a crafted First Cut,
-  bounded questions, one revision of the same Clip, the Deep agent, and a
-  watermarked Export. After the first payment: 10 production hours,
-  $10 included agent balance, Deep and Fast agents, clean Exports, and files up
-  to 4 GB.
-- Producer — $99/month. 40 production hours, $40 included agent balance, Deep
-  and Fast agents, clean Exports, files up to 20 GB, and priority service.
+Download the full episode or a portrait cut, share a review link, or prepare a
+connected YouTube, LinkedIn, or X destination. Publishing always stops for a
+fresh final confirmation; connecting a channel never makes it automatic.
 
-Canceling stops renewal at the end of the current paid period. Existing sources,
-evidence, edits, revision history, and completed Exports stay available; new
-processing may require an active plan.
+### What happens if I cancel?
 
-Signup: https://app.bitterclip.com/sign_up?plan=clip (Creator:
-https://app.bitterclip.com/sign_up?plan=clip · Producer:
-https://app.bitterclip.com/sign_up?plan=pro)
+Cancel before the exact charge date shown at checkout and pay $0. After a paid
+period begins, cancellation stops the next renewal. Sources, edits, finished
+work, and purchased agent work stay in the Studio; new agent work waits until a
+trial or paid plan is active again.

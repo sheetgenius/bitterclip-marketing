@@ -38,7 +38,7 @@ links:
 
 ## Use it from your AI assistant
 
-Ask ChatGPT or Claude to pull up a recording, and the transcript editor opens with a strong clip already selected. You read it over, nudge the edges if you want, then export when it looks right.
+BitterClip's agent is built into the editor. If you connect ChatGPT or Claude, ask it to open a recording or make a specific cut and it operates the same workbench. The source stays attached, the result stays editable, and nothing is selected or published without your direction.
 
 ::next-steps
 ---

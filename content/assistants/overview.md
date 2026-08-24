@@ -56,9 +56,10 @@ reads the transcript, finds the moment, and opens it.
 
 ## What your assistant can do for you
 
-These are a handful of the things you can ask for once you're connected. The main one opens
-your episode in the editor with a strong clip already selected, so you can watch it and tune
-the edges right away. You can also ask it to pull in a recording for you. Point it at a file
+These are a handful of the things you can ask for once you're connected. Open a recording,
+ask for a specific cut, and inspect or revise the result in the same editor. BitterClip does
+not silently pick a "strong clip" for you; the request supplies the direction and the source
+stays attached. You can also ask the assistant to bring in a recording. Point it at a file
 or a link and it adds the recording to your project.
 
 ::mcp-tools

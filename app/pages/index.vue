@@ -2,8 +2,8 @@
 /**
  * The homepage — promoted from /lab/iso4 (owner ruling, 2026-08-20; the
  * cut-over plan is docs/homepage-promotion-audit.md). The fold is the ISO4
- * machine; below it: proof (#demo) → how (#how) → bring-your-agent → FAQ
- * (#faq) → pricing (#pricing). /lab/iso4 stays as the noindexed workshop
+ * machine; below it: proof (#demo) → proof CTA → control and trust (#how) →
+ * agent portability → pricing (#pricing) → FAQ (#faq). /lab/iso4 stays as the noindexed workshop
  * mirror; the pre-swap homepage soaks at /classic (noindex) before deletion.
  *
  * ONE full-bleed canvas at every size — a canvas band always shows a seam
@@ -20,14 +20,17 @@ const route = useRoute()
 
 // Acquisition starts with Creator. Plan keys remain the app's durable
 // compatibility handles, while customer copy uses Creator and Producer.
-const signupUrlFor = (plan?: string) => buildSignupUrl({
+const signupUrlFor = (plan: string, stage: string) => buildSignupUrl({
   query: route.query,
   plan,
   surface: 'homepage',
+  stage,
   landingPath: route.path,
 })
-const signupUrlClip = computed(() => signupUrlFor('clip'))
-const signupUrlPro = computed(() => signupUrlFor('pro'))
+const signupUrlClipHero = computed(() => signupUrlFor('clip', 'hero'))
+const signupUrlClipProof = computed(() => signupUrlFor('clip', 'proof'))
+const signupUrlClipPricing = computed(() => signupUrlFor('clip', 'pricing'))
+const signupUrlProPricing = computed(() => signupUrlFor('pro', 'pricing'))
 
 // FAQ: objection handling right before the pricing ask. Ported from the
 // pre-swap homepage (answers reviewed/signed there) plus one destinations
@@ -36,47 +39,31 @@ const signupUrlPro = computed(() => signupUrlFor('pro'))
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. $0 is due today, and the exact trial end and scheduled $24 first charge appear as soon as the trial starts. Then bring one recording. BitterClip reads the whole session, makes a crafted First Cut, and lets you direct one revision of that same cut during the seven-day trial.',
+    a: 'Choose Creator and add a card. Checkout shows $0 due today, your exact charge date, and the scheduled $24 monthly price before you confirm. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
-    a: 'It does not hand you a scored pile of leftovers. It works from the whole session — who is speaking, what came before and after — and commits to one cut it can show you the source for. Search can find a neighborhood; it does not pick the cut. When it is wrong, you say what is wrong and it revises that same cut instead of offering ten more options.',
+    a: 'BitterClip works from the whole recording — who is speaking, what came before, and what came after — and commits to one coherent cut. It does not hand you a scored pile of disconnected moments. When the cut is wrong, direct the one you have instead of asking a clip generator for ten more guesses.',
   },
   {
-    q: 'Does it know who is talking?',
-    a: 'It splits the voices. Until you name someone they stay Speaker 1, Speaker 2. Name them in this project and they stay named there. Later recognition needs a saved voice, and it can fail.',
-  },
-  {
-    q: 'Does it invent what happened in the recording?',
-    a: 'No. The source clock is the authority. Any cut can be opened in the editor and checked against the moment in the recording it came from.',
+    q: 'Can I keep changing the cut?',
+    a: 'Yes. Ask questions, give another direction, try an alternative, revert, or edit the transcript by hand while agent work remains. There is no revision counter. If the balance reaches zero, playback, manual editing, your sources, and the work you already made remain available.',
   },
   {
     q: 'Do I need ChatGPT or Claude?',
-    a: 'No. The agent is built into the editor, and that is the shortest path. If you would rather work where you already are, Claude supports custom connectors on every Claude plan; in ChatGPT, custom-app access and available actions depend on your plan and workspace policy.',
-  },
-  {
-    q: 'Can it post something without me?',
-    a: 'No. Every send is bound to one exact export, one destination, one account, and a final confirmation from you. Connecting a channel does not hand over the keys.',
+    a: 'No. BitterClip has an agent built into the editor, and that is the shortest path. Claude, ChatGPT, and other MCP clients are optional peer operators of the same workbench when you would rather direct the cut from somewhere else.',
   },
   {
     q: 'Where can the finished work go?',
-    a: 'Export the full-length episode, then pull the short vertical cuts from that same edit instead of starting a second production. Publish to YouTube, X, or LinkedIn, or grab a shareable link. For Instagram, send the finished clip to your phone and post it from the Instagram app. Nothing goes out until you confirm it. Invite a client to the same session and they can pull their own cuts too — upload once, everyone works from it.',
-  },
-  {
-    q: 'Does BitterClip record for me?',
-    a: 'It can record. It cannot have the conversation for you — that part stays yours. Every project has a recorder in the browser: camera and mic on a laptop or phone, or your screen in desktop Chrome, up to 1080p, uploading while you record so transcription starts the moment you stop. It captures one signed-in person on one device — no remote guests, no guest recording links, no separate track per person. Most people bring footage they already shot on a phone, a camera, Zoom, or Riverside, and that stays completely normal.',
+    a: 'Download the full episode or a portrait cut, share a review link, or prepare a connected YouTube, LinkedIn, or X destination. Publishing always stops for your final confirmation; connecting a channel never makes it automatic.',
   },
   {
     q: 'What can I upload?',
-    a: 'Podcasts, interviews, calls, and training sessions — audio or video. The Creator trial accepts one central session up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Bring several angles of the same session and BitterClip keeps them together as one production rather than charging each camera as another session.',
-  },
-  {
-    q: 'Do I have to learn a new editor?',
-    a: 'No. You edit by changing the transcript: select the words, delete them, and the video changes with them. Or say what you want changed and let the agent make the edit. Same editor in the browser and in supported assistant hosts.',
+    a: 'Podcasts, interviews, calls, coaching sessions, and workshops — audio or video. The Creator trial accepts one recording up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Several synchronized angles of the same session stay together as one production.',
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Cancel before the exact trial boundary shown in Billing as soon as your trial starts and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, evidence, edits, revision history, and completed Exports stay available; new processing may require an active plan.',
+    a: 'Cancel before the exact charge date shown at checkout and you pay $0. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
   },
 ]
 
@@ -95,7 +82,7 @@ const structuredData = [
     '@type': 'WebSite',
     name: 'BitterClip',
     url: 'https://bitterclip.com/',
-    description: 'Footage in, episode out: BitterClip turns raw session footage into the finished episode and the short cuts from that same edit — an agent that watched the whole session, directed and revised by you.',
+    description: 'Footage in, episode out: BitterClip understands the whole recording, makes one coherent cut, and lets you keep directing it.',
     publisher: {
       '@type': 'Organization',
       name: 'Bitter',
@@ -109,7 +96,7 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
-    description: 'Footage in, episode out: record in the browser or bring footage you already shot, and BitterClip cuts it into the finished episode, portrait clips, and transcripts — with its built-in agent, or yours over Claude, ChatGPT, and MCP.',
+    description: 'A directable video workbench that understands the whole recording and turns it into a coherent episode, with a built-in agent or optional external agents over Claude, ChatGPT, and MCP.',
     offers: {
       '@type': 'AggregateOffer',
       lowPrice: '24',
@@ -118,7 +105,7 @@ const structuredData = [
       offerCount: 2,
       url: `${SIGNUP_BASE_URL}?plan=clip`,
       availability: 'https://schema.org/InStock',
-      description: 'Creator is $24/month after a seven-day card-backed trial with $0 due today. Producer is $99/month.',
+      description: 'Creator is $24/month after a seven-day card-backed trial with $0 due today, one recording up to two hours, and $5 of included agent work. Producer is $99/month.',
     },
   },
   {
@@ -170,33 +157,33 @@ useHead({
         <h1 class="hero-h1 font-display max-w-[13ch] text-4xl font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-6xl">
           Footage in<br><span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">Episode out</span>
         </h1>
-        <!-- Two named beats under the H1. The third (programmable / our agent
-             or yours) lives in Bring your agent — it never shared this cadence. -->
-        <div class="hero-pillars max-w-[40ch] space-y-3.5 text-sm leading-relaxed text-zinc-400">
-          <p><span class="font-semibold text-zinc-100">Deep Video Intelligence</span> — knows your content.</p>
-          <p><span class="font-semibold text-zinc-100">Precision Edits</span> — the good parts, finished.</p>
-        </div>
+        <p class="hero-pillars max-w-[42ch] text-sm leading-relaxed text-zinc-300 sm:text-base">
+          BitterClip watches the whole recording, makes one cut worth sending, and lets you keep directing it.
+        </p>
         <!-- One CTA, one decision. The produced product film, when it exists,
              brings back "Watch it work" with a real target. -->
         <div class="hero-cta-row">
           <a
-            :href="signupUrlClip"
+            :href="signupUrlClipHero"
+            data-bc-event="hero_cta_click"
+            data-bc-placement="hero"
+            data-bc-plan="creator"
             class="hero-cta inline-flex w-fit items-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.45)]"
           >Start my 7-day trial <span aria-hidden="true">→</span></a>
         </div>
         <!-- One quiet line states the charge boundary at the moment of choice. -->
-        <p class="hero-fineprint font-mono text-[0.68rem] font-medium text-zinc-500">Card required · $0 today · $24/month after seven days unless canceled before the displayed trial end.</p>
+        <p class="hero-fineprint font-mono text-[0.68rem] font-medium text-zinc-500">Card required · $0 today · $24/month after seven days · $5 of included agent work for analysis, First Cut, and direction.</p>
       </div>
     </div>
 
     <!-- ==================== BELOW THE FOLD · 1: THE PROOF =====================
-         Portrait clip + quote column: the phone is a fixed column, the three
-         voices fill its height. Header matches the how-section band (title
-         left, lede right) so the right side of the section is never empty. -->
+         Portrait clip + conversion/quote column: the phone is a fixed column,
+         the offer follows the proof without a detour, and outcome-oriented
+         customer voices supply trust. -->
     <section id="demo" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
       <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">From a Zoom call</p>
       <div class="proof-head">
-        <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Find the Hidden Gems</h2>
+        <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Hours of tape. One cut.</h2>
         <p class="proof-lede">
           Michael Ruescher quit a twelve-year job to build <a href="https://bitter.sh/" target="_blank" rel="noopener">bitter.sh</a>.<br>This is the cut you'd send.
         </p>
@@ -214,12 +201,29 @@ useHead({
               width="1080"
               height="1920"
               title="Watch: Michael Ruescher on quitting to build bitter.sh"
+              data-bc-proof-video
+              data-bc-placement="homepage_proof"
             />
           </div>
           <figcaption class="proof-caption">
             The rest of the hours are still on the tape.
           </figcaption>
         </figure>
+        <div class="proof-cta-band" aria-label="Try BitterClip on your recording">
+          <div class="agent-card flex flex-col gap-5 rounded-2xl border p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <div>
+              <p class="font-display text-2xl font-bold text-white sm:text-3xl">Try it on one real recording.</p>
+              <p class="mt-2 text-sm leading-relaxed text-zinc-400">Seven days · $0 today · one recording up to two hours · $5 of included agent work for analysis, First Cut, and direction.</p>
+            </div>
+            <a
+              :href="signupUrlClipProof"
+              data-bc-event="proof_cta_click"
+              data-bc-placement="after_proof"
+              data-bc-plan="creator"
+              class="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.35)] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >Start my 7-day trial <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
         <div class="proof-quotes">
           <figure class="proof-quote proof-quote-lead">
             <blockquote class="font-display">
@@ -245,18 +249,6 @@ useHead({
               </div>
             </figcaption>
           </figure>
-          <figure class="proof-quote">
-            <blockquote class="font-display">
-              &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
-            </blockquote>
-            <figcaption>
-              <DeferredImage src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" />
-              <div>
-                <span class="proof-quote-name">Rohan Karunakaran</span>
-                <span class="proof-quote-role">Founder · <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener">Frontier Studio</a></span>
-              </div>
-            </figcaption>
-          </figure>
         </div>
       </div>
     </section>
@@ -269,11 +261,11 @@ useHead({
     <section id="how" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
       <div class="substrate-head">
         <div>
-          <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">How it works</p>
-          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">First, the session is in view</h2>
+          <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Control</p>
+          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Direct the cut until it is right</h2>
         </div>
         <p class="substrate-intro agent-measure text-base leading-relaxed text-zinc-400">
-          That clip is still attached to the Zoom it came from. Shoot on a phone, in Zoom, or with BitterClip's own browser recorder, and BitterClip transcribes it, timestamps every word, and splits the voices. Cuts land on the word.
+          Start with BitterClip's built-in agent. Ask why a moment belongs, tighten the opening, try another direction, or revert. You can also edit the transcript by hand. The result stays ordinary, controllable work.
         </p>
       </div>
       <figure class="mt-10 md:mt-14">
@@ -282,26 +274,38 @@ useHead({
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>
-          <p>The agent can still make the cut. You ask for what you want; any cut is checkable against the exact moment it came from.</p>
+          <p>The source stays attached, every word is timestamped, and every cut can be checked against the exact moment it came from.</p>
         </figcaption>
       </figure>
     </section>
 
-    <!-- ================= BELOW THE FOLD · 3: BRING YOUR AGENT =================
+    <!-- ================ BELOW THE FOLD · 3: AGENT PORTABILITY ================
          The cockpit section. The claim (outcome-level direction, not timeline
          operation) is demonstrated by a transcript, not asserted: ask, draft
          that cut, revise that cut, then open or download after render. -->
-    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8">
+    <section class="btf relative mx-auto max-w-6xl px-6 sm:px-8" data-bc-view-event="agent_portability_view" data-bc-placement="agent_portability">
       <div class="agent-grid grid items-center">
         <div>
-          <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Works with Claude · ChatGPT · MCP</p>
-          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Bring your agent</h2>
+          <p class="mb-4 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Built in first · portable when you want it</p>
+          <h2 class="font-display text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Use BitterClip&rsquo;s agent—or yours</h2>
           <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-            BitterClip ships with its agent built in — but it also plugs into Claude, ChatGPT, or anything that speaks MCP. Your agent shows up to footage that's already in view: every word timestamped, voices split, cuts addressable.
+            BitterClip's agent is already inside the editor. Nothing else needs to be connected. If you prefer Claude, ChatGPT, or another MCP client, it can operate the same workbench under the same source and edit rules.
           </p>
           <p class="agent-measure mt-4 text-base leading-relaxed text-zinc-200">
-            You don't operate a timeline. You ask for the finished cut — and when it's wrong, you say so and it revises that same cut.
+            The cockpit can change. The recording, cut, history, and manual controls stay the same.
           </p>
+          <figure class="proof-quote agent-portability-quote">
+            <blockquote class="font-display">
+              &ldquo;The friction was the whole problem with founder content &mdash; timestamps, clunky editors, the back-and-forth on every clip. <span class="text-white">Now I make the clips inside Claude, while I&rsquo;m already in there.</span>&rdquo;
+            </blockquote>
+            <figcaption>
+              <DeferredImage src="/images/rohan_karunakaran.jpg" alt="Rohan Karunakaran" width="48" height="48" />
+              <div>
+                <span class="proof-quote-name">Rohan Karunakaran</span>
+                <span class="proof-quote-role">Founder · <a href="https://www.frontier-studio.com/" target="_blank" rel="noopener">Frontier Studio</a></span>
+              </div>
+            </figcaption>
+          </figure>
           <a href="/docs" class="mt-7 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-zinc-400 hover:text-zinc-200">Connect your agent <span aria-hidden="true">→</span></a>
         </div>
         <figure class="agent-card rounded-2xl border p-5 sm:p-6">
@@ -332,40 +336,14 @@ useHead({
       </div>
     </section>
 
-    <!-- ======================= BELOW THE FOLD · 4: FAQ ========================
-         Bottom-funnel objection handling, staged before the pricing ask.
-         Native <details> accordion (same name = exclusive) so it works without
-         JS, stays keyboard-accessible, and keeps answers in the HTML for
-         FAQPage JSON-LD. Also emitted as FAQPage JSON-LD. -->
-    <section id="faq" aria-labelledby="faq-heading" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
-      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Before you ask</p>
-      <h2 id="faq-heading" class="font-display max-w-[20ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">The questions everyone asks first</h2>
-      <div class="faq-list agent-card mt-10 overflow-hidden rounded-2xl border md:mt-14">
-        <details
-          v-for="item in faqItems"
-          :key="item.q"
-          class="faq-item"
-          name="homepage-faq"
-        >
-          <summary class="faq-q">
-            <span class="faq-q-text">{{ item.q }}</span>
-            <svg class="faq-plus" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-          </summary>
-          <p class="faq-a">{{ item.a }}</p>
-        </details>
-      </div>
-    </section>
-
-    <!-- ====================== BELOW THE FOLD · 5: PRICING =====================
+    <!-- ====================== BELOW THE FOLD · 4: PRICING =====================
          Two public plans, with Creator as the only trial entry. Durable app
          keys remain clip/pro; public language stays Creator/Producer. -->
-    <section id="pricing" aria-label="Pricing" class="btf btf-last relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
+    <section id="pricing" aria-label="Pricing" class="btf relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8" data-bc-view-event="pricing_view" data-bc-placement="pricing">
       <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Pricing</p>
       <h2 class="font-display max-w-[24ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">Bring one recording. Leave with the episode.</h2>
       <p class="agent-measure mt-5 text-base leading-relaxed text-zinc-400">
-        Clipping is not editing. Start Creator with one real recording and meet an agent that reads the whole session, makes a crafted First Cut, and improves that same work when you direct it.
+        Try the real workbench on one recording. Your included agent work covers the whole-recording analysis, First Cut, and the directions you give from there.
       </p>
 
       <div class="mt-10 grid max-w-5xl items-stretch gap-4 md:mt-14 md:grid-cols-2">
@@ -378,19 +356,22 @@ useHead({
           <p class="mb-4 mt-1.5 text-xs text-zinc-400">Meet your editor. Card required; $0 due today.</p>
           <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">During the trial</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>One intake up to 2 hours of central material</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Editor's Read + crafted First Cut</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Questions + one revised cut on the same Clip</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Deep agent + watermarked Export</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>One recording up to 2 hours</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$5 of agent work for analysis, First Cut, and direction</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Keep asking and revising while balance remains</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Watermarked exports during the trial</li>
           </ul>
-          <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">After the first payment</p>
+          <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">After the trial</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
-            <li>10 production hours · $10 agent balance</li>
-            <li>Deep + Fast · clean Exports · 4 GB files</li>
-            <li>Add agent balance anytime</li>
+            <li>10 source-footage hours · $10 included agent work</li>
+            <li>Clean exports · files up to 4 GB</li>
+            <li>Add more agent work at any time</li>
           </ul>
           <a
-            :href="signupUrlClip"
+            :href="signupUrlClipPricing"
+            data-bc-event="pricing_cta_click"
+            data-bc-placement="creator_pricing"
+            data-bc-plan="creator"
             class="mt-auto flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-2.5 font-mono text-xs font-bold text-zinc-950 transition duration-200 hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
           >
             <span>Start my 7-day trial</span>
@@ -406,14 +387,16 @@ useHead({
           <p class="font-display text-3xl font-bold text-white">$99<span class="text-lg font-semibold text-zinc-400">/month</span></p>
           <p class="mb-5 mt-1.5 text-xs text-zinc-400">High-volume recurring production.</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 production hours per billing period</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$40 included agent balance</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Deep + Fast models</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Clean Exports · 20 GB files</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority service · add balance anytime</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 source-footage hours per billing period</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$40 included agent work</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Clean exports · files up to 20 GB</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority rendering · add agent work anytime</li>
           </ul>
           <a
-            :href="signupUrlPro"
+            :href="signupUrlProPricing"
+            data-bc-event="pricing_cta_click"
+            data-bc-placement="producer_pricing"
+            data-bc-plan="producer"
             class="mt-auto flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border border-zinc-700 px-5 py-2.5 font-mono text-xs font-bold text-zinc-200 transition duration-200 hover:border-[#f28f84]/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
           >
             <span>Choose Producer</span>
@@ -427,8 +410,35 @@ useHead({
       </div>
 
       <p class="mt-7 text-center text-xs text-zinc-400">
-        Card required for the Creator trial: $0 today, then $24/month. The exact cancel-before time appears in Billing as soon as the trial starts. Your sources, evidence, edits, revisions, and completed work remain yours.
+        Card required for the Creator trial. Checkout shows $0 today, your exact charge date, and the scheduled $24 monthly price before you confirm. Adding agent work during the trial does not start the subscription early.
       </p>
+    </section>
+
+    <!-- ======================== BELOW THE FOLD · 5: FAQ =======================
+         Compact objection handling after the offer. Native details keep every
+         answer keyboard-accessible, server-rendered, and available to JSON-LD. -->
+    <section id="faq" aria-labelledby="faq-heading" class="btf btf-last relative mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-8">
+      <p class="mb-3 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">Before you ask</p>
+      <h2 id="faq-heading" class="font-display max-w-[20ch] text-3xl font-bold tracking-[-0.03em] text-white sm:text-5xl">The short version</h2>
+      <div class="faq-list agent-card mt-10 overflow-hidden rounded-2xl border md:mt-14">
+        <details
+          v-for="(item, index) in faqItems"
+          :key="item.q"
+          class="faq-item"
+          name="homepage-faq"
+          data-bc-faq
+          :data-bc-faq-id="`faq_${index + 1}`"
+          data-bc-placement="homepage_faq"
+        >
+          <summary class="faq-q">
+            <span class="faq-q-text">{{ item.q }}</span>
+            <svg class="faq-plus" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+          </summary>
+          <p class="faq-a">{{ item.a }}</p>
+        </details>
+      </div>
     </section>
   </main>
 </template>
@@ -704,6 +714,10 @@ useHead({
   margin-top: 2.5rem;
 }
 
+.proof-cta-band {
+  margin-top: 3rem;
+}
+
 .proof-player {
   display: flex;
   flex-direction: column;
@@ -781,6 +795,17 @@ useHead({
   color: #ffa89e;
 }
 
+.agent-portability-quote {
+  margin-top: 1.75rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgb(242 143 132 / 0.28);
+}
+
+.agent-portability-quote blockquote {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
 .proof-lede a:focus-visible,
 .proof-quote-role a:focus-visible {
   outline: 2px solid var(--bitter-accent-clip);
@@ -788,6 +813,10 @@ useHead({
 }
 
 @media (min-width: 48rem) {
+  .proof-cta-band {
+    margin-top: 4rem;
+  }
+
   .proof-stage {
     margin-top: 3.5rem;
   }
@@ -814,21 +843,26 @@ useHead({
 
   .proof-frame {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 1 / span 2;
   }
 
   .proof-caption {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 3;
+    margin-top: 0;
+  }
+
+  .proof-cta-band {
+    grid-column: 2;
+    grid-row: 1;
     margin-top: 0;
   }
 
   .proof-quotes {
     grid-column: 2;
-    grid-row: 1;
-    justify-content: space-between;
-    gap: 1.75rem;
-    min-height: 100%;
+    grid-row: 2;
+    justify-content: start;
+    gap: 2.5rem;
     max-width: 36rem;
     margin-inline: 0;
   }

@@ -3,6 +3,17 @@ import { nextTick, watch } from 'vue'
 const APP_ORIGIN = 'https://app.bitterclip.com'
 const EVENT_VALUE_LIMIT = 120
 
+const HOMEPAGE_CLICK_EVENTS = new Set([
+  'hero_cta_click',
+  'proof_cta_click',
+  'pricing_cta_click',
+])
+
+const HOMEPAGE_VIEW_EVENTS = new Set([
+  'pricing_view',
+  'agent_portability_view',
+])
+
 const DEMO_EVENT_ALLOWLIST = new Set([
   'editor_opened',
   'editor_closed',
@@ -114,6 +125,12 @@ export default defineNuxtPlugin((nuxtApp) => {
   let articleTrackedFor = ''
   let observedPath = ''
   let seenSections = new Set<string>()
+  let homepageViewObserver: IntersectionObserver | null = null
+  let homepageViewPath = ''
+  let seenHomepageViews = new Set<string>()
+  const playedProofVideos = new WeakSet<HTMLVideoElement>()
+  const completedProofVideos = new WeakSet<HTMLVideoElement>()
+  const proofVideoQuartiles = new WeakMap<HTMLVideoElement, Set<number>>()
 
   router.afterEach((to, from) => {
     if (to.fullPath === from.fullPath || to.fullPath === lastPageViewPath) return
@@ -197,6 +214,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       link_text: linkText(anchor),
     }
 
+    const explicitEvent = anchor.dataset.bcEvent
+    if (route.path === '/' && explicitEvent && HOMEPAGE_CLICK_EVENTS.has(explicitEvent)) {
+      sendEvent(explicitEvent, {
+        page_path: route.path,
+        placement: anchor.dataset.bcPlacement || 'unknown',
+        plan_intent: anchor.dataset.bcPlan || url.searchParams.get('plan') || 'unknown',
+      })
+    }
+
     if (url.origin === APP_ORIGIN && url.pathname === '/sign_up') {
       sendEvent('signup_click', {
         ...marketingBase,
@@ -252,6 +278,80 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 
+  function viewportClass() {
+    if (window.innerWidth < 640) return 'mobile'
+    if (window.innerWidth < 1024) return 'tablet'
+    return 'desktop'
+  }
+
+  function setupHomepageViewObserver(path: string) {
+    homepageViewObserver?.disconnect()
+    homepageViewObserver = null
+    if (homepageViewPath !== path) seenHomepageViews = new Set()
+    homepageViewPath = path
+    if (path !== '/' || !('IntersectionObserver' in window)) return
+
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-bc-view-event]'))
+    homepageViewObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        const target = entry.target as HTMLElement
+        const name = target.dataset.bcViewEvent || ''
+        if (!HOMEPAGE_VIEW_EVENTS.has(name)) continue
+        const placement = target.dataset.bcPlacement || 'unknown'
+        const key = `${homepageViewPath}:${name}:${placement}`
+        if (seenHomepageViews.has(key)) continue
+        seenHomepageViews.add(key)
+        sendEvent(name, {
+          page_path: homepageViewPath,
+          placement,
+          viewport_class: viewportClass(),
+        })
+      }
+    }, { rootMargin: '0px 0px -35% 0px', threshold: 0.2 })
+    for (const target of targets) homepageViewObserver.observe(target)
+  }
+
+  function handleHomepageFaq(event: Event) {
+    if (route.path !== '/') return
+    const details = event.target
+    if (!(details instanceof HTMLDetailsElement) || !details.open || !details.hasAttribute('data-bc-faq')) return
+    sendEvent('faq_open', {
+      page_path: route.path,
+      placement: details.dataset.bcPlacement || 'homepage_faq',
+      faq_id: details.dataset.bcFaqId || 'unknown',
+    })
+  }
+
+  function handleHomepageProofVideo(event: Event) {
+    if (route.path !== '/') return
+    const video = event.target
+    if (!(video instanceof HTMLVideoElement) || !video.hasAttribute('data-bc-proof-video')) return
+    const placement = video.dataset.bcPlacement || 'homepage_proof'
+
+    if (event.type === 'play' && !playedProofVideos.has(video)) {
+      playedProofVideos.add(video)
+      sendEvent('proof_video_play', { page_path: route.path, placement })
+      return
+    }
+
+    if (event.type === 'ended' && !completedProofVideos.has(video)) {
+      completedProofVideos.add(video)
+      sendEvent('proof_video_complete', { page_path: route.path, placement })
+      return
+    }
+
+    if (event.type !== 'timeupdate' || !Number.isFinite(video.duration) || video.duration <= 0) return
+    const reached = Math.floor((video.currentTime / video.duration) * 100)
+    const seen = proofVideoQuartiles.get(video) || new Set<number>()
+    for (const quartile of [25, 50, 75]) {
+      if (reached < quartile || seen.has(quartile)) continue
+      seen.add(quartile)
+      sendEvent('proof_video_quartile', { page_path: route.path, placement, quartile })
+    }
+    proofVideoQuartiles.set(video, seen)
+  }
+
   function handleDocsDemoMessage(event: MessageEvent) {
     if (!isDocsRoute(route.path)) return
     const data = event.data
@@ -275,12 +375,22 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   document.addEventListener('click', handleMarketingClick, true)
+  document.addEventListener('toggle', handleHomepageFaq, true)
+  document.addEventListener('play', handleHomepageProofVideo, true)
+  document.addEventListener('timeupdate', handleHomepageProofVideo, true)
+  document.addEventListener('ended', handleHomepageProofVideo, true)
   window.addEventListener('message', handleDocsDemoMessage)
   watch(() => route.path, () => {
-    requestAnimationFrame(() => { void refreshDocsTracking() })
+    requestAnimationFrame(() => {
+      void refreshDocsTracking()
+      setupHomepageViewObserver(route.path)
+    })
   }, { immediate: true })
   nuxtApp.hook('page:finish', () => {
-    requestAnimationFrame(() => { void refreshDocsTracking() })
+    requestAnimationFrame(() => {
+      void refreshDocsTracking()
+      setupHomepageViewObserver(route.path)
+    })
   })
 
   return {

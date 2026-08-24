@@ -6,7 +6,7 @@ competitorUrl: https://www.descript.com
 reviewed: 2026-08-17
 competitorStrength: It invented transcript editing, and it records your session too.
 heroLede: "Stay with Descript if you want to record remote guests and your screen in the same place you edit. Pick BitterClip if you record straight into the project from a browser, or show up with footage already recorded, and need a finished episode plus a few vertical clips out of every session — editing by asking, in ChatGPT, Claude, or the editor. And if what's bothering you is the retry meter: changing your mind about a cut isn't a billable event here."
-verdictBitterclip: "BitterClip is where your recordings become finished episodes and clips. Record straight into the project from your browser — one person, camera and mic, or your screen in desktop Chrome — or bring a file from anywhere, then edit by selecting words in the transcript or just asking for the change — and every clip remembers where it came from, one click back to that spot in the full recording. Paid plans include production hours and agent balance, not a fee for each time you adjust the same cut."
+verdictBitterclip: "BitterClip is where your recordings become finished episodes and clips. Record straight into the project from your browser — one person, camera and mic, or your screen in desktop Chrome — or bring a file from anywhere, then edit by selecting words in the transcript or just asking for the change — and every clip remembers where it came from, one click back to that spot in the full recording. Paid plans include source-footage hours and agent work; manual changes do not mint a new charge."
 verdictCompetitor: "Descript records you, captures your screen, and edits the result in one app — and it invented transcript editing, which it still does better than almost anyone. Underlord, its AI co-editor, takes feedback and leaves you a normal project you can keep editing by hand. Since September 2025, plans count media minutes plus AI credits, and neither carries over to next month."
 rows:
   - axis: Getting the recording in the first place
@@ -76,7 +76,7 @@ rows:
   - axis: What you pay for when you keep tweaking
     bitterclip:
       lead: Tweaking is free.
-      detail: Paid plans include production hours and agent balance; changing the same cut by hand does not mint another plan charge.
+      detail: Paid plans include source-footage hours and agent work; changing the same cut by hand does not mint another plan charge.
     competitor:
       lead: The meter runs on retries.
       detail: Running the same tool twice charges the same twice, and unused minutes and credits expire monthly.
@@ -128,7 +128,7 @@ faq:
   - q: Does BitterClip record?
     a: "Yes. Every project has a recorder in it — \"Record in browser\" from the Sources tab, or \"Record here\" from the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in chunks while you record so transcription starts the moment you stop. The boundary: one person, one device, signed in. No remote guests, no guest recording links, no separate per-participant tracks. For recording someone over the internet, a dedicated remote-recording tool is genuinely better. And recording wherever you already do — phone, Zoom, Riverside, a camera — then bringing the file is still completely normal."
   - q: Is BitterClip cheaper than Descript?
-    a: They charge for different things, so it depends what you make. BitterClip Creator starts with a card-required seven-day trial at $0 today and becomes $24/month unless canceled before the displayed end; paid Creator includes 10 production hours and $10 of agent balance. Producer is $99/month with 40 production hours, $40 of balance, and priority service. Descript's Hobbyist is $24/month ($16 billed annually) for 600 media minutes and 400 AI credits. Take one real month of your own output and run the numbers on both.
+    a: They charge for different things, so it depends what you make. BitterClip Creator starts with a card-required seven-day trial at $0 today and becomes $24/month unless canceled before the displayed charge date; paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Descript's Hobbyist is $24/month ($16 billed annually) for 600 media minutes and 400 AI credits. Take one real month of your own output and run the numbers on both.
   - q: Can I switch from Descript to BitterClip?
     a: Your recordings move; your timeline doesn't. Descript project files don't transfer, so you bring the original media — and from there every clip you make remembers where it came from, one click back to that spot in the full recording.
 sources:
@@ -174,7 +174,7 @@ The difference you feel daily is what "just ask for it" gets you. In BitterClip,
 
 The first cut is rarely the cut. That is where Descript's September 2025 pricing bites. By [Descript's own metering docs](https://help.descript.com/hc/en-us/articles/27841674958221-Track-and-understand-your-media-minutes-and-AI-credits), running the same input through the same tool twice charges you twice, every Underlord prompt bills for the reasoning plus whatever tools it runs, and unused minutes and credits expire at month end. The help center has a whole article about [how that landed with customers](https://help.descript.com/hc/en-us/articles/40471885821325-Questions-and-concerns-we-ve-heard-from-the-customer-community). None of it makes Underlord bad. It makes trying again cost money.
 
-BitterClip's paid plans include production hours and agent balance: Creator is $24/month with 10 hours and $10; Producer is $99/month with 40 hours, $40, and priority service. Changing your mind about a cut by hand is not another plan. When the first pass is wrong you fix the cut you have instead of rolling the dice on a new one, and the review link you already sent still plays the exact version they watched.
+BitterClip's paid plans include source-footage hours and agent work: Creator is $24/month with 10 hours and $10; Producer is $99/month with 40 hours, $40, and priority rendering. Changing your mind about a cut by hand is not another plan. When the first pass is wrong you fix the cut you have instead of rolling the dice on a new one, and the review link you already sent still plays the exact version they watched.
 
 ## Nobody scores your footage
 

@@ -30,6 +30,19 @@ under a dated entry.
 
 ### Product Context
 
+- Reconciled the public offer with the balance-governed Creator trial. The
+  seven-day card-backed trial is $0 today, becomes $24/month on the exact date
+  shown at checkout, accepts one recording up to two hours, and includes $5 of
+  agent work. Customers can keep asking, revising, trying alternatives, and
+  reverting while balance remains; trial exports are watermarked and clean
+  exports unlock after the first paid charge. Public copy no longer describes
+  a revision counter, an export quota, "production hours," or an internal
+  inference-credit model.
+- Clarified BitterClip's commercial identity as a directable video workbench:
+  it understands the whole recording, produces one coherent cut, and keeps the
+  result editable and source-linked. The built-in agent is the default path;
+  Claude, ChatGPT, and MCP clients are optional peer operators rather than a
+  prerequisite for understanding or buying the product.
 - Aligned current public pricing language with the canonical offer: the Creator
   trial lasts exactly seven days and requires a card; it is $0 today, then
   $24/month unless canceled before the displayed trial end. Producer is $99/month,
@@ -95,6 +108,15 @@ under a dated entry.
 
 ### Website
 
+- Rebuilt the homepage conversion sequence as outcome, real source-to-cut
+  proof, an immediate trial ask, control and source trust, optional agent
+  portability, pricing, then a compact FAQ. "Hours of tape. One cut." replaces
+  clip-farm language, pricing now precedes objection handling, and every
+  homepage CTA carries a distinct acquisition stage.
+- Added privacy-safe homepage interaction events for hero, proof, and pricing
+  CTAs; proof playback and quartiles; pricing and agent-portability views; and
+  FAQ opens. Event payloads contain neutral placement context, never customer
+  media, prompts, transcripts, or commercial interpretation.
 - Split the ISO4 homepage cinematic into one live authoring scene and one
   production delivery shell. Development keeps the deterministic Three.js
   workshop; public builds use one responsive, non-looping video over an exact
@@ -363,6 +385,12 @@ under a dated entry.
   than an approved-clip handoff.
 
 ### Public Hygiene
+
+- Removed the current-tree copy-research and truth-audit journals from the public
+  repository. Public product truth, neutral event names, and semantic history
+  remain inspectable here; commercial rationale, cost evidence, funnel results,
+  and experiment interpretation now route to the adjacent private product
+  authority.
 
 - Removed an internal production-readiness report from the public repository,
   rewrote the two affected tip commits out of branch history, restored branch

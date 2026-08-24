@@ -68,7 +68,7 @@ rows:
   - axis: Getting it in front of an audience
     bitterclip:
       lead: YouTube, then hand off.
-      detail: Publishes to YouTube after a final confirm, plus links anyone can watch and 1080p downloads.
+      detail: Sends to a connected YouTube destination only after final confirmation, plus review links and 1080p downloads.
     competitor:
       lead: Posts it for you.
       detail: Direct posting from the $15 Starter tier; Pro schedules six platforms with auto titles and hashtags.
@@ -84,7 +84,7 @@ rows:
   - axis: What a month actually costs
     bitterclip:
       lead: $24 after a seven-day trial.
-      detail: Paid Creator includes 10 production hours, $10 of agent balance, Deep and Fast models, clean Exports, and 4 GB files.
+      detail: Paid Creator includes 10 source-footage hours, $10 of included agent work, clean exports, and 4 GB files.
     competitor:
       lead: $15 for 150 credits.
       detail: One credit is one source minute, charged on the whole upload, and credits expire after 60 days.
@@ -130,9 +130,9 @@ faq:
   - q: Does BitterClip record?
     a: "Yes. Every project has a browser recorder: \"Record in browser\" from the Sources tab, or \"Record here\" in the episode editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record so transcription starts the moment you press stop. The boundary matters: it's one person, one device, signed in. No remote guests, no guest recording links, no separate per-participant tracks. If the job is recording a guest over the internet, use a dedicated remote-recording tool and bring the file in — that's still completely normal here."
   - q: Can BitterClip post directly to TikTok and Instagram?
-    a: "No. BitterClip publishes straight to YouTube with a confirm step, then hands off everything else: private links anyone can watch without an account, 1080p MP4 downloads, and expiring download links any scheduler can pick up. If six-platform auto-posting is the center of your week, choose OpusClip."
+    a: "No. BitterClip can send a finished export to a connected YouTube destination after a fresh confirmation, then hands off everything else through review links and 1080p MP4 downloads. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?
-    a: OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed end; paid Creator includes 10 production hours and $10 of agent balance. Producer is $99/month with 40 production hours, $40 of balance, and priority service.
+    a: OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed charge date; paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering.
 sources:
   - label: OpusClip homepage
     url: https://www.opus.pro/
@@ -178,4 +178,4 @@ Anything you can click, you can ask for. The editor, ChatGPT, Claude, the comman
 
 Be honest about the job. If it's throughput — one long upload into a stack of scored, captioned vertical shorts, scheduled across six platforms with barely any of your time — OpusClip is the most complete machine for it. It takes videos up to ten hours, clips footage that isn't people talking, and its scheduler saves you a second tool. It's no fading startup either: it raised a round from SoftBank and is expanding from clipping into a full AI video-agent platform.
 
-BitterClip is for the other job. You have a recording — twenty minutes to two hours, recorded straight into the project from your browser or shot on a phone, Zoom, Riverside, or a camera and brought in — and every time you need the finished thing: the full episode, the vertical version, captions with the misheard names fixed, and a way to search everything you've recorded when you need that one moment from March back. Creator's card-required seven-day trial is $0 today and covers one session of up to two hours, an Editor's Read, a crafted First Cut, questions, one revision of that same Clip, the Deep agent, and a watermarked Export.
+BitterClip is for the other job. You have a recording — twenty minutes to two hours, recorded straight into the project from your browser or shot on a phone, Zoom, Riverside, or a camera and brought in — and every time you need the finished thing: the full episode, the vertical version, captions with the misheard names fixed, and a way to search everything you've recorded when you need that one moment from March back. Creator's card-required seven-day trial is $0 today and covers one recording up to two hours, $5 of agent work for analysis, the First Cut, and continued direction, plus watermarked exports.

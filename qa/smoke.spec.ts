@@ -117,15 +117,8 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   const h1 = page.getByRole('heading', { level: 1 })
   await expect(h1).toContainText('Footage in')
   await expect(h1).toContainText('Episode out')
-  await expect(page.getByText('Deep Video Intelligence')).toBeVisible()
-  await expect(page.getByText('knows your content')).toBeVisible()
-  await expect(page.getByText('Precision Edits')).toBeVisible()
-  await expect(page.getByText('the good parts, finished')).toBeVisible()
-  await expect(page.getByText('Card required · $0 today · $24/month after seven days unless canceled before the displayed trial end.')).toBeVisible()
-  // The page must not be readable as "BitterClip cannot record": the how
-  // intro names the browser recorder alongside the footage people already have.
-  await expect(page.getByText("with BitterClip's own browser recorder")).toBeVisible()
-  await expect(page.getByText('Does BitterClip record for me?')).toBeVisible()
+  await expect(page.getByText('BitterClip watches the whole recording, makes one cut worth sending, and lets you keep directing it.')).toBeVisible()
+  await expect(page.getByText('Card required · $0 today · $24/month after seven days · $5 of included agent work for analysis, First Cut, and direction.')).toBeVisible()
   const heroTrialCta = page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start my 7-day trial' }).first()
   await expect(heroTrialCta).toBeVisible()
   await expect(heroTrialCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
@@ -133,16 +126,16 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(navCta).toBeVisible()
   await expect(navCta).toHaveClass(/bg-\[#f28f84\]/)
   await expect(page.locator('header a[href^="https://app.bitterclip.com/sign_up"]')).toHaveCount(0)
-  // The below-the-fold spine: proof (#demo) → how → agent → FAQ → pricing.
+  // The below-the-fold spine: proof → control/trust → portability → offer → FAQ.
   const btfHeadings = await page.locator('main h2').allTextContents()
   expect(btfHeadings.map((text) => text.trim())).toEqual([
-    'Find the Hidden Gems',
-    'First, the session is in view',
-    'Bring your agent',
-    'The questions everyone asks first',
+    'Hours of tape. One cut.',
+    'Direct the cut until it is right',
+    'Use BitterClip’s agent—or yours',
     'Bring one recording. Leave with the episode.',
+    'The short version',
   ])
-  await expect(page.locator('#demo').getByRole('heading', { name: 'Find the Hidden Gems' })).toBeVisible()
+  await expect(page.locator('#demo').getByRole('heading', { name: 'Hours of tape. One cut.' })).toBeVisible()
   const proofVideo = page.locator('#demo video[title^="Watch:"]')
   await expect(proofVideo).toHaveAttribute('data-deferred-src', /day-1-sizzle\.mp4/)
   await proofVideo.scrollIntoViewIfNeeded()
@@ -154,6 +147,12 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.locator('#demo').getByRole('link', { name: 'Bitter.sh', exact: true })).toHaveAttribute('href', 'https://bitter.sh/')
   await expect(page.getByRole('link', { name: /Strength & Positions/ })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Frontier Studio' })).toBeVisible()
+  const proofOrder = await page.locator('#demo .proof-stage').evaluate((stage) =>
+    Array.from(stage.children).map((child) => child.classList[0]),
+  )
+  expect(proofOrder).toEqual(['proof-player', 'proof-cta-band', 'proof-quotes'])
+  await expect(page.locator('a[data-bc-event="proof_cta_click"]')).toBeVisible()
+  await expect(page.locator('a[data-bc-event="proof_cta_click"]')).toHaveAttribute('href', /bc_stage=proof/)
   await expect(page.getByText('Open it to check the tape.')).toBeVisible()
   const editorImage = page.locator('#how img')
   await expect(editorImage).toHaveAttribute('data-deferred-src', /sizzle-editor-2/)
@@ -170,11 +169,12 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.getByText('Start clipping')).toHaveCount(0)
   const faq = page.locator('#faq')
   await faq.getByText('Where can the finished work go?').click()
-  await expect(faq.getByText('For Instagram, send the finished clip to your phone')).toBeVisible()
+  await expect(faq.getByText('Publishing always stops for your final confirmation')).toBeVisible()
   await expect(page.getByText('30-day refund')).toHaveCount(0)
   const creatorCta = page.locator('#pricing').getByRole('link', { name: 'Start my 7-day trial' })
   await expect(creatorCta).toBeVisible()
   await expect(creatorCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
+  await expect(creatorCta).toHaveAttribute('href', /bc_stage=pricing/)
   const producerCta = page.locator('#pricing').getByRole('link', { name: 'Choose Producer' })
   await expect(producerCta).toBeVisible()
   await expect(producerCta).toHaveAttribute('href', /[?&]plan=pro(?:&|$)/)
@@ -226,6 +226,66 @@ test('records a sitewide signup CTA event without navigating', async ({ page }) 
       event.params.plan === 'clip',
     ),
   )
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) =>
+      event.name === 'hero_cta_click' &&
+      event.params.placement === 'hero' &&
+      event.params.plan_intent === 'creator',
+    ),
+  )
+})
+
+test('records the neutral homepage conversion spine without customer content', async ({ page }) => {
+  await page.goto('/')
+
+  const proofCta = page.locator('a[data-bc-event="proof_cta_click"]')
+  await proofCta.scrollIntoViewIfNeeded()
+  await page.evaluate(() => {
+    const anchor = document.querySelector<HTMLAnchorElement>('a[data-bc-event="proof_cta_click"]')
+    if (!anchor) throw new Error('proof CTA missing')
+    anchor.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    anchor.click()
+  })
+
+  await page.locator('[data-bc-view-event="agent_portability_view"]').scrollIntoViewIfNeeded()
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) => event.name === 'agent_portability_view'),
+  )
+  await page.locator('#pricing').scrollIntoViewIfNeeded()
+  await page.waitForFunction(() =>
+    (window as any).__bitterclipAnalyticsEvents?.some((event: any) => event.name === 'pricing_view'),
+  )
+
+  const faq = page.locator('#faq details').first()
+  await faq.scrollIntoViewIfNeeded()
+  await faq.locator('summary').click()
+
+  await page.evaluate(() => {
+    const video = document.querySelector<HTMLVideoElement>('video[data-bc-proof-video]')
+    if (!video) throw new Error('proof video missing')
+    Object.defineProperty(video, 'duration', { configurable: true, value: 100 })
+    Object.defineProperty(video, 'currentTime', { configurable: true, value: 76 })
+    video.dispatchEvent(new Event('play'))
+    video.dispatchEvent(new Event('timeupdate'))
+    video.dispatchEvent(new Event('ended'))
+  })
+
+  await page.waitForFunction(() => {
+    const names = ((window as any).__bitterclipAnalyticsEvents || []).map((event: any) => event.name)
+    return names.includes('proof_cta_click') && names.includes('faq_open') &&
+      names.includes('proof_video_play') && names.includes('proof_video_quartile') &&
+      names.includes('proof_video_complete')
+  })
+
+  const spineEvents = await page.evaluate(() =>
+    ((window as any).__bitterclipAnalyticsEvents || []).filter((event: any) =>
+      ['proof_cta_click', 'agent_portability_view', 'pricing_view', 'faq_open',
+        'proof_video_play', 'proof_video_quartile', 'proof_video_complete'].includes(event.name),
+    ),
+  )
+  expect(spineEvents.every((event: any) =>
+    !Object.keys(event.params).some((key) => /prompt|transcript|email|account|user|media_name/.test(key)),
+  )).toBe(true)
 })
 
 test('renders the developer documentation page and navigation', async ({ page }) => {

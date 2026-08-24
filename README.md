@@ -1,10 +1,10 @@
 # BitterClip
 
-[BitterClip](https://bitterclip.com/) is a speaker-aware media workspace for
-turning a recorded session into a finished full-length episode and the shorter
-cuts derived from it. It is designed for AI agents that can reason over
-transcript, speaker, and visual context, and for human operators who accept the
-result before it is published.
+[BitterClip](https://bitterclip.com/) is a directable video workbench that
+understands a whole recording, produces one coherent cut, and keeps the result
+source-linked and editable. Its built-in agent is the shortest path into the
+workbench; Claude, ChatGPT, and other MCP clients can operate the same substrate
+when a customer prefers an external cockpit.
 
 It is built for podcasts, interviews, founder calls, demos, livestreams, expert
 conversations, coaching sessions, and recurring shows, where the recording is

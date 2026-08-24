@@ -15,6 +15,11 @@ Before changing the repository, read:
 3. The task-specific runbook linked from that map.
 4. `README.md` and `CONTRIBUTING.md` when changing public repository context.
 
+Commercial copy or conversion instrumentation also requires
+`docs/runbooks/commercial-instrumentation.md`. Product behavior and private
+commercial interpretation live in the adjacent private BitterClip repository;
+the public site may emit neutral facts but must not become the experiment journal.
+
 Do not treat an older spec, review, workshop prompt, or journal entry as current
 authority merely because it is detailed. The status registry in `docs/README.md`
 decides how each internal document may be used.

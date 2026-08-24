@@ -1,7 +1,7 @@
 # Internal documentation map
 
 Status: Current routing authority
-Last verified: 2026-08-23
+Last verified: 2026-08-24
 
 This directory contains both current operating guidance and preserved design
 history. Detail is not authority: use the status table below before relying on a
@@ -18,6 +18,7 @@ document. Public creator documentation lives in `content/`, not here.
 | Task | Read next | Acceptance surface |
 | --- | --- | --- |
 | Homepage structure, copy, CTA, or layout | [`runbooks/homepage.md`](runbooks/homepage.md) | `/` with real navigation and copy |
+| Commercial claims or conversion instrumentation | [`runbooks/commercial-instrumentation.md`](runbooks/commercial-instrumentation.md), then the private product authority when access is available | `/`, signup handoff, checkout, and private lifecycle receipts |
 | Public docs, blog, compare, routes, Markdown, sitemap, or `llms` | [`runbooks/public-content.md`](runbooks/public-content.md) | generated static site |
 | Live ISO4 scene or visual workshop | [`runbooks/iso4-authoring.md`](runbooks/iso4-authoring.md), then [`hero-iso4-brief.md`](hero-iso4-brief.md) | `/`, never the lab alone |
 | ISO4 bake, compression, Artifact promotion, or rollback | [`runbooks/iso4-release.md`](runbooks/iso4-release.md) | generated site and deployed `/` |
@@ -39,6 +40,7 @@ document. Public creator documentation lives in `content/`, not here.
 | --- | --- | --- |
 | `docs/README.md` | Current authority | This map and status registry. |
 | `docs/runbooks/homepage.md` | Current authority | Homepage ownership and coordinated-change checklist. |
+| `docs/runbooks/commercial-instrumentation.md` | Current authority | Public/private commercial-learning boundary, neutral event contract, and cross-repo change order. |
 | `docs/runbooks/public-content.md` | Current authority | Authored versus generated public surfaces. |
 | `docs/runbooks/iso4-authoring.md` | Current authority | Live scene workshop and homepage acceptance. |
 | `docs/runbooks/iso4-release.md` | Current authority | Renderer diff, bake, Artifact promotion, and rollback. |
@@ -60,8 +62,6 @@ document. Public creator documentation lives in `content/`, not here.
 | `docs/hero-iso-nit-ledger.md` | Historical predecessor evidence | Earlier ISO workshop defects and dispositions. |
 | `docs/hero-iso-workshop-start.md` | Historical workshop prompt | Earlier ISO workshop launch message. |
 | `docs/homepage-promotion-audit.md` | Historical completed migration | Audit used to promote ISO4 to `/`. |
-| `docs/homepage-copy-rd-journal.md` | Historical evidence | Homepage copy research and settled decisions at that time. |
-| `docs/copy-truth-audit-2026-08-24.md` | Historical audit evidence | Copy-to-product-truth findings captured on 2026-08-24; reverify before applying. |
 | `docs/landing-editor-conversion-analysis.md` | Historical study | Prior embedded-editor conversion analysis. |
 | `docs/landing-editor-conversion-journal.md` | Historical evidence | Prior conversion workshop ledger. |
 | `docs/sign-in-and-conversion-study-2026-06-17.md` | Historical study | Sign-in discovery findings from the prior homepage. |

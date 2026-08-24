@@ -184,7 +184,7 @@ useHead({
             Bring a session. Leave with the finished cut.
           </h2>
           <p class="text-zinc-400 max-w-xl leading-relaxed">
-            Start Creator with one recording. The card-required trial is $0 today, lasts exactly seven days, and becomes $24/month unless you cancel before the displayed end.
+            Start Creator with one recording up to two hours. The card-required trial is $0 today, includes $5 of agent work for analysis, the First Cut, and direction, and becomes $24/month after seven days unless you cancel before the displayed charge date.
           </p>
         </div>
         <a

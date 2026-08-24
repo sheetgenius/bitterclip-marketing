@@ -97,7 +97,7 @@ chooseUs:
   - You send review links and need them to hold — the link you sent still plays the exact version they watched, and undo works all the way back.
 chooseThem:
   - Your social calendar should draft itself — posts written from your website and brand materials, your job reduced to approving them.
-  - You need scheduling and auto-publishing across Instagram, Facebook, LinkedIn, YouTube, and TikTok with performance tracking in one place. BitterClip publishes to YouTube and hands the file to anything else.
+  - You need scheduling and auto-publishing across Instagram, Facebook, LinkedIn, YouTube, and TikTok with performance tracking in one place. BitterClip prepares connected destinations for confirmation and hands off the finished file.
   - "You run an agency: the Studio and Scale plans cover multi-brand workspaces with team roles, up to 5 and up to 15 brands."
   - Brand kits matter to you — logo and CTA overlays with platform safe zones, plus intro and outro videos, with no cap on how many kits you build.
   - Clips are the side dish. What you actually want is a posting cadence you barely have to touch.
@@ -128,9 +128,9 @@ faq:
   - q: Can I edit Munch's output?
     a: "Yes, within fixed bounds: extend a clip by up to 30 seconds at either end, split and reframe segments with Manual Crop, and auto-remove silences. Past that the documented path is Re-Munch, which generates a new batch and requires changing at least one setting. Nothing in the docs lets you edit through the transcript."
   - q: Is BitterClip better than Munch?
-    a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip publishes to YouTube and hands the file to any other tool.
+    a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip prepares connected destinations for your final confirmation and hands off the finished file.
   - q: How much does Munch Studio cost compared to BitterClip?
-    a: Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial, but its card-backed terms are explicit — $0 today, then $24/month unless canceled before the displayed end — and the trial takes one session through a crafted First Cut and one revision of that same Clip. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings.
+    a: Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial, but its card-backed terms are explicit — $0 today, then $24/month unless canceled before the displayed charge date — and the trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings.
 sources:
   - label: Munch Studio homepage
     url: https://www.munchstudio.com/

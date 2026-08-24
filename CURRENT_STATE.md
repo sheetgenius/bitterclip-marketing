@@ -1,6 +1,6 @@
 # Current state
 
-Last verified: 2026-08-23
+Last verified: 2026-08-24
 
 This is the short operational truth for a fresh contributor. It is not a
 changelog or design history. When it disagrees with an older spec or review,
@@ -21,6 +21,25 @@ for task-specific authority.
   `bun run generate`.
 - The homepage and Vue-owned legal/marketing routes keep authored Markdown
   alternates in `public/`; see the public-content runbook for the exact split.
+
+## Commercial offer and learning boundary
+
+- The Creator entry offer is a seven-day card-backed trial: $0 today, then
+  $24/month on the exact date shown at checkout if it is not canceled first.
+- The trial accepts one recording up to two hours and includes $5 of agent work
+  for whole-recording analysis, the First Cut, and continued direction.
+- Agent work is the trial's processing boundary. There is no customer-facing
+  revision counter or trial export counter. Trial exports are watermarked;
+  clean exports begin after paid conversion.
+- BitterClip's built-in agent is the default operator. Claude, ChatGPT, and
+  other MCP clients are optional peer operators of the same workbench.
+- Public code may contain truthful claims and neutral interaction events. Cost
+  evidence, conversion targets, customer evidence, abuse analysis, and funnel
+  interpretation stay in the adjacent private product repository.
+
+See [commercial claims and instrumentation](docs/runbooks/commercial-instrumentation.md)
+for the cross-repository authority order and neutral event contract. Product
+behavior must ship and be runtime-verified before this public site promises it.
 
 ## Homepage cinematic
 

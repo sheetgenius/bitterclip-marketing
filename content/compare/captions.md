@@ -83,8 +83,8 @@ rows:
     edge: competitor
   - axis: What the monthly bill looks like
     bitterclip:
-      lead: Trial, then flat production hours.
-      detail: Creator is $0 today, then $24/month after seven days; paid Creator includes 10 production hours and $10 of agent balance.
+      lead: Trial, then source-footage hours.
+      detail: Creator is $0 today, then $24/month after seven days; paid Creator includes 10 source-footage hours and $10 of included agent work.
     competitor:
       lead: Credits burn per feature.
       detail: Max is $24.99 for 500 credits, and unused credits are forfeited when you cancel.
@@ -130,7 +130,7 @@ faq:
   - q: Can BitterClip handle long videos?
     a: "Long recordings are the whole point. A session of roughly 20 minutes to 2 hours becomes one project you cut a full edit and vertical clips from. Captions' AI Shorts can chop a long video into short clips, but its manual editor caps projects at 10 minutes and AI Edit accepts one to two minutes of footage."
   - q: Which is more affordable, BitterClip or Captions?
-    a: They charge for different things, so price it against what you actually make. BitterClip Creator is $0 today during a card-required seven-day trial, then $24/month unless canceled before the displayed end; paid Creator includes 10 production hours and $10 of agent balance. Producer is $99/month with 40 production hours, $40 of agent balance, and priority service. Captions' Max plan is $24.99 for 500 credits that burn per feature use; its free plan has no watermark but limits you to basic tools, and unused credits are forfeited when you cancel.
+    a: They charge for different things, so price it against what you actually make. BitterClip Creator is $0 today during a card-required seven-day trial, then $24/month unless canceled before the displayed charge date; paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Captions' Max plan is $24.99 for 500 credits that burn per feature use; its free plan has no watermark but limits you to basic tools, and unused credits are forfeited when you cancel.
 sources:
   - label: Captions pricing page
     url: https://www.captions.ai/pricing
