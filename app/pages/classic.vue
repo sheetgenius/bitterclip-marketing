@@ -91,7 +91,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. $0 is due today, and the exact trial end and scheduled $24 first charge appear as soon as the trial starts. Then bring one recording. BitterClip reads the whole session, makes a crafted First Cut, and lets you direct one revision of that same cut during the seven-day trial.',
+    a: 'Choose Creator and add a card. $0 is due today, then Creator becomes $24/month unless canceled before the trial ends. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Then bring one recording. The trial includes $5 of agent work for whole-recording analysis, a crafted First Cut, and continued direction while balance remains. Top up exactly $20, $50, or $100 during an active trial or paid plan without auto-activating paid Creator.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -111,7 +111,7 @@ const faqItems = [
   },
   {
     q: 'What can I upload?',
-    a: 'Podcasts, interviews, calls, and training sessions — audio or video. The Creator trial accepts one central session up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Bring several angles of the same session and BitterClip keeps them together as one production rather than charging each camera as another session.',
+    a: 'Podcasts, interviews, calls, and training sessions — audio or video. The Creator trial accepts one recording up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Bring several angles of the same session and BitterClip keeps them together as one production rather than charging each camera as another session.',
   },
   {
     q: 'Do I have to learn a new editor?',
@@ -119,7 +119,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Cancel before the exact trial boundary shown in Billing as soon as your trial starts and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, and completed Exports stay available; new processing may require an active plan.',
+    a: 'After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Cancel before that time and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, purchased agent work, and completed Exports stay available; new processing may require an active plan.',
   },
 ]
 
@@ -161,7 +161,7 @@ const structuredData = [
       offerCount: 2,
       url: 'https://bitterclip.com/#pricing',
       availability: 'https://schema.org/InStock',
-      description: 'Creator is $24/month after a seven-day card-backed trial with $0 due today. Producer is $99/month.',
+      description: 'Creator is $24/month after a seven-day card-backed trial with $0 due today, one recording up to two hours, and $5 of included agent work. Producer is $99/month.',
     },
   },
   {
@@ -423,7 +423,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Card required · $0 today · $24/month after seven days unless canceled before the displayed trial end.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">Card required · $0 today · $24/month after seven days unless canceled before the trial ends.</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -885,13 +885,13 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with the episode.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Creator starts with a seven-day card-backed trial: $0 today, then $24/month unless you cancel before the exact boundary shown in Billing as soon as the trial starts. Producer is $99/month for higher-volume work.
+            Creator starts with a seven-day card-backed trial: $0 today, then $24/month unless you cancel before it ends. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Producer is $99/month for higher-volume work.
           </p>
         </div>
 
         <div class="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-white/[0.09] bg-white/[0.025] p-7 text-center sm:p-9">
           <p class="text-sm leading-relaxed text-zinc-400">
-            The canonical pricing page carries the current trial scope, production allowances, agent balance, Export treatment, and cancellation terms. This noindexed archive does not maintain a second feature grid.
+            The canonical pricing page carries the current trial scope, source-footage allowances, included agent work, exact top-ups, Export treatment, and cancellation terms. This noindexed archive does not maintain a second feature grid.
           </p>
           <div class="flex flex-col items-center gap-3 sm:flex-row">
             <a
@@ -903,7 +903,7 @@ onBeforeUnmount(() => {
               class="inline-flex min-h-11 items-center justify-center rounded-lg border border-zinc-700 px-5 py-2.5 font-mono text-xs font-bold text-zinc-200 transition duration-200 hover:border-[#f28f84]/60 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-98"
             >See current pricing</NuxtLink>
           </div>
-          <p class="text-xs text-zinc-500">Trial Exports are watermarked. Existing work stays available after cancellation or lapse; new processing may require an active plan.</p>
+          <p class="text-xs text-zinc-500">The trial includes $5 of agent work, and trial Exports are watermarked. Clean Exports unlock after the first successful $24 payment. Top-ups never auto-activate paid Creator; early activation requires a separate explicit $24 authorization. Existing work stays available after cancellation or lapse; new processing may require an active plan.</p>
         </div>
       </section>
 

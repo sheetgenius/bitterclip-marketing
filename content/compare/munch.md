@@ -84,7 +84,7 @@ rows:
   - axis: Your first month
     bitterclip:
       lead: "Seven days to prove the fit."
-      detail: "Card required; Creator is $0 today, then $24/month unless canceled before the displayed trial end."
+      detail: "Card required; Creator is $0 today, then $24/month unless canceled before the trial ends."
     competitor:
       lead: "The trial bills you."
       detail: "No free plan; the 7-day trial converts automatically, then Essential is $48/month."
@@ -130,7 +130,7 @@ faq:
   - q: Is BitterClip better than Munch?
     a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip prepares connected destinations for your final confirmation and hands off the finished file.
   - q: How much does Munch Studio cost compared to BitterClip?
-    a: Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial, but its card-backed terms are explicit — $0 today, then $24/month unless canceled before the displayed charge date — and the trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings.
+    a: Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial, but its card-backed terms are explicit — $0 today, then $24/month unless canceled before the trial ends — and the trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings.
 sources:
   - label: Munch Studio homepage
     url: https://www.munchstudio.com/

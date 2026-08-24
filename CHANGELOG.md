@@ -31,21 +31,25 @@ under a dated entry.
 ### Product Context
 
 - Reconciled the public offer with the balance-governed Creator trial. The
-  seven-day card-backed trial is $0 today, becomes $24/month on the exact date
-  shown at checkout, accepts one recording up to two hours, and includes $5 of
-  agent work. Customers can keep asking, revising, trying alternatives, and
+  seven-day card-backed trial is $0 today, becomes $24/month unless canceled
+  before it ends, accepts one recording up to two hours, and includes $5 of
+  agent work. After Bitter Checkout accepts the payment method and starts the
+  trial, Billing shows the provider-owned exact cancel-before time and scheduled
+  first charge. Customers can keep asking, revising, trying alternatives, and
   reverting while balance remains; trial exports are watermarked and clean
-  exports unlock after the first paid charge. Public copy no longer describes
-  a revision counter, an export quota, "production hours," or an internal
-  inference-credit model.
+  exports unlock after the first paid charge. Exactly $20, $50, and $100 agent-
+  work top-ups are available during an active trial or paid plan. Top-ups never
+  activate paid Creator early; early activation requires a separate explicit
+  $24 authorization. Public copy no longer describes a revision counter, an
+  export quota, "production hours," or an internal inference-credit model.
 - Clarified BitterClip's commercial identity as a directable video workbench:
   it understands the whole recording, produces one coherent cut, and keeps the
   result editable and source-linked. The built-in agent is the default path;
   Claude, ChatGPT, and MCP clients are optional peer operators rather than a
   prerequisite for understanding or buying the product.
 - Aligned current public pricing language with the canonical offer: the Creator
-  trial lasts exactly seven days and requires a card; it is $0 today, then
-  $24/month unless canceled before the displayed trial end. Producer is $99/month,
+  trial lasts seven days and requires a card; it is $0 today, then $24/month
+  unless canceled before it ends. Producer is $99/month,
   there is no recurring Free plan, and existing work stays available after
   cancellation. Calls to action now say "Start Creator trial." Older dated pricing
   history remains unchanged.

@@ -10,9 +10,9 @@ withDefaults(defineProps<{ publishing?: boolean }>(), { publishing: false })
     <p>A couple of things to have ready first:</p>
     <ul>
       <li>
-        A BitterClip account. The Creator trial lasts exactly seven days and requires a
-        card: $0 today, then $24/month unless canceled before the displayed trial end.
-        Producer is $99/month.
+        A BitterClip account. The Creator trial lasts seven days and requires a card:
+        $0 today, then $24/month unless canceled before it ends. It includes $5 of
+        agent work for one recording up to two hours. Producer is $99/month.
       </li>
       <li>A recording you've uploaded, so you have something to clip.</li>
       <li v-if="publishing">A clip you've already exported.</li>

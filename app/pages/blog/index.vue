@@ -85,8 +85,9 @@ useHead(() => {
         <a
           :href="signupUrl"
           class="text-[#f28f84] underline decoration-[#f28f84]/40 underline-offset-4 transition hover:text-[#ffa89e]"
-        >Start Creator trial</a>. It lasts exactly seven days and requires a card:
-        $0 today, then $24/month unless canceled before the displayed trial end.
+        >Start Creator trial</a>. It lasts seven days and requires a card: $0 today,
+        then $24/month unless canceled before it ends, with $5 of agent work for one
+        recording up to two hours.
       </p>
     </header>
 

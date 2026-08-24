@@ -132,7 +132,7 @@ faq:
   - q: Can BitterClip post directly to TikTok and Instagram?
     a: "No. BitterClip can send a finished export to a connected YouTube destination after a fresh confirmation, then hands off everything else through review links and 1080p MP4 downloads. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?
-    a: OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the displayed charge date; paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering.
+    a: OpusClip counts minutes of video you upload, so a 60-minute upload costs 60 credits no matter how many clips you keep, and monthly credits expire after 60 days. BitterClip Creator begins with a card-required seven-day trial at $0 today, then costs $24/month unless canceled before the trial ends; paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering.
 sources:
   - label: OpusClip homepage
     url: https://www.opus.pro/

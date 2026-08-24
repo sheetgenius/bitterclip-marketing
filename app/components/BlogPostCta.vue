@@ -10,7 +10,7 @@ withDefaults(defineProps<{
   line?: string
 }>(), {
   title: 'Give your show its signature',
-  line: 'The Creator trial lasts exactly seven days and requires a card: $0 today, then $24/month unless you cancel before the displayed trial end. Upload a recording and open the FX tab — or connect ChatGPT or Claude and describe the look you want.',
+  line: 'The Creator trial lasts seven days and requires a card: $0 today, then $24/month unless you cancel before it ends. It includes $5 of agent work for one recording up to two hours. Upload a recording and open the FX tab — or connect ChatGPT or Claude and describe the look you want.',
 })
 
 const { data: site } = await useAsyncData('site', () =>

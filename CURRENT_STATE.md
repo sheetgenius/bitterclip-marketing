@@ -25,12 +25,18 @@ for task-specific authority.
 ## Commercial offer and learning boundary
 
 - The Creator entry offer is a seven-day card-backed trial: $0 today, then
-  $24/month on the exact date shown at checkout if it is not canceled first.
+  $24/month unless it is canceled before the trial ends. After Bitter Checkout
+  accepts the payment method and starts the trial, Billing shows the
+  provider-owned exact cancel-before time and scheduled first charge.
 - The trial accepts one recording up to two hours and includes $5 of agent work
   for whole-recording analysis, the First Cut, and continued direction.
 - Agent work is the trial's processing boundary. There is no customer-facing
   revision counter or trial export counter. Trial exports are watermarked;
   clean exports begin after paid conversion.
+- Customers can top up exactly $20, $50, or $100 of agent work during an active
+  trial or paid plan. A top-up never starts paid Creator early; early activation
+  requires a separate explicit $24 authorization. Purchased agent work survives
+  a later lapse.
 - BitterClip's built-in agent is the default operator. Claude, ChatGPT, and
   other MCP clients are optional peer operators of the same workbench.
 - Public code may contain truthful claims and neutral interaction events. Cost

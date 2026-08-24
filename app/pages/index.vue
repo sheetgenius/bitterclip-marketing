@@ -39,7 +39,7 @@ const signupUrlProPricing = computed(() => signupUrlFor('pro', 'pricing'))
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. Checkout shows $0 due today, your exact charge date, and the scheduled $24 monthly price before you confirm. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
+    a: 'Choose Creator and add a card. Checkout shows $0 due today and the scheduled $24 monthly price. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -63,7 +63,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Cancel before the exact charge date shown at checkout and you pay $0. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
+    a: 'After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Cancel before that time and you pay $0. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
   },
 ]
 
@@ -365,7 +365,7 @@ useHead({
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
             <li>10 source-footage hours · $10 included agent work</li>
             <li>Clean exports · files up to 4 GB</li>
-            <li>Add more agent work at any time</li>
+            <li>Top up exactly $20, $50, or $100 of agent work while active</li>
           </ul>
           <a
             :href="signupUrlClipPricing"
@@ -379,7 +379,7 @@ useHead({
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
           </a>
-          <p class="mt-2.5 text-center text-[11px] text-zinc-500">Cancel before the displayed trial end and pay $0</p>
+          <p class="mt-2.5 text-center text-[11px] text-zinc-500">Cancel before the trial ends and pay $0</p>
         </div>
 
         <div class="plan-card relative flex flex-col rounded-2xl border p-6">
@@ -390,7 +390,7 @@ useHead({
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 source-footage hours per billing period</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$40 included agent work</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Clean exports · files up to 20 GB</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority rendering · add agent work anytime</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority rendering · exact $20/$50/$100 top-ups</li>
           </ul>
           <a
             :href="signupUrlProPricing"
@@ -410,7 +410,7 @@ useHead({
       </div>
 
       <p class="mt-7 text-center text-xs text-zinc-400">
-        Card required for the Creator trial. Checkout shows $0 today, your exact charge date, and the scheduled $24 monthly price before you confirm. Adding agent work during the trial does not start the subscription early.
+        Card required for the Creator trial: $0 today, then $24/month after seven days unless canceled first. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Top-ups are available during an active trial or paid plan and never auto-activate paid Creator; early activation requires a separate explicit $24 authorization.
       </p>
     </section>
 

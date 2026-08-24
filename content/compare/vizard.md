@@ -188,6 +188,6 @@ BitterClip works the other way around. Every edit the editor can make — trims,
 
 If your output is volume — daily verticals across six platforms, cut from talking-head footage, and you're happy letting the machine choose first — stay on Vizard. It's priced and shaped for exactly that, and Spark 1.0 is good at it, though prompt-based extraction caps at 10 prompts per project and isn't switched on for everyone yet.
 
-If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — start with BitterClip's card-required seven-day Creator trial. Bring one recording up to two hours for $0 today and use $5 of agent work for analysis, the First Cut, and continued direction. Trial exports are watermarked; cancel before the displayed charge date to avoid the $24 first charge.
+If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — start with BitterClip's card-required seven-day Creator trial. Bring one recording up to two hours for $0 today and use $5 of agent work for analysis, the First Cut, and continued direction. Trial exports are watermarked; cancel before the trial ends to avoid the $24 first charge.
 
 Bring one recording you already regret uploading somewhere else. The first almost-right cut you fix instead of redo will tell you which side you're on.

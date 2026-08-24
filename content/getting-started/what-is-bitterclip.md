@@ -21,8 +21,13 @@ If you make long videos or podcasts and want short clips out of them, this page 
 ::
 
 You don't need to connect an assistant or configure anything before starting. The Creator
-trial lasts exactly seven days and requires a card: $0 today, then $24/month unless you
-cancel before the displayed trial end. Producer is $99/month. There is no recurring Free
+trial lasts seven days and requires a card: $0 today, then $24/month unless you cancel
+before it ends. After Bitter Checkout accepts the payment method and starts the trial,
+Billing shows the provider-owned exact cancel-before time. Bring one recording up to two
+hours and use the included $5 of agent work while balance remains. You can add exactly $20,
+$50, or $100 of agent work during an active trial or paid plan. Top-ups never auto-activate
+paid Creator; early activation requires a separate explicit $24 authorization. Creator
+supports files up to 4 GB after payment. Producer is $99/month. There is no recurring Free
 plan; if you cancel, your existing work stays available and new processing may require an
 active plan.
 

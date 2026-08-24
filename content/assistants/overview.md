@@ -27,9 +27,10 @@ actions an app may take depend on your plan and workspace policy. BitterClip's b
 workspace works for everyone.
 ::
 
-You'll need a BitterClip account first. The Creator trial lasts exactly seven days and
-requires a card: $0 today, then $24/month unless canceled before the displayed trial end.
-Producer is $99/month. Already have an account and just want the connect steps?
+You'll need a BitterClip account first. The Creator trial lasts seven days and requires a
+card: $0 today, then $24/month unless canceled before it ends. It includes $5 of agent work
+for one recording up to two hours. Producer is $99/month. Already have an account and just
+want the connect steps?
 [Jump to Connect your assistant](#connect-your-assistant).
 
 ::signup-cta
