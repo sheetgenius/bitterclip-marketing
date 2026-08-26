@@ -20,8 +20,8 @@ This is a running list of the changes worth knowing about. Newest is at the top,
 ### Creator trial and paid plans
 
 The Creator trial lasts seven days and requires a card: $0 today, then $24/month unless you
-cancel before it ends. After Bitter Checkout accepts the payment method and starts the
-trial, Billing shows the provider-owned exact cancel-before time. The trial includes $5 of
+cancel before it ends. Once the payment method is accepted and the trial starts, Billing
+shows your exact cancel-before time. The trial includes $5 of
 agent work for one recording up to two hours; exactly $20, $50, and $100 top-ups are
 available during an active trial or paid plan and do not activate paid Creator early.
 Producer is $99/month. There is no recurring Free plan. If you cancel, your existing work

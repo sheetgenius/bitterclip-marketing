@@ -91,7 +91,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. $0 is due today, then Creator becomes $24/month unless canceled before the trial ends. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Then bring one recording. The trial includes $5 of agent work for whole-recording analysis, a crafted First Cut, and continued direction while balance remains. Top up exactly $20, $50, or $100 during an active trial or paid plan without auto-activating paid Creator.',
+    a: 'Choose Creator and add a card. $0 is due today, then Creator becomes $24/month unless canceled before the trial ends. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Then bring one recording. The trial includes $5 of agent work for whole-recording analysis, a crafted First Cut, and continued direction while balance remains. Top up exactly $20, $50, or $100 during an active trial or paid plan without auto-activating paid Creator.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -119,7 +119,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Cancel before that time and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, purchased agent work, and completed Exports stay available; new processing may require an active plan.',
+    a: 'Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Cancel before that time and the first $24 charge is prevented. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, purchased agent work, and completed Exports stay available; new processing may require an active plan.',
   },
 ]
 
@@ -888,7 +888,7 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with the episode.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Creator starts with a seven-day card-backed trial: $0 today, then $24/month unless you cancel before it ends. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Producer is $99/month for higher-volume work.
+            Creator starts with a seven-day card-backed trial: $0 today, then $24/month unless you cancel before it ends. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Producer is $99/month for higher-volume work.
           </p>
         </div>
 

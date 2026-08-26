@@ -660,7 +660,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('$5 of agent work')
   expect(llmsFullText).toContain('10 source-footage hours')
   expect(llmsFullText).toContain('$20, $50, or $100')
-  expect(llmsFullText).toContain('provider-owned exact cancel-before time')
+  expect(llmsFullText).toContain('your exact cancel-before time')
   expect(llmsFullText).toContain('never auto-activate paid Creator')
   expect(llmsFullText).toContain('separate explicit $24 authorization')
   expect(llmsFullText).toContain('files up to 4 GB')

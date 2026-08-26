@@ -99,16 +99,16 @@ More agent work can be added at any time while a trial or paid plan is active.
 Purchased agent work persists if the plan later lapses. Existing recordings,
 edits, and completed work remain in the Studio after cancellation.
 
-After Bitter Checkout accepts the payment method and starts the trial, Billing
-shows the provider-owned exact cancel-before time and scheduled first charge.
+Once the payment method is accepted and the trial starts, Billing shows your
+exact cancel-before time and scheduled first charge.
 
 ## Common questions
 
 ### What happens after I sign up?
 
 Choose Creator and add a card. Checkout shows $0 due today and the scheduled $24
-monthly price. After Bitter Checkout accepts the payment method and starts the
-trial, Billing shows the provider-owned exact cancel-before time. Bring one
+monthly price. Once the payment method is accepted and the trial starts,
+Billing shows your exact cancel-before time. Bring one
 recording; the trial includes $5 of agent work for the whole-recording analysis,
 First Cut, and the directions and alternatives you try during those seven days.
 
@@ -136,8 +136,8 @@ fresh final confirmation; connecting a channel never makes it automatic.
 
 ### What happens if I cancel?
 
-After Bitter Checkout accepts the payment method and starts the trial, Billing
-shows the provider-owned exact cancel-before time. Cancel before that time and
+Once the payment method is accepted and the trial starts, Billing shows your
+exact cancel-before time. Cancel before that time and
 pay $0. After a paid period begins, cancellation stops the next renewal. Sources,
 edits, finished work, and purchased agent work stay in the Studio; new agent work
 waits until a trial or paid plan is active again.

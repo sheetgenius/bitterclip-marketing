@@ -18,8 +18,8 @@ Short answers to the things people ask before they get started. If your question
 ## What does BitterClip cost?
 
 The Creator trial lasts seven days and requires a card: $0 today, then $24/month unless you
-cancel before it ends. After Bitter Checkout accepts the payment method and starts the
-trial, Billing shows the provider-owned exact cancel-before time. Bring one recording up to
+cancel before it ends. Once the payment method is accepted and the trial starts, Billing
+shows your exact cancel-before time. Bring one recording up to
 two hours. The trial includes $5 of agent work while balance remains, and its Exports are
 watermarked. You can add exactly $20, $50, or $100 of agent work during an active trial or
 paid plan. Top-ups never auto-activate paid Creator; early activation requires a separate

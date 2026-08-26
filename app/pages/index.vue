@@ -39,7 +39,7 @@ const signupUrlProPricing = computed(() => signupUrlFor('pro', 'pricing'))
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. Checkout shows $0 due today and the scheduled $24 monthly price. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
+    a: 'Choose Creator and add a card. Checkout shows $0 due today and the scheduled $24 monthly price. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -63,7 +63,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Cancel before that time and you pay $0. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
+    a: 'Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Cancel before that time and you pay $0. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
   },
 ]
 
@@ -413,7 +413,7 @@ useHead({
       </div>
 
       <p class="mt-7 text-center text-xs text-zinc-400">
-        Card required for the Creator trial: $0 today, then $24/month after seven days unless canceled first. After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time. Top-ups are available during an active trial or paid plan and never auto-activate paid Creator; early activation requires a separate explicit $24 authorization.
+        Card required for the Creator trial: $0 today, then $24/month after seven days unless canceled first. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Top-ups are available during an active trial or paid plan and never auto-activate paid Creator; early activation requires a separate explicit $24 authorization.
       </p>
     </section>
 

@@ -63,7 +63,9 @@ test.describe('pricing section', () => {
     expect(pricingText).toContain('$40 included agent work')
     expect(pricingText).toContain('Clean exports · files up to 20 GB')
     expect(pricingText).toContain('Priority rendering · exact $20/$50/$100 top-ups')
-    expect(pricingText).toContain('After Bitter Checkout accepts your payment method and starts the trial, Billing shows the provider-owned exact cancel-before time')
+    expect(pricingText).toContain('Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time')
+    // The buyer never meets the internal payments layer: the redirect is Stripe-hosted.
+    expect(pricingText).not.toContain('Bitter Checkout')
     expect(pricingText).toContain('Top-ups are available during an active trial or paid plan and never auto-activate paid Creator')
     expect(pricingText).toContain('early activation requires a separate explicit $24 authorization')
     expect(pricingText).not.toContain('one revised cut')

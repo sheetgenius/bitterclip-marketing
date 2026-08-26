@@ -92,7 +92,7 @@ rows:
   - axis: Knowing what you'll pay
     bitterclip:
       lead: Trial terms, printed.
-      detail: Creator shows $0 today and the scheduled $24 monthly price; after the payment method is accepted and the trial starts, Billing shows the provider-owned exact cancel-before time. Producer is $99/month.
+      detail: Creator shows $0 today and the scheduled $24 monthly price; once the payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Producer is $99/month.
     competitor:
       lead: Look in the app.
       detail: Pro is $19.99/month or $179.99/year; Standard's price appears only in-app and varies by region.
