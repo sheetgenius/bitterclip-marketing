@@ -120,7 +120,11 @@ onBeforeUnmount(() => {
 
         <!-- Bottom bar -->
         <div class="mt-12 pt-6 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-600">
-          <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
+          <div class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-baseline sm:gap-2 sm:text-left">
+            <span class="font-sans">© 2026 BitterClip Inc. All rights reserved.</span>
+            <span aria-hidden="true" class="hidden sm:inline text-zinc-700">·</span>
+            <span class="font-sans">BitterClip is a product of <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://company.sheetgenius.com">SheetGenius, Inc.</a></span>
+          </div>
           <span class="font-mono tracking-wide">A Bitter project.</span>
         </div>
       </div>
