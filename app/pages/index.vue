@@ -273,7 +273,7 @@ useHead({
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <DeferredImage src="/images/hero/sizzle-editor-2.webp" alt="The BitterClip editor open on the same day-one cut as the clip above: Mike on camera, the clip description beside him, the takes on the filmstrip, and the transcript of him quitting his job" class="block w-full" width="2720" height="1480" />
+          <DeferredImage src="/images/hero/sizzle-editor-3.webp" alt="The BitterClip editor mid-direction on the Mike and John origin episode: the agent citing the strongest beat at 0:55-1:10, the player playing that exact moment, the chapter list lit on Why Mike quit, the full episode on labeled EPISODE and CAMERA tracks, and the transcript at the question that starts it all" class="block w-full" width="3360" height="1424" />
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>
