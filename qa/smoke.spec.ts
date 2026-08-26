@@ -182,6 +182,10 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(page.locator('footer a[href="/llms.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="/llms-full.txt"]')).toBeVisible()
   await expect(page.locator('footer a[href="https://github.com/sheetgenius/bitterclip-marketing"]')).toBeVisible()
+  // BitterClip is a product name; SheetGenius, Inc. is the only legal entity.
+  await expect(page.locator('footer').getByText('© 2026 SheetGenius, Inc.')).toBeVisible()
+  await expect(page.locator('footer a[href="https://company.sheetgenius.com"]')).toBeVisible()
+  await expect(page.locator('footer a[href="https://company.sheetgenius.com/bitterclip/support/"]')).toBeVisible()
 })
 
 test('keeps the pre-swap homepage soaking at /classic, noindexed', async ({ page }) => {

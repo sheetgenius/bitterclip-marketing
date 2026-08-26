@@ -140,6 +140,8 @@ export default defineContentConfig({
         signup_url: z.string(),
         pricing_url: z.string(),
         support_email: z.string(),
+        company_url: z.string(),
+        company_support_url: z.string(),
         mcp_resource_url: z.string(),
         app_origin: z.string(),
         og_image_default: z.string(),

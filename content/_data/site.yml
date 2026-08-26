@@ -8,6 +8,10 @@ signup_url: https://app.bitterclip.com/sign_up?plan=clip
 # by the site nav); there is no separate /pricing page or app-side pricing route.
 pricing_url: https://bitterclip.com/#pricing
 support_email: hello@bitterclip.com
+# BitterClip is a product of SheetGenius, Inc.; the company keeps a BitterClip
+# support page that links back into these docs. Cross-linked, not duplicated.
+company_url: https://company.sheetgenius.com/
+company_support_url: https://company.sheetgenius.com/bitterclip/support/
 mcp_resource_url: https://app.bitterclip.com/mcp
 app_origin: https://app.bitterclip.com
 # Default 1200x630 social card for marketing and docs routes.

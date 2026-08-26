@@ -13,4 +13,9 @@ const { data: site } = await useAsyncData('site', () =>
     what you were trying to do. A real person reads every message, and the more detail you
     share, the faster we can help.
   </p>
+  <p class="docs-snippet">
+    BitterClip is a product of SheetGenius, Inc. The company keeps a
+    <a :href="site?.company_support_url">BitterClip support page</a> with the same
+    contacts, account and billing help, and data requests.
+  </p>
 </template>
