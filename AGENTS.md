@@ -31,6 +31,13 @@ AI-readable surfaces as public product assets. Do not commit secrets, private
 media, private runbooks, provider payloads, customer data, rendered clips, or
 generated build/evidence output.
 
+BitterClip is a product name, not a company. The only legal entity is
+SheetGenius, Inc. (`company.sheetgenius.com`). Copyright lines, corporate
+attribution, legal pages, and any company-identifying copy name SheetGenius,
+Inc.; never write "BitterClip Inc." or otherwise imply BitterClip is the
+company. The site-wide attribution lives in the footer in
+`app/layouts/default.vue`.
+
 The README is the durable public description of BitterClip and its place in the
 Bitter constellation. Keep it factual and product-structural. Maintain
 `CHANGELOG.md` as the public semantic change history; keep its categories aligned

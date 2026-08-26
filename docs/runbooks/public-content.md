@@ -1,7 +1,7 @@
 # Public content runbook
 
 Status: Current authority
-Last verified: 2026-08-23
+Last verified: 2026-08-25
 
 ## Source of truth
 
@@ -18,6 +18,14 @@ Follow `docs/protocol/authoring-conventions.md` and validate current product
 facts against the product repository or live product when they may have drifted.
 Submission packets and older protocol briefs are snapshots, not current fact
 sources.
+
+## Company identity
+
+BitterClip is a product name. The company is SheetGenius, Inc.
+(`company.sheetgenius.com`), and it is the only legal entity: copyright notices,
+corporate attribution, and the provider named in legal pages are SheetGenius,
+Inc. Do not write "BitterClip Inc." or attribute ownership to BitterClip itself.
+The footer attribution is in `app/layouts/default.vue` and reaches every page.
 
 ## Generated surfaces
 

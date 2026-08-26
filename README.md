@@ -91,6 +91,15 @@ This repository owns:
 - the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
+## Ownership
+
+BitterClip is a product name, not a company. The only legal entity behind it is
+SheetGenius, Inc. ([company.sheetgenius.com](https://company.sheetgenius.com)),
+which owns this repository, the website, the product application, and the
+copyright in both. Public copy, legal pages, and repository documents name
+SheetGenius, Inc. as the company. "BitterClip Inc." is not a real entity and must
+not appear in any surface.
+
 ## Links
 
 - BitterClip website: [bitterclip.com](https://bitterclip.com/)
