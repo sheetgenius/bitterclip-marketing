@@ -29,7 +29,7 @@ const sections = [
   {
     title: 'Who You Are Contracting With',
     body: [
-      'BitterClip is a product name. The company behind it is SheetGenius, Inc., and these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius", "we", "us").',
+      'BitterClip is a product name. The company behind it is SheetGenius, Inc., a Delaware corporation operating from California, and these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius", "we", "us").',
       'SheetGenius, Inc. is the party responsible for the service, the party you pay, and the party to notify about these terms. Company information is at company.sheetgenius.com.',
       'Notices to us go to hello@bitterclip.com, or by mail to SheetGenius, Inc., 9450 SW Gemini Dr PMB 87259, Beaverton, OR 97008-7105, United States. We will use the email address on your account for notices to you.',
     ],
@@ -88,6 +88,14 @@ const sections = [
       'We may change, add, remove, suspend, or discontinue features, integrations, limits, plans, or access as the service evolves.',
       'BitterClip depends on infrastructure, AI/media providers, payment processors, and publishing platforms that we do not control. We do not guarantee uninterrupted availability or that third-party services will continue to accept a given integration or post.',
       'Beta, preview, experimental, or launch features may be incomplete, change quickly, or fail more often than mature features.',
+    ],
+  },
+  {
+    title: 'Governing Law',
+    body: [
+      'These terms are governed by the laws of the State of California, without regard to its conflict-of-laws rules.',
+      'For any dispute that is not resolved between us directly, you and SheetGenius, Inc. agree to the exclusive jurisdiction of the state and federal courts located in San Mateo County, California.',
+      'This does not take away consumer rights that the law where you live gives you and does not let you waive.',
     ],
   },
   {

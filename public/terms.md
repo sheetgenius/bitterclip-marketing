@@ -18,9 +18,9 @@ Contact: hello@bitterclip.com
 
 ## Who You Are Contracting With
 
-BitterClip is a product name. The company behind it is SheetGenius, Inc., and
-these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius",
-"we", "us").
+BitterClip is a product name. The company behind it is SheetGenius, Inc., a
+Delaware corporation operating from California, and these terms are an agreement
+between you and SheetGenius, Inc. ("SheetGenius", "we", "us").
 
 SheetGenius, Inc. is the party responsible for the service, the party you pay,
 and the party to notify about these terms. Company information is at
@@ -123,6 +123,18 @@ that third-party services will continue to accept a given integration or post.
 
 Beta, preview, experimental, or launch features may be incomplete, change
 quickly, or fail more often than mature features.
+
+## Governing Law
+
+These terms are governed by the laws of the State of California, without regard
+to its conflict-of-laws rules.
+
+For any dispute that is not resolved between us directly, you and SheetGenius,
+Inc. agree to the exclusive jurisdiction of the state and federal courts located
+in San Mateo County, California.
+
+This does not take away consumer rights that the law where you live gives you
+and does not let you waive.
 
 ## Disclaimers And Liability
 
