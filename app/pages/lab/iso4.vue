@@ -169,7 +169,7 @@ const signupUrl = computed(() => buildSignupUrl({
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/sizzle-editor-4.webp" alt="The BitterClip editor mid-direction on the Mike and John origin episode: the agent citing the strongest beat at 0:55-1:10, the player playing that exact moment, the chapter list lit on Why Mike quit, the full episode on labeled EPISODE and CAMERA tracks, and the transcript at the question that starts it all" class="block w-full" loading="lazy" width="2560" height="1252">
+          <img src="/images/hero/sizzle-editor-5.webp" alt="The BitterClip editor mid-direction: the agent names the strongest beat at 0:55-1:10, the player plays that exact moment, the timeline holds the range selected and ready to become a clip, and the transcript shows the line it found - John asking why did we start doing this, and Mike answering that he decided to quit his job after 12 years" class="block w-full" loading="lazy" width="2560" height="1252">
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>

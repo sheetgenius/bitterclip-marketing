@@ -98,7 +98,7 @@ test.describe('pricing section', () => {
     expect(reservedBox!.width / reservedBox!.height).toBeCloseTo(2560 / 1252, 2)
 
     await page.getByLabel('Primary').getByRole('link', { name: 'Pricing' }).click()
-    await expect(editorImage).toHaveAttribute('src', /sizzle-editor-4\.webp/)
+    await expect(editorImage).toHaveAttribute('src', /sizzle-editor-5\.webp/)
     await expect.poll(async () => {
       const top = await page.locator('#pricing').evaluate((element) => element.getBoundingClientRect().top)
       return Math.round(top)
