@@ -23,7 +23,8 @@ BitterClip and is responsible for the personal information described in this
 policy. "We" and "us" mean SheetGenius, Inc.
 
 Company information is at https://company.sheetgenius.com. Privacy questions
-and requests go to hello@bitterclip.com.
+and requests go to hello@bitterclip.com, or by mail to SheetGenius, Inc.,
+9450 SW Gemini Dr PMB 87259, Beaverton, OR 97008-7105, United States.
 
 ## Information We Collect
 

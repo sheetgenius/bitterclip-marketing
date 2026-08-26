@@ -31,7 +31,7 @@ const sections = [
     body: [
       'BitterClip is a product name. The company behind it is SheetGenius, Inc., and these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius", "we", "us").',
       'SheetGenius, Inc. is the party responsible for the service, the party you pay, and the party to notify about these terms. Company information is at company.sheetgenius.com.',
-      'Notices to us go to hello@bitterclip.com. We will use the email address on your account for notices to you.',
+      'Notices to us go to hello@bitterclip.com, or by mail to SheetGenius, Inc., 9450 SW Gemini Dr PMB 87259, Beaverton, OR 97008-7105, United States. We will use the email address on your account for notices to you.',
     ],
   },
   {
