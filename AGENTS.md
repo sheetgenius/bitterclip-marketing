@@ -38,8 +38,8 @@ Inc.; never write "BitterClip Inc." or otherwise imply BitterClip is the
 company. The site-wide attribution lives in the footer in
 `app/layouts/default.vue`.
 
-The README is the durable public description of BitterClip and its place in the
-Bitter constellation. Keep it factual and product-structural. Maintain
+The README is the durable public description of BitterClip. It leads with the
+product; Bitter is infrastructure context that stays below it, not the lead. Keep it factual and product-structural. Maintain
 `CHANGELOG.md` as the public semantic change history; keep its categories aligned
 with `.github/release.yml`.
 

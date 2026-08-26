@@ -12,26 +12,6 @@ already the valuable event and the remaining work is production. BitterClip keep
 the recording, transcript, speaker identity, editorial structure, render, export,
 publishing state, and source history connected.
 
-## Place In Bitter
-
-[Bitter](https://bitter.sh/) is an agent-operable software environment. It gives
-AI agents persistent workspaces where repositories, credentials, hosting, email,
-tests, deploys, logs, checks, and work history are connected.
-
-The Bitter constellation is the set of public sites, products, applications, and
-supporting repositories that share that operating model:
-
-- agents work against real source material
-- humans review, steer, and approve the work
-- deployed systems retain enough context to keep improving
-- outputs stay connected to their source history and verification path
-
-BitterClip applies that model to recorded media. A long recording becomes
-structured source material. A transcript becomes an agent-operable workspace.
-Every editorial decision remains linked to who said what, where it happened, what
-came before and after, how it was rendered and exported, and what has already
-been produced from the same session.
-
 ## Product Model
 
 BitterClip is not a generic AI shorts generator. It is a media workbench built
@@ -90,6 +70,18 @@ This repository owns:
 - public AI-assistant and MCP guidance under `/docs/assistants`
 - the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
+
+## Built On Bitter
+
+BitterClip is built and operated on [Bitter](https://bitter.sh/), an
+agent-operable software environment where repositories, credentials, hosting,
+deploys, and work history stay connected. Bitter is the infrastructure this
+product runs on, not part of what a customer buys.
+
+Applied to recorded media, that model is why every editorial decision stays
+linked to who said what, where it happened, what came before and after, how it
+was rendered and exported, and what has already been produced from the same
+session.
 
 ## Ownership
 

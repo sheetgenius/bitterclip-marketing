@@ -120,13 +120,11 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Bottom bar -->
-        <div class="mt-12 pt-6 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-600">
-          <div class="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-baseline sm:gap-2 sm:text-left">
-            <span class="font-sans">© 2026 SheetGenius, Inc. All rights reserved.</span>
-            <span aria-hidden="true" class="hidden sm:inline text-zinc-700">·</span>
-            <span class="font-sans">BitterClip is a product of <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://company.sheetgenius.com">SheetGenius, Inc.</a></span>
-          </div>
-          <span class="font-mono tracking-wide">A Bitter project.</span>
+        <!-- One parent, named once. "A Bitter project." used to sit opposite this
+             line, which left the reader to work out how Bitter and SheetGenius
+             relate; Bitter is infrastructure and keeps its Developers-column link. -->
+        <div class="mt-12 pt-6 border-t border-zinc-900/80 text-[11px] text-zinc-600 text-center sm:text-left">
+          <p class="font-sans">BitterClip is a product of <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://company.sheetgenius.com">SheetGenius, Inc.</a> <span aria-hidden="true" class="text-zinc-700">·</span> © 2026</p>
         </div>
       </div>
     </footer>
