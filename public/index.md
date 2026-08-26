@@ -141,3 +141,12 @@ shows the provider-owned exact cancel-before time. Cancel before that time and
 pay $0. After a paid period begins, cancellation stops the next renewal. Sources,
 edits, finished work, and purchased agent work stay in the Studio; new agent work
 waits until a trial or paid plan is active again.
+
+## Who publishes BitterClip
+
+BitterClip is a product of SheetGenius, Inc. (https://company.sheetgenius.com),
+the company named in the terms of service and the privacy policy.
+
+Support: hello@bitterclip.com · Support page:
+https://company.sheetgenius.com/bitterclip/support/ · Privacy:
+https://bitterclip.com/privacy · Terms: https://bitterclip.com/terms
