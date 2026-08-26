@@ -169,7 +169,7 @@ const signupUrl = computed(() => buildSignupUrl({
       </div>
       <figure class="mt-10 md:mt-14">
         <div class="agent-card overflow-hidden rounded-2xl border">
-          <img src="/images/hero/sizzle-editor-3.webp" alt="The BitterClip editor mid-direction on the Mike and John origin episode: the agent citing the strongest beat at 0:55-1:10, the player playing that exact moment, the chapter list lit on Why Mike quit, the full episode on labeled EPISODE and CAMERA tracks, and the transcript at the question that starts it all" class="block w-full" loading="lazy" width="3360" height="1424">
+          <img src="/images/hero/sizzle-editor-3.webp" alt="The BitterClip editor mid-direction on the Mike and John origin episode: the agent citing the strongest beat at 0:55-1:10, the player playing that exact moment, the chapter list lit on Why Mike quit, the full episode on labeled EPISODE and CAMERA tracks, and the transcript at the question that starts it all" class="block w-full" loading="lazy" width="2880" height="1306">
         </div>
         <figcaption class="substrate-caption mt-4 text-sm leading-relaxed text-zinc-500">
           <p>This is the same cut as above. <span class="text-zinc-300">Open it to check the tape.</span></p>

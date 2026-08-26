@@ -95,7 +95,7 @@ test.describe('pricing section', () => {
     const editorImage = page.locator('#how img')
     const reservedBox = await editorImage.boundingBox()
     expect(reservedBox).not.toBeNull()
-    expect(reservedBox!.width / reservedBox!.height).toBeCloseTo(3360 / 1424, 2)
+    expect(reservedBox!.width / reservedBox!.height).toBeCloseTo(2880 / 1306, 2)
 
     await page.getByLabel('Primary').getByRole('link', { name: 'Pricing' }).click()
     await expect(editorImage).toHaveAttribute('src', /sizzle-editor-3\.webp/)
