@@ -71,8 +71,10 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Bitter',
-    url: 'https://bitter.sh/',
+    '@id': 'https://company.sheetgenius.com/#organization',
+    name: 'SheetGenius, Inc.',
+    legalName: 'SheetGenius, Inc.',
+    url: 'https://company.sheetgenius.com/',
     sameAs: [
       'https://github.com/sheetgenius',
     ],
@@ -84,9 +86,7 @@ const structuredData = [
     url: 'https://bitterclip.com/',
     description: 'Footage in, episode out: BitterClip understands the whole recording, makes one coherent cut, and lets you keep directing it.',
     publisher: {
-      '@type': 'Organization',
-      name: 'Bitter',
-      url: 'https://bitter.sh/',
+      '@id': 'https://company.sheetgenius.com/#organization',
     },
   },
   {
@@ -96,6 +96,9 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
+    publisher: {
+      '@id': 'https://company.sheetgenius.com/#organization',
+    },
     description: 'A directable video workbench that understands the whole recording and turns it into a coherent episode, with a built-in agent or optional external agents over Claude, ChatGPT, and MCP.',
     offers: {
       '@type': 'AggregateOffer',

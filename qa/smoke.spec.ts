@@ -444,7 +444,9 @@ test('renders the blog index and Identity Studio launch post', async ({ page }) 
   const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent()
   expect(jsonLd).toContain('BlogPosting')
   expect(jsonLd).toContain('Michael Ruescher')
-  expect(jsonLd).toContain('BitterClip')
+  // Posts are published by the company, not by the product name.
+  expect(jsonLd).toContain('SheetGenius, Inc.')
+  expect(jsonLd).toContain('https://company.sheetgenius.com/#organization')
 
   await expect(page.getByRole('heading', { level: 1, name: 'Your show has a signature now' })).toBeVisible()
   await expect(page.getByText('Introducing Identity Studio: branded openers, outros, and a signature look')).toBeVisible()
@@ -537,6 +539,9 @@ test('renders the privacy policy page', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'hello@bitterclip.com' }).first()).toBeVisible()
   await expect(page.getByRole('heading', { name: 'YouTube API Services' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'YouTube Terms of Service' })).toBeVisible()
+  // The policy must name the company responsible, not just the product.
+  await expect(page.getByRole('heading', { name: 'Who We Are' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'SheetGenius, Inc.' }).first()).toBeVisible()
 })
 
 test('renders the terms of service page', async ({ page }) => {
@@ -548,6 +553,9 @@ test('renders the terms of service page', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Using BitterClip' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Publishing Integrations' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'hello@bitterclip.com' }).first()).toBeVisible()
+  // The terms must identify the contracting party.
+  await expect(page.getByRole('heading', { name: 'Who You Are Contracting With' })).toBeVisible()
+  await expect(page.getByText('agreement between you and SheetGenius, Inc.')).toBeVisible()
 })
 
 test('renders the data deletion page and its Markdown alternate', async ({ page }) => {
@@ -559,6 +567,7 @@ test('renders the data deletion page and its Markdown alternate', async ({ page 
   await expect(page.getByRole('heading', { level: 2, name: 'Delete your data.' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Disconnect the integration (instant)' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Delete your whole account' })).toBeVisible()
+  await expect(page.getByText('BitterClip is operated by')).toBeVisible()
 })
 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
@@ -582,7 +591,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
       path: '/blog/pi-vs-deepseek-harness.md',
       text: 'BitterClip remembers the video',
     },
-    { path: '/privacy.md', text: 'BitterClip does not sell your recordings' },
+    { path: '/privacy.md', text: 'We do not sell your recordings' },
     { path: '/terms.md', text: 'You retain your rights in recordings' },
     { path: '/data-deletion.md', text: 'Disconnect the integration' },
   ]

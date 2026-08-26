@@ -4,17 +4,30 @@ Canonical HTML page: https://bitterclip.com/privacy
 
 Markdown version: https://bitterclip.com/privacy.md
 
-Effective date: June 9, 2026
+Effective date: June 9, 2026 · Last updated: August 25, 2026
 
-This policy explains how BitterClip handles information for the public website
-at https://bitterclip.com, the hosted app at https://app.bitterclip.com, AI
+BitterClip is a product of SheetGenius, Inc.
+(https://company.sheetgenius.com), the company responsible for the information
+described here.
+
+This policy explains how we handle information for the public website at
+https://bitterclip.com, the hosted app at https://app.bitterclip.com, AI
 assistant connector surfaces, and publishing integrations.
 
 Contact: hello@bitterclip.com
 
+## Who We Are
+
+BitterClip is a product name. SheetGenius, Inc. is the company that operates
+BitterClip and is responsible for the personal information described in this
+policy. "We" and "us" mean SheetGenius, Inc.
+
+Company information is at https://company.sheetgenius.com. Privacy questions
+and requests go to hello@bitterclip.com.
+
 ## Information We Collect
 
-BitterClip may collect:
+We may collect:
 
 - Account and contact details, such as name, email address, workspace
   membership, authentication events, and support messages.
@@ -45,7 +58,7 @@ BitterClip uses information to:
 
 ## AI, Media, And Provider Processing
 
-BitterClip may send recordings, extracted audio, transcripts, prompts,
+We may send recordings, extracted audio, transcripts, prompts,
 metadata, rendered clips, or related operational data to infrastructure and
 AI/media providers when needed to deliver transcription, speaker analysis,
 rendering, storage, billing, support, or publishing features.
@@ -53,7 +66,7 @@ rendering, storage, billing, support, or publishing features.
 Connected publishing services, such as YouTube, LinkedIn, or X, receive only
 the content and account authorization needed for actions you approve or trigger.
 
-BitterClip does not sell your recordings, transcripts, clips, or account data.
+We do not sell your recordings, transcripts, clips, or account data.
 
 ## YouTube API Services
 

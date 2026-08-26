@@ -51,7 +51,7 @@ only after its provider facts have been reverified.
 |---|---|
 | App name (also the `@BitterClip` invocation) | BitterClip |
 | Subtitle (directory one-liner) | Turn long recordings into clips: find the moment in the transcript, trim it in chat, export a captioned MP4. |
-| Developer name | `<verified business name>` |
+| Developer name | SheetGenius, Inc. (the legal entity behind BitterClip; company.sheetgenius.com) |
 | Website | https://bitterclip.com |
 | MCP server URL | https://app.bitterclip.com/mcp |
 | Privacy policy | https://bitterclip.com/privacy |

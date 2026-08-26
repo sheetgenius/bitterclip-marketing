@@ -4,6 +4,9 @@ Canonical HTML page: https://bitterclip.com/data-deletion
 
 Markdown version: https://bitterclip.com/data-deletion.md
 
+BitterClip is operated by SheetGenius, Inc. (https://company.sheetgenius.com),
+the company that holds this data and handles deletion requests.
+
 You can remove the data BitterClip stored from a connected account—including
 Facebook and Instagram—at any time. The fastest path is to disconnect the
 integration in the app. You can also delete your whole account or email

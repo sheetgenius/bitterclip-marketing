@@ -358,6 +358,12 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
       'that term is retired.)',
   )
   lines.push('')
+  lines.push(
+    'BitterClip is a product of SheetGenius, Inc. (https://company.sheetgenius.com), the company ' +
+      'that operates the service and is named in its terms and privacy policy. Support: ' +
+      'hello@bitterclip.com.',
+  )
+  lines.push('')
   for (const section of ['getting-started', 'assistants', 'connect', 'publishing', 'help', 'changelog']) {
     const list = groups.get(section)
     if (!list || list.length === 0) continue
@@ -399,7 +405,8 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: Compare
   parts.push(
     'Concatenated Markdown of every BitterClip docs page and blog post, generated from ' +
       'the content collections. Recording → Episode → Clip is the product model (the ' +
-      'retired "Moment" noun is not used).',
+      'retired "Moment" noun is not used). BitterClip is a product of SheetGenius, Inc. ' +
+      '(https://company.sheetgenius.com).',
   )
   parts.push('')
   for (const p of pages) {

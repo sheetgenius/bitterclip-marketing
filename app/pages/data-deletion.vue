@@ -65,10 +65,13 @@ const steps = [
           integration in the app; you can also email us to request full deletion.
         </p>
         <p>
+          BitterClip is operated by
+          <a class="text-[#f28f84] hover:underline" href="https://company.sheetgenius.com">SheetGenius, Inc.</a>,
+          the company that holds this data and handles deletion requests.
+        </p>
+        <p>
           Questions:
-          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=Data%20deletion">
-            hello@bitterclip.com
-          </a>.
+          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=Data%20deletion">hello@bitterclip.com</a>.
           See also our
           <NuxtLink class="text-[#f28f84] hover:underline" to="/privacy">privacy policy</NuxtLink>.
         </p>

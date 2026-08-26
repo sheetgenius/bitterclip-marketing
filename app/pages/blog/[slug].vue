@@ -92,7 +92,9 @@ useHead(() => {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'BitterClip',
+      '@id': 'https://company.sheetgenius.com/#organization',
+      name: 'SheetGenius, Inc.',
+      url: 'https://company.sheetgenius.com/',
       logo: {
         '@type': 'ImageObject',
         url: `${siteOrigin}/icon.png`,

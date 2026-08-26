@@ -4,7 +4,11 @@ Canonical HTML page: https://bitterclip.com/terms
 
 Markdown version: https://bitterclip.com/terms.md
 
-Effective date: June 9, 2026
+Effective date: June 9, 2026 · Last updated: August 25, 2026
+
+BitterClip is a product of SheetGenius, Inc.
+(https://company.sheetgenius.com), and these terms are an agreement between you
+and that company.
 
 These terms govern access to the BitterClip public website at
 https://bitterclip.com, the hosted app at https://app.bitterclip.com, AI
@@ -12,9 +16,22 @@ assistant connector surfaces, and publishing integrations.
 
 Contact: hello@bitterclip.com
 
+## Who You Are Contracting With
+
+BitterClip is a product name. The company behind it is SheetGenius, Inc., and
+these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius",
+"we", "us").
+
+SheetGenius, Inc. is the party responsible for the service, the party you pay,
+and the party to notify about these terms. Company information is at
+https://company.sheetgenius.com.
+
+Notices to us go to hello@bitterclip.com. We will use the email address on your
+account for notices to you.
+
 ## Using BitterClip
 
-BitterClip provides a hosted media workspace for uploading recordings,
+We provide BitterClip, a hosted media workspace for uploading recordings,
 generating transcripts, identifying speakers, selecting moments, rendering
 clips, and publishing approved outputs.
 
@@ -32,8 +49,8 @@ and connector tokens secure.
 Account owners and admins control workspace membership, publishing connections,
 billing settings, and connector access.
 
-BitterClip may limit, suspend, or terminate access if we believe an account is
-unsafe, abusive, unpaid, or violating these terms.
+We may limit, suspend, or terminate access if we believe an account is unsafe,
+abusive, unpaid, or violating these terms.
 
 ## Your Content
 
@@ -41,7 +58,7 @@ You retain your rights in recordings, transcripts, clips, exports, show
 information, publishing copy, and other content you provide or create in
 BitterClip.
 
-You grant BitterClip the limited rights needed to host, store, process,
+You grant us the limited rights needed to host, store, process,
 transcribe, analyze, render, transmit, display, and publish your content as
 needed to operate the service and integrations you choose to use.
 
@@ -75,11 +92,11 @@ access to your Google account at any time from your Google security settings
 Paid plans, launch pricing, included credits, overages, trial access, discounts,
 and renewal terms are shown at checkout or in the app when applicable.
 
-You authorize BitterClip and its payment providers to process charges for the
-plan, usage, taxes, and fees you accept.
+You authorize SheetGenius, Inc. and its payment providers to process charges
+for the plan, usage, taxes, and fees you accept.
 
 Unless a written agreement says otherwise, payments are non-refundable except
-where required by law or where BitterClip chooses to issue a credit or refund.
+where required by law or where we choose to issue a credit or refund.
 
 ## Acceptable Use
 
@@ -91,16 +108,16 @@ Do not attempt to reverse engineer, probe, attack, resell, sublicense, or misuse
 BitterClip, its infrastructure, provider access, or connected third-party APIs.
 
 Do not upload secrets, private credentials, payment card data, or regulated data
-unless BitterClip has expressly agreed in writing to handle that category of
-data.
+unless we have expressly agreed in writing to handle that category of data.
 
 ## Service Changes And Availability
 
-BitterClip may change, add, remove, suspend, or discontinue features,
-integrations, limits, plans, or access as the service evolves.
+We may change, add, remove, suspend, or discontinue features, integrations,
+limits, plans, or access as the service evolves.
 
 BitterClip depends on infrastructure, AI/media providers, payment processors,
-and publishing platforms. We do not guarantee uninterrupted availability or
+and publishing platforms that we do not control. We do not guarantee
+uninterrupted availability or
 that third-party services will continue to accept a given integration or post.
 
 Beta, preview, experimental, or launch features may be incomplete, change
@@ -112,14 +129,14 @@ BitterClip is provided as is and as available, without warranties of
 merchantability, fitness for a particular purpose, non-infringement, or
 uninterrupted operation to the fullest extent allowed by law.
 
-BitterClip is not responsible for lost profits, lost data, lost content,
+We are not responsible for lost profits, lost data, lost content,
 publishing outcomes, platform moderation decisions, indirect damages, special
 damages, consequential damages, or punitive damages to the fullest extent
 allowed by law.
 
-To the fullest extent allowed by law, BitterClip total liability for claims
-related to the service is limited to the amount you paid to BitterClip for the
-service in the three months before the claim.
+To the fullest extent allowed by law, our total liability for claims related to
+the service is limited to the amount you paid us for the service in the three
+months before the claim.
 
 ## Changes
 

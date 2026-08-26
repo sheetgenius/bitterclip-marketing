@@ -95,6 +95,20 @@ test('shows the sidebar toggle only where there is a sidebar', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Toggle navigation' })).toHaveCount(0)
 })
 
+test('closes every docs page with the company colophon', async ({ page }) => {
+  // The marketing footer does not mount in the docs shell, so this line is the
+  // only place a docs reader sees who publishes BitterClip.
+  await page.goto('/docs/help/faq')
+
+  const colophon = page.locator('.docs-colophon')
+  await expect(colophon.getByRole('link', { name: 'SheetGenius, Inc.' })).toHaveAttribute(
+    'href',
+    'https://company.sheetgenius.com',
+  )
+  await expect(colophon.getByRole('link', { name: 'Privacy' })).toBeVisible()
+  await expect(colophon.getByRole('link', { name: 'Terms' })).toBeVisible()
+})
+
 test('floats the homepage bar over the hero instead of a band above it', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')

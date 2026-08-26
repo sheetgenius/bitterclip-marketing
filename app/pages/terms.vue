@@ -27,9 +27,17 @@ useHead({
 
 const sections = [
   {
+    title: 'Who You Are Contracting With',
+    body: [
+      'BitterClip is a product name. The company behind it is SheetGenius, Inc., and these terms are an agreement between you and SheetGenius, Inc. ("SheetGenius", "we", "us").',
+      'SheetGenius, Inc. is the party responsible for the service, the party you pay, and the party to notify about these terms. Company information is at company.sheetgenius.com.',
+      'Notices to us go to hello@bitterclip.com. We will use the email address on your account for notices to you.',
+    ],
+  },
+  {
     title: 'Using BitterClip',
     body: [
-      'BitterClip provides a hosted media workspace for uploading recordings, generating transcripts, identifying speakers, selecting moments, rendering clips, and publishing approved outputs.',
+      'We provide BitterClip, a hosted media workspace for uploading recordings, generating transcripts, identifying speakers, selecting moments, rendering clips, and publishing approved outputs.',
       'You must use BitterClip only for lawful purposes and only with content, accounts, and integrations you have the right to use.',
       'You are responsible for the activity that happens through your account, workspace, connected publishing channels, and API or connector access tokens.',
     ],
@@ -39,14 +47,14 @@ const sections = [
     body: [
       'You must provide accurate account information and keep your sign-in credentials and connector tokens secure.',
       'Account owners and admins control workspace membership, publishing connections, billing settings, and connector access.',
-      'BitterClip may limit, suspend, or terminate access if we believe an account is unsafe, abusive, unpaid, or violating these terms.',
+      'We may limit, suspend, or terminate access if we believe an account is unsafe, abusive, unpaid, or violating these terms.',
     ],
   },
   {
     title: 'Your Content',
     body: [
       'You retain your rights in recordings, transcripts, clips, exports, show information, publishing copy, and other content you provide or create in BitterClip.',
-      'You grant BitterClip the limited rights needed to host, store, process, transcribe, analyze, render, transmit, display, and publish your content as needed to operate the service and integrations you choose to use.',
+      'You grant us the limited rights needed to host, store, process, transcribe, analyze, render, transmit, display, and publish your content as needed to operate the service and integrations you choose to use.',
       'You are responsible for obtaining any permissions, releases, licenses, or consents required for the people, media, music, trademarks, and other material in your content.',
     ],
   },
@@ -62,8 +70,8 @@ const sections = [
     title: 'Billing And Plans',
     body: [
       'Paid plans, launch pricing, included credits, overages, trial access, discounts, and renewal terms are shown at checkout or in the app when applicable.',
-      'You authorize BitterClip and its payment providers to process charges for the plan, usage, taxes, and fees you accept.',
-      'Unless a written agreement says otherwise, payments are non-refundable except where required by law or where BitterClip chooses to issue a credit or refund.',
+      'You authorize SheetGenius, Inc. and its payment providers to process charges for the plan, usage, taxes, and fees you accept.',
+      'Unless a written agreement says otherwise, payments are non-refundable except where required by law or where we choose to issue a credit or refund.',
     ],
   },
   {
@@ -71,14 +79,14 @@ const sections = [
     body: [
       'Do not use BitterClip to infringe rights, violate privacy, harass people, distribute malware, bypass platform rules, spam, scrape, overload systems, or publish unlawful or harmful material.',
       'Do not attempt to reverse engineer, probe, attack, resell, sublicense, or misuse BitterClip, its infrastructure, provider access, or connected third-party APIs.',
-      'Do not upload secrets, private credentials, payment card data, or regulated data unless BitterClip has expressly agreed in writing to handle that category of data.',
+      'Do not upload secrets, private credentials, payment card data, or regulated data unless we have expressly agreed in writing to handle that category of data.',
     ],
   },
   {
     title: 'Service Changes And Availability',
     body: [
-      'BitterClip may change, add, remove, suspend, or discontinue features, integrations, limits, plans, or access as the service evolves.',
-      'BitterClip depends on infrastructure, AI/media providers, payment processors, and publishing platforms. We do not guarantee uninterrupted availability or that third-party services will continue to accept a given integration or post.',
+      'We may change, add, remove, suspend, or discontinue features, integrations, limits, plans, or access as the service evolves.',
+      'BitterClip depends on infrastructure, AI/media providers, payment processors, and publishing platforms that we do not control. We do not guarantee uninterrupted availability or that third-party services will continue to accept a given integration or post.',
       'Beta, preview, experimental, or launch features may be incomplete, change quickly, or fail more often than mature features.',
     ],
   },
@@ -86,8 +94,8 @@ const sections = [
     title: 'Disclaimers And Liability',
     body: [
       'BitterClip is provided as is and as available, without warranties of merchantability, fitness for a particular purpose, non-infringement, or uninterrupted operation to the fullest extent allowed by law.',
-      'BitterClip is not responsible for lost profits, lost data, lost content, publishing outcomes, platform moderation decisions, indirect damages, special damages, consequential damages, or punitive damages to the fullest extent allowed by law.',
-      'To the fullest extent allowed by law, BitterClip total liability for claims related to the service is limited to the amount you paid to BitterClip for the service in the three months before the claim.',
+      'We are not responsible for lost profits, lost data, lost content, publishing outcomes, platform moderation decisions, indirect damages, special damages, consequential damages, or punitive damages to the fullest extent allowed by law.',
+      'To the fullest extent allowed by law, our total liability for claims related to the service is limited to the amount you paid us for the service in the three months before the claim.',
     ],
   },
 ]
@@ -104,6 +112,12 @@ const sections = [
       <div class="max-w-3xl space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed font-sans">
         <p>
           Effective date: <strong class="text-zinc-200">June 9, 2026</strong>
+          &middot; Last updated: <strong class="text-zinc-200">August 25, 2026</strong>
+        </p>
+        <p>
+          BitterClip is a product of
+          <a class="text-[#f28f84] hover:underline" href="https://company.sheetgenius.com">SheetGenius, Inc.</a>,
+          and these terms are an agreement between you and that company.
         </p>
         <p>
           These terms govern access to the BitterClip public website at
@@ -114,9 +128,7 @@ const sections = [
         </p>
         <p>
           Contact:
-          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=BitterClip%20terms">
-            hello@bitterclip.com
-          </a>.
+          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=BitterClip%20terms">hello@bitterclip.com</a>.
         </p>
       </div>
     </div>

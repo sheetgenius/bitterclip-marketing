@@ -55,7 +55,7 @@ store and review flow.
 | Terms of service | https://bitterclip.com/terms |
 | Support contact | hello@bitterclip.com |
 | Category | `<pick from portal options>` — closest fit: productivity / media & content creation |
-| Submitting org | `<provide in portal>` (verified BitterClip / Bitter Platform org) |
+| Submitting org | SheetGenius, Inc. — the only legal entity; BitterClip and Bitter are product names, not companies |
 
 ### Short description (~50 words)
 BitterClip turns long recordings into clips without leaving the chat. Ask Claude for

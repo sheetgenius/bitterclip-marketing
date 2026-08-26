@@ -78,6 +78,23 @@ useHead({
         <article class="docs-prose">
           <slot />
         </article>
+        <!-- The marketing footer does not mount in this shell, so docs pages carried
+             no ownership, legal, or contact line at all. This colophon is that line. -->
+        <footer class="docs-colophon">
+          <p>
+            BitterClip is a product of
+            <a href="https://company.sheetgenius.com">SheetGenius, Inc.</a>
+          </p>
+          <p class="docs-colophon__links">
+            <NuxtLink to="/privacy">Privacy</NuxtLink>
+            <span aria-hidden="true">·</span>
+            <NuxtLink to="/terms">Terms</NuxtLink>
+            <span aria-hidden="true">·</span>
+            <a href="mailto:hello@bitterclip.com?subject=BitterClip%20support">hello@bitterclip.com</a>
+            <span aria-hidden="true">·</span>
+            <span>© 2026 SheetGenius, Inc.</span>
+          </p>
+        </footer>
       </main>
 
       <!-- Right rail: on this page -->
@@ -89,6 +106,38 @@ useHead({
 </template>
 
 <style scoped>
+.docs-colophon {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #8b8b93;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.docs-colophon p {
+  margin: 0;
+}
+
+.docs-colophon .docs-colophon__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.docs-colophon a {
+  color: #b6b6bd;
+  text-decoration: none;
+}
+
+.docs-colophon a:hover {
+  color: #f28f84;
+}
+
 .docs-root {
   position: relative;
   min-height: 100vh;

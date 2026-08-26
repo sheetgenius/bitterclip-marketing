@@ -127,8 +127,10 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Bitter',
-    url: 'https://bitter.sh/',
+    '@id': 'https://company.sheetgenius.com/#organization',
+    name: 'SheetGenius, Inc.',
+    legalName: 'SheetGenius, Inc.',
+    url: 'https://company.sheetgenius.com/',
     sameAs: [
       'https://github.com/sheetgenius',
     ],
@@ -140,9 +142,7 @@ const structuredData = [
     url: 'https://bitterclip.com/',
     description: 'You record it. BitterClip handles the rest — the full-length episode and the short cuts from that same edit, made by changing the transcript, with an agent that watched the whole session.',
     publisher: {
-      '@type': 'Organization',
-      name: 'Bitter',
-      url: 'https://bitter.sh/',
+      '@id': 'https://company.sheetgenius.com/#organization',
     },
   },
   {
@@ -152,6 +152,9 @@ const structuredData = [
     applicationCategory: 'MultimediaApplication',
     operatingSystem: 'Web',
     url: 'https://bitterclip.com/',
+    publisher: {
+      '@id': 'https://company.sheetgenius.com/#organization',
+    },
     description: 'Record a session in the browser or bring footage you already shot, and BitterClip finishes it: the full-length episode and the short cuts from that same edit, made by changing the transcript, with an agent you can direct and revise.',
     offers: {
       '@type': 'AggregateOffer',

@@ -27,6 +27,13 @@ useHead({
 
 const sections = [
   {
+    title: 'Who We Are',
+    body: [
+      'BitterClip is a product name. SheetGenius, Inc. is the company that operates BitterClip and is responsible for the personal information described in this policy. "We" and "us" mean SheetGenius, Inc.',
+      'Company information is at company.sheetgenius.com. Privacy questions and requests go to hello@bitterclip.com.',
+    ],
+  },
+  {
     title: 'Information We Collect',
     body: [
       'Account and contact details, such as name, email address, workspace membership, authentication events, and support messages.',
@@ -48,9 +55,9 @@ const sections = [
   {
     title: 'AI, Media, And Provider Processing',
     body: [
-      'BitterClip may send recordings, extracted audio, transcripts, prompts, metadata, rendered clips, or related operational data to infrastructure and AI/media providers when needed to deliver transcription, speaker analysis, rendering, storage, billing, support, or publishing features.',
+      'We may send recordings, extracted audio, transcripts, prompts, metadata, rendered clips, or related operational data to infrastructure and AI/media providers when needed to deliver transcription, speaker analysis, rendering, storage, billing, support, or publishing features.',
       'Connected publishing services, such as YouTube, LinkedIn, or X, receive only the content and account authorization needed for actions you approve or trigger.',
-      'BitterClip does not sell your recordings, transcripts, clips, or account data.',
+      'We do not sell your recordings, transcripts, clips, or account data.',
     ],
   },
   {
@@ -98,9 +105,15 @@ const sections = [
       <div class="max-w-3xl space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed font-sans">
         <p>
           Effective date: <strong class="text-zinc-200">June 9, 2026</strong>
+          &middot; Last updated: <strong class="text-zinc-200">August 25, 2026</strong>
         </p>
         <p>
-          This policy explains how BitterClip handles information for the public website at
+          BitterClip is a product of
+          <a class="text-[#f28f84] hover:underline" href="https://company.sheetgenius.com">SheetGenius, Inc.</a>,
+          the company responsible for the information described here.
+        </p>
+        <p>
+          This policy explains how we handle information for the public website at
           <a class="text-[#f28f84] hover:underline" href="https://bitterclip.com/">bitterclip.com</a>,
           the hosted app at
           <a class="text-[#f28f84] hover:underline" href="https://app.bitterclip.com/">app.bitterclip.com</a>,
@@ -108,9 +121,7 @@ const sections = [
         </p>
         <p>
           Contact:
-          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=BitterClip%20privacy">
-            hello@bitterclip.com
-          </a>.
+          <a class="text-[#f28f84] hover:underline" href="mailto:hello@bitterclip.com?subject=BitterClip%20privacy">hello@bitterclip.com</a>.
         </p>
       </div>
     </div>
