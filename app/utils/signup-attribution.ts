@@ -14,6 +14,7 @@ export const ACQUISITION_PARAM_NAMES = [
   'ttclid',
   'msclkid',
   'oppref',
+  'oai_oppref',
 ] as const
 
 type QueryValue = string | null | undefined | Array<string | null>
