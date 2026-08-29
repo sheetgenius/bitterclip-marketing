@@ -13,6 +13,7 @@ export const ACQUISITION_PARAM_NAMES = [
   'fbclid',
   'ttclid',
   'msclkid',
+  'oppref',
 ] as const
 
 type QueryValue = string | null | undefined | Array<string | null>

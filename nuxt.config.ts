@@ -7,6 +7,7 @@ const description =
 // a share card that disagrees with the page it links to reads as a stale mirror.
 const siteTitle = 'BitterClip — Footage in, Episode out'
 const gaMeasurementId = 'G-JRVVJM49G7'
+const openaiAdsPixelId = '8LG6zSVEgap43kni6JGRcf'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -83,6 +84,14 @@ export default defineNuxtConfig({
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms-full.txt', title: 'BitterClip full Markdown context' },
       ],
       script: [
+        {
+          // OpenAI Ads measurement pixel: the inline stub queues calls
+          // immediately (so the ad-click oppref on the landing URL is captured
+          // even before the SDK loads) and the SDK itself loads async.
+          innerHTML: `!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var js=d.createElement(s);js.async=true;js.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(js,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");
+oaiq("init",{pixelId:"${openaiAdsPixelId}"});
+oaiq("measure","page_viewed",{type:"contents",contents:[{id:location.pathname||"/",content_type:"page"}]});`,
+        },
         {
           innerHTML: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
