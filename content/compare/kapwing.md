@@ -67,7 +67,7 @@ rows:
     edge: competitor
   - axis: Shooting with more than one camera
     bitterclip:
-      lead: "Cut between five angles."
+      lead: "Cut between your angles."
       detail: "Solo, two-up, picture-in-picture, speaker rail, or grid — and switching never disturbs the audio."
     competitor:
       lead: "One clip at a time."
@@ -166,7 +166,7 @@ BitterClip starts from the recording instead of from a prompt. Prop your phone u
 
 When a Kapwing clip is 80% right, you open the studio and close the last 20% by hand. When a BitterClip cut is 80% right, you say what's wrong — in ChatGPT, in Claude, or in the panel beside the editor — and it changes. What comes back is a normal edit: keep nudging it yourself, or undo it, all the way back. Anything you can click, you can ask for.
 
-Two things fall out of that, and you feel both weekly. Every clip remembers where it came from, so one click puts you back at that spot in the full recording — worth a lot the day someone asks when exactly he said that. And the review link you sent doesn't drift out from under you; it plays the version they watched, even after you've moved on.
+Two things fall out of that, and you feel both weekly. Every clip remembers where it came from, so one click puts you back at that spot in the full recording — worth a lot the day someone asks when exactly he said that. And a review link plays the exact version you sent, never a later one, for up to two weeks, even after you've moved on.
 
 There's no score deciding which moments are good, either. That's on purpose. If you want a machine to choose your highlights, Kapwing will do it and BitterClip won't.
 

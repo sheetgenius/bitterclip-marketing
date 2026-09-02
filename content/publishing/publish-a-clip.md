@@ -16,8 +16,8 @@ tags:
 # Publish a clip
 
 Once you've exported a clip, BitterClip can send it to your connected channels: YouTube,
-LinkedIn, and X. You review each post before it goes out, and the project decides whether
-posts wait for your okay or publish on their own.
+LinkedIn, and X. You review each post before it goes out, and nothing is sent until you confirm
+it.
 
 (Instagram works differently. There's no reliable one-click posting to it yet, so you hand
 the clip to your phone instead. See [Connect Instagram](/docs/connect/instagram) for the way
@@ -66,8 +66,8 @@ over what it shows you, and approve when it reads right.
 
 You don't have to post one clip at a time, and you don't have to repeat yourself for each
 channel. BitterClip can take a whole episode's finished output and prepare it for YouTube,
-LinkedIn, and X in one step. It builds one package per channel, then your project's
-publishing setting handles the rest.
+LinkedIn, and X in one step. It builds one package per channel, then each one
+waits for your confirmation.
 
 A channel counts as ready when it's connected and still has permission to post. A channel you
 connected a while ago can go stale and need reconnecting. The note at the bottom of this page

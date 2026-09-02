@@ -345,17 +345,18 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
   lines.push('# BitterClip')
   lines.push('')
   lines.push(
-    '> BitterClip turns long video and audio recordings into short, source-accurate clips. ' +
-      'You (or your AI assistant) pick the strongest moment by the words you keep; BitterClip ' +
-      'derives the exact cut from the audio. It runs in the browser at app.bitterclip.com and ' +
-      'inside ChatGPT and Claude via a connection.',
+    '> BitterClip turns a recorded conversation into a finished episode and the clips from it. ' +
+      'It transcribes every word tied to the moment it was spoken, reads the whole session, and ' +
+      'its built-in agent makes the cut; you direct it in plain words or by editing the transcript, ' +
+      'and every cut resolves against the audio. It runs in the browser at app.bitterclip.com; ' +
+      'ChatGPT and Claude can operate the same workbench through an optional connection.',
   )
   lines.push('')
   lines.push(
     'The model is Recording → Episode → Clip: a Recording is a raw uploaded source; an Episode ' +
       'is one stitched transcript timeline (one or more recordings) and the unit you work in; a ' +
-      'Clip is a short exported cut from an episode. (Older material called episodes "Moments" — ' +
-      'that term is retired.)',
+      'Clip is a short cut derived from an episode; both render to exact, downloadable exports. ' +
+      '(Older material called episodes "Moments" — that term is retired.)',
   )
   lines.push('')
   lines.push(

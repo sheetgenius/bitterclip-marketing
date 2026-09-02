@@ -1,6 +1,6 @@
 ---
 title: Use BitterClip from your AI assistant
-description: Connect ChatGPT or Claude and make clips just by asking.
+description: Prefer working from ChatGPT or Claude? Connect one and direct the same workbench by asking.
 navigation:
   label: Use it from your assistant
   order: 1
@@ -15,11 +15,12 @@ tags:
 
 # Use BitterClip from your AI assistant
 
-You connect BitterClip to ChatGPT or Claude once, then you make clips by talking to your
-assistant. No timeline, no settings to learn. You ask for a good moment, and the transcript
-editor opens right there in the chat with a clip already picked. From there you watch it,
-nudge the edges if you want, and export when it's right. The same work is waiting in your
-browser whenever that is easier.
+BitterClip's own agent is built into the editor and needs no connection; most people start
+there ([Use the built-in agent](/docs/getting-started/use-the-built-in-agent)). If you
+already work in ChatGPT or Claude, connect BitterClip once and direct the same workbench by
+talking to your assistant. You ask for a cut, and the editor opens right there in the chat on
+the cut it made. From there you watch it, nudge the edges if you want, and export when it's
+right. The same work is waiting in your browser whenever that is easier.
 
 ::callout{type="note"}
 Claude supports custom connectors on every plan. In ChatGPT, custom-app access and the

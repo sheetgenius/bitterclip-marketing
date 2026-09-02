@@ -36,7 +36,7 @@ see it marked "rendering" on its card; once it's ready, a **Download** button ap
 don't have to open the clip first. The download is right there on the card.
 
 What you get is an MP4. By default it keeps your source's shape (a widescreen recording stays
-widescreen), and you can choose vertical or square when you export. Captions are burned right
+widescreen), and you can choose vertical when you export. Captions are burned right
 into the video by default, so they travel with it everywhere you post. If you turned captions
 off at export, the file comes out without them.
 
@@ -56,10 +56,9 @@ exported and finished rendering first; if there's no ready export yet, the toggl
 on. You can turn it back off any time you want to stop sharing publicly.
 
 ::callout{type="note"}
-Sharing a clip as a live, embeddable player is part of an upgraded plan. The embed page
-re-checks your plan every time it loads, so if your plan changes, the shared link quietly stops
-playing. If it isn't included on your plan yet, you'll see the option to upgrade when you go to
-switch it on.
+Sharing a clip as a live, embeddable player is included on Creator and Producer. The embed page
+re-checks your plan every time it loads, so if your plan lapses, the shared link quietly stops
+playing until the plan is active again.
 ::
 
 ::signup-cta

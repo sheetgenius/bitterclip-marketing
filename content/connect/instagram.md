@@ -32,7 +32,7 @@ BitterClip does the part that's hard to do well: it finds the moment and cuts th
 
 ## Post a clip on Instagram, step by step
 
-1. Make and export your clip in BitterClip. Exports keep your source's shape by default (a widescreen recording stays widescreen), and you can choose vertical or square when you export. For a Reel, pick vertical so the clip fills a phone screen.
+1. Make and export your clip in BitterClip. Exports keep your source's shape by default (a widescreen recording stays widescreen), and you can choose vertical when you export. For a Reel, pick vertical so the clip fills a phone screen.
 2. Download the finished clip from BitterClip.
 3. Get the file onto your phone. AirDrop it from a Mac, drop it in a shared cloud folder, or download it straight from your phone's browser.
 

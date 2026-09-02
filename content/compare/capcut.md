@@ -43,7 +43,7 @@ rows:
     edge: even
   - axis: A session you shot on two cameras
     bitterclip:
-      lead: Compose up to five.
+      lead: Switch between the cameras you shot.
       detail: Solo, two-up, picture-in-picture, speaker rail, or grid — switching cameras never disturbs the audio.
     competitor:
       lead: It points at Premiere.
@@ -102,7 +102,7 @@ chooseUs:
   - You'd rather delete a sentence in the transcript than hunt for it on a timeline, and you want the cut to land on the word instead of clipping the first syllable.
   - You want to ask for the edit — in ChatGPT, in Claude, or in the editor — and get back an ordinary edit you can keep changing by hand or undo exactly.
   - You want to prop your phone up and record straight into the project — one person, from the browser, with the take already transcribed when you stop — as well as bring in sessions you shot elsewhere.
-  - You shoot two to five cameras and want them composed, with clean switching, without exporting to Premiere.
+  - You shoot more than one camera and want clean switching between them without exporting to Premiere.
   - "You want trial terms on the page: card required, $0 today, seven days, and $24/month afterward unless you cancel before the trial ends."
 chooseThem:
   - You make short videos on your phone. CapCut's mobile and tablet apps are the real thing, and one-tap TikTok publishing lives only there.

@@ -67,7 +67,7 @@ rows:
     edge: competitor
   - axis: When you shot with more than one camera
     bitterclip:
-      lead: Up to five cameras.
+      lead: Switch between your cameras.
       detail: Solo, two-up, picture-in-picture, speaker rail, or grid — switching never disturbs the audio.
     competitor:
       lead: One video in, one out.
@@ -93,7 +93,7 @@ chooseUs:
   - Your recordings run 20 minutes to two hours, and every one of them has to become a finished episode plus vertical clips.
   - "You'd rather say \"cut the tangent about the flight\" than go hunting for it on a timeline."
   - You're done re-rolling AI output — you want to fix the cut you have, and undo it when a change was wrong.
-  - You shoot two to five cameras and want to cut between them without touching the audio.
+  - You shoot more than one camera and want to cut between them without touching the audio.
   - You want to know where every clip came from, and jump straight back to that spot in the full recording.
 chooseThem:
   - Your footage is already short — under two minutes — and you want captions, emoji, zooms, and a hook title today.

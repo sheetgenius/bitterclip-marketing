@@ -6,7 +6,7 @@ competitorUrl: https://www.veed.io
 reviewed: "2026-08-17"
 competitorStrength: "Almost any small video job, done fast in one browser tab."
 heroLede: "Stay with VEED if your month is a pile of different video jobs — subtitles, a dub, a captioned ad, a screen walkthrough. Pick BitterClip if it is the same job every week: a podcast, an interview, a client session that has to come out as a finished episode plus a few vertical clips. VEED is a toolbox. BitterClip is a workshop set up for one bench."
-verdictBitterclip: "BitterClip records one person straight from the browser — camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p — and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Up to five cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
+verdictBitterclip: "BitterClip records one person straight from the browser — camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p — and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Switch between your cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
 verdictCompetitor: "VEED is the browser tool that covers the widest spread of small video jobs: auto-subtitles in a long language list, translation, dubbing, avatars, a screen recorder, templates, brand kits, and real team workspaces. Right call when the work changes shape every week. Watch the bill — paid plans multiply by the number of editors in the workspace, including invitations nobody has accepted, and AI credits and transcription minutes never roll over."
 rows:
   - axis: The twenty other video jobs on your list
@@ -43,7 +43,7 @@ rows:
     edge: bitterclip
   - axis: Working with more than one camera
     bitterclip:
-      lead: "Cut between five angles."
+      lead: "Cut between your angles."
       detail: "Solo, two-up, picture-in-picture, speaker rail or grid, and switching angles never disturbs the audio."
     competitor:
       lead: "Stack the tracks yourself."
@@ -186,7 +186,7 @@ BitterClip records, in one narrow lane: every project has a browser recorder —
 
 Either way you get a transcript you edit like a document: delete the rambling sentence and a real cut happens in the video, landing on the word rather than near it because it resolves against the actual audio — no clipped syllables, no half-swallowed first word.
 
-VEED has real transcript editing too; Edit by Script is on every plan. What differs is around it. Up to five cameras, and switching angles never disturbs the audio. Captions with an active-word highlight, your placement, and a per-word fix for the name it mishears. One tap makes the 9:16 version, captions and timing carried across. Same kit every week, so the sixth episode is not a rebuild of the first.
+VEED has real transcript editing too; Edit by Script is on every plan. What differs is around it. Switch between your cameras, and switching angles never disturbs the audio. Captions with an active-word highlight, your placement, and a per-word fix for the name it mishears. One tap makes the 9:16 version, captions and timing carried across. Same kit every week, so the sixth episode is not a rebuild of the first.
 
 ## Ask for the edit instead of finding it
 

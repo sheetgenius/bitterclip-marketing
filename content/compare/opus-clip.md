@@ -6,7 +6,7 @@ competitorUrl: https://www.opus.pro
 reviewed: 2026-08-17
 competitorStrength: The fastest way to get ten shorts out of one video.
 heroLede: "If you need ten captioned vertical clips by Friday and no desire to touch a timeline, that's OpusClip — from the $15 Starter tier it posts them for you. If what you have is one almost-right cut and you need it right, that's BitterClip: edit by deleting words in the transcript, or just ask for the change in ChatGPT, Claude, or the editor. Same recording, two very different jobs."
-verdictBitterclip: "Where your recordings become finished episodes and clips. Record straight into the project from your browser, or bring footage from a phone, Zoom, Riverside, or a camera, and turn a twenty-minute-to-two-hour session into a full cut plus the vertical version — editing in the transcript, up to five cameras, and every change something you can ask for by name or undo. Built for people who fix the cut they have instead of generating another batch."
+verdictBitterclip: "Where your recordings become finished episodes and clips. Record straight into the project from your browser, or bring footage from a phone, Zoom, Riverside, or a camera, and turn a twenty-minute-to-two-hour session into a full cut plus the vertical version — editing in the transcript, switching between your cameras, and every change something you can ask for by name or undo. Built for people who fix the cut they have instead of generating another batch."
 verdictCompetitor: "The volume machine. Upload up to ten hours, get back a batch of captioned vertical clips — graded for engagement on paid tiers — then post them straight from Starter, or on a six-platform schedule with Pro. It's the right tool when the job is quantity and distribution with almost no review, and it isn't going anywhere: SoftBank money, and a push from clipping into a full AI video-agent platform."
 rows:
   - axis: Turning one recording into something you can post
@@ -51,7 +51,7 @@ rows:
     edge: bitterclip
   - axis: Sessions you shot on more than one camera
     bitterclip:
-      lead: Cut between five cameras.
+      lead: Cut between your cameras.
       detail: Solo, two-up, picture-in-picture, speaker rail, or grid — switching cameras never disturbs the audio.
     competitor:
       lead: One video, re-framed.
@@ -168,7 +168,7 @@ BitterClip's unit of work is the clip you already have. Open the transcript, sel
 
 ## Why the cut doesn't eat your first word
 
-Cuts land on the word, not near it, because they resolve against the actual audio in your recording. No clipped syllables, no half-swallowed opening. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and the review link you sent a client always plays the exact version they watched.
+Cuts land on the word, not near it, because they resolve against the actual audio in your recording. No clipped syllables, no half-swallowed opening. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and a review link plays the exact version you sent, never a later one, for up to two weeks.
 
 There is no score, deliberately. OpusClip grades each clip 0–99 on hook strength, flow, and trend alignment, and its own docs describe the number as suggesting engagement potential. BitterClip doesn't have one. No mystery number decides which of your moments are good.
 
