@@ -95,6 +95,8 @@ not appear in any surface.
 ## Links
 
 - BitterClip website: [bitterclip.com](https://bitterclip.com/)
+- Founder-led onboarding:
+  [bitterclip.com/founder-onboarding](https://bitterclip.com/founder-onboarding)
 - BitterClip app signup:
   [app.bitterclip.com/sign_up](https://app.bitterclip.com/sign_up)
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)

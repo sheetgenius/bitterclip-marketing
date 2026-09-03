@@ -559,6 +559,40 @@ test('renders the terms of service page', async ({ page }) => {
   await expect(page.getByText('agreement between you and SheetGenius, Inc.')).toBeVisible()
 })
 
+test('founder onboarding matches the personal first-cut offer and preserves acquisition parameters', async ({ page }) => {
+  await page.goto('/founder-onboarding?utm_source=chatgpt&utm_medium=cpc&utm_campaign=founder-100&oppref=test-ref')
+
+  await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
+  await expect(page.getByText('Founder-led onboarding · up to 100 sessions')).toBeVisible()
+  await expect(page.getByText(/30-minute recorded conversation about what you.re building/)).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://bitterclip.com/founder-onboarding')
+  await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/founder-onboarding.md',
+  )
+
+  const signup = page.getByRole('link', { name: /Make my first founder video/ }).first()
+  await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
+  await expect(signup).toHaveAttribute('href', /utm_medium=cpc/)
+  await expect(signup).toHaveAttribute('href', /utm_campaign=founder-100/)
+  await expect(signup).toHaveAttribute('href', /oppref=test-ref/)
+  await expect(signup).toHaveAttribute('href', /bc_surface=founder_onboarding/)
+})
+
+test('founder onboarding remains usable on a narrow viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/founder-onboarding')
+
+  await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
+  await expect(page.getByRole('link', { name: /Make my first founder video/ }).first()).toBeVisible()
+  await expect(page.getByRole('img', { name: /Michael Ruescher/ })).toBeVisible()
+
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBeFalsy()
+})
+
 test('renders the data deletion page and its Markdown alternate', async ({ page }) => {
   await page.goto('/data-deletion')
 
@@ -574,6 +608,7 @@ test('renders the data deletion page and its Markdown alternate', async ({ page 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Footage in. Episode out.' },
+    { path: '/founder-onboarding.md', text: "Tell me your story. I'll make the first cut." },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     {
@@ -613,6 +648,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemap.ok()).toBeTruthy()
   const sitemapText = await sitemap.text()
   expect(sitemapText).toContain('https://bitterclip.com/')
+  expect(sitemapText).toContain('https://bitterclip.com/founder-onboarding')
   expect(sitemapText).toContain('https://bitterclip.com/docs')
   expect(sitemapText).toContain('https://bitterclip.com/docs/assistants/overview')
   expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
