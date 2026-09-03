@@ -5,7 +5,7 @@ navigation:
   label: Your first clip
   order: 1
 section: getting-started
-updated: '2026-08-01'
+updated: '2026-09-03'
 tags:
   - quickstart
   - getting-started
@@ -41,6 +41,12 @@ any file your device sees as audio or video. How large it can be depends on your
 Moving a whole channel instead of one recording? Use
 [Import your YouTube archive](/docs/getting-started/import-youtube-takeout) to turn the
 videos you exported with Google Takeout into individual Episodes.
+::
+
+::callout{type="tip"}
+If Zoom cloud import is enabled for your studio, you can let a completed meeting arrive
+automatically instead. Follow [Import a Zoom cloud recording](/docs/getting-started/import-zoom-cloud-recording)
+to check the destination and verify the Episode.
 ::
 
 ::callout{type="note"}

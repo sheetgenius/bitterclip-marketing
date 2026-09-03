@@ -5,7 +5,7 @@ navigation:
   label: What's new
   order: 1
 section: changelog
-updated: '2026-08-23'
+updated: '2026-09-03'
 tags:
   - changelog
   - updates
@@ -16,6 +16,14 @@ tags:
 This is a running list of the changes worth knowing about. Newest is at the top, and we keep each entry short so you can skim the page in a minute.
 
 ## Recent updates
+
+### Zoom cloud recordings can become Episodes automatically
+
+For studios with Zoom import enabled, a completed cloud recording can now arrive as a
+Capture Session and build an editable Episode in the configured Project. Settings shows the
+destination, recent deliveries, current progress, and either a retry when one is safe or the
+manual recovery path. Follow [Import a Zoom cloud recording](/docs/getting-started/import-zoom-cloud-recording)
+for the exact click path and first-meeting checklist.
 
 ### Creator trial and paid plans
 

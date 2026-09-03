@@ -32,7 +32,8 @@ attempt; an Export is one completed exact rendered version.
 
 The main workflow is:
 
-1. Upload a session, including several synchronized angles when they exist.
+1. Upload a session, including several synchronized angles when they exist, or let an
+   enabled Zoom cloud recording arrive in its configured Project.
 2. Build a time-aligned transcript.
 3. Identify and confirm speakers.
 4. Work the Episode into a full-length Program, editing through the transcript
@@ -100,6 +101,8 @@ not appear in any surface.
 - BitterClip app signup:
   [app.bitterclip.com/sign_up](https://app.bitterclip.com/sign_up)
 - How BitterClip works: [bitterclip.com/docs](https://bitterclip.com/docs)
+- Import a Zoom cloud recording:
+  [bitterclip.com/docs/getting-started/import-zoom-cloud-recording](https://bitterclip.com/docs/getting-started/import-zoom-cloud-recording)
 - BitterClip blog: [bitterclip.com/blog](https://bitterclip.com/blog)
 - Blog RSS: [bitterclip.com/blog/rss.xml](https://bitterclip.com/blog/rss.xml)
 - MCP and AI assistant workflow:

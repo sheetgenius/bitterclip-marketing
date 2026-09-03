@@ -129,7 +129,7 @@ links:
 
 The keys under `---` become props (here, `links`).
 
-### The 17 snippets and their props
+### The 18 snippets and their props
 
 | Component | Block name | Props | Reads data |
 |---|---|---|---|
@@ -150,6 +150,7 @@ The keys under `---` become props (here, `links`).
 | `McpTools` | `::mcp-tools` | `group?: string` | `mcpTools` |
 | `ConnectorScopes` | `::connector-scopes` | `connector: string` (required) | `connectorScopes` |
 | `LiveEditorEmbed` | `::live-editor-embed` | — | `site` |
+| `ZoomImportSettingsLink` | `::zoom-import-settings-link` | — | `site` |
 | `Callout` | `::callout` | `type?: 'tip'\|'warning'\|'note'` + slot body | — |
 
 > There is **no** raw `{% include %}` in v3. A "shared block on N pages" = one MDC

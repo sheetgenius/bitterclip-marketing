@@ -341,6 +341,47 @@ test('renders the YouTube archive import guide with its ownership and publishing
   await expect(page.getByRole('button', { name: 'Toggle navigation' })).toBeVisible()
 })
 
+test('renders the Zoom import guide as an exact first-meeting click path', async ({ page }) => {
+  await page.goto('/docs/getting-started/import-zoom-cloud-recording')
+
+  await expect(
+    page.locator(
+      'link[rel="alternate"][type="text/markdown"][href="/docs/getting-started/import-zoom-cloud-recording.md"]',
+    ),
+  ).toHaveCount(1)
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://bitterclip.com/docs/getting-started/import-zoom-cloud-recording',
+  )
+  await expect(page.getByRole('heading', { level: 1, name: 'Import a Zoom cloud recording' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Open Zoom import settings' })).toHaveAttribute(
+    'href',
+    'https://app.bitterclip.com/settings#zoom-import',
+  )
+  await expect(page.locator('article')).toContainText('Recording import → Zoom')
+  await expect(page.locator('article')).toContainText('Configured')
+  await expect(page.locator('article')).toContainText('Configured means the required deployment values')
+  await expect(page.locator('article')).toContainText('Last successful delivery')
+  await expect(page.locator('article')).toContainText('View progress')
+  await expect(page.locator('article')).toContainText('Check for updates')
+  await expect(page.locator('article')).toContainText('Open Capture Session')
+  await expect(page.locator('article')).toContainText('Open Episode')
+  await expect(page.locator('article')).toContainText('Retry Zoom import')
+  await expect(page.locator('article')).toContainText('Add footage')
+  await expect(page.locator('article')).toContainText('Browse files')
+  await expect(page.locator('article')).not.toContainText('Add recording')
+  await expect(page.getByRole('heading', { level: 2, name: "Tomorrow's confidence check" })).toBeVisible()
+  await expect(page.locator('article')).toContainText('Do not send the Zoom download link')
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  const sizes = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    content: document.documentElement.scrollWidth,
+  }))
+  expect(sizes.content).toBeLessThanOrEqual(sizes.viewport)
+  await expect(page.getByRole('button', { name: 'Toggle navigation' })).toBeVisible()
+})
+
 test('tracks docs article, section, TOC, and sidebar analytics', async ({ page }) => {
   await page.goto('/docs/getting-started/your-first-clip')
 
@@ -615,6 +656,10 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
       path: '/docs/getting-started/import-youtube-takeout.md',
       text: 'This is an archive import, not a YouTube downloader',
     },
+    {
+      path: '/docs/getting-started/import-zoom-cloud-recording.md',
+      text: "Tomorrow's confidence check",
+    },
     { path: '/blog.md', text: 'Your show has a signature now' },
     { path: '/blog/your-show-has-a-signature-now.md', text: 'Know what mattered in the recording' },
     { path: '/blog/we-stopped-making-templates.md', text: 'The template wall asked you to settle' },
@@ -652,6 +697,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemapText).toContain('https://bitterclip.com/docs')
   expect(sitemapText).toContain('https://bitterclip.com/docs/assistants/overview')
   expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
+  expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-zoom-cloud-recording')
   expect(sitemapText).toContain('https://bitterclip.com/blog')
   expect(sitemapText).toContain('https://bitterclip.com/blog/your-show-has-a-signature-now')
   expect(sitemapText).toContain('https://bitterclip.com/blog/gemini-3-7-multiple-witnesses')
@@ -677,6 +723,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsText).toContain('Use it from your AI assistant')
   expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
   expect(llmsText).toContain('Import your YouTube archive')
+  expect(llmsText).toContain('https://bitterclip.com/docs/getting-started/import-zoom-cloud-recording')
+  expect(llmsText).toContain('Import a Zoom cloud recording')
   expect(llmsText).toContain('Your show has a signature now')
   expect(llmsText).toContain('Visual analysis in BitterClip just got a lot faster')
   expect(llmsText).toContain('Pi vs. DeepSeek Harness: why we chose Pi')
@@ -689,6 +737,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('Connect ChatGPT')
   expect(llmsFullText).toContain('This is an archive import, not a YouTube downloader')
   expect(llmsFullText).toContain('50 GB is recommended')
+  expect(llmsFullText).toContain("Tomorrow's confidence check")
   expect(llmsFullText).toContain('Troubleshooting')
   expect(llmsFullText).toContain('Your show has a signature now')
   expect(llmsFullText).toContain('Know what mattered in the recording')

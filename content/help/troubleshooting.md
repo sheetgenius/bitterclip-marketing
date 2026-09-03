@@ -5,7 +5,7 @@ navigation:
   label: Troubleshooting
   order: 2
 section: help
-updated: '2026-08-01'
+updated: '2026-09-03'
 tags:
   - help
   - troubleshooting
@@ -32,6 +32,28 @@ When you upload a recording, BitterClip turns it into its own **episode** automa
 If you just signed up and nothing uploaded, check the email-verification step above first: an unverified account can't upload yet.
 
 If the upload went through, the episode isn't instant. Transcribing takes a little time, longer for long files. Give it a few moments and refresh. It'll appear once the transcript is ready.
+
+## My Zoom recording did not arrive
+
+First confirm that Zoom finished processing a **cloud recording**. A recording stored only
+on your computer does not enter the automatic import.
+
+In BitterClip, click your name or avatar, then **Settings**. Scroll to **Recording import →
+Zoom** and check the status and destination Project. If the row says **Configured**, click
+**Check for updates** and look under **Recent Zoom deliveries**. Click **Open Capture
+Session** when that action appears for the meeting.
+
+If the meeting says **Needs attention**, read the recovery sentence on the row. Click **Retry
+Zoom import** once only when that action is offered, then **Open Capture Session** to watch
+its progress. Keep the original recording in Zoom. If the Capture Session exists, preserve
+the files already there and use **Browse files** only for missing footage. If there is no
+Capture Session and no retry, click **Open target Project**, **Add footage**, then **Browse
+files**. The full [Zoom cloud recording guide](/docs/getting-started/import-zoom-cloud-recording)
+includes the exact click path and verification checklist.
+
+Never send a Zoom download link, passcode, client secret, or webhook secret in a support
+message. The meeting topic, approximate end time, and BitterClip status are enough to start
+diagnosis.
 
 ## A clip is still processing, or my export is "pending"
 
@@ -107,6 +129,8 @@ links:
     label: Your first clip
   - to: /docs/getting-started/import-youtube-takeout
     label: Import your YouTube archive
+  - to: /docs/getting-started/import-zoom-cloud-recording
+    label: Import a Zoom cloud recording
   - to: /docs/connect/youtube
     label: Connect YouTube
   - to: /docs/connect/instagram
