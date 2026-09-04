@@ -51,7 +51,7 @@ rows:
     edge: bitterclip
   - axis: Sessions shot on more than one camera
     bitterclip:
-      lead: Up to five cameras.
+      lead: Switch between your cameras.
       detail: Solo, two-up, picture-in-picture, speaker rail or grid, and cutting between them never disturbs the audio.
     competitor:
       lead: One video in, shorts out.

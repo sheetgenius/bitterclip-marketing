@@ -6,7 +6,7 @@ competitorUrl: https://podcastle.ai
 reviewed: 2026-08-17
 competitorStrength: The cheapest good way to record remote guests and clean the audio.
 heroLede: "Podcastle is the better recorder. BitterClip is the better finisher. If the job is getting a remote guest on tape and shipping an audio show, stay with Podcastle; BitterClip does have a browser recorder, but it's one person on one device, and what it's really for is turning ninety minutes into a real cut plus a stack of vertical clips."
-verdictBitterclip: "BitterClip records one person from a browser, and everything after that is where it earns its keep. Prop your phone up and record straight into the project, or bring in whatever you shot — phone, Zoom, Riverside, a camera — then cut it by deleting words in the transcript, switch between up to five cameras, and get the vertical version in one tap. You can do all of it by asking in ChatGPT, Claude, or the editor, and undo works all the way back."
+verdictBitterclip: "BitterClip records one person from a browser, and everything after that is where it earns its keep. Prop your phone up and record straight into the project, or bring in whatever you shot — phone, Zoom, Riverside, a camera — then cut it by deleting words in the transcript, switch between your cameras, and get the vertical version in one tap. You can do all of it by asking in ChatGPT, Claude, or the editor, and undo works all the way back."
 verdictCompetitor: "Podcastle — renamed Async in January 2026 — is the stronger pick if you need to record a remote guest, or if your show is audio and you want AI to make most of the editing decisions. It's a browser recording studio plus a chat-first AI suite: local per-guest 4K capture, one-click cleanup, AI clips, and free podcast hosting with RSS distribution. The AI work is billed in credits that reset every month."
 rows:
   - axis: Getting everyone on the call recorded
@@ -44,7 +44,7 @@ rows:
   - axis: When there's more than one camera
     bitterclip:
       lead: Switch angles like a director.
-      detail: Solo, two-up, picture-in-picture, speaker rail or grid, up to five cameras, and the audio never flinches.
+      detail: Cut between the cameras you recorded, and the audio never flinches.
     competitor:
       lead: Tracks go in, nothing switches.
       detail: Separate tracks per guest are captured, but no multicam editing appears on its feature pages.
@@ -166,7 +166,7 @@ Podcastle earned its users honestly. It gets a guest on the line from a browser 
 
 Then the file lands, and you have ninety minutes of two people talking and a Tuesday to turn it into something. Async's text-based editing page is written for podcasts and voiceovers: delete a word, the audio goes with it. And nothing on its feature pages says it can cut between cameras. Separate tracks per guest go in; nothing documented puts them on screen one at a time.
 
-That's the part BitterClip does. Bring in the recording — Podcastle's studio, Zoom, a phone, a camera — or record it here. Every project has a browser recorder: "Record in browser" from the Sources tab, or "Record here" in the editor, which drops the take into the cut at the playhead. Prop your phone up, hit record, and it lands already transcribed, uploading in chunks as you go rather than sitting on your device. It is a single-person recorder, though — camera and mic on a laptop or phone, or your screen in desktop Chrome, up to 1080p, no guest links and no per-guest tracks — so for a remote interview, keep using Podcastle's studio. Either way, the next part is building the picture: one person, two-up, picture-in-picture, a speaker rail or a grid, up to five cameras. Cutting to a different angle never touches the audio, so what people hear is one continuous conversation. Crossfades keep the length honest. When the wide cut is done, one tap makes the vertical version with the captions and timing carried over. That's a finished package out of every session, not just cleaner sound.
+That's the part BitterClip does. Bring in the recording — Podcastle's studio, Zoom, a phone, a camera — or record it here. Every project has a browser recorder: "Record in browser" from the Sources tab, or "Record here" in the editor, which drops the take into the cut at the playhead. Prop your phone up, hit record, and it lands already transcribed, uploading in chunks as you go rather than sitting on your device. It is a single-person recorder, though — camera and mic on a laptop or phone, or your screen in desktop Chrome, up to 1080p, no guest links and no per-guest tracks — so for a remote interview, keep using Podcastle's studio. Either way, the next part is choosing the picture: cut between the cameras you recorded. Cutting to a different angle never touches the audio, so what people hear is one continuous conversation. Crossfades keep the length honest. When the wide cut is done, one tap makes the vertical version with the captions and timing carried over. That's a finished package out of every session, not just cleaner sound.
 
 ## Two different meanings of "just chat with it"
 

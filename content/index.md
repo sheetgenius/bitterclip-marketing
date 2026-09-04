@@ -1,6 +1,6 @@
 ---
 title: BitterClip docs
-description: Turn long recordings into short, source-accurate clips in your browser or a supported AI assistant. Start here.
+description: Finished episodes and clips from the conversations you record, made with the agent built into the editor. Start here.
 navigation:
   label: Overview
   order: 0
@@ -20,11 +20,13 @@ tags:
 
 ## Start here
 
-New to BitterClip? Walk through making your first clip, then pick up the handful of words you'll see everywhere. You can make clips in your browser, or hand the job to your AI assistant. Most people begin by setting up a project, which is the home for one show or series.
+New to BitterClip? Start with the agent built into the editor, walk through your first cut, then pick up the handful of words you'll see everywhere. Most people begin by setting up a project, which is the home for one show or series.
 
 ::next-steps
 ---
 links:
+  - to: /docs/getting-started/use-the-built-in-agent
+    label: Use the built-in agent
   - to: /docs/getting-started/your-first-clip
     label: Your first clip
   - to: /docs/getting-started/what-is-bitterclip
@@ -38,9 +40,9 @@ links:
 ---
 ::
 
-## Use it from your AI assistant
+## Use BitterClip's agent, or yours
 
-BitterClip's agent is built into the editor. If you connect ChatGPT or Claude, ask it to open a recording or make a specific cut and it operates the same workbench. The source stays attached, the result stays editable, and nothing is selected or published without your direction.
+BitterClip's agent is built into the editor and needs no setup; see [Use the built-in agent](/docs/getting-started/use-the-built-in-agent). If you prefer ChatGPT or Claude, connect one and ask it to open a recording or make a specific cut; it operates the same workbench. The source stays attached, the result stays editable, and nothing is selected or published without your direction.
 
 ::next-steps
 ---

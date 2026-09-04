@@ -34,12 +34,12 @@ your workspace admin or use BitterClip in your browser or [connect Claude](/docs
 ::assistant-connection-intro
 ::
 
-BitterClip is not in ChatGPT's public plugin directory yet. Until its plugin is approved
+BitterClip is not in ChatGPT's public app directory yet. Until its app is approved
 and published, add it as a custom developer app:
 
 1. Open ChatGPT **Settings → Security and login** and turn on **Developer mode**. Your workspace may require an admin to make this available.
-2. Open **Settings → Plugins**, or go to `chatgpt.com/plugins`.
-3. Click **Create** to add a plugin.
+2. Open **Settings → Apps**.
+3. Click **Create app**.
 4. In the **New App** window, fill in:
    - **Name** — BitterClip
    - **Connection** — leave this on **Server URL** and paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
@@ -52,9 +52,9 @@ and published, add it as a custom developer app:
 
 ::callout{type="note"}
 ChatGPT moves its menus and labels around, so the exact wording can differ. The shape stays
-the same: enable developer mode, create a plugin pointed at the BitterClip address, and
-authorize it. Once BitterClip's public plugin is available, you will add it from ChatGPT's
-plugin directory instead. Stuck? See
+the same: enable developer mode, create an app pointed at the BitterClip address, and
+authorize it. Once BitterClip's public app is available, you will add it from ChatGPT's
+app directory instead. Stuck? See
 [Troubleshooting](/docs/help/troubleshooting).
 ::
 

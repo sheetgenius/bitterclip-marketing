@@ -60,7 +60,7 @@ rows:
   - axis: Cutting between cameras after the shoot
     bitterclip:
       lead: "Decide angles afterward."
-      detail: "Up to five cameras — solo, two-up, picture-in-picture, speaker rail, grid — and the audio never moves."
+      detail: "Cut between the cameras you recorded, and the audio never moves."
     competitor:
       lead: "Decided at record time."
       detail: "A phone can join as a second angle; in-person multicam needs the Mac app on Pro or above."
@@ -176,6 +176,6 @@ Both products let you talk to an assistant about your video. The difference is w
 
 ## The cut lands on the word
 
-The other difference is quieter, and you feel it every day rather than once. BitterClip cuts against the actual audio, so an edit lands on the word instead of near it — no clipped syllable, no half-swallowed first word, no nudging the edge a frame at a time until it stops sounding wrong. Every clip remembers where it came from, so one click puts you back at that spot in the full recording when someone asks where it's from. The review link you sent last week still plays the version they watched. When the first cut isn't right, you fix that cut rather than rolling the dice on a new one, and undo goes all the way back. Nothing scores your moments and tells you which ones are good. You decide, or you ask.
+The other difference is quieter, and you feel it every day rather than once. BitterClip cuts against the actual audio, so an edit lands on the word instead of near it — no clipped syllable, no half-swallowed first word, no nudging the edge a frame at a time until it stops sounding wrong. Every clip remembers where it came from, so one click puts you back at that spot in the full recording when someone asks where it's from. A review link plays the exact version you sent, never a later one, for up to two weeks. When the first cut isn't right, you fix that cut rather than rolling the dice on a new one, and undo goes all the way back. Nothing scores your moments and tells you which ones are good. You decide, or you ask.
 
 Keep recording where recording is best. Finish where finishing is the whole product. Bring one Riverside session across and see what the same conversation looks like done.

@@ -51,7 +51,7 @@ rows:
     edge: bitterclip
   - axis: When you shot with more than one camera
     bitterclip:
-      lead: "Up to five angles."
+      lead: "Switch between your angles."
       detail: Solo, two-up, picture-in-picture, speaker rail or grid, and the audio never wobbles.
     competitor:
       lead: "One video in."
@@ -168,7 +168,7 @@ That is a legitimate product. It is also a different product. If you signed up t
 
 You finish a 90-minute conversation. Munch hands back a batch. One clip is close. So you Extend Clip — 30 seconds at either end, that is the ceiling — and reframe with Manual Crop, and when it is still not right, the documented path is Re-Munch: a new batch, and you have to change at least one setting to get it. You never fix the clip in front of you. You re-roll and re-watch, and the version that almost existed in batch one never comes back.
 
-BitterClip starts somewhere else. Your recording is the reference, so cuts land on the word, not near it — no clipped syllables, no half-swallowed first word. When a cut is 90% right, you say what is wrong, something like "the intro drags, lose the sponsor tangent," and that same cut gets tightened. Undo works all the way back. Every clip remembers where it came from, so one click jumps you to that spot in the full recording, and the review link you sent your co-host on Tuesday still plays the exact version they watched on Thursday.
+BitterClip starts somewhere else. Your recording is the reference, so cuts land on the word, not near it — no clipped syllables, no half-swallowed first word. When a cut is 90% right, you say what is wrong, something like "the intro drags, lose the sponsor tangent," and that same cut gets tightened. Undo works all the way back. Every clip remembers where it came from, so one click jumps you to that spot in the full recording, and the review link you sent your co-host on Tuesday still plays that exact version on Thursday, never a later one, for up to two weeks.
 
 You can also just read your way through it. The transcript is the edit: find the tangent in the words, select it, delete it, and it is gone from the video. Then one tap makes the vertical version, captions and timing carried across, and if a word came through wrong you fix that word.
 

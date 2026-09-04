@@ -51,7 +51,7 @@ rows:
     edge: bitterclip
   - axis: Two or three cameras on one conversation
     bitterclip:
-      lead: Cut between five angles.
+      lead: Cut between your angles.
       detail: Two-up, picture-in-picture, speaker rail or grid — switching never disturbs the audio.
     competitor:
       lead: One speaker, raw footage.
@@ -172,7 +172,7 @@ This is the part you feel on a Tuesday afternoon, on the fourth pass.
 
 In Captions, refinement has a price list. You can revert AI Edit cuts one at a time or re-run with a different style, which costs 10 to 40 credits a pass. On desktop, correcting a misspelled word regenerates the whole video for about a credit. The loop is: don't like it, generate again, pay again, hope.
 
-In BitterClip you fix the cut you have. Say what's wrong and that same cut changes. Undo works all the way back. A review link you sent always plays the exact version the other person watched, so nobody argues about which version they saw. And no mystery score decides which moments are good — you pick, or you tell your assistant what to pick.
+In BitterClip you fix the cut you have. Say what's wrong and that same cut changes. Undo works all the way back. A review link plays the exact version you sent, never a later one, for up to two weeks, so nobody argues about which version they saw. And no mystery score decides which moments are good — you pick, or you tell your assistant what to pick.
 
 ## Two companies, two bets
 

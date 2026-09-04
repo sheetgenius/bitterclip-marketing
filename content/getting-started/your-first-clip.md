@@ -91,7 +91,7 @@ ending. The cut follows your selection.
 
 When the clip looks right, hit Export. You'll get a chance to pick the shape of the video
 first. Exports keep your source's shape by default (a widescreen recording stays
-widescreen), and you can choose vertical or square when you export. Pick vertical if you're
+widescreen), and you can choose vertical when you export. Pick vertical if you're
 headed for Shorts, Reels, or TikTok.
 
 BitterClip then renders an MP4 with the captions burned right into the picture, so they look

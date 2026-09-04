@@ -59,7 +59,7 @@ rows:
     edge: even
   - axis: When more than one camera was rolling
     bitterclip:
-      lead: Up to five cameras.
+      lead: Switch between your cameras.
       detail: Solo, two-up, picture-in-picture, speaker rail, or grid — and switching never disturbs the audio.
     competitor:
       lead: Switches speakers, with caveats.
