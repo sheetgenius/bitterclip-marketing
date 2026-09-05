@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import { EARLY_SIGNUP_HANDOFF_SCRIPT } from './app/utils/signup-attribution'
 
 const description =
   'Footage in, episode out: BitterClip understands the whole recording, makes one coherent cut, and lets you keep directing it — with its built-in agent or yours.'
@@ -84,6 +85,11 @@ export default defineNuxtConfig({
         { rel: 'alternate', type: 'text/plain', href: 'https://bitterclip.com/llms-full.txt', title: 'BitterClip full Markdown context' },
       ],
       script: [
+        {
+          // Preserve a cold landing's acquisition and registered offer even if
+          // the visitor reaches a signup CTA before the Nuxt app hydrates.
+          innerHTML: EARLY_SIGNUP_HANDOFF_SCRIPT,
+        },
         {
           // OpenAI Ads measurement pixel: the inline stub queues calls
           // immediately (so the ad-click oppref on the landing URL is captured

@@ -30,11 +30,12 @@ under a dated entry.
 
 ### Product Context
 
-- Added a founder-led onboarding offer for up to 100 customers. Michael
-  Ruescher joins each customer for a 30-minute recorded founder conversation,
-  helps find the story worth sharing, and shapes the first cut in BitterClip.
-  The page states the ordinary card-backed seven-day Creator trial and
-  $24/month terms without changing the product entitlement.
+- Reconciled Founder First 100 with the guided product journey. Up to 100
+  eligible customers can choose an available 30-minute session with Michael
+  Ruescher after verified trial acceptance, while campaign capacity remains.
+  The public handoff identifies the qualifying offer, shows the watermark and
+  renewal terms, and distinguishes a source-linked First Cut from work that may
+  finish processing after the call.
 - Reconciled the public offer with the balance-governed Creator trial. The
   seven-day card-backed trial is $0 today, becomes $24/month unless canceled
   before it ends, accepts one recording up to two hours, and includes $5 of
@@ -117,6 +118,13 @@ under a dated entry.
 
 ### Website
 
+- Rebuilt the founder landing around a bounded live availability preview, an
+  explicit self-serve fallback, recording-rights and processing context, local
+  timezone display, and route-aware neutral CTA and FAQ events. Cold signup
+  links retain the first tab-scoped acquisition snapshot and registered offer
+  before hydration; click analytics omit raw click references. The canonical
+  campaign URL now has an explicit HTTPS trailing-slash redirect that preserves
+  its query string.
 - Added `/founder-onboarding` with a matching Markdown alternate, campaign
   attribution handoff, sitemap entry, and smoke coverage for the founder-led
   first-cut offer.

@@ -1,66 +1,102 @@
-# Founder onboarding with BitterClip
+# Founder First 100 with BitterClip
 
-Canonical HTML page: https://bitterclip.com/founder-onboarding
+Canonical HTML page: https://bitterclip.com/founder-onboarding/
 
 Markdown version: https://bitterclip.com/founder-onboarding.md
 
 ## Tell me your story. I'll make the first cut.
 
-Michael Ruescher, the founder of BitterClip, is personally offering up to 100
-founder-onboarding sessions while capacity remains.
+Michael Ruescher, the founder of BitterClip, is offering one included
+30-minute founder session to eligible Founder First 100 customers while the
+campaign has capacity.
 
-Join Michael for a 30-minute recorded conversation about what you are building.
-Together, you will find the part worth sharing, shape the first founder video in
-BitterClip, and leave with a cut you can keep directing.
+Start the card-backed Creator trial, then choose an available time in
+BitterClip. Michael will help find the clearest story, review the source, and
+set the direction for a First Cut that stays linked to the full Recording and
+remains editable after the call. Analysis or rendering may continue after the
+30-minute session.
 
-Start Creator: https://app.bitterclip.com/sign_up?plan=clip
+[Start the Creator trial and get the founder session](https://app.bitterclip.com/sign_up?plan=clip&offer=founder-first-100-v2&utm_source=bitterclip.com&utm_medium=owned&utm_campaign=founder_onboarding&utm_content=markdown&bc_surface=founder_onboarding&bc_stage=markdown&bc_landing_path=%2Ffounder-onboarding%2F&from=founder_onboarding_markdown)
 
 Card required. $0 today. Creator becomes $24/month after seven days unless
-canceled before the trial ends.
+canceled before the trial ends. Starting the trial does not reserve a session
+time.
 
-## One call. One real result.
+## Check the timing first
 
-1. Tell the real story. Record a focused 30-minute conversation about the
-   problem, the turning point, and why the company needs to exist.
-2. Find the moment. BitterClip watches the whole conversation, and you choose
-   the part that makes someone understand why they should care.
-3. Direct the first cut. Shape the opening and ending, then keep revising the
-   same cut instead of sorting through another pile of guesses.
+The HTML page shows a live preview of the next seven days when verified
+availability is available. A preview does not hold a time. You choose and
+confirm one after your identity is verified and the trial is accepted.
 
-You can also bring an existing podcast appearance, customer call, investor
-conversation, demo, webinar, or launch recording. If none of those captures the
-story, the onboarding call can become the source.
+The fixed online scheduling window is September 7 through November 5, 2026,
+while times and campaign capacity remain. If the session is the reason you are
+joining and no suitable time appears, contact
+[hello@bitterclip.com](mailto:hello@bitterclip.com?subject=Founder%20session%20availability)
+before starting the trial. You can also
+[start with your own Recording](https://app.bitterclip.com/sign_up?plan=clip&utm_source=bitterclip.com&utm_medium=owned&utm_campaign=founder_onboarding&utm_content=markdown_self_serve&bc_surface=founder_onboarding&bc_stage=self_serve&bc_landing_path=%2Ffounder-onboarding%2F&from=founder_onboarding_self_serve)
+without the founder-session offer.
 
-## What you leave with
+## One source. One working edit.
 
-- a recorded founder conversation with a clear editorial point of view;
-- a first cut in BitterClip, linked back to the full source;
-- a review link you can share and a cut you can keep directing; and
-- a repeatable way to turn future conversations into publishable work.
+1. **Bring the real story.** Use an interview, demo, customer conversation,
+   webinar, or another Recording you have the right to share. If the founder
+   session will be recorded as your source, Michael will agree the recording
+   and consent details with you before it begins.
+2. **Find the point together.** Choose the moment that carries the story, then
+   set the opening, ending, and tone for the First Cut.
+3. **Keep directing the same cut.** Review the result in BitterClip, give
+   another direction, and keep the edit history instead of sorting through a
+   new batch of guesses.
+
+## What the Creator trial includes
+
+- one Recording up to two hours;
+- $5 of agent work for analysis, the First Cut, and continued direction;
+- one included 30-minute founder session for this qualifying campaign offer;
+- a source-grounded, editable First Cut; and
+- watermarked trial Exports, with clean Exports beginning after the first
+  successful $24 payment.
+
+Only upload media you have the right to use. Recordings and related media are
+processed to provide BitterClip. Read the [Privacy
+Policy](https://bitterclip.com/privacy) and [Terms of
+Service](https://bitterclip.com/terms) before sharing sensitive conversations.
 
 ## Practical questions
 
 ### Is the 30-minute session really included?
 
-Yes. Michael is personally offering up to 100 sessions while capacity remains.
-Start the Creator trial and he will contact you to schedule the call.
+Yes, for eligible Founder First 100 customers while campaign capacity remains.
+After your identity is verified and the card-backed Creator trial is accepted,
+you can choose an available time in BitterClip. Starting the trial does not
+reserve a particular time.
 
 ### Do I need to bring a recording?
 
-No. The onboarding call can become the source recording. If you already have a
-podcast appearance, interview, demo, webinar, or customer conversation, bring
-that instead and work from the stronger source.
+Bring a podcast appearance, interview, demo, webinar, customer conversation,
+or other Recording when you have one. If the founder session will become your
+source, Michael will agree the recording and consent details with you before it
+begins.
 
 ### What happens during the session?
 
-You tell the real story behind what you are building. Michael helps find the
-moment worth sharing, makes the first cut in BitterClip, and shows you how to
-keep directing and revising it afterward.
+You and Michael choose the clearest story, review the source, and set the
+direction for the First Cut. Analysis or rendering may continue after the
+30-minute call; the editable result stays in your BitterClip workspace.
+
+### What if none of the available times work?
+
+Check the live preview before starting the trial. You can begin with your own
+Recording and use BitterClip self-serve, or contact Michael before checkout if
+the founder session is the reason you are joining. No previewed time is held
+until you confirm it after enrollment.
 
 ### What does the Creator trial cost?
 
 The seven-day trial requires a card and charges $0 today. It becomes $24/month
-unless you cancel before the trial ends. It accepts one recording up to two
-hours and includes $5 of agent work for analysis, the First Cut, and direction.
+unless you cancel before the trial ends. It accepts one Recording up to two
+hours and includes $5 of agent work for analysis, the First Cut, and continued
+direction. Trial Exports are watermarked; clean Exports begin after the first
+successful $24 payment.
 
 BitterClip is a product of SheetGenius, Inc.

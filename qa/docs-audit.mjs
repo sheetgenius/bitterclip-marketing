@@ -39,7 +39,7 @@ const AUTHORED_ROUTE_TWINS = [
     page: 'app/pages/founder-onboarding.vue',
     markdown: 'public/founder-onboarding.md',
     href: 'https://bitterclip.com/founder-onboarding.md',
-    canonical: 'https://bitterclip.com/founder-onboarding',
+    canonical: 'https://bitterclip.com/founder-onboarding/',
   },
   {
     page: 'app/pages/privacy.vue',

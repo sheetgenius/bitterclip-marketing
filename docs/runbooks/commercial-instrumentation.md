@@ -66,6 +66,21 @@ signup and the product-side checkout bridge. Do not add ad-network identifiers t
 public documentation merely because the implementation can receive them. Keep
 payloads bounded and covered by the applicable public privacy policy.
 
+The generated site cannot see a visitor's query string while it prerenders. A
+small head script therefore captures the first supported acquisition snapshot in
+tab-scoped `sessionStorage` and reapplies it to app signup links before navigation,
+including clicks that happen before Nuxt hydrates. Internal navigation and reloads
+retain that original snapshot for the tab; a fresh tab starts fresh. The script
+may retain an offer only from metadata emitted by a registered marketing page. An
+inbound `offer` query is measurement context, never authority to invent or select
+an offer.
+
+Keep original acquisition, current page placement, and registered offer separate.
+The signup URL carries the former in supported acquisition fields, the page
+placement in `bc_*` fields, and the offer in its own validated field. A CTA that
+explicitly chooses ordinary self-serve enrollment must be able to omit the offer
+without discarding the original acquisition snapshot.
+
 Instrumentation must never block navigation, playback, signup, or checkout. An
 analytics outage is a missing observation, not a customer-facing failure.
 

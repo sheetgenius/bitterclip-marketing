@@ -3,11 +3,22 @@ import { nextTick, watch } from 'vue'
 const APP_ORIGIN = 'https://app.bitterclip.com'
 const EVENT_VALUE_LIMIT = 120
 
-const HOMEPAGE_CLICK_EVENTS = new Set([
+const MARKETING_CLICK_EVENTS = new Set([
   'hero_cta_click',
   'proof_cta_click',
   'pricing_cta_click',
 ])
+
+const CLICK_REFERENCE_PARAMS = [
+  'oppref',
+  'oai_oppref',
+  'gclid',
+  'gbraid',
+  'wbraid',
+  'fbclid',
+  'ttclid',
+  'msclkid',
+]
 
 const HOMEPAGE_VIEW_EVENTS = new Set([
   'pricing_view',
@@ -93,6 +104,12 @@ function normalizedUrl(anchor: HTMLAnchorElement) {
   } catch {
     return null
   }
+}
+
+function analyticsUrl(url: URL) {
+  const safe = new URL(url)
+  for (const name of CLICK_REFERENCE_PARAMS) safe.searchParams.delete(name)
+  return safe.href
 }
 
 function linkText(anchor: HTMLAnchorElement) {
@@ -210,16 +227,18 @@ export default defineNuxtPlugin((nuxtApp) => {
     if (!url) return
     const marketingBase = {
       page_path: route.path,
-      link_url: url.href,
+      link_url: analyticsUrl(url),
       link_text: linkText(anchor),
     }
 
     const explicitEvent = anchor.dataset.bcEvent
-    if (route.path === '/' && explicitEvent && HOMEPAGE_CLICK_EVENTS.has(explicitEvent)) {
+    if (explicitEvent && MARKETING_CLICK_EVENTS.has(explicitEvent)) {
       sendEvent(explicitEvent, {
         page_path: route.path,
         placement: anchor.dataset.bcPlacement || 'unknown',
         plan_intent: anchor.dataset.bcPlan || url.searchParams.get('plan') || 'unknown',
+        offer_id: url.searchParams.get('offer') || 'none',
+        viewport_class: viewportClass(),
       })
     }
 
@@ -227,6 +246,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       sendEvent('signup_click', {
         ...marketingBase,
         plan: url.searchParams.get('plan') || 'unknown',
+        offer_id: url.searchParams.get('offer') || 'none',
         marketing_surface: url.searchParams.get('bc_surface') || 'unknown',
         marketing_stage: url.searchParams.get('bc_stage') || 'default',
       })
@@ -312,13 +332,12 @@ export default defineNuxtPlugin((nuxtApp) => {
     for (const target of targets) homepageViewObserver.observe(target)
   }
 
-  function handleHomepageFaq(event: Event) {
-    if (route.path !== '/') return
+  function handleMarketingFaq(event: Event) {
     const details = event.target
     if (!(details instanceof HTMLDetailsElement) || !details.open || !details.hasAttribute('data-bc-faq')) return
     sendEvent('faq_open', {
       page_path: route.path,
-      placement: details.dataset.bcPlacement || 'homepage_faq',
+      placement: details.dataset.bcPlacement || 'marketing_faq',
       faq_id: details.dataset.bcFaqId || 'unknown',
     })
   }
@@ -375,7 +394,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   document.addEventListener('click', handleMarketingClick, true)
-  document.addEventListener('toggle', handleHomepageFaq, true)
+  document.addEventListener('toggle', handleMarketingFaq, true)
   document.addEventListener('play', handleHomepageProofVideo, true)
   document.addEventListener('timeupdate', handleHomepageProofVideo, true)
   document.addEventListener('ended', handleHomepageProofVideo, true)

@@ -2,12 +2,22 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { iso4Release, iso4ReleaseReady } from '../app/lib/hero-iso4/release'
-import { buildSignupUrl } from '../app/utils/signup-attribution'
+import { buildSignupUrl, FOUNDER_OFFER_ID } from '../app/utils/signup-attribution'
+
+const qaOrigin = process.env.BITTERCLIP_QA_PORT
+  ? `http://127.0.0.1:${process.env.BITTERCLIP_QA_PORT}`
+  : 'http://127.0.0.1:4179'
 
 test.describe('signup URL commercial intent', () => {
   test('defaults acquisition to Creator while preserving attribution', () => {
     const url = new URL(buildSignupUrl({
-      query: { utm_source: 'newsletter', utm_campaign: 'founder_series' },
+      query: {
+        utm_source: 'newsletter',
+        utm_campaign: 'founder_series',
+        utm_id: 'campaign-42',
+        oai_ad_account_id: 'account-7',
+      },
+      offer: FOUNDER_OFFER_ID,
       surface: 'smoke',
       stage: 'hero',
       landingPath: '/from-email',
@@ -16,6 +26,9 @@ test.describe('signup URL commercial intent', () => {
     expect(url.searchParams.get('plan')).toBe('clip')
     expect(url.searchParams.get('utm_source')).toBe('newsletter')
     expect(url.searchParams.get('utm_campaign')).toBe('founder_series')
+    expect(url.searchParams.get('utm_id')).toBe('campaign-42')
+    expect(url.searchParams.get('oai_ad_account_id')).toBe('account-7')
+    expect(url.searchParams.get('offer')).toBe(FOUNDER_OFFER_ID)
     expect(url.searchParams.get('bc_surface')).toBe('smoke')
     expect(url.searchParams.get('bc_stage')).toBe('hero')
     expect(url.searchParams.get('bc_landing_path')).toBe('/from-email')
@@ -44,6 +57,28 @@ test.describe('signup URL commercial intent', () => {
     expect(defaultUrl.searchParams.get('plan')).toBe('clip')
     expect(producerUrl.searchParams.get('plan')).toBe('pro')
   })
+
+  test('accepts an offer only from the page-owned option', () => {
+    const unregistered = new URL(buildSignupUrl({
+      query: { offer: 'forged-offer' },
+      surface: 'homepage',
+    }))
+    const registered = new URL(buildSignupUrl({
+      query: { offer: 'forged-offer' },
+      offer: FOUNDER_OFFER_ID,
+      surface: 'founder_onboarding',
+    }))
+
+    expect(unregistered.searchParams.has('offer')).toBe(false)
+    expect(registered.searchParams.get('offer')).toBe(FOUNDER_OFFER_ID)
+  })
+})
+
+test('declares the founder canonical redirect as HTTPS and query preserving', () => {
+  const nginx = readFileSync(new URL('../nginx.conf', import.meta.url), 'utf8')
+  expect(nginx).toContain('location = /founder-onboarding {')
+  expect(nginx).toContain('return 308 https://bitterclip.com/founder-onboarding/$is_args$args;')
+  expect(nginx).toContain('<https://bitterclip.com/founder-onboarding/>; rel=\\"canonical\\"')
 })
 
 test('keeps the OG source and shipped legacy card aligned with the current Creator trial', () => {
@@ -600,33 +635,161 @@ test('renders the terms of service page', async ({ page }) => {
   await expect(page.getByText('agreement between you and SheetGenius, Inc.')).toBeVisible()
 })
 
-test('founder onboarding matches the personal first-cut offer and preserves acquisition parameters', async ({ page }) => {
-  await page.goto('/founder-onboarding?utm_source=chatgpt&utm_medium=cpc&utm_campaign=founder-100&oppref=test-ref')
+test('founder onboarding carries the registered offer, live preview, metadata, and neutral events', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-06T00:00:00Z'))
+  let previewRequest: URL | null = null
+  await page.route('https://app.bitterclip.com/founder-availability?*', async (route) => {
+    previewRequest = new URL(route.request().url())
+    await route.fulfill({
+      status: 200,
+      headers: {
+        'access-control-allow-origin': qaOrigin,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        available: true,
+        timezone: 'Asia/Hong_Kong',
+        durationMinutes: 30,
+        slots: [
+          { startAt: '2026-09-07T09:00:00+08:00', endAt: '2026-09-07T09:30:00+08:00' },
+          { startAt: '2026-09-07T13:00:00+08:00', endAt: '2026-09-07T13:30:00+08:00' },
+        ],
+      }),
+    })
+  })
+  await page.goto('/founder-onboarding/?utm_source=chatgpt&utm_medium=cpc&utm_campaign=founder-100&utm_id=campaign-42&utm_term=ad-group-3&utm_content=ad-8&oai_ad_account_id=account-7&oppref=test-ref')
 
   await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
-  await expect(page.getByText('Founder-led onboarding · up to 100 sessions')).toBeVisible()
-  await expect(page.getByText(/30-minute recorded conversation about what you.re building/)).toBeVisible()
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://bitterclip.com/founder-onboarding')
+  await expect(page.getByText('Founder First 100 · one included 30-minute session')).toBeVisible()
+  await expect(page.getByText(/Your First Cut stays linked to the source/)).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://bitterclip.com/founder-onboarding/')
   await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
     'href',
     'https://bitterclip.com/founder-onboarding.md',
   )
+  await expect(page.locator('meta[name="bitterclip:offer"]')).toHaveAttribute('content', FOUNDER_OFFER_ID)
+  const jsonLd = await page.locator('script[type="application/ld+json"]').textContent()
+  expect(jsonLd).toContain('SheetGenius, Inc.')
+  expect(jsonLd).toContain('LimitedAvailability')
 
-  const signup = page.getByRole('link', { name: /Make my first founder video/ }).first()
+  await expect(page.locator('[data-bc-availability-state="ready"]')).toBeVisible()
+  await expect(page.getByText('Upcoming times, in your timezone')).toBeVisible()
+  await expect(page.locator('#availability time')).toHaveCount(2)
+  expect(previewRequest).not.toBeNull()
+  const from = previewRequest!.searchParams.get('from')!
+  const to = previewRequest!.searchParams.get('to')!
+  expect((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000).toBeLessThanOrEqual(6)
+
+  const signup = page.getByRole('link', { name: /Start trial \+ get my session/ }).first()
   await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
   await expect(signup).toHaveAttribute('href', /utm_medium=cpc/)
   await expect(signup).toHaveAttribute('href', /utm_campaign=founder-100/)
+  await expect(signup).toHaveAttribute('href', /utm_id=campaign-42/)
+  await expect(signup).toHaveAttribute('href', /oai_ad_account_id=account-7/)
   await expect(signup).toHaveAttribute('href', /oppref=test-ref/)
+  await expect(signup).toHaveAttribute('href', /offer=founder-first-100-v2/)
   await expect(signup).toHaveAttribute('href', /bc_surface=founder_onboarding/)
+
+  await page.evaluate(() => {
+    const anchor = document.querySelector<HTMLAnchorElement>('a[data-bc-placement="founder_onboarding_hero"]')
+    if (!anchor) throw new Error('founder hero CTA missing')
+    anchor.addEventListener('click', (event) => event.preventDefault(), { once: true })
+    anchor.click()
+  })
+  const faq = page.locator('details[data-bc-faq-id="included"] summary')
+  await faq.focus()
+  await page.keyboard.press('Enter')
+
+  await page.waitForFunction(() => {
+    const events = (window as any).__bitterclipAnalyticsEvents || []
+    return events.some((event: any) => event.name === 'hero_cta_click' && event.params.placement === 'founder_onboarding_hero') &&
+      events.some((event: any) => event.name === 'signup_click' && event.params.offer_id === 'founder-first-100-v2') &&
+      events.some((event: any) => event.name === 'faq_open' && event.params.faq_id === 'included')
+  })
+  const founderEvents = await page.evaluate(() =>
+    ((window as any).__bitterclipAnalyticsEvents || []).filter((event: any) =>
+      ['hero_cta_click', 'signup_click', 'faq_open'].includes(event.name),
+    ),
+  )
+  expect(founderEvents.filter((event: any) => event.name === 'hero_cta_click')).toHaveLength(1)
+  expect(founderEvents.filter((event: any) => event.name === 'signup_click')).toHaveLength(1)
+  const signupEvent = founderEvents.find((event: any) => event.name === 'signup_click')
+  expect(signupEvent.params.link_url).not.toContain('oppref')
+  expect(signupEvent.params.link_url).not.toContain('test-ref')
+})
+
+test('founder CTA keeps its handoff before Nuxt hydration', async ({ page }) => {
+  await page.route('**/_nuxt/**', async (route) => {
+    if (route.request().resourceType() === 'script') await route.abort()
+    else await route.continue()
+  })
+  await page.goto('/founder-onboarding/?utm_source=chatgpt&utm_medium=cpc&utm_campaign=founder-100&utm_id=campaign-42&oai_ad_account_id=account-7&oppref=cold-ref', { waitUntil: 'domcontentloaded' })
+
+  const signup = page.getByRole('link', { name: /Start trial \+ get my session/ }).first()
+  await expect(signup).toHaveAttribute('href', /offer=founder-first-100-v2/)
+  await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
+  await expect(signup).toHaveAttribute('href', /utm_id=campaign-42/)
+  await expect(signup).toHaveAttribute('href', /oai_ad_account_id=account-7/)
+  await expect(signup).toHaveAttribute('href', /oppref=cold-ref/)
+})
+
+test('tab-scoped founder acquisition survives internal navigation without accepting a later overwrite', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-06T00:00:00Z'))
+  await page.route('https://app.bitterclip.com/founder-availability?*', (route) => route.fulfill({
+    status: 503,
+    headers: { 'access-control-allow-origin': qaOrigin },
+    body: '',
+  }))
+  await page.goto('/founder-onboarding/?utm_source=chatgpt&utm_campaign=founder-100&utm_id=first-campaign&oppref=first-ref')
+  await expect(page.locator('[data-bc-availability-state="unavailable"]')).toBeVisible()
+  const selfServe = page.getByRole('link', { name: /Start with my own recording/ })
+  await expect(selfServe).not.toHaveAttribute('href', /[?&]offer=/)
+
+  await page.goto('/privacy?utm_source=second-touch&utm_id=second-campaign')
+  const clickedHref = await page.evaluate(() => {
+    const anchor = Array.from(document.querySelectorAll<HTMLAnchorElement>('footer a'))
+      .find((candidate) => candidate.textContent?.includes('Start Creator trial'))
+    if (!anchor) throw new Error('footer signup missing')
+    let hrefAtNavigation = ''
+    anchor.addEventListener('click', (event) => {
+      event.preventDefault()
+      hrefAtNavigation = anchor.href
+    }, { once: true })
+    anchor.click()
+    return hrefAtNavigation
+  })
+  expect(clickedHref).toContain('utm_source=chatgpt')
+  expect(clickedHref).toContain('utm_id=first-campaign')
+  expect(clickedHref).toContain('oppref=first-ref')
+  expect(clickedHref).toContain('offer=founder-first-100-v2')
+  expect(clickedHref).not.toContain('second-campaign')
 })
 
 test('founder onboarding remains usable on a narrow viewport', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/founder-onboarding')
+  await page.clock.setFixedTime(new Date('2026-09-06T00:00:00Z'))
+  await page.setViewportSize({ width: 360, height: 800 })
+  await page.route('https://app.bitterclip.com/founder-availability?*', (route) => route.fulfill({
+    status: 200,
+    headers: {
+      'access-control-allow-origin': qaOrigin,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      available: true,
+      timezone: 'Asia/Hong_Kong',
+      durationMinutes: 30,
+      slots: [
+        { startAt: '2026-09-07T09:00:00+08:00', endAt: '2026-09-07T09:30:00+08:00' },
+      ],
+    }),
+  }))
+  await page.goto('/founder-onboarding/')
 
   await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Make my first founder video/ }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: /Start trial \+ get my session/ }).first()).toBeVisible()
   await expect(page.getByRole('img', { name: /Michael Ruescher/ })).toBeVisible()
+  await page.locator('#availability').scrollIntoViewIfNeeded()
+  await expect(page.locator('#availability time')).toBeVisible()
 
   const hasHorizontalOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
@@ -649,7 +812,7 @@ test('renders the data deletion page and its Markdown alternate', async ({ page 
 test('serves crawlable markdown alternates and discovery files', async ({ request }) => {
   const markdownPages = [
     { path: '/index.md', text: 'Footage in. Episode out.' },
-    { path: '/founder-onboarding.md', text: "Tell me your story. I'll make the first cut." },
+    { path: '/founder-onboarding.md', text: 'Founder First 100 with BitterClip' },
     { path: '/docs.md', text: 'Use it from your AI assistant' },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     {
@@ -693,7 +856,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(sitemap.ok()).toBeTruthy()
   const sitemapText = await sitemap.text()
   expect(sitemapText).toContain('https://bitterclip.com/')
-  expect(sitemapText).toContain('https://bitterclip.com/founder-onboarding')
+  expect(sitemapText).toContain('<loc>https://bitterclip.com/founder-onboarding/</loc>')
   expect(sitemapText).toContain('https://bitterclip.com/docs')
   expect(sitemapText).toContain('https://bitterclip.com/docs/assistants/overview')
   expect(sitemapText).toContain('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
