@@ -8,6 +8,7 @@ const availabilityEndpoint = 'https://app.bitterclip.com/founder-availability'
 const hostTimeZone = 'Asia/Hong_Kong'
 const firstOfferDate = '2026-09-07'
 const lastOfferDate = '2026-11-05'
+const offerEndExclusiveDate = '2026-11-06'
 
 type PreviewState = 'loading' | 'ready' | 'empty' | 'unavailable' | 'closed'
 type FounderSlot = { startAt: string, endAt: string }
@@ -90,7 +91,7 @@ const previewRange = (): { from: string, to: string } | null => {
   const today = isoDateInZone(new Date(), hostTimeZone)
   const from = today < firstOfferDate ? firstOfferDate : today
   if (from > lastOfferDate) return null
-  return { from, to: [addIsoDays(from, 6), lastOfferDate].sort()[0] }
+  return { from, to: [addIsoDays(from, 7), offerEndExclusiveDate].sort()[0] }
 }
 
 const cleanMessage = (value: unknown): string | null => {

@@ -678,7 +678,7 @@ test('founder onboarding carries the registered offer, live preview, metadata, a
   expect(previewRequest).not.toBeNull()
   const from = previewRequest!.searchParams.get('from')!
   const to = previewRequest!.searchParams.get('to')!
-  expect((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000).toBeLessThanOrEqual(6)
+  expect((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000).toBe(7)
 
   const signup = page.getByRole('link', { name: /Start trial \+ get my session/ }).first()
   await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
