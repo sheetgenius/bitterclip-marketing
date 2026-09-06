@@ -38,7 +38,7 @@ const questions = [
   {
     id: 'included',
     question: 'Is the 30-minute session really included?',
-    answer: 'Yes, for eligible Founder First 100 customers while campaign capacity remains. After your identity is verified and the card-backed Creator trial is accepted, you can choose an available time in BitterClip. Starting the trial does not reserve a particular time.',
+    answer: 'Yes, for eligible Founder First 100 customers while campaign capacity remains. After you verify your identity and start the card-required Creator trial, you can choose an available time in BitterClip. Starting the trial does not reserve a particular time.',
   },
   {
     id: 'recording',
@@ -53,12 +53,12 @@ const questions = [
   {
     id: 'availability',
     question: 'What if none of the available times work?',
-    answer: 'Check the live preview before starting the trial. You can begin with your own recording and use BitterClip self-serve, or contact Michael before checkout if the founder session is the reason you are joining. No previewed time is held until you confirm it after enrollment.',
+    answer: 'Check the live preview before starting the trial. You can begin with your own recording and use BitterClip on your own, or contact Michael before checkout if the founder session is the reason you are joining. Previewing a time does not reserve it; you confirm your time in BitterClip after the trial starts.',
   },
   {
     id: 'trial',
     question: 'What does the Creator trial cost?',
-    answer: 'The seven-day trial requires a card and charges $0 today. It becomes $24/month unless you cancel before the trial ends. It accepts one Recording up to two hours and includes $5 of agent work for analysis, the First Cut, and continued direction. Trial Exports are watermarked; clean Exports begin after the first successful $24 payment.',
+    answer: 'The seven-day trial requires a card and charges $0 today. It becomes $24/month unless you cancel before the trial ends. The trial includes one Recording up to two hours and $5 of agent work for analysis, the First Cut, and continued direction. Trial Exports are watermarked; clean Exports begin after the first successful $24 payment.',
   },
 ]
 
@@ -167,7 +167,7 @@ const loadAvailability = async () => {
   const range = previewRange()
   if (!range) {
     previewState.value = 'closed'
-    previewMessage.value = 'Online times for this fixed campaign window ran through November 5, 2026. Contact Michael before starting if the included session is why you are joining.'
+    previewMessage.value = 'Online founder-session times ended on November 5, 2026. Contact Michael before starting if the included session is why you are joining.'
     return
   }
 
@@ -196,13 +196,13 @@ const loadAvailability = async () => {
     previewSlots.value = hasAvailableSlots ? validSlots : []
     const serviceMessage = cleanMessage(payload.message)
     previewMessage.value = hasAvailableSlots
-      ? `${previewSlots.value.length} live ${previewSlots.value.length === 1 ? 'time is' : 'times are'} shown below. ${serviceMessage || 'You choose and confirm one after your trial is accepted; this preview does not hold it.'}`
+      ? `${previewSlots.value.length} live ${previewSlots.value.length === 1 ? 'time is' : 'times are'} shown below. ${serviceMessage || 'After your trial starts, choose and confirm one in BitterClip. Previewing it here does not reserve it.'}`
       : serviceMessage || 'There are no bookable times in this seven-day window. Check again later or contact Michael before starting.'
     previewState.value = hasAvailableSlots ? 'ready' : 'empty'
   } catch {
     if (previewController !== controller) return
     previewState.value = 'unavailable'
-    previewMessage.value = 'We could not verify live times. Try the check again, start with your own recording, or contact Michael before checkout if the session is essential to you.'
+    previewMessage.value = 'We could not check live times. Try again, start with your own recording, or contact Michael before checkout if the session is essential to you.'
   } finally {
     clearTimeout(timeout)
     if (previewController === controller) previewController = null
@@ -271,7 +271,7 @@ useHead({
           offers: {
             '@type': 'Offer',
             availability: 'https://schema.org/LimitedAvailability',
-            description: 'One 30-minute session is included for an eligible Founder First 100 customer after a verified, accepted Creator trial while campaign capacity remains.',
+            description: 'Eligible Founder First 100 customers can book one included 30-minute session after starting the card-required Creator trial, while campaign capacity remains.',
           },
         },
       }),
@@ -312,7 +312,7 @@ useHead({
           </a>
         </div>
         <p class="mt-5 max-w-xl text-sm leading-relaxed text-zinc-400">
-          Eligible Founder First 100 customers while campaign capacity remains · Card required · $0 today · $24/month after seven days unless canceled · starting the trial does not hold a session time
+          Eligible Founder First 100 customers while campaign capacity remains · Card required · $0 today · $24/month after seven days unless canceled · starting the trial does not reserve a session time
         </p>
       </div>
 
@@ -345,7 +345,7 @@ useHead({
           <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-[#f28f84]">Before you start the clock</p>
           <h2 id="availability-title" class="mt-4 font-display text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">See whether the timing works.</h2>
           <p class="mt-5 max-w-xl text-lg leading-relaxed text-zinc-400">
-            The trial begins only after secure checkout accepts it. Preview the next seven days here; no anonymous hold or booking is created.
+            Your seven-day trial starts after you complete checkout. See the next seven days here. Previewing a time doesn&rsquo;t reserve it.
           </p>
           <p class="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
             Online sessions run September 7 through November 5, 2026, while times and campaign capacity remain.
@@ -374,7 +374,7 @@ useHead({
           </div>
 
           <p v-if="previewState === 'ready'" class="mt-3 text-xs leading-relaxed text-zinc-400 sm:text-sm">
-            Times use your device timezone: {{ viewerTimeZoneLabel }}. You confirm the exact time in BitterClip after enrollment.
+            Times use your device timezone: {{ viewerTimeZoneLabel }}. You confirm the exact time in BitterClip after your trial starts.
           </p>
           <div class="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <span v-if="previewState === 'loading'" class="min-h-11 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400">Live check in progress</span>
@@ -436,7 +436,7 @@ useHead({
         <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">What the trial includes</p>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">A real cut, with the terms in view.</h2>
         <p class="mt-6 text-lg leading-relaxed text-zinc-400">
-          Creator accepts one Recording up to two hours and includes $5 of agent work for analysis, the First Cut, and continued direction. Processing or rendering can continue after the founder session.
+          The Creator trial includes one Recording up to two hours and $5 of agent work for analysis, the First Cut, and continued direction. Processing or rendering can continue after the founder session.
         </p>
         <p class="mt-5 text-sm leading-relaxed text-zinc-400">
           Only upload media you have the right to use. Recordings and related media are processed to provide BitterClip; read the <NuxtLink class="rounded text-zinc-200 underline decoration-zinc-600 underline-offset-4 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]" to="/privacy">Privacy Policy</NuxtLink> and <NuxtLink class="rounded text-zinc-200 underline decoration-zinc-600 underline-offset-4 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]" to="/terms">Terms</NuxtLink> before sharing sensitive conversations.
@@ -445,7 +445,7 @@ useHead({
       <div class="rounded-3xl border border-[#f28f84]/20 bg-[#f28f84]/[0.055] p-7 sm:p-9">
         <p class="font-display text-2xl font-semibold text-white">Your working result</p>
         <ul class="mt-6 space-y-4 text-zinc-300">
-          <li class="flex gap-3"><span class="text-[#f28f84]" aria-hidden="true">●</span><span>One included 30-minute founder session for this qualifying campaign offer.</span></li>
+          <li class="flex gap-3"><span class="text-[#f28f84]" aria-hidden="true">●</span><span>One included 30-minute founder session if you qualify and campaign capacity remains.</span></li>
           <li class="flex gap-3"><span class="text-[#f28f84]" aria-hidden="true">●</span><span>A source-grounded editorial point of view and First Cut in BitterClip.</span></li>
           <li class="flex gap-3"><span class="text-[#f28f84]" aria-hidden="true">●</span><span>A watermarked trial Export you can review; clean Exports begin after the first successful payment.</span></li>
           <li class="flex gap-3"><span class="text-[#f28f84]" aria-hidden="true">●</span><span>The editable cut and its history, so you can keep directing it after the session.</span></li>

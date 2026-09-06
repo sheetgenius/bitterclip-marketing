@@ -664,6 +664,7 @@ test('founder onboarding carries the registered offer, live preview, metadata, a
   await expect(page.locator('main > section').first().getByText(/Your source-linked First Cut stays editable/)).toBeVisible()
   await expect(page.getByText(/Eligible Founder First 100 customers while campaign capacity remains/).first()).toBeVisible()
   await expect(page.getByText(/Online sessions run September 7 through November 5, 2026/)).toBeVisible()
+  await expect(page.getByText('Previewing a time doesn’t reserve it.')).toBeVisible()
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://bitterclip.com/founder-onboarding/')
   await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
     'href',

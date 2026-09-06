@@ -10,7 +10,7 @@ Michael Ruescher, the founder of BitterClip, is offering one included
 30-minute founder session to eligible Founder First 100 customers while the
 campaign has capacity.
 
-Start the card-backed Creator trial, then choose an available time in
+Start the card-required Creator trial, then choose an available time in
 BitterClip. You and Michael will choose the clearest story, review the source,
 and set the direction together. The source-linked First Cut remains editable
 after the call; analysis or rendering may continue after the 30-minute session.
@@ -23,17 +23,17 @@ time.
 
 ## Check the timing first
 
-The HTML page shows a live preview of the next seven days when verified
-availability is available. A preview does not hold a time. You choose and
-confirm one after your identity is verified and the trial is accepted.
+The HTML page shows open times for the next seven days when they can be
+confirmed. Previewing a time doesn't reserve it. After you verify your identity
+and start the card-required Creator trial, you can choose and confirm one.
 
-The fixed online scheduling window is September 7 through November 5, 2026,
-while times and campaign capacity remain. If the session is the reason you are
+Online sessions run September 7 through November 5, 2026, while times and
+campaign capacity remain. If the session is the reason you are
 joining and no suitable time appears, contact
 [hello@bitterclip.com](mailto:hello@bitterclip.com?subject=Founder%20session%20availability)
 before starting the trial. You can also
 [start with your own Recording](https://app.bitterclip.com/sign_up?plan=clip&utm_source=bitterclip.com&utm_medium=owned&utm_campaign=founder_onboarding&utm_content=markdown_self_serve&bc_surface=founder_onboarding&bc_stage=self_serve&bc_landing_path=%2Ffounder-onboarding%2F&from=founder_onboarding_self_serve)
-without the founder-session offer.
+without the included founder session.
 
 ## One source. One working edit.
 
@@ -51,7 +51,8 @@ without the founder-session offer.
 
 - one Recording up to two hours;
 - $5 of agent work for analysis, the First Cut, and continued direction;
-- one included 30-minute founder session for this qualifying campaign offer;
+- one included 30-minute founder session if you qualify and campaign capacity
+  remains;
 - a source-grounded, editable First Cut; and
 - watermarked trial Exports, with clean Exports beginning after the first
   successful $24 payment.
@@ -66,9 +67,9 @@ Service](https://bitterclip.com/terms) before sharing sensitive conversations.
 ### Is the 30-minute session really included?
 
 Yes, for eligible Founder First 100 customers while campaign capacity remains.
-After your identity is verified and the card-backed Creator trial is accepted,
-you can choose an available time in BitterClip. Starting the trial does not
-reserve a particular time.
+After you verify your identity and start the card-required Creator trial, you
+can choose an available time in BitterClip. Starting the trial does not reserve
+a particular time.
 
 ### Do I need to bring a recording?
 
@@ -86,15 +87,15 @@ direction for the First Cut. Analysis or rendering may continue after the
 ### What if none of the available times work?
 
 Check the live preview before starting the trial. You can begin with your own
-Recording and use BitterClip self-serve, or contact Michael before checkout if
-the founder session is the reason you are joining. No previewed time is held
-until you confirm it after enrollment.
+Recording and use BitterClip on your own, or contact Michael before checkout if
+the founder session is the reason you are joining. Previewing a time does not
+reserve it; you confirm your time in BitterClip after the trial starts.
 
 ### What does the Creator trial cost?
 
 The seven-day trial requires a card and charges $0 today. It becomes $24/month
-unless you cancel before the trial ends. It accepts one Recording up to two
-hours and includes $5 of agent work for analysis, the First Cut, and continued
+unless you cancel before the trial ends. The trial includes one Recording up to
+two hours and $5 of agent work for analysis, the First Cut, and continued
 direction. Trial Exports are watermarked; clean Exports begin after the first
 successful $24 payment.
 
