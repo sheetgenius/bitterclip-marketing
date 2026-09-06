@@ -661,7 +661,9 @@ test('founder onboarding carries the registered offer, live preview, metadata, a
 
   await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
   await expect(page.getByText('Founder First 100 · one included 30-minute session')).toBeVisible()
-  await expect(page.getByText(/Your First Cut stays linked to the source/)).toBeVisible()
+  await expect(page.locator('main > section').first().getByText(/Your source-linked First Cut stays editable/)).toBeVisible()
+  await expect(page.getByText(/Eligible Founder First 100 customers while campaign capacity remains/).first()).toBeVisible()
+  await expect(page.getByText(/Online sessions run September 7 through November 5, 2026/)).toBeVisible()
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://bitterclip.com/founder-onboarding/')
   await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
     'href',
@@ -680,7 +682,7 @@ test('founder onboarding carries the registered offer, live preview, metadata, a
   const to = previewRequest!.searchParams.get('to')!
   expect((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000).toBe(7)
 
-  const signup = page.getByRole('link', { name: /Start trial \+ get my session/ }).first()
+  const signup = page.getByRole('link', { name: /Start trial, then book/ }).first()
   await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
   await expect(signup).toHaveAttribute('href', /utm_medium=cpc/)
   await expect(signup).toHaveAttribute('href', /utm_campaign=founder-100/)
@@ -725,12 +727,77 @@ test('founder CTA keeps its handoff before Nuxt hydration', async ({ page }) => 
   })
   await page.goto('/founder-onboarding/?utm_source=chatgpt&utm_medium=cpc&utm_campaign=founder-100&utm_id=campaign-42&oai_ad_account_id=account-7&oppref=cold-ref', { waitUntil: 'domcontentloaded' })
 
-  const signup = page.getByRole('link', { name: /Start trial \+ get my session/ }).first()
+  const signup = page.getByRole('link', { name: /Start trial, then book/ }).first()
   await expect(signup).toHaveAttribute('href', /offer=founder-first-100-v2/)
   await expect(signup).toHaveAttribute('href', /utm_source=chatgpt/)
   await expect(signup).toHaveAttribute('href', /utm_id=campaign-42/)
   await expect(signup).toHaveAttribute('href', /oai_ad_account_id=account-7/)
   await expect(signup).toHaveAttribute('href', /oppref=cold-ref/)
+  const availability = page.locator('[data-bc-availability-state="loading"]')
+  await expect(availability.getByText('Live check in progress')).toBeVisible()
+  await expect(availability.getByRole('link', { name: /Start with my own recording/ })).toHaveCount(0)
+})
+
+test('founder availability avoids a loading-state exit, filters stale slots, and retries by keyboard', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-06T00:00:00Z'))
+  let attempt = 0
+  let releaseFirstResponse: (() => void) | undefined
+  const firstResponse = new Promise<void>((resolve) => {
+    releaseFirstResponse = resolve
+  })
+  await page.route('https://app.bitterclip.com/founder-availability?*', async (route) => {
+    attempt += 1
+    if (attempt === 1) {
+      await firstResponse
+      await route.fulfill({
+        status: 503,
+        headers: { 'access-control-allow-origin': qaOrigin },
+        body: '',
+      })
+      return
+    }
+    await route.fulfill({
+      status: 200,
+      headers: {
+        'access-control-allow-origin': qaOrigin,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        available: true,
+        timezone: 'Asia/Hong_Kong',
+        durationMinutes: 30,
+        slots: [
+          { startAt: '2026-09-06T09:00:00+08:00', endAt: '2026-09-06T09:30:00+08:00' },
+          { startAt: '2026-09-07T09:00:00+08:00', endAt: '2026-09-07T09:30:00+08:00' },
+          { startAt: '2026-09-14T09:00:00+08:00', endAt: '2026-09-14T09:30:00+08:00' },
+          { startAt: '2026-09-08T09:00:00+08:00', endAt: '2026-09-08T10:00:00+08:00' },
+        ],
+      }),
+    })
+  })
+  await page.goto('/founder-onboarding/')
+
+  const card = page.locator('[data-bc-availability-state]')
+  await expect(card).toHaveAttribute('data-bc-availability-state', 'loading')
+  await expect(card).toHaveAttribute('aria-busy', 'true')
+  await expect(card.getByRole('link', { name: /Start with my own recording/ })).toHaveCount(0)
+  releaseFirstResponse?.()
+
+  await expect(card).toHaveAttribute('data-bc-availability-state', 'unavailable')
+  const retry = card.getByRole('button', { name: 'Try live times again' })
+  await retry.focus()
+  await expect(retry).toBeFocused()
+  await page.keyboard.press('Enter')
+
+  await expect(card).toHaveAttribute('data-bc-availability-state', 'ready')
+  await expect(card).toHaveAttribute('aria-busy', 'false')
+  await expect(card.locator('time')).toHaveCount(1)
+  await expect(card.getByRole('status')).toContainText('1 live time is shown below')
+  await expect(card.getByRole('status')).toHaveAttribute('aria-label', /1 live time is shown below/)
+  await expect(card.getByRole('status').locator('time')).toHaveCount(0)
+  await expect(card.getByText(/Times use your device timezone:/)).toBeVisible()
+  await expect(card.getByText(/Asia\/Hong_Kong/)).toHaveCount(0)
+  await expect(card.getByRole('link', { name: /Start trial, then book/ })).toHaveAttribute('href', /offer=founder-first-100-v2/)
 })
 
 test('tab-scoped founder acquisition survives internal navigation without accepting a later overwrite', async ({ page }) => {
@@ -786,7 +853,7 @@ test('founder onboarding remains usable on a narrow viewport', async ({ page }) 
   await page.goto('/founder-onboarding/')
 
   await expect(page.getByRole('heading', { level: 1, name: /Tell me your story/ })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Start trial \+ get my session/ }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: /Start trial, then book/ }).first()).toBeVisible()
   await expect(page.getByRole('img', { name: /Michael Ruescher/ })).toBeVisible()
   await page.locator('#availability').scrollIntoViewIfNeeded()
   await expect(page.locator('#availability time')).toBeVisible()

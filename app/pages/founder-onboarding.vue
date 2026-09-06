@@ -14,7 +14,7 @@ type PreviewState = 'loading' | 'ready' | 'empty' | 'unavailable' | 'closed'
 type FounderSlot = { startAt: string, endAt: string }
 
 const previewState = ref<PreviewState>('loading')
-const previewMessage = ref('Live times will appear here when the scheduling service responds.')
+const previewMessage = ref('Checking the live schedule now. If it does not load, contact Michael before starting.')
 const previewSlots = ref<FounderSlot[]>([])
 const viewerTimeZone = ref(hostTimeZone)
 let previewController: AbortController | null = null
@@ -100,7 +100,7 @@ const cleanMessage = (value: unknown): string | null => {
   return clean ? clean.slice(0, 180) : null
 }
 
-const parseSlots = (value: unknown): FounderSlot[] => {
+const parseSlots = (value: unknown, range: { from: string, to: string }): FounderSlot[] => {
   if (!Array.isArray(value)) return []
   const seen = new Set<string>()
   const slots: FounderSlot[] = []
@@ -112,7 +112,9 @@ const parseSlots = (value: unknown): FounderSlot[] => {
     const start = Date.parse(startAt)
     const end = Date.parse(endAt)
     if (!Number.isFinite(start) || !Number.isFinite(end) || end - start !== 30 * 60 * 1000) continue
-    const key = `${startAt}/${endAt}`
+    const startDate = isoDateInZone(new Date(start), hostTimeZone)
+    if (start <= Date.now() || startDate < range.from || startDate >= range.to) continue
+    const key = `${start}/${end}`
     if (seen.has(key)) continue
     seen.add(key)
     slots.push({ startAt, endAt })
@@ -137,7 +139,31 @@ const formatSlot = (slot: FounderSlot): string => {
     : `${formatter.format(start)} – ${formatter.format(end)}`
 }
 
+const viewerTimeZoneLabel = computed(() => {
+  try {
+    const reference = previewSlots.value[0]?.startAt
+      ? new Date(previewSlots.value[0].startAt)
+      : new Date()
+    const name = new Intl.DateTimeFormat(undefined, {
+      timeZone: viewerTimeZone.value,
+      timeZoneName: 'long',
+    }).formatToParts(reference).find((part) => part.type === 'timeZoneName')?.value
+    return name || viewerTimeZone.value.replaceAll('_', ' ')
+  } catch {
+    return viewerTimeZone.value.replaceAll('_', ' ')
+  }
+})
+
 const loadAvailability = async () => {
+  const previousController = previewController
+  previewController = null
+  previousController?.abort()
+  if (previewTimeout) clearTimeout(previewTimeout)
+  previewTimeout = null
+  previewSlots.value = []
+  previewState.value = 'loading'
+  previewMessage.value = 'Checking the live schedule now. If it does not load, contact Michael before starting.'
+
   const range = previewRange()
   if (!range) {
     previewState.value = 'closed'
@@ -145,8 +171,10 @@ const loadAvailability = async () => {
     return
   }
 
-  previewController = new AbortController()
-  previewTimeout = setTimeout(() => previewController?.abort(), 6000)
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 6000)
+  previewController = controller
+  previewTimeout = timeout
   try {
     const url = new URL(availabilityEndpoint)
     url.searchParams.set('from', range.from)
@@ -154,7 +182,7 @@ const loadAvailability = async () => {
     const response = await fetch(url, {
       credentials: 'omit',
       headers: { Accept: 'application/json' },
-      signal: previewController.signal,
+      signal: controller.signal,
     })
     if (!response.ok) throw new Error(`availability response ${response.status}`)
     const payload = await response.json() as Record<string, unknown>
@@ -162,20 +190,23 @@ const loadAvailability = async () => {
       throw new Error('availability contract mismatch')
     }
 
-    previewSlots.value = parseSlots(payload.slots).slice(0, 6)
-    const hasAvailableSlots = payload.available && previewSlots.value.length > 0
-    previewMessage.value = cleanMessage(payload.message) || (
-      hasAvailableSlots
-        ? 'These are live previews. You choose and confirm one after your trial is accepted.'
-        : 'There are no bookable times in this seven-day window. Check again later or contact Michael before starting.'
-    )
+    if (previewController !== controller) return
+    const validSlots = parseSlots(payload.slots, range).slice(0, 6)
+    const hasAvailableSlots = payload.available && validSlots.length > 0
+    previewSlots.value = hasAvailableSlots ? validSlots : []
+    const serviceMessage = cleanMessage(payload.message)
+    previewMessage.value = hasAvailableSlots
+      ? `${previewSlots.value.length} live ${previewSlots.value.length === 1 ? 'time is' : 'times are'} shown below. ${serviceMessage || 'You choose and confirm one after your trial is accepted; this preview does not hold it.'}`
+      : serviceMessage || 'There are no bookable times in this seven-day window. Check again later or contact Michael before starting.'
     previewState.value = hasAvailableSlots ? 'ready' : 'empty'
   } catch {
+    if (previewController !== controller) return
     previewState.value = 'unavailable'
-    previewMessage.value = 'We could not verify live times. You can start with your own recording, or contact Michael before checkout if the session is essential to you.'
+    previewMessage.value = 'We could not verify live times. Try the check again, start with your own recording, or contact Michael before checkout if the session is essential to you.'
   } finally {
-    if (previewTimeout) clearTimeout(previewTimeout)
-    previewTimeout = null
+    clearTimeout(timeout)
+    if (previewController === controller) previewController = null
+    if (previewTimeout === timeout) previewTimeout = null
   }
 }
 
@@ -186,7 +217,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (previewTimeout) clearTimeout(previewTimeout)
-  previewController?.abort()
+  const controller = previewController
+  previewController = null
+  controller?.abort()
 })
 
 const pageDescription = 'Start a qualifying Creator trial, then book an included 30-minute founder session with Michael Ruescher and direct a source-linked First Cut in BitterClip.'
@@ -195,13 +228,13 @@ useSeoMeta({
   title: 'Founder First 100 — direct your first cut with BitterClip',
   description: pageDescription,
   ogTitle: 'Tell me your story. I’ll make the first cut.',
-  ogDescription: 'An included 30-minute founder session and a source-linked First Cut you can keep directing in BitterClip.',
+  ogDescription: 'Start a qualifying Creator trial, then book an included 30-minute founder session and direct a source-linked First Cut.',
   ogUrl: canonicalUrl,
   ogType: 'website',
   ogImage: 'https://bitterclip.com/images/bitterclip-og.png',
   twitterCard: 'summary_large_image',
   twitterTitle: 'Tell me your story. I’ll make the first cut.',
-  twitterDescription: 'An included 30-minute founder session and a source-linked First Cut you can keep directing in BitterClip.',
+  twitterDescription: 'Start a qualifying Creator trial, then book an included 30-minute founder session and direct a source-linked First Cut.',
   twitterImage: 'https://bitterclip.com/images/bitterclip-og.png',
 })
 
@@ -264,7 +297,7 @@ useHead({
           <span class="mt-2 block bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">I&rsquo;ll make the first cut.</span>
         </h1>
         <p class="mt-8 max-w-2xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
-          I&rsquo;m Michael, the founder of BitterClip. Start the Creator trial, then choose an available time to work with me on the story and direction. Your First Cut stays linked to the source, editable, and ready for more direction after our call.
+          I&rsquo;m Michael, the founder of BitterClip. Start the Creator trial, then choose an available time. We&rsquo;ll choose the story and set the direction together. Your source-linked First Cut stays editable in BitterClip; analysis or rendering may finish after our 30-minute call.
         </p>
         <div class="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           <a
@@ -273,13 +306,13 @@ useHead({
             data-bc-placement="founder_onboarding_hero"
             data-bc-plan="creator"
             class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.42)] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >Start trial + get my session <span aria-hidden="true">→</span></a>
+          >Start trial, then book <span aria-hidden="true">→</span></a>
           <a class="rounded-full px-1 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-300 underline decoration-zinc-600 underline-offset-4 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]" href="#availability">
             Check upcoming times
           </a>
         </div>
-        <p class="mt-5 max-w-xl font-mono text-[0.68rem] leading-relaxed text-zinc-500">
-          Card required · $0 today · $24/month after seven days unless canceled · starting the trial does not hold a session time
+        <p class="mt-5 max-w-xl text-sm leading-relaxed text-zinc-400">
+          Eligible Founder First 100 customers while campaign capacity remains · Card required · $0 today · $24/month after seven days unless canceled · starting the trial does not hold a session time
         </p>
       </div>
 
@@ -314,19 +347,22 @@ useHead({
           <p class="mt-5 max-w-xl text-lg leading-relaxed text-zinc-400">
             The trial begins only after secure checkout accepts it. Preview the next seven days here; no anonymous hold or booking is created.
           </p>
+          <p class="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
+            Online sessions run September 7 through November 5, 2026, while times and campaign capacity remain.
+          </p>
         </div>
 
-        <div class="rounded-3xl border border-white/[0.09] bg-black/25 p-6 shadow-xl shadow-black/20 sm:p-8" :data-bc-availability-state="previewState">
+        <div class="rounded-3xl border border-white/[0.09] bg-black/25 p-6 shadow-xl shadow-black/20 sm:p-8" :data-bc-availability-state="previewState" :aria-busy="previewState === 'loading'">
           <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p class="font-mono text-[0.66rem] uppercase tracking-[0.18em] text-zinc-500">30-minute founder session</p>
+              <p class="font-mono text-xs uppercase tracking-[0.18em] text-zinc-400">30-minute founder session</p>
               <h3 class="mt-2 font-display text-2xl font-semibold text-white">{{ previewHeading }}</h3>
             </div>
-            <span v-if="previewState === 'ready'" class="w-fit rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-3 py-1.5 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-emerald-200">Live preview</span>
+            <span v-if="previewState === 'ready'" class="w-fit rounded-full border border-emerald-400/20 bg-emerald-400/[0.08] px-3 py-1.5 font-mono text-xs uppercase tracking-[0.12em] text-emerald-200">Live preview</span>
           </div>
 
-          <div role="status" aria-live="polite" aria-atomic="true">
-            <ul v-if="previewState === 'ready'" class="mt-6 grid gap-3 sm:grid-cols-2">
+          <div>
+            <ul v-if="previewState === 'ready'" :aria-label="`Upcoming founder session times in ${viewerTimeZoneLabel}`" class="mt-6 grid gap-3 sm:grid-cols-2">
               <li v-for="slot in previewSlots" :key="slot.startAt" class="rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 font-mono text-xs leading-relaxed text-zinc-200">
                 <time :datetime="slot.startAt">{{ formatSlot(slot) }}</time>
               </li>
@@ -334,23 +370,30 @@ useHead({
             <div v-else-if="previewState === 'loading'" class="mt-6 grid gap-3 sm:grid-cols-2" aria-hidden="true">
               <div v-for="index in 4" :key="index" class="h-12 animate-pulse rounded-xl bg-white/[0.045]" />
             </div>
-            <p class="mt-5 text-sm leading-relaxed text-zinc-400">{{ previewMessage }}</p>
+            <p class="mt-5 text-sm leading-relaxed text-zinc-400" role="status" aria-live="polite" aria-atomic="true" :aria-label="previewMessage">{{ previewMessage }}</p>
           </div>
 
-          <p v-if="previewState === 'ready'" class="mt-3 font-mono text-[0.66rem] leading-relaxed text-zinc-500">
-            Shown in {{ viewerTimeZone }}. You confirm the exact time in BitterClip after enrollment.
+          <p v-if="previewState === 'ready'" class="mt-3 text-xs leading-relaxed text-zinc-400 sm:text-sm">
+            Times use your device timezone: {{ viewerTimeZoneLabel }}. You confirm the exact time in BitterClip after enrollment.
           </p>
-          <div class="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <div class="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <span v-if="previewState === 'loading'" class="min-h-11 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-zinc-400">Live check in progress</span>
             <a
-              v-if="previewState === 'ready'"
+              v-else-if="previewState === 'ready'"
               :href="availabilitySignupUrl"
               data-bc-event="hero_cta_click"
               data-bc-placement="founder_onboarding_availability"
               data-bc-plan="creator"
               class="inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-6 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
-            >Start trial + choose later <span class="ml-2" aria-hidden="true">→</span></a>
+            >Start trial, then book <span class="ml-2" aria-hidden="true">→</span></a>
+            <button
+              v-else-if="previewState === 'unavailable'"
+              type="button"
+              class="inline-flex min-h-11 items-center justify-center rounded-full border border-[#f28f84]/60 px-6 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-[0.12em] text-[#ffd0c7] transition hover:border-[#f28f84] hover:bg-[#f28f84]/[0.07] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              @click="loadAvailability"
+            >Try live times again</button>
             <a
-              v-else
+              v-if="previewState === 'empty' || previewState === 'unavailable' || previewState === 'closed'"
               :href="selfServeSignupUrl"
               data-bc-offer-mode="none"
               data-bc-event="hero_cta_click"
@@ -365,7 +408,7 @@ useHead({
     </section>
 
     <section aria-labelledby="how-it-works" class="mx-auto max-w-6xl px-6 py-20 sm:px-8 sm:py-24">
-      <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">One source. One working edit.</p>
+      <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">One source. One working edit.</p>
       <h2 id="how-it-works" class="mt-4 max-w-3xl font-display text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">
         Start with the strongest recording you have.
       </h2>
@@ -390,13 +433,13 @@ useHead({
 
     <section class="mx-auto grid max-w-6xl gap-12 px-6 pb-20 sm:px-8 sm:pb-24 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-20">
       <div>
-        <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-500">What the trial includes</p>
+        <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-zinc-400">What the trial includes</p>
         <h2 class="mt-4 font-display text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">A real cut, with the terms in view.</h2>
         <p class="mt-6 text-lg leading-relaxed text-zinc-400">
           Creator accepts one Recording up to two hours and includes $5 of agent work for analysis, the First Cut, and continued direction. Processing or rendering can continue after the founder session.
         </p>
-        <p class="mt-5 text-sm leading-relaxed text-zinc-500">
-          Only upload media you have the right to use. Recordings and related media are processed to provide BitterClip; read the <NuxtLink class="text-zinc-300 underline decoration-zinc-700 underline-offset-4 hover:text-white" to="/privacy">Privacy Policy</NuxtLink> and <NuxtLink class="text-zinc-300 underline decoration-zinc-700 underline-offset-4 hover:text-white" to="/terms">Terms</NuxtLink> before sharing sensitive conversations.
+        <p class="mt-5 text-sm leading-relaxed text-zinc-400">
+          Only upload media you have the right to use. Recordings and related media are processed to provide BitterClip; read the <NuxtLink class="rounded text-zinc-200 underline decoration-zinc-600 underline-offset-4 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]" to="/privacy">Privacy Policy</NuxtLink> and <NuxtLink class="rounded text-zinc-200 underline decoration-zinc-600 underline-offset-4 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]" to="/terms">Terms</NuxtLink> before sharing sensitive conversations.
         </p>
       </div>
       <div class="rounded-3xl border border-[#f28f84]/20 bg-[#f28f84]/[0.055] p-7 sm:p-9">
@@ -434,15 +477,15 @@ useHead({
       <div class="rounded-[2rem] border border-[#f28f84]/25 bg-[radial-gradient(circle_at_top_right,rgba(242,143,132,0.16),transparent_45%),rgba(255,255,255,0.025)] p-8 sm:p-12">
         <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-[#f28f84]">Founder First 100</p>
         <h2 class="mt-4 max-w-3xl font-display text-3xl font-bold tracking-[-0.035em] text-white sm:text-5xl">Bring the company you can&rsquo;t stop talking about.</h2>
-        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">We&rsquo;ll turn that energy into a source-linked First Cut—then the edit stays in your hands.</p>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">We&rsquo;ll set its direction together. Your source-linked First Cut stays editable in BitterClip, even when analysis or rendering continues after the call.</p>
         <a
           :href="finalSignupUrl"
           data-bc-event="hero_cta_click"
           data-bc-placement="founder_onboarding_final"
           data-bc-plan="creator"
           class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-        >Start trial + get my session <span aria-hidden="true">→</span></a>
-        <p class="mt-4 max-w-3xl font-mono text-[0.68rem] leading-relaxed text-zinc-500">Up to 100 sessions while campaign capacity remains · Card required · $0 today · $24/month after seven days unless canceled · trial Exports are watermarked</p>
+        >Start trial, then book <span aria-hidden="true">→</span></a>
+        <p class="mt-4 max-w-3xl text-sm leading-relaxed text-zinc-400">Up to 100 sessions while campaign capacity remains · Card required · $0 today · $24/month after seven days unless canceled · trial Exports are watermarked</p>
       </div>
     </section>
   </main>

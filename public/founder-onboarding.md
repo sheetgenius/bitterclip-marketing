@@ -11,12 +11,11 @@ Michael Ruescher, the founder of BitterClip, is offering one included
 campaign has capacity.
 
 Start the card-backed Creator trial, then choose an available time in
-BitterClip. Michael will help find the clearest story, review the source, and
-set the direction for a First Cut that stays linked to the full Recording and
-remains editable after the call. Analysis or rendering may continue after the
-30-minute session.
+BitterClip. You and Michael will choose the clearest story, review the source,
+and set the direction together. The source-linked First Cut remains editable
+after the call; analysis or rendering may continue after the 30-minute session.
 
-[Start the Creator trial and get the founder session](https://app.bitterclip.com/sign_up?plan=clip&offer=founder-first-100-v2&utm_source=bitterclip.com&utm_medium=owned&utm_campaign=founder_onboarding&utm_content=markdown&bc_surface=founder_onboarding&bc_stage=markdown&bc_landing_path=%2Ffounder-onboarding%2F&from=founder_onboarding_markdown)
+[Start the Creator trial, then choose an available time](https://app.bitterclip.com/sign_up?plan=clip&offer=founder-first-100-v2&utm_source=bitterclip.com&utm_medium=owned&utm_campaign=founder_onboarding&utm_content=markdown&bc_surface=founder_onboarding&bc_stage=markdown&bc_landing_path=%2Ffounder-onboarding%2F&from=founder_onboarding_markdown)
 
 Card required. $0 today. Creator becomes $24/month after seven days unless
 canceled before the trial ends. Starting the trial does not reserve a session
