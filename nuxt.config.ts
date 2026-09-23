@@ -46,7 +46,8 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'static',
-    prerender: { routes: ['/docs/assistants/tool-reference'] },
+    // Keep prerender memory bounded on the shared Grid build host.
+    prerender: { routes: ['/docs/assistants/tool-reference'], concurrency: 1 },
     // Emit immutable gzip/brotli sidecars for the production nginx/CDN path.
     // Lighthouse against an uncompressed toy server materially understates
     // the actual static delivery contract.
