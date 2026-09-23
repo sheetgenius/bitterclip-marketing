@@ -21,9 +21,10 @@ you keep directing it.
 
 Start my 7-day trial: https://app.bitterclip.com/sign_up?plan=clip
 
-Card required. $0 today. Creator becomes $24/month after seven days. The trial
-includes $5 of agent work for whole-recording analysis, the First Cut, and the
-directions you give from there.
+Card required. $1 today for your first seven days, then Creator is $24/month
+unless you cancel before those seven days end. The trial includes $5 of agent
+work for whole-recording analysis, the First Cut, and the directions you give
+from there.
 
 ## Hours of tape. One cut.
 
@@ -70,8 +71,10 @@ Try one real recording:
 
 - seven days;
 - card required;
-- $0 charged today;
-- then $24/month unless canceled before the trial ends;
+- $1 charged today for the first seven days, a separate introductory payment
+  rather than a credit toward the monthly price;
+- then $24/month starting when those seven days end, unless canceled before
+  then;
 - one recording up to two hours;
 - $5 of agent work for whole-recording analysis, the First Cut, and direction;
 - keep asking, revising, trying alternatives, and reverting while balance
@@ -81,7 +84,7 @@ Try one real recording:
 - top-ups never auto-activate paid Creator; early activation requires a
   separate explicit $24 authorization;
 - watermarked exports during the trial; and
-- clean exports after the first paid charge.
+- clean exports after the first $24 monthly payment.
 
 There is no revision counter or trial export counter. Agent work is the economic
 boundary. If the balance reaches zero, playback, manual editing, source custody,
@@ -100,17 +103,19 @@ Purchased agent work persists if the plan later lapses. Existing recordings,
 edits, and completed work remain in the Studio after cancellation.
 
 Once the payment method is accepted and the trial starts, Billing shows your
-exact cancel-before time and scheduled first charge.
+exact cancel-before time and when the $24 monthly charge is scheduled to start.
 
 ## Common questions
 
 ### What happens after I sign up?
 
-Choose Creator and add a card. Checkout shows $0 due today and the scheduled $24
-monthly price. Once the payment method is accepted and the trial starts,
-Billing shows your exact cancel-before time. Bring one
-recording; the trial includes $5 of agent work for the whole-recording analysis,
-First Cut, and the directions and alternatives you try during those seven days.
+Choose Creator and add a card. Checkout shows $1 due today for your first seven
+days and the $24 monthly price that starts when those seven days end. The $1 is
+a separate introductory payment, not a credit toward the monthly price. Once
+the payment method is accepted and the trial starts, Billing shows your exact
+cancel-before time. Bring one recording; the trial includes $5 of agent work for
+the whole-recording analysis, First Cut, and the directions and alternatives you
+try during those seven days.
 
 ### Why is this different from an AI clipper?
 
@@ -137,8 +142,9 @@ fresh final confirmation; connecting a channel never makes it automatic.
 ### What happens if I cancel?
 
 Once the payment method is accepted and the trial starts, Billing shows your
-exact cancel-before time. Cancel before that time and
-pay $0. After a paid period begins, cancellation stops the next renewal. Sources,
+exact cancel-before time. Cancel before the seven days end and the $24 monthly
+charge never starts. Cancelling stops the monthly charge; it does not refund the
+$1. After a paid period begins, cancellation stops the next renewal. Sources,
 edits, finished work, and purchased agent work stay in the Studio; new agent work
 waits until a trial or paid plan is active again.
 

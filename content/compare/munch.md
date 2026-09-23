@@ -83,10 +83,10 @@ rows:
     edge: competitor
   - axis: Your first month
     bitterclip:
-      lead: "Seven days to prove the fit."
-      detail: "Card required; Creator is $0 today, then $24/month unless canceled before the trial ends."
+      lead: "Seven days for $1."
+      detail: "Card required; Creator is $1 today, then $24/month unless canceled before the seven days end."
     competitor:
-      lead: "The trial bills you."
+      lead: "Converts to $48/month."
       detail: "No free plan; the 7-day trial converts automatically, then Essential is $48/month."
     edge: bitterclip
 chooseUs:
@@ -102,7 +102,7 @@ chooseThem:
   - Brand kits matter to you — logo and CTA overlays with platform safe zones, plus intro and outro videos, with no cap on how many kits you build.
   - Clips are the side dish. What you actually want is a posting cadence you barely have to touch.
 gotchas:
-  - title: The trial charges you unless you act
+  - title: The trial becomes $48/month unless you cancel
     body: There is no free plan. The 7-day trial turns into a paid subscription on its own at the end — Munch's help center says that if you do nothing, "your payment method will be charged." Cancel before the trial ends to avoid the charge.
     sourceLabel: "Munch Studio help: trial and billing"
     sourceUrl: https://help.munchstudio.com/en/articles/13114429-free-trial-demo-billing-during-trial
@@ -124,13 +124,13 @@ faq:
   - q: Is Munch Studio worth it?
     a: "Worth it if you want the whole suite: posts written from your website and materials, scheduled and auto-published across five platforms, with analytics — starting at $48/month. Not worth it for the clipping alone: repurposing is a metered sub-feature, editing a clip stops at extending, cropping, and cutting silence, and there is no free plan to find out with."
   - q: What is the best Munch alternative for clipping?
-    a: "BitterClip, if the clips were the point. That is the whole product: recordings in, a finished full cut and vertical clips out, edited by selecting words in the transcript or by asking in ChatGPT or Claude. Creator's card-required seven-day trial lets you bring one session of up to two hours through that workflow at $0 today before the scheduled $24 first charge."
+    a: "BitterClip, if the clips were the point. That is the whole product: recordings in, a finished full cut and vertical clips out, edited by selecting words in the transcript or by asking in ChatGPT or Claude. Creator's card-required seven-day trial lets you bring one session of up to two hours through that workflow for $1 today; Creator then becomes $24/month unless you cancel before the seven days end."
   - q: Can I edit Munch's output?
     a: "Yes, within fixed bounds: extend a clip by up to 30 seconds at either end, split and reframe segments with Manual Crop, and auto-remove silences. Past that the documented path is Re-Munch, which generates a new batch and requires changing at least one setting. Nothing in the docs lets you edit through the transcript."
   - q: Is BitterClip better than Munch?
     a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip prepares connected destinations for your final confirmation and hands off the finished file.
   - q: How much does Munch Studio cost compared to BitterClip?
-    a: Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial, but its card-backed terms are explicit — $0 today, then $24/month unless canceled before the trial ends — and the trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings.
+    a: "Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial: card required, $1 today, then $24/month unless canceled before the seven days end. The trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings."
 sources:
   - label: Munch Studio homepage
     url: https://www.munchstudio.com/

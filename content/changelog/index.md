@@ -5,7 +5,7 @@ navigation:
   label: What's new
   order: 1
 section: changelog
-updated: '2026-09-23'
+updated: '2026-09-24'
 tags:
   - changelog
   - updates
@@ -27,12 +27,14 @@ for the exact click path and first-meeting checklist.
 
 ### Creator trial and paid plans
 
-The Creator trial lasts seven days and requires a card: $0 today, then $24/month unless you
-cancel before it ends. Once the payment method is accepted and the trial starts, Billing
-shows your exact cancel-before time. The trial includes $5 of
-agent work for one recording up to two hours; exactly $20, $50, and $100 top-ups are
-available during an active trial or paid plan and do not activate paid Creator early.
-Producer is $99/month. There is no recurring Free plan. If you cancel, your existing work
+The Creator trial lasts seven days and requires a card: $1 today for your first seven days,
+then $24/month starting when those seven days end unless you cancel before then. The $1 is
+a separate introductory payment, not a credit toward the monthly price. Cancelling stops the
+monthly charge; it does not refund the $1. Once the payment method is accepted and the trial
+starts, Billing shows your exact cancel-before time. The trial includes $5 of agent work for
+one recording up to two hours. Trial exports are watermarked; clean exports unlock after the
+first $24 monthly payment. Exactly $20, $50, and $100 top-ups are available during an active
+trial or paid plan and do not activate paid Creator early. Producer is $99/month. There is no recurring Free plan. If you cancel, your existing work
 stays available so you can return without losing it; new processing may require an active
 plan.
 

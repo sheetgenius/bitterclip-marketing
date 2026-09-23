@@ -50,10 +50,11 @@ test('keeps the OG source and shipped legacy card aligned with the current Creat
   const source = readFileSync(new URL('../app/assets/og/bitterclip-og.svg', import.meta.url), 'utf8')
   const shippedLegacyCard = readFileSync(new URL('../public/images/bitterclip-og.png', import.meta.url))
 
-  expect(source).toContain('7-day trial · $0 today · card required')
+  expect(source).toContain('7-day trial · $1 today · card required')
+  expect(source).not.toContain('$0 today')
   expect(source).not.toContain('150 exports')
   expect(createHash('sha256').update(shippedLegacyCard).digest('hex')).toBe(
-    'a56cbbfd05c3b37a7b6e78ff80420d0ce0ec16bfdce89321f80ff74f2537b050',
+    'b5c94f9f374891bb4c4bb6ee2c49c603465e7af6da7a45607beef3da63bf2c74',
   )
 })
 
@@ -118,7 +119,7 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(h1).toContainText('Footage in')
   await expect(h1).toContainText('Episode out')
   await expect(page.getByText('BitterClip watches the whole recording, makes one cut worth sending, and lets you keep directing it.')).toBeVisible()
-  await expect(page.getByText('Card required · $0 today · $24/month after seven days · $5 of included agent work for analysis, First Cut, and direction.')).toBeVisible()
+  await expect(page.getByText('Card required · $1 today for seven days · then $24/month unless you cancel · $5 of included agent work for analysis, First Cut, and direction.')).toBeVisible()
   const heroTrialCta = page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start my 7-day trial' }).first()
   await expect(heroTrialCta).toBeVisible()
   await expect(heroTrialCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
@@ -699,6 +700,13 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     expect(await response.text()).toContain(markdownPage.text)
   }
 
+  // The Creator entry offer is $1 today; offer-bearing twins never state $0.
+  for (const offerPage of ['/index.md', '/founder-onboarding.md', '/compare.md']) {
+    const offerText = await (await request.get(offerPage)).text()
+    expect(offerText).toContain('$1 today')
+    expect(offerText).not.toContain('$0')
+  }
+
   const robots = await request.get('/robots.txt')
   expect(robots.ok()).toBeTruthy()
   const robotsText = await robots.text()
@@ -765,6 +773,8 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('your exact cancel-before time')
   expect(llmsFullText).toContain('never auto-activate paid Creator')
   expect(llmsFullText).toContain('separate explicit $24 authorization')
+  expect(llmsFullText).toContain('not a credit toward the monthly price')
+  expect(llmsFullText).not.toContain('$0 today')
   expect(llmsFullText).toContain('files up to 4 GB')
   expect(llmsFullText).not.toContain('your exact charge date')
   expect(llmsFullText).not.toContain('displayed trial end')

@@ -100,7 +100,7 @@ chooseThem:
   - You post on a schedule across TikTok, Instagram, LinkedIn, X, Facebook, and YouTube. BitterClip prepares connected destinations but keeps a fresh final confirmation in the loop.
   - "You push a lot of footage every month: Creator starts at 600 upload-minutes for $29/month, or $174 billed yearly."
   - You clip on your phone and want a real iOS or Android app instead of a browser tab.
-  - "You need a permanent free tier: Vizard gives you 60 upload-minutes a month at 720p with a watermark; BitterClip instead offers one card-required seven-day Creator trial."
+  - "You need a permanent free tier: Vizard gives you 60 upload-minutes a month at 720p with a watermark; BitterClip instead offers one card-required seven-day Creator trial at $1."
 gotchas:
   - title: The meter runs when you upload, not when you export
     body: One credit is one minute of uploaded video, taken when the project is processed — once per project, however many clips you end up keeping. Two keepers out of a 90-minute recording cost the same 90 credits as twenty.
@@ -188,6 +188,6 @@ BitterClip works the other way around. Every edit the editor can make — trims,
 
 If your output is volume — daily verticals across six platforms, cut from talking-head footage, and you're happy letting the machine choose first — stay on Vizard. It's priced and shaped for exactly that, and Spark 1.0 is good at it, though prompt-based extraction caps at 10 prompts per project and isn't switched on for everyone yet.
 
-If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — start with BitterClip's card-required seven-day Creator trial. Bring one recording up to two hours for $0 today and use $5 of agent work for analysis, the First Cut, and continued direction. Trial exports are watermarked; cancel before the trial ends to avoid the $24 first charge.
+If your output is finished recordings — the full cut, the vertical version with captions and timing already carried across, every clip one click from the spot it came from — start with BitterClip's card-required seven-day Creator trial. Bring one recording up to two hours for $1 today and use $5 of agent work for analysis, the First Cut, and continued direction. Trial exports are watermarked; cancel before the seven days end and the $24 monthly charge never starts.
 
 Bring one recording you already regret uploading somewhere else. The first almost-right cut you fix instead of redo will tell you which side you're on.
