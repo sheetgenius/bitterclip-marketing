@@ -5,7 +5,7 @@ navigation:
   label: Troubleshooting
   order: 2
 section: help
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - help
   - troubleshooting
@@ -115,7 +115,7 @@ Sometimes a publish ends in a spot where BitterClip isn't sure whether your post
 Don't hit publish again. A second try could post your clip twice. Open the channel you were posting to, confirm whether the clip is already there, and go from what you find.
 ::
 
-If the clip did post, you're done, nothing more to do. If it didn't, you can publish it again safely. When you're unsure, [reach out](#still-stuck) and we'll sort it out with you.
+If the clip did post, keep it; BitterClip can bring its record back in line. If you don't see it, or you can't tell, [reach out](#still-stuck) before retrying. A delayed post may still land, so an empty channel page is not proof that another send is safe.
 
 ## Still stuck
 

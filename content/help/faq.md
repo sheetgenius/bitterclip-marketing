@@ -5,7 +5,7 @@ navigation:
   label: FAQ
   order: 1
 section: help
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - faq
   - help
@@ -77,7 +77,7 @@ The [find and share guide](/docs/getting-started/find-and-share-clips) shows whe
 
 ## Will it post to my channels without asking?
 
-You're in control. First you connect a channel yourself (see [connect your channels](/docs/connect/youtube)), then you choose how each project handles publishing.
+You're in control. First you connect a channel yourself (see [connect your channels](/docs/connect/youtube)). Every prepared post then waits for you to review and confirm it in BitterClip before anything goes out.
 
 ::approval-promise
 ::

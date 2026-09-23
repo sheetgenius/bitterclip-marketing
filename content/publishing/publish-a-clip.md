@@ -5,7 +5,7 @@ navigation:
   label: Publish a clip
   order: 1
 section: publishing
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - publishing
   - youtube
@@ -32,14 +32,14 @@ New here? Make a clip first in [Your first clip](/docs/getting-started/your-firs
 clip needs to finish exporting before you can publish it, because publishing sends that
 rendered output.
 
-## Review before a post goes out
+## Prepare a post for review
 
 Preparing a post creates a draft. It does not publish anything.
 
 ::approval-promise
 ::
 
-## Review the post before it goes out
+## Confirm the exact package
 
 ::callout{type="note"}
 A **package** is just your finished post for one channel: the clip, the caption that goes
@@ -50,8 +50,6 @@ sent.
 When you ask BitterClip to publish, it builds one of these packages for each channel. You
 look it over, read the caption, check the destination, watch the clip, and confirm the
 exact package in BitterClip.
-
-[screenshot: reviewing a publish package]
 
 The package stays a draft until you confirm it. Preparing it never sends it.
 

@@ -5,7 +5,7 @@ navigation:
   label: Use it from your assistant
   order: 1
 section: assistants
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - assistants
   - mcp
@@ -52,10 +52,10 @@ This is the BitterClip transcript editor a supported host can open. Have a play 
 ::example-clip-prompt
 ::
 
-You don't have to phrase it any particular way. "Pull up my interview," "find me something
+You don't have to phrase it any particular way. "Pull up my interview," "suggest moments
 worth posting," and "cut the part where she talks about pricing" all work. The assistant
-reads the transcript and points to the moment. A connection with write actions can save
-a review point and prepare the editor for you.
+reads the transcript and proposes moments for you to choose from. A connection with write
+actions can save a review point and prepare the editor for you.
 
 ## What your assistant can do for you
 

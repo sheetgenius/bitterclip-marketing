@@ -5,7 +5,7 @@ navigation:
   label: Projects and collaborators
   order: 2
 section: getting-started
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - projects
   - collaboration
@@ -24,8 +24,6 @@ You created your first project when you signed up and uploaded a recording. Make
 ## Switching between projects
 
 Your projects live on the Projects page, listed under your studio. Open the one you want, and the recordings, episodes, and clips you see all belong to it. Go back any time to move to another show.
-
-[screenshot: the Projects page listing your studio's projects]
 
 When you connect an assistant like ChatGPT or Claude, it works inside the project you point
 it at. Recordings it opens—and, where the host supports write actions, Clips it makes—stay

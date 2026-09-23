@@ -5,7 +5,7 @@ navigation:
   label: Your first clip
   order: 1
 section: getting-started
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - quickstart
   - getting-started
@@ -27,15 +27,11 @@ A project is a home for one show or series. Your recordings, episodes, and clips
 inside it, so everything from the same show stays together. Make one and give it a name
 you'll recognize later: your podcast title, your channel name, whatever fits.
 
-[screenshot: the New project button and the name field]
-
 ## 3. Upload a recording
 
 Open your project and click to upload, or drag your file onto the upload area. This is the
 raw file you're starting from: an interview, an episode, a talk you gave. BitterClip takes
 any file your device sees as audio or video. How large it can be depends on your plan.
-
-[screenshot: dragging a file onto the upload area]
 
 ::callout{type="tip"}
 Moving a whole channel instead of one recording? Use
@@ -84,8 +80,6 @@ Your clip shows up in the transcript editor with a start and an end already set.
 over. To trim or extend it, change which words you've got selected, the same thing you did in
 step 5. Add a word at the front for a little lead-in, or drop one at the end to tighten the
 ending. The cut follows your selection.
-
-[screenshot: refining a selection in the transcript editor]
 
 ## 7. Export the captioned clip
 

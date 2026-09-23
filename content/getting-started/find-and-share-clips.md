@@ -5,7 +5,7 @@ navigation:
   label: Find and share clips
   order: 3
 section: getting-started
-updated: '2026-06-24'
+updated: '2026-09-23'
 tags:
   - clips
   - sharing
@@ -26,8 +26,6 @@ the clips you cut, plus any longer videos you've put together.
 Each clip stays linked to the recording it started from. So if you want to revisit the full
 episode, pull a different clip, or just jog your memory on the context, the trail back is
 always there.
-
-[screenshot: the Outputs tab in a project]
 
 ## Download a clip
 
@@ -64,8 +62,6 @@ switch it on.
 
 ::signup-cta
 ::
-
-[screenshot: the embed toggle on a clip's Outputs card]
 
 ::callout{type="note"}
 Downloading the MP4 always works once a clip has rendered. The shareable link is the extra step

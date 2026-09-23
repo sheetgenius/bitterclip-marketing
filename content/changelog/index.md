@@ -5,7 +5,7 @@ navigation:
   label: What's new
   order: 1
 section: changelog
-updated: '2026-09-03'
+updated: '2026-09-23'
 tags:
   - changelog
   - updates
@@ -71,8 +71,7 @@ transcript and the captions on future renders pick up the correction.
 
 Ask your assistant for a montage: give it the moments in order and it builds
 a single video, with branded intro and outro blocks if your project has them.
-It will warn you if a cut lands mid-word so you can fix the edge before
-rendering.
+It flags edges that may need a closer listen before rendering.
 
 ### See what's on screen, right in chat
 
