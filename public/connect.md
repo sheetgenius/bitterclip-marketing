@@ -59,6 +59,13 @@ then show my recent recordings or help me upload one."
 - Which plans work? Claude allows custom connectors on every plan; a Free
   account can add one. In ChatGPT, adding a custom app needs Developer mode,
   which depends on your plan and workspace.
+- My Claude is a Team or Enterprise plan. An Owner of your organization adds
+  BitterClip once, in Organization settings under Connectors, with
+  https://app.bitterclip.com/mcp. Then each member connects it from
+  Customize → Connectors and signs in to BitterClip.
+- Can I use it on my phone? Connect on a computer first. Claude then makes
+  BitterClip available in its iPhone and Android apps the next time you sign
+  in there.
 - Claude says the connector came from an external link. That note appears for
   any connector suggested by a link until it is listed in Claude's directory.
   Check the address is https://app.bitterclip.com/mcp, then click Continue.
