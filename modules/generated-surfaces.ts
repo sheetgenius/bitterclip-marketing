@@ -424,6 +424,17 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
       'hello@bitterclip.com.',
   )
   lines.push('')
+  lines.push('## Install')
+  lines.push('')
+  lines.push(`- [Connect BitterClip](${SITE_ORIGIN}/connect): the page for people. One-click setup for Claude, ChatGPT, Claude Code and Codex, with live connection status when signed in.`)
+  lines.push(
+    `- [Install BitterClip in Claude Code or Codex](${SITE_ORIGIN}/docs/assistants/install): instructions an agent follows to install, ` +
+      'have the person sign in, verify and hand off. Use it for any request to install BitterClip, including ' +
+      `"Read ${SITE_ORIGIN}/docs/assistants/install and follow it exactly to install BitterClip, then tell me how to start."`,
+  )
+  lines.push('- MCP server: https://app.bitterclip.com/mcp (streamable HTTP with OAuth sign-in; never paste a token).')
+  lines.push('- Optional editing skills: https://github.com/sheetgenius/bitterclip-plugin')
+  lines.push('')
   for (const section of ['getting-started', 'assistants', 'connect', 'publishing', 'help', 'changelog']) {
     const list = groups.get(section)
     if (!list || list.length === 0) continue

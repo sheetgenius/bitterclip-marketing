@@ -7,17 +7,22 @@ import { relativeTime, useViewer, type AssistantKey } from '~/composables/useVie
 // signed in at app.bitterclip.com. Install buttons go through the app's /go
 // links, which record where a connection came from.
 
-type TabKey = 'claude' | 'chatgpt' | 'claude_code'
+type TabKey = 'claude' | 'chatgpt' | 'claude_code' | 'codex'
 
 const APP_ORIGIN = 'https://app.bitterclip.com'
 const MCP_URL = `${APP_ORIGIN}/mcp`
 const STARTER_PROMPT = 'Using BitterClip, help me make my first clip. Briefly explain how you can help, then show my recent recordings or help me upload one.'
 const CLAUDE_CODE_COMMAND = `claude mcp add --scope user --transport http bitterclip ${MCP_URL}`
+const INSTALL_DOC_URL = 'https://bitterclip.com/docs/assistants/install'
+const AGENT_INSTALL_PROMPT = `Read ${INSTALL_DOC_URL} and follow it exactly to install BitterClip, then tell me how to start.`
+const CODEX_COMMANDS = `codex mcp add bitterclip --url ${MCP_URL}\ncodex mcp login bitterclip`
+const codexUrl = (prompt: string) => `codex://new?prompt=${encodeURIComponent(prompt)}`
 const TAB_STORAGE_KEY = 'bc.connect.client'
 const TABS: { key: TabKey, label: string }[] = [
   { key: 'claude', label: 'Claude' },
   { key: 'chatgpt', label: 'ChatGPT' },
   { key: 'claude_code', label: 'Claude Code' },
+  { key: 'codex', label: 'Codex' },
 ]
 
 const route = useRoute()
@@ -27,6 +32,24 @@ const tabChosenByVisitor = ref(false)
 const polling = ref(false)
 const copied = ref<string | null>(null)
 const announcement = ref('')
+const codexMissing = ref(false)
+
+// Opening codex:// hands a prompt to the ChatGPT desktop app. If the app does
+// not take focus within 1.5 s it is probably not installed.
+function openCodex(prompt: string) {
+  codexMissing.value = false
+  let tookFocus = false
+  const noticeFocus = () => { tookFocus = true }
+  window.addEventListener('blur', noticeFocus, { once: true })
+  document.addEventListener('visibilitychange', noticeFocus, { once: true })
+  window.location.href = codexUrl(prompt)
+  setTimeout(() => {
+    window.removeEventListener('blur', noticeFocus)
+    document.removeEventListener('visibilitychange', noticeFocus)
+    if (!tookFocus) codexMissing.value = true
+    else watchForConnection()
+  }, 1500)
+}
 
 const goUrl = (assistant: 'claude' | 'chatgpt', action: 'add' | 'start') =>
   `${APP_ORIGIN}/go/${assistant}${action === 'start' ? '/start' : ''}?from=connect_page`
@@ -146,8 +169,8 @@ const faqs = [
 ]
 
 useSeoMeta({
-  title: 'Connect BitterClip to Claude, ChatGPT or Claude Code',
-  description: 'Add BitterClip to Claude in one click, or to ChatGPT or Claude Code, then ask for clips from your recordings in plain words.',
+  title: 'Connect BitterClip to Claude, ChatGPT, Claude Code or Codex',
+  description: 'Add BitterClip to Claude in one click, or to ChatGPT, Claude Code or Codex, then ask for clips from your recordings in plain words.',
   ogTitle: 'Edit your videos from Claude or ChatGPT',
   ogDescription: 'Connect BitterClip once, then ask your assistant for clips from your recordings.',
   ogUrl: 'https://bitterclip.com/connect',
@@ -168,6 +191,9 @@ useHead({
 
 <template>
   <main class="relative">
+    <p class="sr-only">
+      AI agents: to install BitterClip, read and follow {{ INSTALL_DOC_URL }}.
+    </p>
     <section class="mx-auto max-w-5xl px-6 pb-10 pt-14 text-center sm:px-8 sm:pt-20">
       <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-[#f28f84]">
         Use BitterClip from your assistant
@@ -346,6 +372,66 @@ useHead({
             In Claude Code, run <code class="text-zinc-200">/mcp</code>, choose bitterclip, then Authenticate. Your browser opens BitterClip; click Allow.
           </p>
         </li>
+        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-3">
+          <h2 class="font-display text-lg font-semibold text-white">Or let Claude Code do it</h2>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">Send Claude Code this message. It installs BitterClip, asks you to sign in, and checks the connection.</p>
+          <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+            <code class="min-w-0 flex-1 text-xs leading-relaxed text-zinc-200">{{ AGENT_INSTALL_PROMPT }}</code>
+            <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(AGENT_INSTALL_PROMPT, 'claude-code-agent'); watchForConnection()">
+              {{ copied === 'claude-code-agent' ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Codex -->
+      <ol
+        v-show="tab === 'codex'"
+        id="connect-panel-codex"
+        role="tabpanel"
+        aria-labelledby="connect-tab-codex"
+        class="mt-6 grid gap-4 md:grid-cols-3"
+      >
+        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+          <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
+          <h2 class="mt-4 font-display text-xl font-semibold text-white">Install in Codex</h2>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+            Opens Codex in the ChatGPT desktop app with an install request ready. Codex adds BitterClip and checks it.
+          </p>
+          <button
+            type="button"
+            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            @click="openCodex(`/goal ${AGENT_INSTALL_PROMPT}`)"
+          >Install in Codex</button>
+          <p v-if="codexMissing" data-testid="codex-missing" class="mt-3 text-sm text-[#f0d68f]">
+            Couldn't open Codex. Install the ChatGPT desktop app, or run the commands under step 2.
+          </p>
+        </li>
+        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+          <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
+          <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">
+            Codex opens your browser; sign in to BitterClip and click Allow. Prefer the terminal? Run:
+          </p>
+          <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+            <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CODEX_COMMANDS }}</code>
+            <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(CODEX_COMMANDS, 'codex-commands'); watchForConnection()">
+              {{ copied === 'codex-commands' ? 'Copied' : 'Copy' }}
+            </button>
+          </div>
+        </li>
+        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+          <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
+          <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+            Opens a new Codex task with a first request ready to send.
+          </p>
+          <button
+            type="button"
+            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+            @click="openCodex(STARTER_PROMPT)"
+          >Start in Codex</button>
+        </li>
       </ol>
 
       <p class="mt-6 text-center text-sm text-zinc-500">
@@ -397,6 +483,9 @@ useHead({
           <p>
             The optional <a href="https://github.com/sheetgenius/bitterclip-plugin" class="text-[#f28f84] hover:underline">BitterClip plugin</a>
             adds editing skills for Claude Code and Codex.
+          </p>
+          <p>
+            Setting up with an AI agent: <a :href="INSTALL_DOC_URL" class="text-[#f28f84] hover:underline">installation instructions for agents</a>.
           </p>
           <p>
             Step-by-step guides with screenshots:

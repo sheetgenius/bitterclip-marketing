@@ -1,4 +1,4 @@
-# Connect BitterClip to Claude, ChatGPT or Claude Code
+# Connect BitterClip to Claude, ChatGPT, Claude Code or Codex
 
 Canonical HTML page: https://bitterclip.com/connect
 
@@ -30,6 +30,21 @@ back a video you can post.
 1. Run: `claude mcp add --scope user --transport http bitterclip https://app.bitterclip.com/mcp`
 2. In Claude Code, run `/mcp`, choose bitterclip, then Authenticate. Your
    browser opens BitterClip; click Allow.
+
+Or send Claude Code: "Read https://bitterclip.com/docs/assistants/install and
+follow it exactly to install BitterClip, then tell me how to start."
+
+## Codex
+
+1. Install in Codex: in the ChatGPT desktop app's Codex, send
+   "/goal Read https://bitterclip.com/docs/assistants/install and follow it
+   exactly to install BitterClip, then tell me how to start." Or run
+   `codex mcp add bitterclip --url https://app.bitterclip.com/mcp`.
+2. Sign in: `codex mcp login bitterclip` opens your browser; sign in to
+   BitterClip and click Allow.
+3. Start a new Codex task with the first request below.
+
+Instructions for AI agents: https://bitterclip.com/docs/assistants/install
 
 ## A first request to try
 

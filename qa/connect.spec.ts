@@ -95,8 +95,30 @@ test('the page notices a new connection after an Add click', async ({ page, cont
 test('connect has a Markdown twin and a sitemap entry', async ({ request }) => {
   const markdown = await request.get('/connect.md')
   expect(markdown.status()).toBe(200)
-  expect(await markdown.text()).toContain('# Connect BitterClip to Claude, ChatGPT or Claude Code')
+  expect(await markdown.text()).toContain('# Connect BitterClip to Claude, ChatGPT, Claude Code or Codex')
 
   const sitemap = await (await request.get('/sitemap.xml')).text()
   expect(sitemap).toContain('https://bitterclip.com/connect')
+})
+
+test('Codex installs through the desktop app, and says so when it cannot open', async ({ page }) => {
+  await mockViewer(page, [SIGNED_OUT])
+  await page.goto('/connect?client=codex')
+
+  await expect(page.getByRole('tab', { name: 'Codex' })).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByText('codex mcp add bitterclip --url https://app.bitterclip.com/mcp')).toBeVisible()
+  await page.getByRole('button', { name: 'Install in Codex' }).click()
+  await expect(page.getByTestId('codex-missing')).toBeVisible({ timeout: 5000 })
+})
+
+test('agents are pointed at the install instructions', async ({ page, request }) => {
+  await mockViewer(page, [SIGNED_OUT])
+  await page.goto('/connect')
+  await expect(page.locator('main p.sr-only').first()).toHaveText(/read and follow https:\/\/bitterclip\.com\/docs\/assistants\/install/)
+
+  const install = await request.get('/docs/assistants/install')
+  expect(install.status()).toBe(200)
+  const llms = await (await request.get('/llms.txt')).text()
+  expect(llms).toContain('## Install')
+  expect(llms).toContain('https://bitterclip.com/docs/assistants/install')
 })

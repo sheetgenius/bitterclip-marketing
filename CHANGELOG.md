@@ -38,6 +38,13 @@ under a dated entry.
   ChatGPT steps. `/plugin`, `/install` and `/mcp` now lead there, and it has a
   Markdown twin and a sitemap entry.
 - Redirects stay relative, so a trailing-slash redirect keeps https.
+- Added Codex to `/connect` (Install opens Codex in the ChatGPT desktop app with
+  an install request, and says so when the app is missing) and an "or let
+  Claude Code do it" message for Claude Code.
+- Added `/docs/assistants/install`, instructions an AI agent follows to install
+  BitterClip in Claude Code or Codex, have the person sign in, verify and hand
+  off. `llms.txt` now opens with an Install section pointing people to
+  `/connect` and agents to these instructions.
 - Added a one-click "Add BitterClip to Claude" link to the assistant guides.
   It opens Claude's Add custom connector window with BitterClip's name and
   address filled in.
