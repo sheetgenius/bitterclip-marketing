@@ -27,7 +27,7 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
 ## Installation contract
 
 - **Server:** `https://app.bitterclip.com/mcp`, streamable HTTP with OAuth sign-in. Server
-  name: `bitterclip`.
+  name: `bitterclip`; Claude Code lists the plugin's server as `plugin:bitterclip:bitterclip`.
 - Use only the section for the client you are running in. Do not install into both Claude
   Code and Codex because both are present.
 - Inspect first. If a working `bitterclip` server already points at the address above, keep
@@ -45,25 +45,37 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
 1. Inspect the current configuration:
 
    ```bash
-   claude mcp get bitterclip
+   claude plugin list
+   claude mcp get plugin:bitterclip:bitterclip
    ```
 
-2. If BitterClip is missing, add it for this user:
+2. If the BitterClip plugin is missing, add its marketplace and install it for this user.
+   It brings the connection and BitterClip's editing skills:
+
+   ```bash
+   claude plugin marketplace add sheetgenius/bitterclip-plugin
+   claude plugin install bitterclip@bitterclip
+   ```
+
+   If this Claude Code cannot install plugins, add the connection alone instead and say so
+   in your report:
 
    ```bash
    claude mcp add --scope user --transport http bitterclip https://app.bitterclip.com/mcp
    ```
 
-3. Sign in. Ask the person to run `/mcp` in Claude Code, choose `bitterclip`, then
-   **Authenticate**. Their browser opens BitterClip; they sign in and click **Allow**. Ask:
+3. Sign in. The plugin loads in a new session. Ask the person to start one, run `/mcp`,
+   choose BitterClip, then **Authenticate**. Their browser opens BitterClip; they sign in and
+   click **Allow**. Ask:
 
    ```text
-   Please sign in to BitterClip in the browser window that opened and click Allow, then let me know.
+   Please start a new Claude Code session, run /mcp, choose BitterClip and authenticate. Sign in to BitterClip in the browser window that opens and click Allow, then let me know.
    ```
 
-4. Verify. `claude mcp get bitterclip` must show `https://app.bitterclip.com/mcp` and a
-   connected status. In a session where BitterClip's tools are loaded, call `projects_list`
-   with `{}`: a structured response proves an authenticated read that changes nothing.
+4. Verify. `claude mcp get plugin:bitterclip:bitterclip` (or `claude mcp get bitterclip`
+   for the connection alone) must show `https://app.bitterclip.com/mcp` and a connected
+   status. In a session where BitterClip's tools are loaded, call `projects_list` with `{}`:
+   a structured response proves an authenticated read that changes nothing.
 
 5. Hand off. Tell the person to start a new Claude Code session in a folder without a code
    repository, since the work is a video, and send:
@@ -85,10 +97,19 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
 2. Inspect the current configuration:
 
    ```bash
+   codex plugin list
    codex mcp list
    ```
 
-3. If BitterClip is missing, add it:
+3. If the BitterClip plugin is missing, add its marketplace and install it. It brings the
+   connection and BitterClip's editing skills:
+
+   ```bash
+   codex plugin marketplace add https://github.com/sheetgenius/bitterclip-plugin.git --ref main
+   codex plugin add bitterclip@bitterclip
+   ```
+
+   If this Codex cannot install plugins, add the connection alone and say so in your report:
 
    ```bash
    codex mcp add bitterclip --url https://app.bitterclip.com/mcp
@@ -124,5 +145,5 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
 - **A tool call is refused:** BitterClip's response says why and what to do; relay it to the
   person.
 
-The optional [BitterClip plugin](https://github.com/sheetgenius/bitterclip-plugin) adds
-editing skills on top of this connection.
+The [BitterClip plugin](https://github.com/sheetgenius/bitterclip-plugin) is the source of
+the marketplaces above.

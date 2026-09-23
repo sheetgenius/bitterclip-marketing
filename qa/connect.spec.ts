@@ -45,7 +45,7 @@ test('ChatGPT ad traffic opens the ChatGPT tab and ?client= picks a tab', async 
 
   await page.goto('/connect?client=claude_code')
   await expect(page.getByRole('tab', { name: 'Claude Code' })).toHaveAttribute('aria-selected', 'true')
-  await expect(page.getByText('claude mcp add --scope user --transport http bitterclip https://app.bitterclip.com/mcp')).toBeVisible()
+  await expect(page.locator('#connect-panel-claude_code code').first()).toContainText('claude plugin install bitterclip@bitterclip')
 })
 
 test('a signed-in visitor sees live connection status', async ({ page }) => {
@@ -106,7 +106,7 @@ test('Codex installs through the desktop app, and says so when it cannot open', 
   await page.goto('/connect?client=codex')
 
   await expect(page.getByRole('tab', { name: 'Codex' })).toHaveAttribute('aria-selected', 'true')
-  await expect(page.getByText('codex mcp add bitterclip --url https://app.bitterclip.com/mcp')).toBeVisible()
+  await expect(page.locator('#connect-panel-codex')).toContainText('codex plugin add bitterclip@bitterclip')
   await page.getByRole('button', { name: 'Install in Codex' }).click()
   await expect(page.getByTestId('codex-missing')).toBeVisible({ timeout: 5000 })
 })

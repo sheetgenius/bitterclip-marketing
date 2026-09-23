@@ -41,6 +41,9 @@ under a dated entry.
 - Added Codex to `/connect` (Install opens Codex in the ChatGPT desktop app with
   an install request, and says so when the app is missing) and an "or let
   Claude Code do it" message for Claude Code.
+- Claude Code and Codex now install the BitterClip plugin from GitHub (the
+  connection plus editing skills) on `/connect` and in the agent instructions,
+  with the connection-only commands kept as a fallback.
 - Added `/docs/assistants/install`, instructions an AI agent follows to install
   BitterClip in Claude Code or Codex, have the person sign in, verify and hand
   off. `llms.txt` now opens with an Install section pointing people to

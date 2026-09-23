@@ -12,10 +12,10 @@ type TabKey = 'claude' | 'chatgpt' | 'claude_code' | 'codex'
 const APP_ORIGIN = 'https://app.bitterclip.com'
 const MCP_URL = `${APP_ORIGIN}/mcp`
 const STARTER_PROMPT = 'Using BitterClip, help me make my first clip. Briefly explain how you can help, then show my recent recordings or help me upload one.'
-const CLAUDE_CODE_COMMAND = `claude mcp add --scope user --transport http bitterclip ${MCP_URL}`
+const CLAUDE_CODE_COMMAND = 'claude plugin marketplace add sheetgenius/bitterclip-plugin\nclaude plugin install bitterclip@bitterclip'
 const INSTALL_DOC_URL = 'https://bitterclip.com/docs/assistants/install'
 const AGENT_INSTALL_PROMPT = `Read ${INSTALL_DOC_URL} and follow it exactly to install BitterClip, then tell me how to start.`
-const CODEX_COMMANDS = `codex mcp add bitterclip --url ${MCP_URL}\ncodex mcp login bitterclip`
+const CODEX_COMMANDS = 'codex plugin marketplace add https://github.com/sheetgenius/bitterclip-plugin.git --ref main\ncodex plugin add bitterclip@bitterclip\ncodex mcp login bitterclip'
 const codexUrl = (prompt: string) => `codex://new?prompt=${encodeURIComponent(prompt)}`
 const TAB_STORAGE_KEY = 'bc.connect.client'
 const TABS: { key: TabKey, label: string }[] = [
@@ -160,7 +160,7 @@ const faqs = [
   },
   {
     question: 'Do I need to install anything?',
-    answer: 'Not for Claude or ChatGPT: the connection lives in your assistant, and you sign in to BitterClip once. The optional plugin adds editing skills for Claude Code and Codex.',
+    answer: 'Not for Claude or ChatGPT: the connection lives in your assistant, and you sign in to BitterClip once. In Claude Code and Codex, the BitterClip plugin adds the connection and editing skills in one step.',
   },
   {
     question: 'What can the assistant do with my account?',
@@ -354,10 +354,10 @@ useHead({
       >
         <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-2">
           <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Run one command</h2>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-400">In your terminal:</p>
+          <h2 class="mt-4 font-display text-xl font-semibold text-white">Install the plugin</h2>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">In your terminal. It adds the connection and BitterClip's editing skills.</p>
           <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
-            <code class="min-w-0 flex-1 break-all text-xs leading-relaxed text-zinc-200">{{ CLAUDE_CODE_COMMAND }}</code>
+            <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CLAUDE_CODE_COMMAND }}</code>
             <button
               type="button"
               class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]"
@@ -369,7 +369,7 @@ useHead({
           <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
           <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
           <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            In Claude Code, run <code class="text-zinc-200">/mcp</code>, choose bitterclip, then Authenticate. Your browser opens BitterClip; click Allow.
+            In a new Claude Code session, run <code class="text-zinc-200">/mcp</code>, choose BitterClip, then Authenticate. Your browser opens BitterClip; click Allow.
           </p>
         </li>
         <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-3">
@@ -396,7 +396,7 @@ useHead({
           <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
           <h2 class="mt-4 font-display text-xl font-semibold text-white">Install in Codex</h2>
           <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Opens Codex in the ChatGPT desktop app with an install request ready. Codex adds BitterClip and checks it.
+            Opens Codex in the ChatGPT desktop app with an install request ready. Codex installs the BitterClip plugin and checks it.
           </p>
           <button
             type="button"
@@ -411,7 +411,7 @@ useHead({
           <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
           <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
           <p class="mt-2 text-sm leading-relaxed text-zinc-400">
-            Codex opens your browser; sign in to BitterClip and click Allow. Prefer the terminal? Run:
+            Codex opens your browser; sign in to BitterClip and click Allow. Prefer the terminal? This installs the plugin and signs in:
           </p>
           <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
             <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CODEX_COMMANDS }}</code>
@@ -481,8 +481,10 @@ useHead({
             It signs in with OAuth; never paste a token.
           </p>
           <p>
-            The optional <a href="https://github.com/sheetgenius/bitterclip-plugin" class="text-[#f28f84] hover:underline">BitterClip plugin</a>
-            adds editing skills for Claude Code and Codex.
+            The <a href="https://github.com/sheetgenius/bitterclip-plugin" class="text-[#f28f84] hover:underline">BitterClip plugin</a>
+            adds editing skills in Claude Code and Codex. For the connection alone:
+            <code class="text-zinc-200">claude mcp add --scope user --transport http bitterclip {{ MCP_URL }}</code> or
+            <code class="text-zinc-200">codex mcp add bitterclip --url {{ MCP_URL }}</code>.
           </p>
           <p>
             Setting up with an AI agent: <a :href="INSTALL_DOC_URL" class="text-[#f28f84] hover:underline">installation instructions for agents</a>.
