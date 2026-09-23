@@ -48,6 +48,15 @@ test('ChatGPT ad traffic opens the ChatGPT tab and ?client= picks a tab', async 
   await expect(page.locator('#connect-panel-claude_code code').first()).toContainText('claude plugin install bitterclip@bitterclip')
 })
 
+test('install links carry where the visit started', async ({ page }) => {
+  await mockViewer(page, [SIGNED_OUT])
+  await page.goto('/connect?from=app_menu')
+  await expect(page.getByRole('link', { name: 'Add to Claude' })).toHaveAttribute('href', 'https://app.bitterclip.com/go/claude?from=app_menu')
+
+  await page.goto('/connect?from=somewhere_else')
+  await expect(page.getByRole('link', { name: 'Add to Claude' })).toHaveAttribute('href', 'https://app.bitterclip.com/go/claude?from=connect_page')
+})
+
 test('a signed-in visitor sees live connection status', async ({ page }) => {
   const usedAt = new Date(Date.now() - 2 * 60_000).toISOString()
   await mockViewer(page, [{

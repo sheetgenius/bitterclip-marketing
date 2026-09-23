@@ -51,8 +51,13 @@ function openCodex(prompt: string) {
   }, 1500)
 }
 
+// Where the visit started, for the app's install funnel. Only entry points the
+// app records are passed on; anything else counts as the page itself.
+const ENTRY_POINTS = ['app_menu', 'settings', 'upload_complete', 'recording_ready_email', 'docs', 'pricing']
+const entry = ref('connect_page')
+
 const goUrl = (assistant: 'claude' | 'chatgpt', action: 'add' | 'start') =>
-  `${APP_ORIGIN}/go/${assistant}${action === 'start' ? '/start' : ''}?from=connect_page`
+  `${APP_ORIGIN}/go/${assistant}${action === 'start' ? '/start' : ''}?from=${entry.value}`
 
 const isTab = (value: unknown): value is TabKey => TABS.some((t) => t.key === value)
 
@@ -76,11 +81,15 @@ function initialTab(): TabKey {
 
 // A prerendered page mounts before the router restores the address's query, so
 // choose again when it arrives, unless the visitor has already picked a tab.
+function readArrival() {
+  const from = String(route.query.from ?? '')
+  entry.value = ENTRY_POINTS.includes(from) ? from : 'connect_page'
+  if (!tabChosenByVisitor.value) tab.value = initialTab()
+}
+
 onMounted(() => {
-  tab.value = initialTab()
-  watch(() => route.fullPath, () => {
-    if (!tabChosenByVisitor.value) tab.value = initialTab()
-  })
+  readArrival()
+  watch(() => route.fullPath, readArrival)
 })
 
 watch(tab, (value) => {
