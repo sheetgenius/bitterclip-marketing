@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
               </svg>
               <span class="font-mono tracking-wider text-zinc-200 uppercase text-sm">BitterClip</span>
             </div>
-            <p class="font-sans text-zinc-500 leading-relaxed max-w-[16rem]">
+            <p class="font-sans text-zinc-400 leading-relaxed max-w-[16rem]">
               Footage in, episode out. A recorded session becomes the finished episode, and the short cuts from that same edit.
             </p>
             <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded font-mono text-[#f28f84]/90 hover:text-[#f28f84] transition" href="mailto:hello@bitterclip.com?subject=BitterClip">hello@bitterclip.com</a>
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
           <!-- Link columns -->
           <nav aria-label="Footer" class="grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 lg:gap-x-16">
             <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Product</h2>
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Product</h2>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs">Docs</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/blog">Blog</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/docs/assistants/overview">Assistants</NuxtLink>
@@ -104,13 +104,13 @@ onBeforeUnmount(() => {
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" :href="signupUrl">Start Creator trial</a>
             </div>
             <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Legal</h2>
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Legal</h2>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/privacy">Privacy</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/terms">Terms</NuxtLink>
               <NuxtLink class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" to="/data-deletion">Data deletion</NuxtLink>
             </div>
             <div class="flex flex-col gap-3">
-              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-500">Developers</h2>
+              <h2 class="font-mono uppercase text-[10px] tracking-[0.2em] text-zinc-400">Developers</h2>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="/llms.txt">llms.txt</a>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="/llms-full.txt">Markdown</a>
               <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-100 transition" href="https://github.com/sheetgenius/bitterclip-marketing">GitHub</a>
@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
         <!-- One parent, named once. "A Bitter project." used to sit opposite this
              line, which left the reader to work out how Bitter and SheetGenius
              relate; Bitter is infrastructure and keeps its Developers-column link. -->
-        <div class="mt-12 pt-6 border-t border-zinc-900/80 text-[11px] text-zinc-600 text-center sm:text-left">
+        <div class="mt-12 pt-6 border-t border-zinc-900/80 text-[11px] text-zinc-400 text-center sm:text-left">
           <p class="font-sans">BitterClip is a product of <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://company.sheetgenius.com">SheetGenius, Inc.</a> <span aria-hidden="true" class="text-zinc-700">·</span> © 2026</p>
         </div>
       </div>

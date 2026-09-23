@@ -261,201 +261,205 @@ useHead({
       </div>
 
       <!-- Claude -->
-      <ol
+      <div
         v-show="tab === 'claude'"
         id="connect-panel-claude"
         role="tabpanel"
         aria-labelledby="connect-tab-claude"
-        class="mt-6 grid gap-4 md:grid-cols-3"
       >
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Add BitterClip to Claude</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Claude opens its Add connector window with BitterClip filled in. Click Continue.
-          </p>
-          <a
-            :href="goUrl('claude', 'add')"
-            target="_blank"
-            rel="noopener"
-            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            @click="watchForConnection"
-          >Add to Claude</a>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in and allow</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Sign in to BitterClip and click Allow. This page shows when Claude is connected. Works on every Claude plan.
-          </p>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Opens a new Claude chat with a first request ready to send. Claude adds a caution note to prompts that arrive by link; this one only asks BitterClip to show your recordings.
-          </p>
-          <a
-            :href="goUrl('claude', 'start')"
-            target="_blank"
-            rel="noopener"
-            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
-          >Start in Claude</a>
-        </li>
-      </ol>
+        <ol class="mt-6 grid gap-4 md:grid-cols-3">
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Add BitterClip to Claude</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Claude opens its Add connector window with BitterClip filled in. Click Continue.
+            </p>
+            <a
+              :href="goUrl('claude', 'add')"
+              target="_blank"
+              rel="noopener"
+              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              @click="watchForConnection"
+            >Add to Claude</a>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in and allow</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Sign in to BitterClip and click Allow. This page shows when Claude is connected. Works on every Claude plan.
+            </p>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Opens a new Claude chat with a first request ready to send. Claude adds a caution note to prompts that arrive by link; this one only asks BitterClip to show your recordings.
+            </p>
+            <a
+              :href="goUrl('claude', 'start')"
+              target="_blank"
+              rel="noopener"
+              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+            >Start in Claude</a>
+          </li>
+        </ol>
+      </div>
 
       <!-- ChatGPT -->
-      <ol
+      <div
         v-show="tab === 'chatgpt'"
         id="connect-panel-chatgpt"
         role="tabpanel"
         aria-labelledby="connect-tab-chatgpt"
-        class="mt-6 grid gap-4 md:grid-cols-3"
       >
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Turn on Developer mode</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            In ChatGPT, open Settings → Security and login and turn on Developer mode. Your plan and workspace decide whether it's available.
-          </p>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Add BitterClip</h2>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-400">
-            On ChatGPT's Plugins page, click +, name it BitterClip, and paste this address. Then sign in to BitterClip and click Allow.
-          </p>
-          <div class="mt-4 flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2">
-            <code class="min-w-0 flex-1 truncate text-xs text-zinc-300">{{ MCP_URL }}</code>
-            <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(MCP_URL, 'chatgpt-url')">
-              {{ copied === 'chatgpt-url' ? 'Copied' : 'Copy' }}
-            </button>
-          </div>
-          <a
-            :href="goUrl('chatgpt', 'add')"
-            target="_blank"
-            rel="noopener"
-            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            @click="watchForConnection"
-          >Open ChatGPT Plugins</a>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Open a new chat, choose BitterClip, and paste the first request.
-          </p>
-          <div class="mt-5 flex flex-wrap gap-2">
+        <ol class="mt-6 grid gap-4 md:grid-cols-3">
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Turn on Developer mode</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              In ChatGPT, open Settings → Security and login and turn on Developer mode. Your plan and workspace decide whether it's available.
+            </p>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Add BitterClip</h2>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-400">
+              On ChatGPT's Plugins page, click +, name it BitterClip, and paste this address. Then sign in to BitterClip and click Allow.
+            </p>
+            <div class="mt-4 flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+              <code class="min-w-0 flex-1 truncate text-xs text-zinc-300">{{ MCP_URL }}</code>
+              <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(MCP_URL, 'chatgpt-url')">
+                {{ copied === 'chatgpt-url' ? 'Copied' : 'Copy' }}
+              </button>
+            </div>
             <a
-              :href="goUrl('chatgpt', 'start')"
+              :href="goUrl('chatgpt', 'add')"
               target="_blank"
               rel="noopener"
-              class="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
-            >Open ChatGPT</a>
-            <button
-              type="button"
-              class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-4 font-mono text-xs font-bold uppercase tracking-[0.12em] text-zinc-300 transition hover:border-[#f28f84]"
-              @click="copy(STARTER_PROMPT, 'chatgpt-prompt')"
-            >{{ copied === 'chatgpt-prompt' ? 'Copied' : 'Copy prompt' }}</button>
-          </div>
-        </li>
-      </ol>
+              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              @click="watchForConnection"
+            >Open ChatGPT Plugins</a>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Open a new chat, choose BitterClip, and paste the first request.
+            </p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              <a
+                :href="goUrl('chatgpt', 'start')"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+              >Open ChatGPT</a>
+              <button
+                type="button"
+                class="inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-4 font-mono text-xs font-bold uppercase tracking-[0.12em] text-zinc-300 transition hover:border-[#f28f84]"
+                @click="copy(STARTER_PROMPT, 'chatgpt-prompt')"
+              >{{ copied === 'chatgpt-prompt' ? 'Copied' : 'Copy prompt' }}</button>
+            </div>
+          </li>
+        </ol>
+      </div>
 
       <!-- Claude Code -->
-      <ol
+      <div
         v-show="tab === 'claude_code'"
         id="connect-panel-claude_code"
         role="tabpanel"
         aria-labelledby="connect-tab-claude_code"
-        class="mt-6 grid gap-4 md:grid-cols-3"
       >
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-2">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Install the plugin</h2>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-400">In your terminal. It adds the connection and BitterClip's editing skills.</p>
-          <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
-            <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CLAUDE_CODE_COMMAND }}</code>
-            <button
-              type="button"
-              class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]"
-              @click="copy(CLAUDE_CODE_COMMAND, 'claude-code-command'); watchForConnection()"
-            >{{ copied === 'claude-code-command' ? 'Copied' : 'Copy' }}</button>
-          </div>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            In a new Claude Code session, run <code class="text-zinc-200">/mcp</code>, choose BitterClip, then Authenticate. Your browser opens BitterClip; click Allow.
-          </p>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-3">
-          <h2 class="font-display text-lg font-semibold text-white">Or let Claude Code do it</h2>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-400">Send Claude Code this message. It installs BitterClip, asks you to sign in, and checks the connection.</p>
-          <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
-            <code class="min-w-0 flex-1 text-xs leading-relaxed text-zinc-200">{{ AGENT_INSTALL_PROMPT }}</code>
-            <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(AGENT_INSTALL_PROMPT, 'claude-code-agent'); watchForConnection()">
-              {{ copied === 'claude-code-agent' ? 'Copied' : 'Copy' }}
-            </button>
-          </div>
-        </li>
-      </ol>
+        <ol class="mt-6 grid gap-4 md:grid-cols-3">
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-2">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Install the plugin</h2>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-400">In your terminal. It adds the connection and BitterClip's editing skills.</p>
+            <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+              <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CLAUDE_CODE_COMMAND }}</code>
+              <button
+                type="button"
+                class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]"
+                @click="copy(CLAUDE_CODE_COMMAND, 'claude-code-command'); watchForConnection()"
+              >{{ copied === 'claude-code-command' ? 'Copied' : 'Copy' }}</button>
+            </div>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              In a new Claude Code session, run <code class="text-zinc-200">/mcp</code>, choose BitterClip, then Authenticate. Your browser opens BitterClip; click Allow.
+            </p>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6 md:col-span-3">
+            <h2 class="font-display text-lg font-semibold text-white">Or let Claude Code do it</h2>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-400">Send Claude Code this message. It installs BitterClip, asks you to sign in, and checks the connection.</p>
+            <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+              <code class="min-w-0 flex-1 text-xs leading-relaxed text-zinc-200">{{ AGENT_INSTALL_PROMPT }}</code>
+              <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(AGENT_INSTALL_PROMPT, 'claude-code-agent'); watchForConnection()">
+                {{ copied === 'claude-code-agent' ? 'Copied' : 'Copy' }}
+              </button>
+            </div>
+          </li>
+        </ol>
+      </div>
 
       <!-- Codex -->
-      <ol
+      <div
         v-show="tab === 'codex'"
         id="connect-panel-codex"
         role="tabpanel"
         aria-labelledby="connect-tab-codex"
-        class="mt-6 grid gap-4 md:grid-cols-3"
       >
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Install in Codex</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Opens Codex in the ChatGPT desktop app with an install request ready. Codex installs the BitterClip plugin and checks it.
-          </p>
-          <button
-            type="button"
-            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            @click="openCodex(`/goal ${AGENT_INSTALL_PROMPT}`)"
-          >Install in Codex</button>
-          <p v-if="codexMissing" data-testid="codex-missing" class="mt-3 text-sm text-[#f0d68f]">
-            Couldn't open Codex. Install the ChatGPT desktop app, or run the commands under step 2.
-          </p>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
-          <p class="mt-2 text-sm leading-relaxed text-zinc-400">
-            Codex opens your browser; sign in to BitterClip and click Allow. Prefer the terminal? This installs the plugin and signs in:
-          </p>
-          <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
-            <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CODEX_COMMANDS }}</code>
-            <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(CODEX_COMMANDS, 'codex-commands'); watchForConnection()">
-              {{ copied === 'codex-commands' ? 'Copied' : 'Copy' }}
-            </button>
-          </div>
-        </li>
-        <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
-          <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
-          <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
-          <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
-            Opens a new Codex task with a first request ready to send.
-          </p>
-          <button
-            type="button"
-            class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
-            @click="openCodex(STARTER_PROMPT)"
-          >Start in Codex</button>
-        </li>
-      </ol>
+        <ol class="mt-6 grid gap-4 md:grid-cols-3">
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">01</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Install in Codex</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Opens Codex in the ChatGPT desktop app with an install request ready. Codex installs the BitterClip plugin and checks it.
+            </p>
+            <button
+              type="button"
+              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              @click="openCodex(`/goal ${AGENT_INSTALL_PROMPT}`)"
+            >Install in Codex</button>
+            <p v-if="codexMissing" data-testid="codex-missing" class="mt-3 text-sm text-[#f0d68f]">
+              Couldn't open Codex. Install the ChatGPT desktop app, or run the commands under step 2.
+            </p>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">02</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Sign in</h2>
+            <p class="mt-2 text-sm leading-relaxed text-zinc-400">
+              Codex opens your browser; sign in to BitterClip and click Allow. Prefer the terminal? This installs the plugin and signs in:
+            </p>
+            <div class="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+              <code class="min-w-0 flex-1 whitespace-pre-line break-all text-xs leading-relaxed text-zinc-200">{{ CODEX_COMMANDS }}</code>
+              <button type="button" class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.12em] text-[#f28f84]" @click="copy(CODEX_COMMANDS, 'codex-commands'); watchForConnection()">
+                {{ copied === 'codex-commands' ? 'Copied' : 'Copy' }}
+              </button>
+            </div>
+          </li>
+          <li class="flex flex-col rounded-2xl border border-white/[0.08] bg-black/20 p-6">
+            <p class="font-mono text-xs font-bold text-[#f28f84]">03</p>
+            <h2 class="mt-4 font-display text-xl font-semibold text-white">Start editing</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">
+              Opens a new Codex task with a first request ready to send.
+            </p>
+            <button
+              type="button"
+              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+              @click="openCodex(STARTER_PROMPT)"
+            >Start in Codex</button>
+          </li>
+        </ol>
+      </div>
 
-      <p class="mt-6 text-center text-sm text-zinc-500">
+      <p class="mt-6 text-center text-sm text-zinc-400">
         <template v-if="signedIn">Signed in to BitterClip.</template>
         <template v-else>
           Already use BitterClip?
-          <a :href="`${APP_ORIGIN}/sign_in`" class="text-[#f28f84] hover:underline">Sign in</a>
+          <a :href="`${APP_ORIGIN}/sign_in`" class="text-[#f28f84] underline underline-offset-2">Sign in</a>
           to see what's connected.
         </template>
       </p>
@@ -471,7 +475,7 @@ useHead({
           @click="copy(STARTER_PROMPT, 'starter-prompt')"
         >{{ copied === 'starter-prompt' ? 'Copied' : 'Copy' }}</button>
       </div>
-      <p class="mt-4 text-sm leading-relaxed text-zinc-500">
+      <p class="mt-4 text-sm leading-relaxed text-zinc-400">
         Then ask for the clip you want in your own words: &ldquo;cut the part where she explains pricing,&rdquo; &ldquo;find three moments worth posting.&rdquo;
       </p>
     </section>
