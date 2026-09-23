@@ -28,6 +28,20 @@ Preferred categories:
 Use this section for changes that have been committed but not yet summarized
 under a dated entry.
 
+### Website
+
+- Added a one-click "Add BitterClip to Claude" link to the assistant guides.
+  It opens Claude's Add custom connector window with BitterClip's name and
+  address filled in.
+- Made the assistant guides tell one story: connecting is all a Claude or
+  ChatGPT user needs, and the plugin is an optional skills package for Claude
+  Code and Codex. The ChatGPT guide now describes the Developer mode custom-app
+  path customers actually have, since BitterClip is not yet in ChatGPT's plugin
+  directory, and states that what a custom connection can change depends on
+  plan and workspace.
+- Removed the statement that connections expire after 30 days without
+  refreshing. Connections now renew in the background.
+
 ### Product Context
 
 - Added a founder-led onboarding offer for up to 100 customers. Michael

@@ -455,9 +455,25 @@ test('renders the assistant documentation page and live editor', async ({ page }
   await expect(page.locator('article')).toContainText('custom-MCP access and actions depend on plan, role, workspace policy, region, model, and rollout')
   await expect(page.getByRole('heading', { name: 'Try the editor right here' })).toBeVisible()
   await expect(page.locator('iframe[title="BitterClip — the live transcript editor"]')).toHaveAttribute('src', /embed\/clip-demo/)
-  await expect(page.getByText('app.bitterclip.com/mcp')).toBeVisible()
+  await expect(page.getByText('app.bitterclip.com/mcp').first()).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Add BitterClip to Claude' })).toHaveAttribute('href', CLAUDE_CONNECTOR_ADD_URL)
   await expect(page.getByRole('heading', { name: 'What you can ask for' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'BitterClip tool reference' })).toHaveAttribute('href', '/docs/assistants/tool-reference')
+})
+
+const CLAUDE_CONNECTOR_ADD_URL = 'https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=BitterClip&connectorUrl=https%3A%2F%2Fapp.bitterclip.com%2Fmcp'
+
+test('assistant guides describe the setup paths customers actually have', async ({ page }) => {
+  await page.goto('/docs/assistants/connect-claude')
+  await expect(page.getByRole('link', { name: 'Add BitterClip to Claude' })).toHaveAttribute('href', CLAUDE_CONNECTOR_ADD_URL)
+  await expect(page.locator('article')).toContainText('The connection renews itself in the background')
+
+  await page.goto('/docs/assistants/connect-chatgpt')
+  const article = page.locator('article')
+  await expect(article).toContainText("BitterClip isn't listed in ChatGPT's plugin directory yet")
+  await expect(article).toContainText('Developer mode')
+  await expect(article).not.toContainText('BitterClip Prod')
+  await expect(article).not.toContainText('lasts up to 30 days')
 })
 
 test('renders the blog index and Identity Studio launch post', async ({ page }) => {

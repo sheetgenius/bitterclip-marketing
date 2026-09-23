@@ -51,11 +51,9 @@ for the full walkthrough.
 ## Does it work with ChatGPT, Claude, or both?
 
 Both, but the connection rules are different today. Claude lets every plan add
-a custom connector (Free accounts can add one). In ChatGPT, use the installed
-BitterClip plugin when it is available; its exposed actions depend on the
-account and workspace. A raw Pro custom-MCP connection is read/fetch-only, while
-OpenAI documents full raw custom-MCP writes for eligible Business and
-Enterprise/Edu workspaces. The
+a custom connector (Free accounts can add one). In ChatGPT, BitterClip isn't in the
+plugin directory yet, so you add it as a custom app in Developer mode; what it can
+change depends on your plan and workspace. The
 [assistant guide](/docs/assistants/overview)
 walks through both paths. You can always skip the assistant and work in your browser.
 

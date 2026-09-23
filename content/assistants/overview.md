@@ -16,11 +16,11 @@ tags:
 # Use BitterClip from your AI assistant
 
 You connect BitterClip to Claude or ChatGPT, then ask the assistant to find a
-source-backed moment and prepare it for review. Claude and an installed BitterClip plugin
-can carry that into Clip creation and rendering when the selected account
-exposes write actions. A raw ChatGPT Pro custom-MCP connection is currently
-read/fetch-only; it can browse Episodes, read transcripts, and open the
-workspace when the host supports it, then continue the edit in BitterClip's browser.
+source-backed moment and prepare it for review. In Claude, the assistant can carry that
+through to an editable Clip and a rendered video. In ChatGPT, what a custom connection can
+change depends on your plan and workspace; when it can only read, it can still browse
+Episodes, read transcripts, and open the workspace when the host supports it, and you
+continue the edit in BitterClip's browser.
 
 ::callout{type="note"}
 Claude supports custom connectors on every plan. In ChatGPT, the Plugin directory is
@@ -98,14 +98,22 @@ review. Final confirmation happens in BitterClip.
 ## Connect your assistant
 
 Both assistants connect to the same BitterClip account, but their setup rules differ.
-Choose the guide for the host you use:
 
-- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: open the installed
-  **BitterClip Prod** plugin and choose **Try in chat**. Developer mode is only
-  for adding the raw MCP server as an unpublished development connection; that
-  raw Pro path is currently read/fetch-only.
+Using Claude? Add it in one click:
+
+::add-to-claude
+::
+
+Or choose the guide for the host you use:
+
 - **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip under
   **Customize → Connectors**, sign in, then enable it for the conversation where you need it.
+- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: BitterClip isn't in ChatGPT's
+  plugin directory yet, so you add it as a custom app in **Developer mode**.
+
+Connecting is all you need. BitterClip also publishes an optional
+[plugin](https://github.com/sheetgenius/bitterclip-plugin) that adds editing skills for
+Claude Code and Codex.
 
 If the connection doesn't take or your recordings don't show up, the
 [troubleshooting guide](/docs/help/troubleshooting) covers the usual fixes, and you can

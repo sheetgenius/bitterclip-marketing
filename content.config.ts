@@ -143,6 +143,7 @@ export default defineContentConfig({
         company_url: z.string(),
         company_support_url: z.string(),
         mcp_resource_url: z.string(),
+        claude_connector_add_url: z.string(),
         app_origin: z.string(),
         og_image_default: z.string(),
       }),

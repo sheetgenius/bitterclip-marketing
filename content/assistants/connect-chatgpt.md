@@ -1,11 +1,11 @@
 ---
 title: Connect ChatGPT
-description: Use the BitterClip plugin in ChatGPT, or connect the MCP server directly for development testing.
+description: Add BitterClip to ChatGPT as a custom app in Developer mode, check the connection, then make your first clip.
 navigation:
   label: Connect ChatGPT
   order: 2
 section: assistants
-updated: '2026-09-04'
+updated: '2026-09-23'
 tags:
   - chatgpt
   - assistants
@@ -14,19 +14,15 @@ tags:
 
 # Connect ChatGPT
 
-This page walks you through opening the installed BitterClip plugin in ChatGPT,
-checking the connection without changing anything, and opening an Episode in
-the chat. A direct MCP-server connection remains a developer/testing path.
+BitterClip isn't listed in ChatGPT's plugin directory yet, so you add it yourself as a
+custom app. This page walks you through adding it, checking the connection without
+changing anything, and making your first clip.
 
 ::callout{type="note"}
-ChatGPT's Plugin directory is visible across plans, but the included capabilities
-and actions are not. An installed BitterClip plugin and a raw custom MCP
-connection do not have the same plan boundary. OpenAI currently limits Pro
-custom MCP connections to read/fetch and documents full custom-MCP writes as a
-Business and Enterprise/Edu beta. An installed BitterClip Prod plugin was able
-to create, edit, and render on the Pro account used for our 2026-09-04 host
-check. Your workspace policy, role, region, model, and rollout can still narrow
-that behavior.
+Custom apps need ChatGPT's **Developer mode**, which depends on your plan, and a workspace
+admin may need to allow it. What a custom app can change also depends on your plan and
+workspace. If ChatGPT can read your recordings but won't make changes, it can still find
+and explain moments, and you finish the cut in BitterClip's browser editor.
 ::
 
 ## Before you start
@@ -39,45 +35,26 @@ that behavior.
 ::assistant-connection-intro
 ::
 
-BitterClip may already be installed or available to your ChatGPT account. A
-**plugin** is the package ChatGPT distributes and can contain Skills, an MCP
-server, or both. Installed details may separately call the connected
-integration an **App**.
-
-If **BitterClip Prod** is available:
-
-1. Open ChatGPT **Plugins**.
-2. Select **BitterClip Prod** and review its privacy and permission information.
-3. Choose **Try in chat**.
-4. Confirm the **BitterClip Prod** pill is selected in the composer.
-
-That installed-plugin path does not require Developer mode. If BitterClip Prod
-is not available and you are testing the raw MCP endpoint as a developer, use
-the direct-server flow instead:
-
 1. Open ChatGPT **Settings → Security and login** and turn on **Developer mode**. Your workspace may require an admin to make this available.
 2. Open the top-level **Plugins** page at `chatgpt.com/plugins` and click the plus button.
 3. Enter **Name** — BitterClip — and a short description.
 4. Under **Connection**, choose the public **Server URL** method and paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`.
-5. Create the connection. ChatGPT discovers BitterClip's OAuth setup automatically; sign in and approve the connection when prompted.
-6. Review the tools and metadata ChatGPT discovered.
+5. Create the connection. ChatGPT discovers BitterClip's sign-in setup automatically; sign in to BitterClip when prompted.
+6. Review the tools ChatGPT discovered.
 
 ::callout{type="note"}
-ChatGPT moves its menus and labels around, so the exact wording can differ.
-Prefer the installed plugin when it is available. Enable Developer mode only
-when you deliberately need to add an unpublished MCP server URL. Stuck? See
+ChatGPT moves its menus and labels around, so the exact wording can differ. Stuck? See
 [Troubleshooting](/docs/help/troubleshooting).
 ::
 
 ## Sign in to BitterClip
 
-An installed plugin may already be connected. If ChatGPT asks you to connect or
-reconnect it, complete the BitterClip sign-in and authorization window, then
-review the discovered tools. A raw Developer-mode connection follows the same
-OAuth authorization step.
+If ChatGPT asks you to connect BitterClip, complete the BitterClip sign-in window, then
+review the discovered tools.
 
-BitterClip's current connector token lasts up to 30 days and does not refresh in the
-background. If access later stops, reconnect BitterClip and sign in again.
+The connection renews itself in the background, so you shouldn't need to sign in again. If
+ChatGPT ever asks you to reconnect, click **Connect**; you don't need to remove and re-add
+BitterClip.
 
 ::callout{type="warning"}
 ChatGPT's plugin information says it may share relevant chats and memories with a connected
@@ -106,10 +83,9 @@ supports the interactive MCP workspace.
 
 ## Make your first clip in chat
 
-This section requires the selected BitterClip plugin or connection to expose
-write actions. The installed BitterClip Prod plugin did so on the Pro account
-used for our latest host check. A raw Pro custom-MCP connection remains subject
-to OpenAI's documented read/fetch boundary.
+This needs a connection that can make changes (see the plan note at the top of this
+page). With a read-only connection, ChatGPT can still explain what it found and you
+continue in BitterClip's browser.
 
 If your account is empty, upload a recording first so there's something to clip. The
 [browser walkthrough](/docs/getting-started/your-first-clip) shows you how. Once you have
@@ -118,11 +94,11 @@ one, just ask:
 ::example-clip-prompt{prompt="Pull up my latest interview and find the strongest moment."}
 ::
 
-ChatGPT can inspect the Episode and point to a promising stretch. If your selected plugin
-has write actions, it can save a review point and prepare the Episode editor. Inspect the
+ChatGPT can inspect the Episode and point to a promising stretch. If your connection can
+make changes, it can save a review point and prepare the Episode editor. Inspect the
 source and choose the cut there; asking for a Clip saves an editable cut, while asking
-for an Export starts a separate render. A raw read/fetch-only connection can explain its
-findings and direct you to continue in BitterClip's browser.
+for an Export starts a separate render. A read-only connection can explain its findings
+and direct you to continue in BitterClip's browser.
 
 ::chat-vs-web-app
 ::

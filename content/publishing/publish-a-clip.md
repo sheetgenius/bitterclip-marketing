@@ -54,11 +54,10 @@ exact package in BitterClip.
 The package stays a draft until you confirm it. Preparing it never sends it.
 
 ::callout{type="tip"}
-You can ask Claude or a ChatGPT workspace whose selected BitterClip plugin exposes
-write actions to prepare the publication. The assistant can open the review; confirm
-the exact displayed package in BitterClip only when it reads right.
-A raw ChatGPT Pro custom-MCP connection is currently read/fetch-only, so use an
-installed write-capable plugin or the BitterClip browser workspace instead.
+You can ask Claude, or ChatGPT when your connection can make changes, to prepare the
+publication. The assistant can open the review; confirm the exact displayed package in
+BitterClip only when it reads right. If your ChatGPT connection can only read, use the
+BitterClip browser workspace instead.
 ::
 
 ## Publish a whole episode at once

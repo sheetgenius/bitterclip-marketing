@@ -45,10 +45,8 @@ point of editorial intent for review; an Episode or Clip is the editable product
 
 There are two ways to work, and your recordings and clips are the same in both. The browser
 is the place to manage everything in one window. If you'd rather just say what you want out
-loud, ChatGPT or Claude can help while you talk it through; editing actions
-depend on the selected plugin or connection. The installed BitterClip plugin
-can expose writes on ChatGPT Pro, while a raw Pro custom-MCP connection is
-currently limited to reads and opening the workspace. Whichever you start in,
+loud, ChatGPT or Claude can help while you talk it through. In ChatGPT, what the
+assistant can change depends on your plan and workspace. Whichever you start in,
 you can pick up where you left off in the other. The
 [assistant guide](/docs/assistants/overview) walks through that side.
 

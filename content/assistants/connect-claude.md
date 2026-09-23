@@ -5,7 +5,7 @@ navigation:
   label: Connect Claude
   order: 3
 section: assistants
-updated: '2026-09-04'
+updated: '2026-09-23'
 tags:
   - assistants
   - claude
@@ -33,9 +33,13 @@ account can add one custom connector, so BitterClip can be that one.
 ::assistant-connection-intro
 ::
 
-There's nothing to download or run on your computer. Claude now keeps Skills, Connectors,
-Plugins, and Settings as separate sections under **Customize**. BitterClip is a Web / Custom
-connector, not a Claude plugin:
+The quickest way is one click:
+
+::add-to-claude
+::
+
+To add it by hand instead: Claude keeps Skills, Connectors, Plugins, and Settings as
+separate sections under **Customize**, and BitterClip goes under **Connectors**.
 
 1. In Claude, open **Customize → Connectors** and click **+ → Add custom connector**.
 2. In **Step 1 of 2**, fill in:
@@ -48,12 +52,12 @@ connector, not a Claude plugin:
 ## Connect and sign in
 
 BitterClip now shows up in **Customize → Connectors**. If it shows a **Connect** button,
-click it. Claude opens BitterClip so you can sign in and approve the connection. When you
-return, the row should say **Connected**.
+click it. Claude opens BitterClip so you can sign in. When you return, the row should say
+**Connected**.
 
-BitterClip's current connector token lasts up to 30 days and does not refresh in the
-background. If the connector later asks you to sign in again, reconnect it; you do not need
-to remove and re-add it.
+The connection renews itself in the background, so you shouldn't need to sign in again. If
+Claude ever shows **Connection expired**, click **Connect**; you don't need to remove and
+re-add BitterClip.
 
 ## Enable BitterClip in this conversation
 
