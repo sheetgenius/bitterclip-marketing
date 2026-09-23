@@ -83,6 +83,11 @@ publication, rollback, and validation.
   not call the baker.
 - `bun run generate` creates `.output/public`; the Docker image copies that
   static output into nginx.
+- Grid admits an image only when its `org.opencontainers.image.revision` label
+  equals the commit it built. `config/deploy.yml` passes Grid's
+  `BITTERGRID_RELEASE_SHA` as the `SOURCE_REVISION` build argument, and the
+  Dockerfile's final stage stamps it. Without the label every build fails at
+  `artifact_identity_before` and production keeps the previous release.
 - `/up` is the production health check.
 
 ## Normal verification

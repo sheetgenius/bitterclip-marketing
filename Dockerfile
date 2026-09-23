@@ -18,4 +18,9 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/.output/public /usr/share/nginx/html
 RUN printf 'ok\n' > /usr/share/nginx/html/up
 
+# Grid admits only an image whose revision label equals the source commit it
+# built. Declared last so it never invalidates the build layers above.
+ARG SOURCE_REVISION
+LABEL org.opencontainers.image.revision="${SOURCE_REVISION}"
+
 EXPOSE 80

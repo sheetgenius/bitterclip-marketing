@@ -42,6 +42,12 @@ under a dated entry.
 - Removed the statement that connections expire after 30 days without
   refreshing. Connections now renew in the background.
 
+### Deployment
+
+- Stamped the site image with its source commit
+  (`org.opencontainers.image.revision`). BitterGrid admits only images whose
+  label matches the commit it built, so builds had stopped deploying.
+
 ### Product Context
 
 - Added a founder-led onboarding offer for up to 100 customers. Michael

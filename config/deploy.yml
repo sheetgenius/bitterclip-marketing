@@ -1,3 +1,11 @@
+<%
+  # Grid exports the checked-out commit; it becomes the image revision label
+  # that Grid verifies before admitting the image.
+  source_revision = ENV["BITTERGRID_RELEASE_SHA"].to_s.strip
+  unless source_revision.empty? || source_revision.match?(/\A[0-9a-f]{40}\z/)
+    raise "BITTERGRID_RELEASE_SHA must be an exact 40-character lowercase Git SHA"
+  end
+%>
 service: bitterclip-marketing
 image: ruemic/bitterclip.com
 
@@ -34,6 +42,10 @@ builder:
   cache:
     type: registry
     image: bitterclip-marketing-build-cache
+<% unless source_revision.empty? %>
+  args:
+    SOURCE_REVISION: <%= source_revision.inspect %>
+<% end %>
 
 ssh:
   user: <%= ENV.fetch("DEPLOY_REMOTE_USER", "deploy") %>
