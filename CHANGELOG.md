@@ -30,6 +30,14 @@ under a dated entry.
 
 ### Website
 
+- Added `/connect`, one page for connecting BitterClip to Claude, ChatGPT or
+  Claude Code: three numbered steps per assistant with one action each, a first
+  request to try, and short answers to setup questions. When the visitor is
+  signed in at app.bitterclip.com, the page shows live connection status and
+  notices a new connection after an Add click. Visitors from ChatGPT open on the
+  ChatGPT steps. `/plugin`, `/install` and `/mcp` now lead there, and it has a
+  Markdown twin and a sitemap entry.
+- Redirects stay relative, so a trailing-slash redirect keeps https.
 - Added a one-click "Add BitterClip to Claude" link to the assistant guides.
   It opens Claude's Add custom connector window with BitterClip's name and
   address filled in.

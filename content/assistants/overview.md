@@ -104,6 +104,9 @@ Using Claude? Add it in one click:
 ::add-to-claude
 ::
 
+The [connect page](/connect) has one-click setup for Claude, ChatGPT and Claude Code, and
+shows what's connected when you're signed in.
+
 Or choose the guide for the host you use:
 
 - **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip under

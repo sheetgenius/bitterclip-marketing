@@ -86,7 +86,7 @@ function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
 
 // Marketing routes that live outside the docs collection (Vue pages in app/pages/).
 // Kept here as the one place the static, non-docs URLs are enumerated for the sitemap.
-const MARKETING_ROUTES = ['/', '/founder-onboarding', '/privacy', '/terms', '/data-deletion', '/compare'] as const
+const MARKETING_ROUTES = ['/', '/connect', '/founder-onboarding', '/privacy', '/terms', '/data-deletion', '/compare'] as const
 
 interface DocPage {
   /** Source path relative to content/, e.g. "getting-started/your-first-clip.md". */
