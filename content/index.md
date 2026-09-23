@@ -40,7 +40,10 @@ links:
 
 ## Use it from your AI assistant
 
-BitterClip's agent is built into the editor. If you connect ChatGPT or Claude, ask it to open a recording or make a specific cut and it operates the same workbench. The source stays attached, the result stays editable, and nothing is selected or published without your direction.
+BitterClip's agent is built into the editor. If you connect ChatGPT or Claude, ask it to
+open a recording; where the host supports write actions, you can also ask for a specific
+cut in the same workbench. The source stays attached, the result stays editable, and
+nothing is selected or published without your direction.
 
 ::next-steps
 ---

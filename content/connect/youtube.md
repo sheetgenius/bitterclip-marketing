@@ -52,12 +52,14 @@ Channel still won't show up? The heads-up above is almost always why. A YouTube 
 You decide how your YouTube uploads behave by default in **Settings**, under **Publishing defaults**. That's where you set the privacy for uploads: private, unlisted, or public. The control stays greyed out until you've saved a destination channel and connected it, so sort the connection out first.
 
 ::callout{type="note"}
-Depending on your YouTube account's standing, YouTube itself may force new uploads to start as private until your account is verified for public posting. If your uploads keep going private, that's coming from YouTube, not from BitterClip. You can still pick your preferred default in Settings.
+YouTube account restrictions or BitterClip's current upload policy can make an upload
+private even when you requested a wider audience. Review the effective privacy shown
+in BitterClip before confirming the exact post.
 ::
 
 ## Posting to YouTube alongside X and LinkedIn
 
-If you publish the same clip to several channels at once, BitterClip can drop the YouTube link into your X or LinkedIn post for you. That only happens after YouTube finishes publishing, since the link doesn't exist until the video is live. So when you line up a multi-channel post, let YouTube go out and the link follows on its own.
+If you prepare the same clip for several channels, a LinkedIn package can include the YouTube link when its video needs a link instead of a native upload. Publish the YouTube package first so the link exists, then review and confirm the exact LinkedIn package. A long video for X uses a manual handoff.
 
 ## Reconnecting later
 

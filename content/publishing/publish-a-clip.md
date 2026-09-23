@@ -1,11 +1,11 @@
 ---
 title: Publish a clip
-description: Send a finished clip to your connected channels. Review the post, choose how a project publishes, and check on it after it goes out.
+description: Prepare a finished clip for connected channels, confirm the exact post in BitterClip, and check its status.
 navigation:
   label: Publish a clip
   order: 1
 section: publishing
-updated: '2026-06-24'
+updated: '2026-09-03'
 tags:
   - publishing
   - youtube
@@ -16,8 +16,8 @@ tags:
 # Publish a clip
 
 Once you've exported a clip, BitterClip can send it to your connected channels: YouTube,
-LinkedIn, and X. You review each post before it goes out, and the project decides whether
-posts wait for your okay or publish on their own.
+LinkedIn, and X. Every prepared post waits for you to review and confirm the exact
+video, copy, and destination before anything goes out.
 
 (Instagram works differently. There's no reliable one-click posting to it yet, so you hand
 the clip to your phone instead. See [Connect Instagram](/docs/connect/instagram) for the way
@@ -32,10 +32,9 @@ New here? Make a clip first in [Your first clip](/docs/getting-started/your-firs
 clip needs to finish exporting before you can publish it, because publishing sends that
 rendered output.
 
-## Choose how a project publishes
+## Review before a post goes out
 
-Each project decides for itself whether posts wait for you or go out on their own. Pick the
-setting that fits before you publish anything.
+Preparing a post creates a draft. It does not publish anything.
 
 ::approval-promise
 ::
@@ -49,25 +48,27 @@ sent.
 ::
 
 When you ask BitterClip to publish, it builds one of these packages for each channel. You
-look it over, read the caption, check the destination, watch the clip, and then your
-project's setting takes over.
+look it over, read the caption, check the destination, watch the clip, and confirm the
+exact package in BitterClip.
 
 [screenshot: reviewing a publish package]
 
-If the project waits for your approval, the package sits as a draft until you approve it. If
-the project publishes automatically, the ready channels post as soon as the package is built.
+The package stays a draft until you confirm it. Preparing it never sends it.
 
 ::callout{type="tip"}
-You can do all of this by chatting with ChatGPT or Claude. Ask it to publish the clip, look
-over what it shows you, and approve when it reads right.
+You can ask Claude or a ChatGPT workspace whose selected BitterClip plugin exposes
+write actions to prepare the publication. The assistant can open the review; confirm
+the exact displayed package in BitterClip only when it reads right.
+A raw ChatGPT Pro custom-MCP connection is currently read/fetch-only, so use an
+installed write-capable plugin or the BitterClip browser workspace instead.
 ::
 
 ## Publish a whole episode at once
 
-You don't have to post one clip at a time, and you don't have to repeat yourself for each
+You don't have to prepare one clip at a time, and you don't have to repeat yourself for each
 channel. BitterClip can take a whole episode's finished output and prepare it for YouTube,
-LinkedIn, and X in one step. It builds one package per channel, then your project's
-publishing setting handles the rest.
+LinkedIn, and X in one step. It builds one reviewable package per channel; confirm each
+package before it goes out.
 
 A channel counts as ready when it's connected and still has permission to post. A channel you
 connected a while ago can go stale and need reconnecting. The note at the bottom of this page
@@ -77,7 +78,7 @@ points you to each channel's setup.
 
 The same publishing flow works when you've stitched several pieces into a longer video, not
 just a single clip. Once that longer video has finished rendering, you review and send it the
-same way: a package per channel, your project's setting deciding what happens next.
+same way: one reviewable package per channel, each requiring your exact confirmation.
 
 ## Check on a post after publishing
 
@@ -108,8 +109,8 @@ You don't have to set the same things every time. In the BitterClip app, open **
 and find the **Publishing defaults** section. You can set, in this order:
 
 - **Platforms**: the channels a new package goes to by default.
-- **YouTube privacy**: how a YouTube upload starts. Private is the safe default, since a
-  fresh upload can't go fully public until it's been reviewed.
+- **YouTube privacy**: the requested starting privacy of a YouTube upload. A service
+  policy or YouTube restriction may make the effective upload private.
 - **Default tags**.
 - **Post body template**: default copy for your X or LinkedIn posts.
 

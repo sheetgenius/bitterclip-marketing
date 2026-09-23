@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// The safety promise, softened for the real project-level auto-vs-approval mode.
-// Grounded in Show#publish_mode ("approval" default | "auto"). Invoke: ::approval-promise
+// Current publication rule: every prepared package waits for exact review.
+// Historical Project auto values are normalized to approval by PublishingOperations.
 </script>
 
 <template>
@@ -10,18 +10,11 @@
       first, and connecting one just lets BitterClip post on your behalf when you ask it to.
     </p>
     <p>
-      Each project has its own publishing setting, and you choose which one fits:
+      Every prepared post waits for review in BitterClip:
     </p>
     <ul>
-      <li>
-        <strong>Wait for my approval</strong> (the default): clips are prepared as drafts
-        and sit ready for you to look over. Nothing goes out until you say so.
-      </li>
-      <li>
-        <strong>Publish automatically</strong>: once you turn this on for a project, ready
-        clips post to your connected channels on their own. You opt into it, so it's never
-        the starting point.
-      </li>
+      <li>Check the exact video, post copy, destination, and account.</li>
+      <li>Confirm that package in BitterClip before it can be sent.</li>
     </ul>
     <p>
       Your account, your plan, and your payment details always live on BitterClip's own

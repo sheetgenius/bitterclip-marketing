@@ -46,6 +46,7 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'static',
+    prerender: { routes: ['/docs/assistants/tool-reference'] },
     // Emit immutable gzip/brotli sidecars for the production nginx/CDN path.
     // Lighthouse against an uncompressed toy server materially understates
     // the actual static delivery contract.

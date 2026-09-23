@@ -163,7 +163,11 @@ Step-by-step to connect BitterClip to ChatGPT and make a first clip in chat. Aud
 **Must include**
 
 - The connection is a remote, hosted endpoint at app.bitterclip.com/mcp — you add it and sign in; no local setup (AssistantConnectionIntro)
-- During the app-directory/dev phase you connect the remote MCP server in ChatGPT Developer Mode and sign in; after publication users enable the BitterClip app the same way
+- Prefer the installed BitterClip plugin when it is available; users open its
+  detail and choose Try in chat without Developer mode. Before publication or
+  for a raw-server test, developers enable ChatGPT Developer mode and add the
+  remote MCP server from the Plugins page. Raw Pro custom MCP is read/fetch
+  only; installed-plugin actions depend on the selected account and workspace.
 - An example natural-language prompt (ExampleClipPrompt, e.g. 'pull up my latest interview and find the strongest moment')
 - Account creation, plan management, and checkout stay on BitterClip's own domain — not in the ChatGPT app
 - ApprovalPromise (softened, auto/approval mode aware)

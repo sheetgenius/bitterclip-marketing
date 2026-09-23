@@ -100,14 +100,14 @@ Earlier signup opened a workspace without checkout or a trial clock. That offer 
 been replaced by the Creator trial described above.
 
 ### Post clips to your channels
-You can connect YouTube, X, and LinkedIn and send finished clips straight to them. Per project, you choose whether a clip waits for your approval or goes out automatically once it's ready. See the connect guides for [YouTube](/docs/connect/youtube), [X](/docs/connect/x), and [LinkedIn](/docs/connect/linkedin).
+You can connect YouTube, X, and LinkedIn and prepare finished clips for those channels. Every package now waits for your review and exact confirmation in BitterClip before it goes out. See the connect guides for [YouTube](/docs/connect/youtube), [X](/docs/connect/x), and [LinkedIn](/docs/connect/linkedin).
 
 ::callout{type="note"}
 Instagram is a special case. You'll see a Connect button, but auto-posting to your feed is limited by Meta's rules. See the [Connect Instagram](/docs/connect/instagram) guide for the working path.
 ::
 
 ### Clip right inside your AI assistant
-BitterClip connects to ChatGPT and Claude. Ask for the strongest moment in a recording, and your assistant opens the transcript editor with a clip already picked out, ready for you to review and tune. The [assistants overview](/docs/assistants/overview) shows you how to set it up.
+BitterClip connects to ChatGPT and Claude. Ask for a strong moment in an Episode, and your assistant can point you to source-backed evidence. Connections with write actions can save a review point and prepare the editor. The [assistants overview](/docs/assistants/overview) explains the host differences.
 
 ### Captions, built in
 Clips export with captions burned right into the video, styled to sit cleanly in the frame. That's the default. If you turn captions off before you export, the video comes out without them.

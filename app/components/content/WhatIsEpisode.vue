@@ -2,9 +2,7 @@
 // Canonical Recording -> Episode -> Clip noun block. Single source so the model
 // never drifts. Includes the multi-recording (sync) example.
 // Verified against apps/bitterclip-rails/app/services/bitterclip/mcp_server.rb.
-// No "Moment" rename note: in the product, Episode is a Composition, not a renamed
-// Moment (Moment was a saved time-range, closer to today's Clip) — so do not claim
-// they're the same thing. We just avoid the word.
+// Moment is saved review intent, not an Episode or Clip.
 // Invoke: ::what-is-episode
 </script>
 
@@ -24,8 +22,8 @@
         you automatically.
       </li>
       <li>
-        <strong>Clip</strong> — a short, exported cut taken from an episode. You pick the part
-        worth keeping, and the clip is what you download or post.
+        <strong>Clip</strong> — an editable cut derived from an episode. You pick the part
+        worth keeping, then render it into an exact Export to download or post.
       </li>
     </ul>
 

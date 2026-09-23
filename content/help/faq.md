@@ -5,7 +5,7 @@ navigation:
   label: FAQ
   order: 1
 section: help
-updated: '2026-08-23'
+updated: '2026-09-03'
 tags:
   - faq
   - help
@@ -50,9 +50,13 @@ for the full walkthrough.
 
 ## Does it work with ChatGPT, Claude, or both?
 
-Both, but the connection rules are different today. Claude lets every plan add a custom
-connector (Free accounts can add one). In ChatGPT, custom-app access and available actions
-depend on your plan and workspace policy. The [assistant guide](/docs/assistants/overview)
+Both, but the connection rules are different today. Claude lets every plan add
+a custom connector (Free accounts can add one). In ChatGPT, use the installed
+BitterClip plugin when it is available; its exposed actions depend on the
+account and workspace. A raw Pro custom-MCP connection is read/fetch-only, while
+OpenAI documents full raw custom-MCP writes for eligible Business and
+Enterprise/Edu workspaces. The
+[assistant guide](/docs/assistants/overview)
 walks through both paths. You can always skip the assistant and work in your browser.
 
 ## Do I have to use an AI assistant, or can I use the browser?

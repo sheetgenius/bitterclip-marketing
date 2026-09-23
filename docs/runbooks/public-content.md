@@ -33,11 +33,46 @@ The footer attribution is in `app/layouts/default.vue` and reaches every page.
 
 - per-page docs Markdown twins;
 - docs/blog/compare discovery entries in `llms.txt` and `llms-full.txt`;
+- a docs-only `/help-corpus.json` projection for product agent help. Each entry
+  carries authored-file and rendered-body SHA-256 values, canonical URL,
+  Markdown URL, and text from the built HTML article, including Vue snippets;
+  the corpus digest covers the ordered page identities and digests;
 - `sitemap.xml`;
 - docs changelog RSS and blog RSS.
 
 Do not hand-edit a generated artifact to repair drift. Edit the `content/`
 source, collection data, or generation module and rebuild.
+
+The product repository fetches the deployed `help-corpus.json` for creator help
+and keeps its private agent operating pages separately. For a new public fact
+needed by existing product behavior, publish this site first. For the initial
+single-`help` cutover, deploy Rails first because the static catalog build
+requires its new descriptor; help will explicitly report public guidance
+unavailable until the site deploys next. It does not use
+a bundled public copy. It revalidates on every call and refuses an unverified
+response. Generated Markdown twins retain authored MDC directives; the help
+corpus reads the prerendered HTML article and includes each snippet's actual
+visible words. Review rendered pages for claims inside snippets.
+
+Exact MCP tool names, titles, descriptions, and schemas live in the Rails
+operation catalog. `bun run generate` fetches the deployed
+`https://app.bitterclip.com/api/v1/operation_catalog.json` once, validates its
+model-visible profile and product release, then builds the static
+`/docs/assistants/tool-reference` HTML, Markdown twin, JSON snapshot, and
+discovery entries from that response. The ignored `tmp/` snapshot is a build
+input, never an authored or committed copy. A failed fetch or invalid response
+fails the build; there is no fallback to an older snapshot. The page prints
+its source release, capture time, and catalog SHA-256. Creator explanations in
+`content/` remain authored here and should not restate descriptor details.
+The build command passes a one-build token with the snapshot to Nuxt; invoking
+Nuxt directly cannot reuse an old temporary file.
+The build also requires the new `help` tool and refuses the retired help-tool
+names, so this cutover cannot accidentally publish the old tool list.
+
+Release order for a tool change: deploy Rails first, then rebuild and deploy
+this static site. Independent deployments cannot update atomically; until the
+site rebuilds, its printed product release identifies the older catalog it
+reflects. The live Rails catalog and MCP `tools/list` update with Rails.
 
 Vue-owned routes outside the content collections—currently the homepage and
 legal/marketing pages—may have authored alternates under `public/`. When one of

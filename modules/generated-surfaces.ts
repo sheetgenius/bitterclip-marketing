@@ -1,28 +1,88 @@
 import { fileURLToPath } from 'node:url'
+import { createHash } from 'node:crypto'
 import { promises as fs } from 'node:fs'
 import { dirname, join, relative } from 'node:path'
 import { defineNuxtModule } from '@nuxt/kit'
 import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
+import { parse as parseHtml } from 'parse5'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
  *
- * Single source of truth: the `content/` docs collection on disk. From it we emit, into
+ * Creator prose comes from `content/`; the tool reference comes from one
+ * build-time snapshot of the deployed Rails catalog. From these we emit, into
  * the static output (`.output/public`), after all routes are prerendered:
  *
  *   1. Per-page `.md` twins at `/docs/<path>.md` (verbatim frontmatter + body).
  *   2. `/llms.txt`     — a structured index of the docs.
  *   3. `/llms-full.txt`— the concatenated docs corpus.
- *   4. `/sitemap.xml`  — every `/docs/*` page, blog route, blog post, and marketing route.
- *   5. `/changelog.xml`— an RSS feed built from the changelog entries.
- *   6. `/blog/rss.xml` — an RSS feed built from the blog collection.
+ *   4. `/help-corpus.json` — docs-only corpus with source digests for product help.
+ *   5. `/sitemap.xml`  — every `/docs/*` page, blog route, blog post, and marketing route.
+ *   6. `/changelog.xml`— an RSS feed built from the changelog entries.
+ *   7. `/blog/rss.xml` — an RSS feed built from the blog collection.
  *
- * DRY: add or edit a `content/*.md` page (or `site.yml`) and every surface above
- * regenerates on the next build. No generated surface is authored by hand.
+ * No generated surface is authored by hand.
  */
 
 const SITE_ORIGIN = 'https://bitterclip.com'
+const TOOL_REFERENCE_PATH = '/docs/assistants/tool-reference'
+
+interface CatalogSnapshot {
+  schema_version: string
+  surface: string
+  source: string
+  product_release: string
+  retrieved_at: string
+  digest: string
+  build_id: string
+  operations: Array<Record<string, unknown> & { name: string; title: string; description: string; input_schema: unknown }>
+}
+
+async function readCatalogSnapshot(): Promise<CatalogSnapshot> {
+  const file = fileURLToPath(new URL('../tmp/mcp-catalog-snapshot.json', import.meta.url))
+  const snapshot = JSON.parse(await fs.readFile(file, 'utf8')) as CatalogSnapshot
+  const digest = createHash('sha256').update(JSON.stringify(snapshot.operations)).digest('hex')
+  const expectedSource = process.env.BITTERCLIP_CATALOG_URL ?? 'https://app.bitterclip.com/api/v1/operation_catalog.json'
+  const ageMs = Date.now() - Date.parse(snapshot.retrieved_at)
+  if (snapshot.schema_version !== 'bitterclip.operation_catalog.v1' || snapshot.surface !== 'mcp_model_visible' ||
+      !snapshot.operations?.length || snapshot.digest !== digest || snapshot.source !== expectedSource ||
+      !process.env.BITTERCLIP_CATALOG_BUILD_ID || snapshot.build_id !== process.env.BITTERCLIP_CATALOG_BUILD_ID ||
+      !/^[0-9a-f]{7,40}$/.test(snapshot.product_release) ||
+      (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(snapshot.product_release)) ||
+      !Number.isFinite(ageMs) || ageMs < 0 || ageMs > 30 * 60_000) {
+    throw new Error('Invalid or modified build-time Rails catalog snapshot')
+  }
+  return snapshot
+}
+
+function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
+  const lines = [
+    '# BitterClip tool reference',
+    '',
+    `Canonical HTML page: ${SITE_ORIGIN}${TOOL_REFERENCE_PATH}`,
+    '',
+    `Catalog profile: ${snapshot.surface}`,
+    `Product release: ${snapshot.product_release}`,
+    `Catalog SHA-256: ${snapshot.digest}`,
+    `Captured: ${snapshot.retrieved_at}`,
+    `Source: ${snapshot.source}`,
+    '',
+    'This is the deployed Rails model-visible catalog at site build time. A host may filter or adapt its presentation. The model-only result profile omits output schemas; Live Workspace may rename its workspace-opening tool. Errors and examples are catalog guidance, not extra fields in MCP tools/list.',
+    '',
+  ]
+  for (const operation of snapshot.operations) {
+    lines.push(`## ${operation.name}`, '', `Title: ${operation.title}`, '', operation.description, '')
+    for (const [label, key] of [
+      ['Input schema', 'input_schema'], ['Output schema', 'output_schema'],
+      ['Annotations', 'annotations'], ['Errors', 'errors'], ['Examples', 'examples'],
+    ]) {
+      if (!(key in operation)) continue
+      lines.push(`### ${label}`, '', '```json', JSON.stringify(operation[key], null, 2), '```', '')
+    }
+  }
+  return lines.join('\n').trimEnd() + '\n'
+}
 
 // Marketing routes that live outside the docs collection (Vue pages in app/pages/).
 // Kept here as the one place the static, non-docs URLs are enumerated for the sitemap.
@@ -354,8 +414,8 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
   lines.push(
     'The model is Recording → Episode → Clip: a Recording is a raw uploaded source; an Episode ' +
       'is one stitched transcript timeline (one or more recordings) and the unit you work in; a ' +
-      'Clip is a short exported cut from an episode. (Older material called episodes "Moments" — ' +
-      'that term is retired.)',
+      'Clip is an editable cut derived from an episode. A Render attempts to make media; ' +
+      'an Export is one completed exact version. A Moment saves intent for review, not an Episode.',
   )
   lines.push('')
   lines.push(
@@ -404,8 +464,8 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: Compare
   parts.push('')
   parts.push(
     'Concatenated Markdown of every BitterClip docs page and blog post, generated from ' +
-      'the content collections. Recording → Episode → Clip is the product model (the ' +
-      'retired "Moment" noun is not used). BitterClip is a product of SheetGenius, Inc. ' +
+      'the content collections. Recording → Episode → Clip is the editable product model; ' +
+      'a Moment saves intent for review. BitterClip is a product of SheetGenius, Inc. ' +
       '(https://company.sheetgenius.com).',
   )
   parts.push('')
@@ -450,6 +510,75 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: Compare
     parts.push('')
   }
   return parts.join('\n').trimEnd() + '\n'
+}
+
+interface HtmlNode {
+  nodeName: string
+  value?: string
+  attrs?: Array<{ name: string; value: string }>
+  childNodes?: HtmlNode[]
+}
+
+function findArticle(node: HtmlNode): HtmlNode | undefined {
+  if (node.nodeName === 'article' && node.attrs?.some((attr) => attr.name === 'class' && attr.value.split(/\s+/).includes('docs-prose'))) return node
+  for (const child of node.childNodes ?? []) {
+    const found = findArticle(child)
+    if (found) return found
+  }
+}
+
+function renderedArticleText(html: string, path: string): string {
+  const article = findArticle(parseHtml(html) as HtmlNode)
+  if (!article) throw new Error(`No rendered docs article at ${path}`)
+  function walk(node: HtmlNode): string {
+    if (node.nodeName === '#text') return node.value ?? ''
+    if (['script', 'style', 'svg', 'iframe', 'button'].includes(node.nodeName)) return ''
+    const inner = (node.childNodes ?? []).map(walk).join('')
+    if (node.nodeName === 'a') {
+      const href = node.attrs?.find((attr) => attr.name === 'href')?.value
+      return href ? `[${inner.trim()}](${href})` : inner
+    }
+    if (node.nodeName === 'li') return `\n- ${inner.trim()}\n`
+    if (/^(?:h[1-6]|p|div|aside|section|ul|ol|pre|blockquote)$/.test(node.nodeName)) return `\n${inner.trim()}\n`
+    return inner
+  }
+  const body = walk(article).replace(/[ \t]+/g, ' ').replace(/[ \t]*\n[ \t]*/g, '\n').replace(/\n{3,}/g, '\n\n').trim() + '\n'
+  if (body.length < 20 || body.includes('::approval-promise') || body.includes('::connector-scopes')) {
+    throw new Error(`Incomplete rendered docs article at ${path}`)
+  }
+  return body
+}
+
+// Rails reads this deployment-atomic projection of what the static docs page
+// actually renders, including Vue snippets. The authored file hash remains
+// provenance; the body hash covers rendered text delivered to help.
+async function buildHelpCorpus(pages: DocPage[], publicDir: string): Promise<string> {
+  if (!pages.length || pages.length > 100) throw new Error('Public help page count exceeds Rails acceptance bounds')
+  const documents = await Promise.all(pages.map(async (page) => {
+    const path = join(publicDir, page.urlPath.replace(/^\//, ''), 'index.html')
+    const body = renderedArticleText(await fs.readFile(path, 'utf8'), path)
+    const uri = `bitterclip://docs/public/${page.sourceRel.replace(/\.md$/, '')}`
+    const source = `${SITE_ORIGIN}${page.urlPath}`
+    const markdown = `${SITE_ORIGIN}${page.mdPath}`
+    const title = page.frontmatter.title
+    const description = page.frontmatter.description
+    const section = page.frontmatter.section
+    if (!/^bitterclip:\/\/docs\/public\/[a-z0-9/-]+$/.test(uri) ||
+        !/^https:\/\/bitterclip\.com\/docs(?:\/[a-z0-9/-]+)?$/.test(source) ||
+        markdown !== `${source}.md` ||
+        ![title, description, section].every((value) => typeof value === 'string')) {
+      throw new Error(`Public help page violates Rails acceptance bounds: ${page.sourceRel}`)
+    }
+    return {
+      uri, title, description, section, source, markdown,
+      sha256: createHash('sha256').update(page.raw).digest('hex'),
+      body_sha256: createHash('sha256').update(body).digest('hex'), body,
+    }
+  }))
+  const digest = createHash('sha256').update(documents.map((page) => `${page.uri} ${page.sha256} ${page.body_sha256}`).join('\n')).digest('hex')
+  const corpus = JSON.stringify({ schema_version: 'bitterclip.public_help.v1', digest, documents }) + '\n'
+  if (Buffer.byteLength(corpus) > 512_000) throw new Error('Public help corpus exceeds Rails 512 KB limit')
+  return corpus
 }
 
 function buildSitemap(pages: DocPage[], posts: BlogPost[], comparisons: ComparePage[]): string {
@@ -621,7 +750,22 @@ export default defineNuxtModule({
     nuxt.hook('nitro:init', (nitro) => {
       nitro.hooks.hook('prerender:done', async () => {
         const publicDir = nitro.options.output.publicDir
-        const pages = await readDocs(contentDir)
+        const authoredPages = await readDocs(contentDir)
+        const catalog = await readCatalogSnapshot()
+        const toolMarkdown = buildToolReferenceMarkdown(catalog)
+        const pages: DocPage[] = [...authoredPages, {
+          sourceRel: 'assistants/tool-reference.md',
+          urlPath: TOOL_REFERENCE_PATH,
+          mdPath: `${TOOL_REFERENCE_PATH}.md`,
+          raw: toolMarkdown,
+          body: toolMarkdown,
+          frontmatter: {
+            title: 'BitterClip tool reference',
+            description: 'Complete model-visible MCP tool catalog captured from the deployed product.',
+            section: 'assistants',
+            updated: catalog.retrieved_at.slice(0, 10),
+          },
+        }]
         const posts = await readBlogPosts(contentDir)
         const comparisons = await readComparePages(contentDir)
 
@@ -640,10 +784,15 @@ export default defineNuxtModule({
           twinCount++
         }
         await writeFile(publicDir, '/blog.md', buildBlogIndexMarkdown(posts))
+        await writeFile(publicDir, `${TOOL_REFERENCE_PATH}.json`, JSON.stringify(catalog) + '\n')
 
         // 2 + 3. llms.txt index + full corpus (replaces the stale hand-written ones).
         await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages, posts, comparisons))
-        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(pages, posts, comparisons))
+        // The 600 KB schema reference has its own Markdown twin. Keep the full
+        // prose corpus bounded; llms.txt still links to the complete reference.
+        await writeFile(publicDir, '/llms-full.txt', buildLlmsFull(authoredPages, posts, comparisons))
+        // Agent help gets authored creator pages; Rails owns live tool descriptors.
+        await writeFile(publicDir, '/help-corpus.json', await buildHelpCorpus(authoredPages, publicDir))
 
         // 4. sitemap.xml — marketing routes + comparisons + every /docs page + blog.
         await writeFile(publicDir, '/sitemap.xml', buildSitemap(pages, posts, comparisons))
@@ -655,7 +804,7 @@ export default defineNuxtModule({
         await writeFile(publicDir, '/blog/rss.xml', buildBlogRss(posts))
 
         nitro.logger.success(
-          `[generated-surfaces] ${twinCount} .md twins + blog.md, llms.txt, llms-full.txt, sitemap.xml, changelog.xml, blog/rss.xml`,
+          `[generated-surfaces] ${twinCount} .md twins + blog.md, llms.txt, llms-full.txt, help-corpus.json, sitemap.xml, changelog.xml, blog/rss.xml`,
         )
       })
     })

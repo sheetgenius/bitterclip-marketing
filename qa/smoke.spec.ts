@@ -452,12 +452,12 @@ test('renders the assistant documentation page and live editor', async ({ page }
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="/docs/assistants/overview.md"]')).toHaveCount(1)
   await expect(page.getByRole('heading', { level: 1, name: 'Use BitterClip from your AI assistant' })).toBeVisible()
   await expect(page.getByText('Claude supports custom connectors on every plan')).toBeVisible()
-  await expect(page.locator('article')).toContainText('custom-app access and the actions an app may take depend on your plan and workspace policy')
+  await expect(page.locator('article')).toContainText('custom-MCP access and actions depend on plan, role, workspace policy, region, model, and rollout')
   await expect(page.getByRole('heading', { name: 'Try the editor right here' })).toBeVisible()
   await expect(page.locator('iframe[title="BitterClip — the live transcript editor"]')).toHaveAttribute('src', /embed\/clip-demo/)
   await expect(page.getByText('app.bitterclip.com/mcp')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'What you can ask for' })).toBeVisible()
-  await expect(page.getByText('not the full list')).toBeVisible()
+  await expect(page.getByRole('link', { name: 'BitterClip tool reference' })).toHaveAttribute('href', '/docs/assistants/tool-reference')
 })
 
 test('renders the blog index and Identity Studio launch post', async ({ page }) => {
@@ -753,4 +753,73 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).not.toContain('your exact charge date')
   expect(llmsFullText).not.toContain('displayed trial end')
   expect(llmsFullText).not.toContain('30% markup')
+
+  const helpResponse = await request.get('/help-corpus.json')
+  expect(helpResponse.ok()).toBeTruthy()
+  const helpCorpus = await helpResponse.json()
+  expect(helpCorpus.schema_version).toBe('bitterclip.public_help.v1')
+  expect(helpCorpus.documents.length).toBeGreaterThan(10)
+  expect(helpCorpus.documents.some((doc: { uri: string }) => doc.uri.includes('/blog/'))).toBe(false)
+  expect(helpCorpus.documents.some((doc: { uri: string }) => doc.uri.includes('/tool-reference'))).toBe(false)
+  expect(helpCorpus.documents.every((doc: { body: string }) => !doc.body.includes('::'))).toBe(true)
+  const publishing = helpCorpus.documents.find((doc: { uri: string }) =>
+    doc.uri === 'bitterclip://docs/public/publishing/publish-a-clip')
+  expect(publishing.body).toContain('Confirm that package in BitterClip before it can be sent.')
+  const takeout = helpCorpus.documents.find((doc: { uri: string }) =>
+    doc.uri === 'bitterclip://docs/public/getting-started/import-youtube-takeout')
+  const authoredTakeout = readFileSync(new URL('../content/getting-started/import-youtube-takeout.md', import.meta.url))
+  expect(takeout.source).toBe('https://bitterclip.com/docs/getting-started/import-youtube-takeout')
+  expect(takeout.sha256).toBe(createHash('sha256').update(authoredTakeout).digest('hex'))
+  expect(takeout.body_sha256).toBe(createHash('sha256').update(takeout.body).digest('hex'))
+  expect(helpCorpus.digest).toBe(createHash('sha256').update(
+    helpCorpus.documents.map((doc: { uri: string; sha256: string; body_sha256: string }) =>
+      `${doc.uri} ${doc.sha256} ${doc.body_sha256}`).join('\n'),
+  ).digest('hex'))
+})
+
+test('publishes the complete Rails catalog as one static tool reference', async ({ page, request }) => {
+  const snapshotResponse = await request.get('/docs/assistants/tool-reference.json')
+  expect(snapshotResponse.ok()).toBeTruthy()
+  const snapshot = await snapshotResponse.json()
+  expect(snapshot.schema_version).toBe('bitterclip.operation_catalog.v1')
+  expect(snapshot.surface).toBe('mcp_model_visible')
+  expect(snapshot.product_release).toMatch(/^[0-9a-f]{7,40}$/)
+  expect(snapshot.digest).toBe(createHash('sha256').update(JSON.stringify(snapshot.operations)).digest('hex'))
+  const names = snapshot.operations.map((operation: { name: string }) => operation.name)
+  expect(names).toContain('help')
+  expect(names).not.toContain('list_docs')
+  expect(names).not.toContain('search_docs')
+  expect(names).not.toContain('read_doc')
+
+  const htmlResponse = await request.get('/docs/assistants/tool-reference')
+  expect(htmlResponse.ok()).toBeTruthy()
+  const html = await htmlResponse.text()
+  expect(html).toContain(snapshot.product_release)
+  expect(html).toContain(snapshot.digest)
+  expect(html).toContain('rel="alternate"')
+
+  await page.goto('/docs/assistants/tool-reference')
+  await expect(page.getByRole('heading', { level: 1, name: 'BitterClip tool reference' })).toBeVisible()
+  await expect(page.locator('.docs-sidebar a[href="/docs/assistants/tool-reference"]')).toBeVisible()
+  const rendered = await page.locator('.tool-reference__tool').evaluateAll((sections) => sections.map((section) => ({
+    name: section.querySelector('h2 code')?.textContent,
+    title: section.querySelector('h3')?.textContent,
+    description: section.querySelector('.tool-reference__description')?.textContent,
+    input_schema: JSON.parse(section.querySelector('pre code')?.textContent || '{}'),
+  })))
+  expect(rendered).toEqual(snapshot.operations.map((operation: any) => ({
+    name: operation.name,
+    title: operation.title,
+    description: operation.description,
+    input_schema: operation.input_schema,
+  })))
+
+  const markdown = await (await request.get('/docs/assistants/tool-reference.md')).text()
+  expect(markdown).toContain(snapshot.digest)
+  for (const operation of snapshot.operations) {
+    expect(markdown).toContain(`## ${operation.name}\n`)
+    expect(markdown).toContain(operation.description)
+  }
+  expect(await (await request.get('/llms.txt')).text()).toContain('https://bitterclip.com/docs/assistants/tool-reference')
+  expect(await (await request.get('/sitemap.xml')).text()).toContain('https://bitterclip.com/docs/assistants/tool-reference')
 })

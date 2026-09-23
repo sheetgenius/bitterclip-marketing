@@ -2,7 +2,7 @@
 # capped Instagram reality and the LinkedIn reconnect note can't drift.
 # VERIFIED against apps/bitterclip-rails/app/models/channel_connection.rb (publish scopes)
 # and docs/build/instagram-distribution-capped.md: youtube/x/linkedin = connectable +
-# auto_publish true (post after approval or in auto mode); instagram = connectable
+# auto_publish true means provider posting is available after exact approval; instagram = connectable
 # (Connect button exists, it authorizes) but auto_publish=false/capped, manual_handoff=true.
 # Owner reviews on any connector-manifest change.
 connectors:

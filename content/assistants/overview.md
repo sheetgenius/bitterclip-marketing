@@ -1,11 +1,11 @@
 ---
 title: Use BitterClip from your AI assistant
-description: Connect ChatGPT or Claude and make clips just by asking.
+description: Connect Claude or ChatGPT to browse and work with BitterClip; editing support depends on the host plan.
 navigation:
   label: Use it from your assistant
   order: 1
 section: assistants
-updated: '2026-08-23'
+updated: '2026-09-03'
 tags:
   - assistants
   - mcp
@@ -15,16 +15,17 @@ tags:
 
 # Use BitterClip from your AI assistant
 
-You connect BitterClip to ChatGPT or Claude once, then you make clips by talking to your
-assistant. No timeline, no settings to learn. You ask for a good moment, and the transcript
-editor opens right there in the chat with a clip already picked. From there you watch it,
-nudge the edges if you want, and export when it's right. The same work is waiting in your
-browser whenever that is easier.
+You connect BitterClip to Claude or ChatGPT, then ask the assistant to find a
+source-backed moment and prepare it for review. Claude and an installed BitterClip plugin
+can carry that into Clip creation and rendering when the selected account
+exposes write actions. A raw ChatGPT Pro custom-MCP connection is currently
+read/fetch-only; it can browse Episodes, read transcripts, and open the
+workspace when the host supports it, then continue the edit in BitterClip's browser.
 
 ::callout{type="note"}
-Claude supports custom connectors on every plan. In ChatGPT, custom-app access and the
-actions an app may take depend on your plan and workspace policy. BitterClip's browser
-workspace works for everyone.
+Claude supports custom connectors on every plan. In ChatGPT, the Plugin directory is
+visible across plans, but custom-MCP access and actions depend on plan, role, workspace
+policy, region, model, and rollout. BitterClip's browser workspace works for everyone.
 ::
 
 You'll need a BitterClip account first. The Creator trial lasts seven days and requires a
@@ -41,7 +42,7 @@ want the connect steps?
 
 ## Try the editor right here
 
-This is the same transcript editor your assistant opens for you. Have a play with it.
+This is the BitterClip transcript editor a supported host can open. Have a play with it.
 
 ::live-editor-embed
 ::
@@ -53,18 +54,21 @@ This is the same transcript editor your assistant opens for you. Have a play wit
 
 You don't have to phrase it any particular way. "Pull up my interview," "find me something
 worth posting," and "cut the part where she talks about pricing" all work. The assistant
-reads the transcript, finds the moment, and opens it.
+reads the transcript and points to the moment. A connection with write actions can save
+a review point and prepare the editor for you.
 
 ## What your assistant can do for you
 
-These are a handful of the things you can ask for once you're connected. Open a recording,
-ask for a specific cut, and inspect or revise the result in the same editor. BitterClip does
-not silently pick a "strong clip" for you; the request supplies the direction and the source
-stays attached. You can also ask the assistant to bring in a recording. Point it at a file
-or a link and it adds the recording to your project.
+These are a handful of the things you can ask for once you're connected. Ask for a specific
+cut, then inspect or revise the source-backed result in the editor. BitterClip does not
+silently pick a "strong clip" for you; your request supplies the direction. A connection
+with write actions can also prepare an upload handoff for a Recording you choose to add.
 
-::mcp-tools
-::
+For tool names, descriptions, input fields, and errors, see the
+[BitterClip tool reference](/docs/assistants/tool-reference). This static page
+is generated from the deployed Rails catalog during the site build and shows
+the product release it reflects. Available actions depend on your host and
+account permissions.
 
 ## How it connects
 
@@ -79,9 +83,9 @@ plain words.
 
 ## What lives in chat, and what lives in the web app
 
-Your assistant is built for one job: finding, reviewing, and tuning clips with you. It can
-also check whether a channel is connected and post a clip you've prepared. That keeps the
-conversation simple. Everything else lives in the web app.
+Your assistant helps find, review, and tune clips with you. Where the selected
+connection allows writes, it can prepare a post and open the exact package for
+review. Final confirmation happens in BitterClip.
 
 ::chat-vs-web-app
 ::
@@ -96,10 +100,12 @@ conversation simple. Everything else lives in the web app.
 Both assistants connect to the same BitterClip account, but their setup rules differ.
 Choose the guide for the host you use:
 
-- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: enable custom apps, add
-  BitterClip, then sign in. Workspace policy may require an admin.
-- **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip as a custom
-  connector on any Claude plan, then sign in.
+- **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: open the installed
+  **BitterClip Prod** plugin and choose **Try in chat**. Developer mode is only
+  for adding the raw MCP server as an unpublished development connection; that
+  raw Pro path is currently read/fetch-only.
+- **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip under
+  **Customize → Connectors**, sign in, then enable it for the conversation where you need it.
 
 If the connection doesn't take or your recordings don't show up, the
 [troubleshooting guide](/docs/help/troubleshooting) covers the usual fixes, and you can

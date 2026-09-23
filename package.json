@@ -8,9 +8,9 @@
     "node": ">=25"
   },
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "build": "node scripts/fetch-operation-catalog.mjs build",
+    "dev": "node scripts/fetch-operation-catalog.mjs dev",
+    "generate": "node scripts/fetch-operation-catalog.mjs generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "docs:audit": "node qa/docs-audit.mjs",
@@ -31,6 +31,7 @@
     "@nuxt/content": "^3.14.0",
     "better-sqlite3": "^12.11.1",
     "nuxt": "^4.4.4",
+    "parse5": "8.0.1",
     "three": "^0.185.1",
     "vue": "^3.5.34",
     "vue-router": "^5.0.6"

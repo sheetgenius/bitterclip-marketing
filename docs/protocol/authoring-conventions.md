@@ -5,8 +5,10 @@
 > [public-content runbook](../runbooks/public-content.md).
 
 This is the contract for everyone who writes docs pages. The substrate is
-`@nuxt/content` **v3** (Nuxt 4). Follow these rules and nothing drifts: edit
-one snippet or one `.yml` row and every page updates (O(1), not O(pages)).
+`@nuxt/content` **v3** (Nuxt 4). Shared creator copy lives in one snippet or
+data row. Exact tool definitions live in Rails. The site build snapshots its
+deployed model-visible catalog into the static tool reference page; edit tool
+descriptions in Rails, then deploy Rails and rebuild this site.
 
 > Phase status: the creator docs substrate is shipped. Build-time generation in
 > `modules/generated-surfaces.ts` emits the public Markdown/discovery surfaces;
@@ -21,7 +23,7 @@ one snippet or one `.yml` row and every page updates (O(1), not O(pages)).
 | A docs page | `content/<section>/<page>.md` | Served at `/docs/<section>/<page>`. The hub is `content/index.md` → `/docs`. |
 | A reusable snippet (prose/UI) | `app/components/content/<PascalCase>.vue` | Auto-registered MDC component. |
 | Volatile data | `content/_data/<name>.yml` | Validated by a zod schema in `content.config.ts`. Excluded from page routing. |
-| Frontmatter / data schema | `content.config.ts` | One `docs` page collection + four `data` collections. |
+| Frontmatter / data schema | `content.config.ts` | One `docs` page collection + three `data` collections. |
 | The render route | `app/pages/docs/[...slug].vue` | Catch-all; maps the route path 1:1 to the collection path. |
 
 Sections (folders + the `section` frontmatter enum): `getting-started`, `assistants`,
@@ -147,7 +149,6 @@ The keys under `---` become props (here, `links`).
 | `InstagramCappedNote` | `::instagram-capped-note` | — | `connectors` |
 | `ExampleClipPrompt` | `::example-clip-prompt` | `prompt?: string` | — |
 | `NextSteps` | `::next-steps` | `links: {to,label}[]` (YAML block) | — |
-| `McpTools` | `::mcp-tools` | `group?: string` | `mcpTools` |
 | `ConnectorScopes` | `::connector-scopes` | `connector: string` (required) | `connectorScopes` |
 | `LiveEditorEmbed` | `::live-editor-embed` | — | `site` |
 | `ZoomImportSettingsLink` | `::zoom-import-settings-link` | — | `site` |
@@ -160,13 +161,12 @@ The keys under `---` become props (here, `links`).
 
 ## Data collections — query + interpolation
 
-Volatile facts (URLs, tool names, scopes, connector status) live in `content/_data/*.yml`
-and are validated by zod. Four collections (defined in `content.config.ts`):
+Volatile site facts (URLs, scopes, connector status) live in `content/_data/*.yml`
+and are validated by zod. Three collections are defined in `content.config.ts`:
 
 | Collection | File | Shape |
 |---|---|---|
 | `site` | `content/_data/site.yml` | single object (`signup_url`, `support_email`, `mcp_resource_url`, `app_origin`, …) |
-| `mcpTools` | `content/_data/mcp-tools.yml` | `{ tools: [...] }` |
 | `connectorScopes` | `content/_data/connector-scopes.yml` | `{ scopes: [...] }` |
 | `connectors` | `content/_data/connectors.yml` | `{ connectors: [...] }` |
 
@@ -179,28 +179,24 @@ const { data: site } = await useAsyncData('site', () =>
 )
 // → site.value?.signup_url
 
-// List collection — read the doc, then index into its array:
-const { data } = await useAsyncData('mcp-tools', async () => {
-  const doc = await queryCollection('mcpTools').first()
-  return doc?.tools ?? []
-})
+// List collections follow the same pattern: read the data doc, then its array.
 ```
 
 `queryCollection(<name>)` is auto-imported (no import line). Builder methods:
 `.path(p)`, `.where(field, op, value)`, `.order(field, 'ASC'|'DESC')`, `.first()`, `.all()`.
 
-> **Pages do NOT read data directly.** Prose pages stay free of tool names, scopes, URLs,
-> and emails — they invoke a data-bearing snippet (`SignupCta`, `McpTools`,
+> **Pages do NOT read data directly.** Prose pages stay free of scopes, repeated URLs,
+> and emails — they invoke a data-bearing snippet (`SignupCta`,
 > `ConnectorScopes`, `SupportContact`, `InstagramCappedNote`, `LiveEditorEmbed`) which reads
-> the `.yml`. To change a fact, edit the `.yml` row, not the page.
+> the `.yml`. To change a site fact, edit the `.yml` row, not the page. Exact tool names,
+> schemas, and descriptions belong to the live Rails operation reference linked from the
+> assistant guide; do not mirror them in this site.
 
 ### Rules that protect us
 
 - **Raw OAuth scopes are never rendered.** `connector-scopes.yml` stores the raw `scope`
   string only for cross-checking against the Rails `channel_connection.rb`; the
   `ConnectorScopes` component renders **only** `plain_label`.
-- **`mcp-tools.yml` is a curated subset** (the live server has ~80 ops). The `McpTools`
-  component prints a "curated subset — not the full catalog" caption; keep it.
 - **No prices/plan names** anywhere — link via `SignupCta` (reads `site.yml`).
 
 ---

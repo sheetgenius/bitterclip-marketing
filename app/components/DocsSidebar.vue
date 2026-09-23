@@ -75,6 +75,12 @@ const sections = computed<NavSection[]>(() => {
     if (!buckets.has(seg)) buckets.set(seg, [])
     buckets.get(seg)!.push(item)
   }
+  // This page is built from the deployed Rails catalog, not authored content/.
+  buckets.get('assistants')?.push({
+    title: 'Tool reference',
+    path: '/docs/assistants/tool-reference',
+    order: 5,
+  })
   const out: NavSection[] = []
   for (const id of SECTION_ORDER) {
     const items = buckets.get(id)

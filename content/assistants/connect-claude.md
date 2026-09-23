@@ -1,11 +1,11 @@
 ---
 title: Connect Claude
-description: Add BitterClip to Claude as a Connector and make your first clip in chat.
+description: Add BitterClip to Claude as a Connector and review your first source-backed clip.
 navigation:
   label: Connect Claude
   order: 3
 section: assistants
-updated: '2026-07-10'
+updated: '2026-09-04'
 tags:
   - assistants
   - claude
@@ -25,8 +25,7 @@ conversation. Here's how to set it up and pull your first clip.
 
 ::callout{type="note"}
 Claude supports custom connectors on Free, Pro, Max, Team, and Enterprise plans. A Free
-account can add one custom connector, so BitterClip can be that one. The feature is still
-marked beta, which is why some labels may move.
+account can add one custom connector, so BitterClip can be that one.
 ::
 
 ## Add BitterClip as a connector in Claude
@@ -34,41 +33,60 @@ marked beta, which is why some labels may move.
 ::assistant-connection-intro
 ::
 
-There's nothing to download or run on your computer:
+There's nothing to download or run on your computer. Claude now keeps Skills, Connectors,
+Plugins, and Settings as separate sections under **Customize**. BitterClip is a Web / Custom
+connector, not a Claude plugin:
 
-1. In Claude, open **Settings → Connectors** — or go straight to [claude.ai/customize/connectors](https://claude.ai/customize/connectors) — and click **Add custom connector** (it's marked BETA).
-2. Fill in:
+1. In Claude, open **Customize → Connectors** and click **+ → Add custom connector**.
+2. In **Step 1 of 2**, fill in:
    - **Name** — BitterClip
    - **URL** — paste the address above (it ends in `/mcp`): `https://app.bitterclip.com/mcp`
-   - Leave **Advanced settings** (OAuth Client ID / Secret) blank — you don't need them.
-3. Click **Add**.
-
-![Claude's "Add custom connector" dialog with BitterClip and the app.bitterclip.com/mcp URL](/img/docs/claude-add-custom-connector.png)
+3. Click **Continue**. Leave OAuth Client ID and Secret blank if the next step shows
+   advanced settings; BitterClip and Claude discover the connection automatically.
+4. Finish adding the connector.
 
 ## Connect and sign in
 
-BitterClip now shows up in your connectors with **"You are not connected to BitterClip yet."**
-Click **Connect**, then sign in to your BitterClip account in the window Claude opens. That's
-the only sign-in step.
+BitterClip now shows up in **Customize → Connectors**. If it shows a **Connect** button,
+click it. Claude opens BitterClip so you can sign in and approve the connection. When you
+return, the row should say **Connected**.
 
-![Claude showing BitterClip not connected yet, with a Connect button](/img/docs/claude-connect.png)
+BitterClip's current connector token lasts up to 30 days and does not refresh in the
+background. If the connector later asks you to sign in again, reconnect it; you do not need
+to remove and re-add it.
+
+## Enable BitterClip in this conversation
+
+Connected and enabled are separate. In the chat composer, click **+ → Connectors** and make
+sure BitterClip is checked for this conversation. You can turn it off there whenever the
+conversation does not need access to your recordings.
 
 ::callout{type="tip"}
-Optional: on the BitterClip connector's page you can set **Tool permissions** to **Always
-allow** so Claude stops asking each time it opens an episode or reads a transcript. You can
-also allow tools one at a time.
+Claude's BitterClip page groups tools as **Interactive**, **Read-only**,
+**Write/delete**, and **App-only**. Keep Interactive and Write/delete tools on **Needs
+approval**. To reduce prompts, allow only the exact reads you trust—such as **List episodes**
+and **Read an episode**—instead of changing a whole group to Always allow.
 ::
 
-![Claude's BitterClip connector page with tool permissions set to Always allow](/img/docs/claude-tool-permissions.png)
+Claude conservatively puts **Check render status** in Write/delete. Checking does not start
+or charge a render, but it may tidy the delivery record for a finished Clip, so leaving it
+on **Needs approval** is the honest default.
 
 ::callout{type="note"}
 Claude moves its menus around now and then, so the wording can differ. The shape stays the
-same: **Settings → Connectors → Add custom connector**, point it at the BitterClip address
-above, then click **Connect** to sign in.
+same: **Customize → Connectors → Add custom connector**, point it at the BitterClip address
+above, authorize it, then enable it in the conversation where you want to use it.
 ::
 
 You'll know it worked when BitterClip's tools turn up in your conversation and Claude can
 answer about your recordings.
+
+Before asking Claude to cut anything, try this small check:
+
+> "Using BitterClip, list my three latest episodes with their titles and lengths. Don't
+> open, edit, render, or publish anything."
+
+That proves the connector is enabled and signed in without changing your work.
 
 ## Make your first clip in chat
 
@@ -79,18 +97,18 @@ you have a recording, ask Claude in plain words:
 ::example-clip-prompt
 ::
 
-## Review and export in the editor that opens
+## Review and export in the editor
 
-When Claude picks out a strong moment, the transcript editor opens right in the
-conversation with that clip already selected. You'll see the words, who's speaking, and
-the cut Claude chose. Read it over the way you'd read a paragraph. The cut comes
-straight from the words you keep, so you can trace it back to the exact spot it came
-from.
+Claude can inspect the Episode, explain a promising stretch, and save a review point.
+Ask it to prepare the Episode editor when you want to inspect the source. A host that
+supports BitterClip's interactive workspace can open it in the conversation; you can
+also open the same Episode in BitterClip's browser. Check the words, speakers, and
+boundaries before asking for an editable Clip.
 
-Nothing is final yet. Keep talking to Claude to nudge the edges ("start it on her
-question," "trim the last few seconds"), or drag the selection yourself. When it looks
-right, ask Claude to export it. That render is a separate step, and the finished clip
-lands in your project once it's done.
+Keep talking to Claude to revise the cut ("start it on her question," "trim the last few
+seconds"), or edit it in the browser. When the Clip looks right, ask Claude to render
+an Export. Rendering is a separate step; the exact finished version appears in your
+Project once it is ready.
 
 ::chat-vs-web-app
 ::
@@ -101,6 +119,17 @@ lands in your project once it's done.
 ::
 
 ## Troubleshooting
+
+If Claude says no BitterClip tools are available even though Customize shows
+the connector as Connected, open **+ → Connectors** in that conversation and
+turn BitterClip on. Account-level connection and conversation-level enablement
+are separate; without the toggle Claude may try an unrelated artifact or code
+tool instead.
+
+The finished BitterClip card can mount even when Claude's prose says it cannot
+confirm what the host displayed. Trust the visible card: it should show the
+Clip title, Ready status, Play preview, Download MP4, and Open in editor. The
+model's tool summary and the host's rendered UI are separate evidence layers.
 
 If a connection won't stick or a clip doesn't show up, see the
 [troubleshooting guide](/docs/help/troubleshooting).

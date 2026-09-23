@@ -1,26 +1,60 @@
-# BitterClip — ChatGPT app directory submission packet
+# BitterClip — ChatGPT Plugin submission packet
 
-> **Status: submission snapshot.** Reverify current provider requirements,
-> public URLs, and product capabilities before submission. Never add reviewer
-> credentials or secrets.
+> **Status: quarantined historical submission snapshot; not submit-ready.** A
+> 2026-09-03 host/source audit found material drift in the provider vocabulary,
+> plan matrix, OAuth lifecycle guidance, current operation names/counts, and
+> widget resource policy. Never paste this packet into a portal until the
+> revalidation gate below is complete. Never add reviewer credentials or secrets.
 
-Working packet for listing BitterClip in the **ChatGPT app directory** (OpenAI Apps
-SDK). Companion to [anthropic-connector-submission.md](anthropic-connector-submission.md)
+Working packet for submitting BitterClip as an MCP-backed **plugin**. The first
+version can be MCP-only; Skills can be added when they materially improve the
+workflow. Installed-plugin/help UI may separately label the connected external
+capability an App. Companion to
+[anthropic-connector-submission.md](anthropic-connector-submission.md)
 — same server, same verified facts, different store, form, and review flow. The
-The public assistant overview now lives at `/docs/assistants/overview`; `/mcp`
-is a compatibility redirect. This packet remains the working public checklist
+public assistant overview now lives at `/docs/assistants/overview`;
+`https://bitterclip.com/mcp` is a marketing compatibility redirect. This packet
+remains the working public checklist
 only after its provider facts have been reverified.
 
 - **Submission portal:** https://platform.openai.com/apps-manage (after testing in
   ChatGPT Developer Mode)
-- **Submission guide:** https://developers.openai.com/apps-sdk/deploy/submission
-- **Submission guidelines (policy):** https://developers.openai.com/apps-sdk/app-submission-guidelines
-- **Auth requirements:** https://developers.openai.com/apps-sdk/build/auth
-- **Server/widget requirements:** https://developers.openai.com/apps-sdk/build/mcp-server
-- **UI guidelines:** https://developers.openai.com/apps-sdk/concepts/ui-guidelines
+- **Submission guide:** https://developers.openai.com/plugins/deploy/submission
+- **Submission guidelines (policy):** https://developers.openai.com/plugins/app-guidelines
+- **Auth requirements:** https://developers.openai.com/plugins/build/auth
+- **Server/widget requirements:** https://developers.openai.com/plugins/build/mcp-server
+- **UI guidelines:** https://developers.openai.com/plugins/concepts/ui-guidelines
 
 > Same rule as the Anthropic packet: no OAuth secrets, demo credentials, or private
 > reviewer accounts in this repo. `<provide in portal>` fields go in the dashboard.
+
+## 2026-09-03 revalidation gate
+
+The current binding facts are:
+
+- ChatGPT exposes a Plugin directory with separate Plugins and Skills. Current
+  developer docs define a plugin as Skills, an MCP server, or both. Installed
+  detail/help UI may still call the connected external capability an App.
+- OpenAI currently limits Pro custom MCP to read/fetch. Full write/modify MCP is
+  a Business and Enterprise/Edu beta. Reviewer prompts that create Clips,
+  render, or publish require an eligible managed workspace and policy.
+- Current Developer-mode testing enables Developer mode under Settings →
+  Security and login, then adds the MCP server from the Plugins page with its
+  plus button. Create the connection, complete discovered OAuth, then review the
+  tools and metadata. A copied confidential-client secret is fallback-only.
+- BitterClip issues 30-day access tokens and no refresh token. OpenAI warns an
+  OAuth App without refresh access may lose connectivity when the original
+  authorization expires; reauthentication is expected until that contract is
+  implemented.
+- The hard-coded June tool counts, operation names, annotation totals, and widget
+  URIs below are historical. Regenerate them from the current Rails
+  `Bitterclip::OperationCatalog`, then rerun exact-host read and write cases before
+  changing this status.
+
+Until that work is done, the remainder of this document is archaeology and test
+design—not current submission evidence. The current user setup contract is
+`content/assistants/connect-chatgpt.md`; the current operator contract is the
+Rails repo's `docs/build/chatgpt-prod-connection-guide.md`.
 
 ---
 
@@ -83,7 +117,7 @@ Things this store requires that the Anthropic one doesn't (or weighs differently
 2. **OAuth 2.1 specifics.** The link-account UI only appears if: protected-resource
    metadata is discoverable, tools declare `securitySchemes` (✅ already), and auth
    errors carry `_meta["mcp/www_authenticate"]`. PKCE S256 is required. Audit the
-   server against https://developers.openai.com/apps-sdk/build/auth before submitting.
+   server against https://developers.openai.com/plugins/build/auth before submitting.
 3. **Transport.** Streamable HTTP recommended (SSE legacy-supported), streaming
    responses, proper HTTP status codes. Same open verification item as the Anthropic
    packet (§8.5 there).
@@ -99,7 +133,7 @@ Things this store requires that the Anthropic one doesn't (or weighs differently
    `idempotency_key` params. Server `instructions`: first 512 chars must stand alone.
 6. **App-only tool tier — resolved (2026-06-11 audit).** App-only tools ship with
    `_meta.ui.visibility: ["app"]` and `"openai/widgetAccessible": true`
-   (`operation_catalog.rb:1880-1894`) — exactly the Apps SDK mechanism for
+   (`operation_catalog.rb:1880-1894`) — the standard plugin/MCP Apps UI mechanism for
    widget-initiated tools. Note the precise claim: this is **host-honored metadata,
    not server-side caller enforcement** — all 54 tools accept any authenticated,
    scope-authorized call (widget and model use the same `/mcp` endpoint and token).

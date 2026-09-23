@@ -69,6 +69,8 @@ This repository owns:
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - public blog RSS at `/blog/rss.xml`
 - public AI-assistant and MCP guidance under `/docs/assistants`
+- a static full tool reference at `/docs/assistants/tool-reference`, built from
+  the deployed Rails model-visible catalog with source release and digest
 - the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 
@@ -108,6 +110,8 @@ not appear in any surface.
 - MCP and AI assistant workflow:
   [bitterclip.com/docs/assistants/overview](https://bitterclip.com/docs/assistants/overview)
   (`/mcp` remains a compatibility redirect)
+- Static MCP tool reference:
+  [bitterclip.com/docs/assistants/tool-reference](https://bitterclip.com/docs/assistants/tool-reference)
 - Privacy policy: [bitterclip.com/privacy](https://bitterclip.com/privacy)
 - Terms of service: [bitterclip.com/terms](https://bitterclip.com/terms)
 - Markdown page mirrors:

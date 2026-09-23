@@ -61,6 +61,11 @@ generation in `modules/generated-surfaces.ts` emits docs Markdown twins,
 `llms.txt`, `llms-full.txt`, sitemap entries, and feeds. Do not hand-edit those
 generated outputs.
 
+The static tool reference is the exception to `content/` authoring: its
+descriptors are fetched from the deployed Rails model-visible catalog during
+`bun run generate`. Change a tool description in the product catalog, deploy
+Rails, then rebuild this site. An unavailable or invalid catalog fails the build.
+
 Vue-owned marketing routes such as the homepage and legal pages retain their
 checked-in Markdown alternates under `public/`. Follow
 `docs/runbooks/public-content.md` before changing routes, public claims, or

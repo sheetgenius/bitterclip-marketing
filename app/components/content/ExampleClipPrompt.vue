@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // A reusable example natural-language prompt a creator can paste to their assistant.
-// Matches the product's clip-suggestion flow: a "find the moment" ask makes the
-// assistant open the episode in the transcript editor with a clip already picked
-// (the open_workspace greeting). Optional `prompt` prop overrides the default example.
+// A suggestion points to source-backed evidence; write-capable connections can
+// save a review point and prepare the editor. Optional `prompt` overrides this example.
 // Invoke: ::example-clip-prompt  or  ::example-clip-prompt{prompt="Find my best moment"}
 withDefaults(defineProps<{ prompt?: string }>(), {
   prompt: 'Pull up my latest interview and find the strongest moment.',
@@ -16,10 +15,9 @@ withDefaults(defineProps<{ prompt?: string }>(), {
       <p>"{{ prompt }}"</p>
     </blockquote>
     <p>
-      BitterClip opens that episode for you right in the chat, with a strong clip already
-      picked out and the cut ready to review. From there you can keep talking to it: "make it
-      a bit shorter," "start it on her question," "find me one more." It adjusts until the
-      clip is right.
+      Your assistant can inspect the Episode and point to a promising stretch. With a
+      connection that supports write actions, it can save a review point and prepare the
+      Episode editor. Review the source, then ask it to make a Clip or adjust a cut.
     </p>
   </div>
 </template>

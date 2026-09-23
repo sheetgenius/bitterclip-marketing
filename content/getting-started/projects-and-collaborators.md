@@ -5,7 +5,7 @@ navigation:
   label: Projects and collaborators
   order: 2
 section: getting-started
-updated: '2026-06-24'
+updated: '2026-09-03'
 tags:
   - projects
   - collaboration
@@ -27,11 +27,17 @@ Your projects live on the Projects page, listed under your studio. Open the one 
 
 [screenshot: the Projects page listing your studio's projects]
 
-When you connect an assistant like ChatGPT or Claude, it works inside the project you point it at, so the recordings it can open and the clips it makes stay scoped to that show.
+When you connect an assistant like ChatGPT or Claude, it works inside the project you point
+it at. Recordings it opens—and, where the host supports write actions, Clips it makes—stay
+scoped to that Project.
 
 ## Inviting a collaborator
 
-You don't have to do everything yourself. If you own a project, you can invite someone to work in it alongside you: an editor, a co-host, a reviewer, or a client. They open your recordings, and depending on the role you give them, they can pull their own clips in their own ChatGPT or Claude, or in the browser. You upload once, and your collaborators work from the same recordings.
+You don't have to do everything yourself. If you own a project, you can invite someone to
+work in it alongside you: an editor, a co-host, a reviewer, or a client. Depending on the
+role you give them, they can open your recordings and make Clips in the browser or through
+an assistant whose plan and workspace policy allow writes. You upload once, and your
+collaborators work from the same recordings.
 
 When you send an invite, you choose what that person can do:
 

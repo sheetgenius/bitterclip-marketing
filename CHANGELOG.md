@@ -117,6 +117,25 @@ under a dated entry.
 
 ### Website
 
+- Added a static full MCP tool reference generated from the deployed Rails
+  model-visible catalog at build time. Its HTML, Markdown, and JSON surfaces
+  show the source release and digest; the build refuses the retired help-tool
+  catalog until the Rails cutover is deployed.
+- Corrected creator publishing guidance to match the current exact-package
+  confirmation flow, and aligned the assistant capability examples with the
+  live model tool surface. The docs build now emits a digest-labelled public
+  help corpus from authored creator pages for the product agent.
+- Updated the ChatGPT and Claude connection guides for their September 2026
+  host surfaces. ChatGPT users open the installed BitterClip Prod plugin from
+  Plugins and choose Try in chat without Developer mode; Developer mode is the
+  separate raw/unpublished MCP-server test path. The docs preserve OpenAI's raw
+  Pro custom-MCP read/fetch boundary while recording that the installed plugin
+  exposed writes on the Pro account used for live QA. Claude separates
+  Skills, Connectors, and Plugins under Customize and enables connectors per
+  conversation. Both guides now begin with a read-only check, explain the
+  relevant privacy/approval controls, and no longer teach stale screenshots or
+  blanket Claude permissions. The FAQ, introductory, Project/collaborator, and
+  publishing guides now carry the same ChatGPT plan boundary.
 - Added `/founder-onboarding` with a matching Markdown alternate, campaign
   attribution handoff, sitemap entry, and smoke coverage for the founder-led
   first-cut offer.

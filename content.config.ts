@@ -148,25 +148,6 @@ export default defineContentConfig({
       }),
     }),
 
-    // Curated, creator-facing subset of the MCP tool catalog (NOT the full ~80).
-    mcpTools: defineCollection({
-      type: 'data',
-      source: '_data/mcp-tools.yml',
-      schema: z.object({
-        tools: z.array(
-          z.object({
-            name: z.string(),
-            // Plain "what you can ask for" phrase rendered to creators (the raw `name` stays internal).
-            ask: z.string(),
-            group: z.string(),
-            plain_purpose: z.string(),
-            primary: z.boolean().default(false),
-            creator_facing: z.boolean().default(true),
-          }),
-        ),
-      }),
-    }),
-
     // Per-connector permissions in plain English. Raw scope is internal-only.
     connectorScopes: defineCollection({
       type: 'data',

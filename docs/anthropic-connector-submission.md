@@ -1,12 +1,13 @@
 # BitterClip — Anthropic Connectors Directory submission packet
 
-> **Status: submission snapshot.** Reverify current provider requirements,
-> public URLs, and product capabilities before submission. Never add reviewer
-> credentials or secrets.
+> **Status: quarantined historical submission snapshot; not submit-ready.** A
+> 2026-09-03 host/source audit confirmed the connection surface but found the
+> hard-coded tool counts, operation names, annotation totals, and some test flows
+> materially stale. Never add reviewer credentials or secrets.
 
 Working packet for listing BitterClip in **Anthropic's Connectors Directory** (the
 catalog users browse and "Add" inside Claude.ai / Claude Desktop / Claude Code). This
-is distinct from the ChatGPT app directory packet
+is distinct from the ChatGPT Plugin submission packet
 ([chatgpt-app-submission.md](chatgpt-app-submission.md)) — same server, different
 store and review flow.
 
@@ -18,6 +19,32 @@ store and review flow.
 > Do **not** commit OAuth secrets, demo credentials, or the private reviewer account
 > password into this repo. Fields marked `<provide in portal>` are filled in the
 > submission portal / a private channel, never here.
+
+## 2026-09-03 revalidation gate
+
+The current binding facts are:
+
+- Claude separates Skills, Connectors, Plugins, and Settings under **Customize**.
+  BitterClip is a **Web / Custom connector**, enabled per conversation through
+  the composer **+ → Connectors** menu. It is not itself a Claude plugin.
+- The connector's host permissions group tools as Interactive, Read-only,
+  Write/delete, and App-only. Keep Interactive and Write/delete at Needs
+  approval for QA; do not recommend blanket Always allow.
+- `render_status` deliberately appears under Write/delete because it is a
+  repairing read with `readOnlyHint: false`. Checking never starts or charges a
+  render, but it may idempotently repair delivery records for an already-ready
+  Clip.
+- The hard-coded June catalog counts and legacy operation names below are not
+  current. Regenerate every tool/annotation claim from Rails
+  `Bitterclip::OperationCatalog` and rerun the reviewer flows before submission.
+- `GET https://app.bitterclip.com/mcp` is now correctly `405`; the connector is
+  the authenticated MCP
+  transport endpoint, not a public documentation page.
+
+Until that work is done, the remainder of this document is archaeology and test
+design—not current submission evidence. The current user setup contract is
+`content/assistants/connect-claude.md`; the current operator contract is the
+Rails repo's `docs/build/claude-prod-connection-guide.md`.
 
 ---
 

@@ -5,7 +5,7 @@ navigation:
   label: What is BitterClip?
   order: 0
 section: getting-started
-updated: '2026-08-23'
+updated: '2026-09-03'
 tags:
   - overview
   - concepts
@@ -37,12 +37,20 @@ active plan.
 ::
 
 ::callout{type="note"}
-You might run into an older BitterClip post that says "Moment." Don't worry about it. The words we use now are Recording, Episode, and Clip.
+An older BitterClip post may call an Episode a "Moment." Today a Moment is a saved
+point of editorial intent for review; an Episode or Clip is the editable production.
 ::
 
 ## Where it runs
 
-There are two ways to work, and your recordings and clips are the same in both. The browser is the place to manage everything in one window. If you'd rather just say what you want out loud, ChatGPT or Claude can do the work for you while you talk it through. Whichever you start in, you can pick up where you left off in the other. The [assistant guide](/docs/assistants/overview) walks through that side.
+There are two ways to work, and your recordings and clips are the same in both. The browser
+is the place to manage everything in one window. If you'd rather just say what you want out
+loud, ChatGPT or Claude can help while you talk it through; editing actions
+depend on the selected plugin or connection. The installed BitterClip plugin
+can expose writes on ChatGPT Pro, while a raw Pro custom-MCP connection is
+currently limited to reads and opening the workspace. Whichever you start in,
+you can pick up where you left off in the other. The
+[assistant guide](/docs/assistants/overview) walks through that side.
 
 ## How a clip actually gets made
 
