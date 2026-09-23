@@ -34,6 +34,8 @@ test('connect page leads with Claude and routes installs through the app', async
   await expect(page.getByRole('link', { name: 'Add to Claude' })).toHaveAttribute('href', 'https://app.bitterclip.com/go/claude?from=connect_page')
   await expect(page.getByRole('link', { name: 'Start in Claude' })).toHaveAttribute('href', 'https://app.bitterclip.com/go/claude/start?from=connect_page')
   await expect(page.getByText('to see what\'s connected')).toBeVisible()
+  await expect(page.locator('header').getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', 'https://app.bitterclip.com/sign_in')
+  await expect(page.getByRole('link', { name: 'Add to Claude' })).toHaveClass(/bg-\[#f28f84\]/)
   await expect(page.getByTestId('connect-status')).toHaveCount(0)
 })
 
@@ -72,6 +74,10 @@ test('a signed-in visitor sees live connection status', async ({ page }) => {
 
   await expect(page.getByTestId('connect-status')).toHaveText(/Connected · used 2 minutes ago/)
   await expect(page.getByText('Signed in to BitterClip.')).toBeVisible()
+  await expect(page.locator('header').getByRole('link', { name: 'Open BitterClip' })).toHaveAttribute('href', 'https://app.bitterclip.com/')
+  // Connected, so starting to edit is the primary action.
+  await expect(page.getByRole('link', { name: 'Start in Claude' })).toHaveClass(/bg-\[#f28f84\]/)
+  await expect(page.getByRole('link', { name: 'Add to Claude' })).not.toHaveClass(/bg-\[#f28f84\]/)
   await page.getByRole('tab', { name: 'ChatGPT' }).click()
   await expect(page.getByTestId('connect-status')).toHaveText(/Reconnect needed/)
 })

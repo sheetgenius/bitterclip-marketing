@@ -16,29 +16,35 @@ export interface ViewerStatus {
   assistants?: Partial<Record<AssistantKey, AssistantStatus>>
 }
 
+const APP_ORIGIN = 'https://app.bitterclip.com'
 const REQUEST_TIMEOUT_MS = 4000
 
-export function useViewer(appOrigin = 'https://app.bitterclip.com') {
-  const status = ref<ViewerStatus | null>(null)
+// One status for the whole page: the site header and /connect read the same
+// answer, and a page load asks the app once. Only the browser fetches, so the
+// prerendered HTML always carries the signed-out rendering.
+const status = ref<ViewerStatus | null>(null)
+let firstCheck: Promise<void> | null = null
+
+async function refresh() {
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+  try {
+    const response = await fetch(`${APP_ORIGIN}/viewer`, {
+      credentials: 'include',
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+    if (response.ok) status.value = await response.json()
+  } catch {
+    // Network, CORS, or timeout: keep the signed-out rendering.
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
+export function useViewer() {
   let pollTimer: ReturnType<typeof setInterval> | null = null
   let pollDeadline = 0
-
-  async function refresh() {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
-    try {
-      const response = await fetch(`${appOrigin}/viewer`, {
-        credentials: 'include',
-        cache: 'no-store',
-        signal: controller.signal,
-      })
-      if (response.ok) status.value = await response.json()
-    } catch {
-      // Network, CORS, or timeout: keep the signed-out rendering.
-    } finally {
-      clearTimeout(timeout)
-    }
-  }
 
   function stopPolling() {
     if (pollTimer) clearInterval(pollTimer)
@@ -58,7 +64,9 @@ export function useViewer(appOrigin = 'https://app.bitterclip.com') {
     }, everyMs)
   }
 
-  onMounted(refresh)
+  onMounted(() => {
+    firstCheck ??= refresh()
+  })
   onBeforeUnmount(stopPolling)
 
   return { status, refresh, pollUntil, stopPolling }

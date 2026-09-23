@@ -12,6 +12,11 @@ import ibmPlexMonoLatinUrl from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-l
 // pricing, in-page CTAs), and a header a[href^=".../sign_up"] would be counted
 // as a signup_click by plugins/analytics.client.ts.
 const SIGN_IN_URL = 'https://app.bitterclip.com/sign_in'
+const APP_URL = 'https://app.bitterclip.com/'
+
+// A visitor already signed in to the app goes straight back to it.
+const { status } = useViewer()
+const signedIn = computed(() => status.value?.signed_in === true)
 
 // The canonical nav. A link added here appears in every header on the site.
 const NAV_LINKS = [
@@ -114,9 +119,9 @@ const isActive = (to: string) => {
       <div class="flex items-center">
         <a
           class="focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:outline-none px-4 py-1.5 rounded-full text-xs font-bold bg-[#f28f84] text-zinc-950 hover:bg-[#ffa89e] active:scale-[0.97] transition duration-200 shadow-lg shadow-[#f28f84]/20 hover:shadow-[#f28f84]/40"
-          :href="SIGN_IN_URL"
+          :href="signedIn ? APP_URL : SIGN_IN_URL"
         >
-          Sign in
+          {{ signedIn ? 'Open BitterClip' : 'Sign in' }}
         </a>
       </div>
     </nav>

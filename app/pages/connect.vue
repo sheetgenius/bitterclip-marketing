@@ -26,7 +26,7 @@ const TABS: { key: TabKey, label: string }[] = [
 ]
 
 const route = useRoute()
-const { status, pollUntil } = useViewer(APP_ORIGIN)
+const { status, pollUntil } = useViewer()
 const tab = ref<TabKey>('claude')
 const tabChosenByVisitor = ref(false)
 const polling = ref(false)
@@ -98,6 +98,14 @@ watch(tab, (value) => {
 
 const signedIn = computed(() => status.value?.signed_in === true)
 const stateFor = (key: AssistantKey) => status.value?.assistants?.[key]?.state ?? null
+
+// Once an assistant is connected, starting to edit is the next step, so Start
+// takes the primary style from Add.
+const BUTTON = 'inline-flex min-h-11 items-center justify-center rounded-full px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]'
+const PRIMARY_BUTTON = `${BUTTON} bg-[#f28f84] text-[#20100c] hover:bg-[#ffa89e] focus-visible:ring-offset-2 focus-visible:ring-offset-black`
+const SECONDARY_BUTTON = `${BUTTON} border border-white/15 text-white hover:border-[#f28f84]`
+const addButton = (key: AssistantKey) => stateFor(key) === 'connected' ? SECONDARY_BUTTON : PRIMARY_BUTTON
+const startButton = (key: AssistantKey) => stateFor(key) === 'connected' ? PRIMARY_BUTTON : SECONDARY_BUTTON
 const chip = computed(() => {
   if (!signedIn.value) return polling.value ? { tone: 'wait', text: 'Waiting for you to sign in and allow' } : null
   const assistant = status.value?.assistants?.[tab.value]
@@ -278,7 +286,7 @@ useHead({
               :href="goUrl('claude', 'add')"
               target="_blank"
               rel="noopener"
-              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="mt-5" :class="addButton('claude')"
               @click="watchForConnection"
             >Add to Claude</a>
           </li>
@@ -299,7 +307,7 @@ useHead({
               :href="goUrl('claude', 'start')"
               target="_blank"
               rel="noopener"
-              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+              class="mt-5" :class="startButton('claude')"
             >Start in Claude</a>
           </li>
         </ol>
@@ -336,7 +344,7 @@ useHead({
               :href="goUrl('chatgpt', 'add')"
               target="_blank"
               rel="noopener"
-              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="mt-5" :class="addButton('chatgpt')"
               @click="watchForConnection"
             >Open ChatGPT Plugins</a>
           </li>
@@ -351,7 +359,7 @@ useHead({
                 :href="goUrl('chatgpt', 'start')"
                 target="_blank"
                 rel="noopener"
-                class="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+                class="flex-1" :class="startButton('chatgpt')"
               >Open ChatGPT</a>
               <button
                 type="button"
@@ -420,7 +428,7 @@ useHead({
             </p>
             <button
               type="button"
-              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-[#f28f84] px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              class="mt-5" :class="addButton('codex')"
               @click="openCodex(`/goal ${AGENT_INSTALL_PROMPT}`)"
             >Install in Codex</button>
             <p v-if="codexMissing" data-testid="codex-missing" class="mt-3 text-sm text-[#f0d68f]">
@@ -448,7 +456,7 @@ useHead({
             </p>
             <button
               type="button"
-              class="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-white/15 px-5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:border-[#f28f84] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+              class="mt-5" :class="startButton('codex')"
               @click="openCodex(STARTER_PROMPT)"
             >Start in Codex</button>
           </li>
