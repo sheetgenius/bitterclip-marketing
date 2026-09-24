@@ -69,7 +69,7 @@ const releaseRequestText = await readFile(releaseRequestPath, 'utf8').catch((err
   if (error.code === 'ENOENT') return null
   throw error
 })
-if (releaseRequestText && !process.env.BITTERCLIP_CATALOG_URL) {
+if (releaseRequestText !== null && !process.env.BITTERCLIP_CATALOG_URL) {
   const request = JSON.parse(releaseRequestText)
   if (request.schema_version !== 'bitterclip.public_contract_release_request.v1' ||
       request.product_release !== release || request.public_contract_commit !== commit ||
