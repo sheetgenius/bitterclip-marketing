@@ -15,8 +15,10 @@ tags:
 
 # Install BitterClip in Claude Code or Codex
 
-This page is written for AI agents. People can use the [connect page](/connect), which also
-covers Claude and ChatGPT.
+This page is written for AI agents installing BitterClip in Claude Code or Codex.
+BitterClip's built-in Agent already has the editing skills; it needs no plugin
+installation. People can use the [connect page](/connect), which also covers
+Claude and ChatGPT.
 
 To have an agent install BitterClip, send it this message. In Codex, start it with `/goal`.
 
