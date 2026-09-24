@@ -1,0 +1,101 @@
+{
+  "name": "episode_camera_group_set",
+  "title": "Group episode cameras",
+  "description": "Explicitly assign synchronized camera angles in one editable Episode to a stable camera group. Omit camera_group_key to create a new opaque group, pass an existing Episode group, or backfill the exact key already carried by every selected angle's active Footage-session membership. This changes only camera identity/label projection: synchronization, angle IDs, Program ranges, preview, and render resolution remain unchanged. The revision-guarded receipt retains every prior key and label for reversal.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID."
+      },
+      "angle_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 200,
+        "description": "Angles that should share the group."
+      },
+      "camera_group_key": {
+        "type": "string",
+        "description": "Optional existing group key from this Episode. Omit to create one."
+      },
+      "camera_label": {
+        "type": "string",
+        "description": "Optional human-facing group label; never used as identity."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current Episode structural revision."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact regrouping."
+      },
+      "reason": {
+        "type": "string",
+        "description": "Required evidence or explicit human instruction supporting the grouping."
+      }
+    },
+    "required": [
+      "episode_id",
+      "angle_ids",
+      "expected_revision",
+      "idempotency_key",
+      "reason"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "angle_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "camera_group_key": {
+        "type": "string"
+      },
+      "camera_label": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "angles": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "prior_anchors": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "audit_receipt_id": {
+        "type": "string"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "render_stale": {
+        "type": "boolean"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

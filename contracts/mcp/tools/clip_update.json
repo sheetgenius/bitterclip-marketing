@@ -1,0 +1,71 @@
+{
+  "name": "clip_update",
+  "title": "Update clip metadata",
+  "description": "Update one exact Clip's title and/or description. Read that Clip first and pass its draft_revision; a stale token fails without overwriting newer human copy. This does not structurally edit the parent episode; choose render aspect ratio with render_create.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "clip_id": {
+        "type": "string",
+        "description": "Clip public ID."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional new title."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional new description."
+      },
+      "expected_revision": {
+        "type": "string",
+        "description": "Required opaque draft_revision from a fresh episode_read or binding receipt."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry."
+      }
+    },
+    "required": [
+      "clip_id",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "clip_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "draft_revision": {
+        "type": "string"
+      },
+      "stale_media": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

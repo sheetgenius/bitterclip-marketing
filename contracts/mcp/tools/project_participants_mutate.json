@@ -1,0 +1,143 @@
+{
+  "name": "project_participants_mutate",
+  "title": "Save participant recognition and reviews",
+  "description": "Studio-owner operation for Project-scoped face recognition. enable requires explicit participant permission and expected_consent_revision from a fresh read; recording_ids selects up to eight historical Recordings, while enabled future intake is automatic. process selects further existing Recordings. review names/confirms only explicitly included displayed observation IDs and excludes the displayed examples that are not that person; pass the exact review_context, choose speaker_profile_id OR new_person_name, and then poll project_participants_read for real cached-descriptor regrouping. Agents acting under delegated review authority must set reviewer_kind:delegated_agent_review; never claim the owner personally inspected images. undo requires the current review_id and refuses to overwrite newer answers. disable stops use/work while retaining saved data. forget disables and removes this feature's Project descriptors, previews and associations; Recordings, voices, approved portraits and a host's confirmed face references remain. retry names a failed recording_id or job_id. review, undo, and update_matches accept match_scope with type episode plus episode_id, type recordings plus up to eight recording_ids, or type project. Omission retains the Project-wide default for existing clients. update_matches only uses cached descriptors and never analyzes original video; unavailable evidence is reported separately. Deferred Recordings retain reviewed facts while older automatic names are withheld. cancel_update with job_id stops a cached update and retains the saved answer; retry reuses that job scope. Every action requires a stable idempotency_key. Never infer participant permission or enable other Projects from this one; consent here gates only this Project's matching, and a host's confirmed faces stay theirs whether it is on or off.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "action": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enable",
+              "process",
+              "review",
+              "undo",
+              "disable",
+              "forget",
+              "retry",
+              "update_matches",
+              "cancel_update"
+            ]
+          },
+          "expected_consent_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "participant_permission": {
+            "type": "boolean"
+          },
+          "recording_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 8,
+            "uniqueItems": true
+          },
+          "review_context": {
+            "type": "string"
+          },
+          "included_observation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 6,
+            "uniqueItems": true
+          },
+          "excluded_observation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 6,
+            "uniqueItems": true
+          },
+          "speaker_profile_id": {
+            "type": "string"
+          },
+          "new_person_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "reviewer_kind": {
+            "type": "string",
+            "enum": [
+              "owner_review",
+              "delegated_agent_review"
+            ]
+          },
+          "match_scope": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "project",
+                  "recordings"
+                ]
+              },
+              "episode_id": {
+                "type": "string"
+              },
+              "recording_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 8,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "job_id": {
+            "type": "string"
+          },
+          "recording_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "project_id",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "not_found",
+    "invalid_input",
+    "recognition_owner_required",
+    "recognition_review_stale",
+    "recognition_undo_stale",
+    "recognition_consent_changed",
+    "recognition_retry_changed"
+  ],
+  "examples": []
+}

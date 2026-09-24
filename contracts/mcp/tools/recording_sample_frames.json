@@ -1,0 +1,459 @@
+{
+  "name": "recording_sample_frames",
+  "title": "Sample video frames from a recording",
+  "description": "Inspect raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. Sample up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. Use it to choose exact recording_id ranges before one multi-source episode_create; never create a throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Omit delivery to inline extracted JPEGs that fit the aggregate model-content budget and use linked delivery from the same artifacts otherwise. BitterClip samples; you interpret.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Exact src_... Recording handle returned by recordings_list or Project evidence."
+      },
+      "times": {
+        "type": "array",
+        "description": "Explicit Recording SOURCE-time seconds. Exactly one of times or region is allowed. Maximum 4.",
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minItems": 1,
+        "maxItems": 4
+      },
+      "region": {
+        "type": "array",
+        "description": "Recording SOURCE-time [start_seconds, end_seconds] region sampled at deterministic interior midpoints. Exactly one of times or region is allowed. Hard cap 30 seconds.",
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "count": {
+        "type": "integer",
+        "description": "Frames from one <=30s region. Default 5, maximum 8.",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "high"
+        ],
+        "description": "standard is the default; high is for fine visual evidence."
+      },
+      "delivery": {
+        "type": "string",
+        "enum": [
+          "inline",
+          "links"
+        ],
+        "description": "Optional explicit delivery override. When omitted, extracted JPEGs resolve to inline when their aggregate bytes fit the model-content budget and to links otherwise. inline returns adjacent JPEG image blocks plus URLs; links omits only the JPEG blocks while retaining inline captions, camera provenance, and public gallery/frame URLs."
+      },
+      "purpose": {
+        "type": "string",
+        "description": "Optional short reason for sampling, echoed in the result."
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "oneOf": [
+          {
+            "required": [
+              "times"
+            ]
+          },
+          {
+            "required": [
+              "region"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "recording_not_found",
+    "stale_recording",
+    "invalid_input",
+    "invalid_time_range",
+    "time_out_of_range",
+    "source_media_unavailable",
+    "ffmpeg_busy",
+    "ffmpeg_missing",
+    "ffmpeg_timeout",
+    "frame_extraction_failed",
+    "frame_artifact_publish_failed",
+    "payload_budget_exceeded"
+  ],
+  "examples": [
+    {
+      "label": "Inspect one movement on raw footage",
+      "input": {
+        "recording_id": "src_...",
+        "region": [
+          1404.0,
+          1412.0
+        ],
+        "count": 4,
+        "purpose": "choose the clearest squat repetitions"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "subject_type": {
+        "type": "string",
+        "enum": [
+          "recording"
+        ]
+      },
+      "recording_id": {
+        "type": "string",
+        "description": "Authorized Recording sampled."
+      },
+      "purpose": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Recording source duration used for this sample."
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "high"
+        ]
+      },
+      "delivery": {
+        "type": "string",
+        "enum": [
+          "inline",
+          "links"
+        ]
+      },
+      "projection": {
+        "type": "string",
+        "enum": [
+          "original"
+        ]
+      },
+      "presentation": {
+        "type": "string",
+        "enum": [
+          "source"
+        ]
+      },
+      "content_bytes": {
+        "type": "integer"
+      },
+      "sampled_pixel_change": {
+        "type": "object",
+        "description": "Bounded mean-absolute channel difference between consecutive successful sampled stills in chronological Recording SOURCE time, compared on a 64×64 sRGB 3-band raster. Returned artifact dimensions stay native. This is a measurement at sampled instants only: it does not observe anything between samples and is not a motion, duration, payoff, quality, or taste claim. Decode failure is typed unavailable without fabricating a zero.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "insufficient",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Typed reason when status is insufficient or unavailable."
+          },
+          "metric": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "mean_absolute_channel_difference when a pair could be scored."
+          },
+          "overall_level": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "none",
+              "near_zero",
+              "low",
+              "moderate",
+              "high",
+              null
+            ],
+            "description": "Coarse class of the largest measured adjacent pair; null when unmeasured."
+          },
+          "overall_normalized_difference": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Largest adjacent-pair difference in [0, 1] when measured."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Literal measurement sentence. Does not claim events between samples."
+          },
+          "pairs": {
+            "type": "array",
+            "description": "Chronological adjacent pairs on Recording SOURCE time. Request order is not used.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from_seconds": {
+                  "type": "number"
+                },
+                "to_seconds": {
+                  "type": "number"
+                },
+                "time_axis": {
+                  "type": "string",
+                  "enum": [
+                    "episode",
+                    "source"
+                  ]
+                },
+                "from_camera_ref": {
+                  "type": "string"
+                },
+                "to_camera_ref": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "measured",
+                    "unavailable"
+                  ]
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "normalized_difference": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "level": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "none",
+                    "near_zero",
+                    "low",
+                    "moderate",
+                    "high",
+                    null
+                  ]
+                }
+              },
+              "required": [
+                "from_seconds",
+                "to_seconds",
+                "status"
+              ]
+            }
+          }
+        },
+        "required": [
+          "status",
+          "summary",
+          "pairs"
+        ]
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "times",
+          "region"
+        ]
+      },
+      "region": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "items": {
+          "type": "number"
+        },
+        "description": "Resolved source-time region in region mode."
+      },
+      "sample_id": {
+        "type": "string"
+      },
+      "gallery_url": {
+        "type": "string"
+      },
+      "sample_expires_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "manifest_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "frame_artifact_delivery": {
+        "type": "string",
+        "enum": [
+          "cdn",
+          "public_route"
+        ]
+      },
+      "handle_policy": {
+        "type": "string",
+        "description": "Reminder that raw Recording handles are tool-call-only and should not be shown to users."
+      },
+      "frames": {
+        "type": "array",
+        "description": "Recording frames with source-time provenance and public image handles.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "frame_id": {
+              "type": "string"
+            },
+            "sample_id": {
+              "type": "string"
+            },
+            "caption": {
+              "type": "string"
+            },
+            "source_seconds": {
+              "type": "number"
+            },
+            "source_timecode": {
+              "type": "string"
+            },
+            "recording_id": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string"
+            },
+            "source_title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "projection": {
+              "type": "string",
+              "enum": [
+                "original"
+              ]
+            },
+            "presentation": {
+              "type": "string",
+              "enum": [
+                "source"
+              ]
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "mime_type": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "thumbnail_url": {
+              "type": "string"
+            },
+            "download_url": {
+              "type": "string"
+            },
+            "open_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "frame_id",
+            "sample_id",
+            "caption",
+            "source_seconds",
+            "source_timecode",
+            "recording_id",
+            "source_id",
+            "projection",
+            "presentation",
+            "width",
+            "height",
+            "mime_type",
+            "image_url",
+            "thumbnail_url",
+            "download_url",
+            "open_url"
+          ]
+        }
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "source_seconds": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "error_code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "error_code",
+            "message"
+          ]
+        }
+      }
+    },
+    "required": [
+      "subject_type",
+      "recording_id",
+      "sample_id",
+      "gallery_url",
+      "mode",
+      "projection",
+      "presentation",
+      "duration_seconds",
+      "detail",
+      "frames",
+      "errors",
+      "sampled_pixel_change"
+    ],
+    "additionalProperties": false
+  }
+}

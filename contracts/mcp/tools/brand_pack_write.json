@@ -1,0 +1,94 @@
+{
+  "name": "brand_pack_write",
+  "title": "Write account Brand Studio pack",
+  "description": "Create or update an account-scoped brand pack for an accessible Project: wordmark, organization, palette, fonts, tagline and optional ingested logo. Account IDs are namespaced to avoid collisions with curated packs. Brand is reusable context for programmable scenes, not a fixed visual template. Author a source scene, inspect rendered frames, and iterate before explicitly applying it to a production.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID; this is the account boundary for the brand pack."
+      },
+      "brand_id": {
+        "type": "string",
+        "description": "Requested brand id. It will be normalized/prefixed to acct-... unless already prefixed."
+      },
+      "pack_id": {
+        "type": "string",
+        "description": "Alias for brand_id."
+      },
+      "name": {
+        "type": "string"
+      },
+      "wordmark": {
+        "type": "string"
+      },
+      "organization": {
+        "type": "string"
+      },
+      "tagline": {
+        "type": "string"
+      },
+      "palette": {
+        "type": "object",
+        "description": "Partial palette override, e.g. {background, text, accent, accent2, line}."
+      },
+      "fonts": {
+        "type": "object",
+        "description": "Partial typography override, e.g. {family, cssFamily, weight, letterSpacing}."
+      },
+      "logo_asset_id": {
+        "type": "string",
+        "description": "Asset id returned by identity_asset_ingest."
+      },
+      "document": {
+        "type": "object",
+        "description": "Optional full or partial identity-studio.brand.v0 document. Explicit scalar args win where supplied."
+      }
+    },
+    "required": [
+      "project_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Build a two-tone reveal brand",
+      "input": {
+        "project_id": "show_...",
+        "brand_id": "acme-two-tone",
+        "wordmark": "Acme",
+        "organization": "Acme Labs",
+        "tagline": "proof in motion",
+        "palette": {
+          "background": "#101820",
+          "text": "#f7f2e8",
+          "accent": "#ff6b4a",
+          "accent2": "#4fc3f7"
+        },
+        "logo_asset_id": "ibrandasset_..."
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "brand_pack": {
+        "type": "object",
+        "description": "Account-scoped brand pack row with brand_id/pack_id and brand_url."
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

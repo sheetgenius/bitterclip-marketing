@@ -1,0 +1,2142 @@
+{
+  "name": "episode_edit",
+  "title": "Arrange an existing episode Program",
+  "description": "Edit the current Program in place through one stable occurrence operation. For several partial shortenings inspected on one revision, use one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence; do not send those removals as separate trims or change-set items. Read the episode first, then address exact occurrence IDs and a revision-bound semantic Junction; never use pixels, mutable positions, transcript words, filenames, or source chronology as arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops whole supported occurrences, one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, but you must reread before addressing the resulting occurrence. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists when framing evidence reports a subject too_wide for the full-canvas crop window, and one that is yours to make or decline. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views, after which you inspect the composed canvas. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Use Signal for restrained long-form interview typography. All caption presets use the same HTML paint as the editor preview. Signal keeps restrained interview typography; Active Word adds the timed accent word. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants; inspect them for punch-state quality and text-layer collisions before another nudge. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omit them to preserve, pass [] to clear, and re-read instead of retrying if transcript drift makes one stale. junction.transition owns one adjacent source-backed edit point: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Use Produced selectively between cold-open excerpts, not mechanically on body edits or multicamera switches; duration, intensity, and sound gain are cheap corrections on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only. For a plan-backed typed opener or outro, use identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; use Replace only when Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, and junction.transition need no new boundary evidence; Split, partial Range, an interior destination Point, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input: do not repeat it with a new idempotency key or in parallel. Change the operation according to its typed reason, or report the blocker while preserving the Episode. Re-read before addressing the next structural revision.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode (composition) public ID, such as comp_..."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Required integer revision from a fresh episode_read. A stale value is rejected; re-read before retrying."
+      },
+      "ops": {
+        "type": "array",
+        "description": "Exactly one stable occurrence operation. The operation itself may transform one contiguous multi-occurrence Range or up to 64 disjoint removal Ranges atomically. To trim an inspected prefix, use occurrence.remove with selection:{range:{start:{occurrence_id,source_seconds:<existing start>},end:{occurrence_id,source_seconds:<inspected boundary>}}}. Prefer short evidence_id handles from episode_zoom detail edit for every interior edge. For dense dialogue work, put every partial removal you inspected—across one or many occurrences—in one selection.ranges array. Each Range holds only start and end points; its evidence goes beside selection in the operation's boundary_evidence array, one entry per interior edge. In occurrence.remove an endpoint may instead be its zoom receipt alone, which cuts at the exact point that receipt certifies and counts as that edge's evidence: ranges:[{start:{evidence_id:\"biev_1…\"},end:{evidence_id:\"biev_2…\"}}]. A removal retires the occurrence it cuts, so that occurrence's other unused evidence becomes stale; evidence on untouched occurrences stays valid. BitterClip applies the current attachment-safety policy server-side.",
+        "minItems": 1,
+        "maxItems": 1,
+        "items": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.split"
+                  ]
+                },
+                "point": {
+                  "type": "object",
+                  "properties": {
+                    "occurrence_id": {
+                      "type": "string",
+                      "description": "Stable Program occurrence ID."
+                    },
+                    "source_seconds": {
+                      "type": "number",
+                      "description": "Exact source-media second, resolved to a millisecond boundary."
+                    },
+                    "base_revision": {
+                      "type": "integer",
+                      "description": "Must equal the top-level expected_revision."
+                    }
+                  },
+                  "required": [
+                    "occurrence_id",
+                    "source_seconds",
+                    "base_revision"
+                  ],
+                  "additionalProperties": false
+                },
+                "boundary_evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "evidence_id": {
+                        "type": "string",
+                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                      },
+                      "inspection_token": {
+                        "type": "string",
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                      },
+                      "semantic_boundary": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "pattern": "^word_[a-z0-9]{20}$",
+                            "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                          },
+                          "edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "edge"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "op",
+                "point",
+                "boundary_evidence"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.duplicate"
+                  ],
+                  "description": "For an ordinary request such as 'duplicate this beat', send only op and selection. BitterClip places the new copy immediately after the selected occurrence. Do not send attachment_policy."
+                },
+                "selection": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "occurrence_ids": {
+                          "type": "array",
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "occurrence_ids"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "range": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_id": {
+                                  "type": "string",
+                                  "description": "Stable Program occurrence ID."
+                                },
+                                "source_seconds": {
+                                  "type": "number",
+                                  "description": "Exact source-media second, resolved to a millisecond boundary."
+                                }
+                              },
+                              "required": [
+                                "occurrence_id",
+                                "source_seconds"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "end": {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_id": {
+                                  "type": "string",
+                                  "description": "Stable Program occurrence ID."
+                                },
+                                "source_seconds": {
+                                  "type": "number",
+                                  "description": "Exact source-media second, resolved to a millisecond boundary."
+                                }
+                              },
+                              "required": [
+                                "occurrence_id",
+                                "source_seconds"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "range"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The exact current occurrence or geometric Program Range to duplicate. Use the selected Program occurrence ID when the editor ask supplies one."
+                },
+                "destination": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "base_revision": {
+                          "type": "integer"
+                        },
+                        "left_occurrence_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "right_occurrence_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "base_revision",
+                        "left_occurrence_id",
+                        "right_occurrence_id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "base_revision": {
+                          "type": "integer"
+                        },
+                        "at": {
+                          "type": "object",
+                          "properties": {
+                            "occurrence_id": {
+                              "type": "string",
+                              "description": "Stable Program occurrence ID."
+                            },
+                            "source_seconds": {
+                              "type": "number",
+                              "description": "Exact source-media second, resolved to a millisecond boundary."
+                            }
+                          },
+                          "required": [
+                            "occurrence_id",
+                            "source_seconds"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "base_revision",
+                        "at"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Optional. Supply only when the user explicitly names a different placement; otherwise omit it and use the adjacent-copy default."
+                },
+                "boundary_evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "evidence_id": {
+                        "type": "string",
+                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                      },
+                      "inspection_token": {
+                        "type": "string",
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                      },
+                      "semantic_boundary": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "pattern": "^word_[a-z0-9]{20}$",
+                            "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                          },
+                          "edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "edge"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "op",
+                "selection"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.move"
+                  ]
+                },
+                "selection": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "occurrence_ids": {
+                          "type": "array",
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "occurrence_ids"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "range": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_id": {
+                                  "type": "string",
+                                  "description": "Stable Program occurrence ID."
+                                },
+                                "source_seconds": {
+                                  "type": "number",
+                                  "description": "Exact source-media second, resolved to a millisecond boundary."
+                                }
+                              },
+                              "required": [
+                                "occurrence_id",
+                                "source_seconds"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "end": {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_id": {
+                                  "type": "string",
+                                  "description": "Stable Program occurrence ID."
+                                },
+                                "source_seconds": {
+                                  "type": "number",
+                                  "description": "Exact source-media second, resolved to a millisecond boundary."
+                                }
+                              },
+                              "required": [
+                                "occurrence_id",
+                                "source_seconds"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "range"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "destination": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "base_revision": {
+                          "type": "integer"
+                        },
+                        "left_occurrence_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "right_occurrence_id": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "base_revision",
+                        "left_occurrence_id",
+                        "right_occurrence_id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "base_revision": {
+                          "type": "integer"
+                        },
+                        "at": {
+                          "type": "object",
+                          "properties": {
+                            "occurrence_id": {
+                              "type": "string",
+                              "description": "Stable Program occurrence ID."
+                            },
+                            "source_seconds": {
+                              "type": "number",
+                              "description": "Exact source-media second, resolved to a millisecond boundary."
+                            }
+                          },
+                          "required": [
+                            "occurrence_id",
+                            "source_seconds"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "base_revision",
+                        "at"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "boundary_evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "evidence_id": {
+                        "type": "string",
+                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                      },
+                      "inspection_token": {
+                        "type": "string",
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                      },
+                      "semantic_boundary": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "pattern": "^word_[a-z0-9]{20}$",
+                            "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                          },
+                          "edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "edge"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
+                  }
+                },
+                "attachment_policy": {
+                  "type": "string",
+                  "enum": [
+                    "content_v1"
+                  ],
+                  "description": "Compatibility-only; omit this field. BitterClip applies the current attachment-safety policy server-side."
+                }
+              },
+              "required": [
+                "op",
+                "selection",
+                "destination"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.remove"
+                  ]
+                },
+                "selection": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "occurrence_ids": {
+                          "type": "array",
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "occurrence_ids"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "range": {
+                          "type": "object",
+                          "properties": {
+                            "start": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "occurrence_id": {
+                                      "type": "string",
+                                      "description": "Stable Program occurrence ID."
+                                    },
+                                    "source_seconds": {
+                                      "type": "number",
+                                      "description": "Exact source-media second, resolved to a millisecond boundary."
+                                    }
+                                  },
+                                  "required": [
+                                    "occurrence_id",
+                                    "source_seconds"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "evidence_id": {
+                                      "type": "string",
+                                      "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                    }
+                                  },
+                                  "required": [
+                                    "evidence_id"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "end": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "occurrence_id": {
+                                      "type": "string",
+                                      "description": "Stable Program occurrence ID."
+                                    },
+                                    "source_seconds": {
+                                      "type": "number",
+                                      "description": "Exact source-media second, resolved to a millisecond boundary."
+                                    }
+                                  },
+                                  "required": [
+                                    "occurrence_id",
+                                    "source_seconds"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "evidence_id": {
+                                      "type": "string",
+                                      "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                    }
+                                  },
+                                  "required": [
+                                    "evidence_id"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "start",
+                            "end"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "range"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "ranges": {
+                          "type": "array",
+                          "minItems": 1,
+                          "maxItems": 64,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "start": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "occurrence_id": {
+                                        "type": "string",
+                                        "description": "Stable Program occurrence ID."
+                                      },
+                                      "source_seconds": {
+                                        "type": "number",
+                                        "description": "Exact source-media second, resolved to a millisecond boundary."
+                                      }
+                                    },
+                                    "required": [
+                                      "occurrence_id",
+                                      "source_seconds"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "evidence_id": {
+                                        "type": "string",
+                                        "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                      }
+                                    },
+                                    "required": [
+                                      "evidence_id"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "end": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "occurrence_id": {
+                                        "type": "string",
+                                        "description": "Stable Program occurrence ID."
+                                      },
+                                      "source_seconds": {
+                                        "type": "number",
+                                        "description": "Exact source-media second, resolved to a millisecond boundary."
+                                      }
+                                    },
+                                    "required": [
+                                      "occurrence_id",
+                                      "source_seconds"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "evidence_id": {
+                                        "type": "string",
+                                        "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                      }
+                                    },
+                                    "required": [
+                                      "evidence_id"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "start",
+                              "end"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. Put every partial removal you inspected in this same array: a removal retires the occurrence it cuts, which stales that occurrence's other unused evidence. All cuts settle atomically as one receipt."
+                        }
+                      },
+                      "required": [
+                        "ranges"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "boundary_evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "evidence_id": {
+                        "type": "string",
+                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                      },
+                      "inspection_token": {
+                        "type": "string",
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                      },
+                      "semantic_boundary": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "pattern": "^word_[a-z0-9]{20}$",
+                            "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                          },
+                          "edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "edge"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "op",
+                "selection"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.restore_cut"
+                  ]
+                },
+                "selection": {
+                  "type": "object",
+                  "properties": {
+                    "occurrence_ids": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Exactly two adjacent same-Recording occurrence IDs in current Program order. The left identity survives and the right retires."
+                    }
+                  },
+                  "required": [
+                    "occurrence_ids"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "op",
+                "selection"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.trim"
+                  ]
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "Stable source-backed occurrence ID to preserve while changing its in/out points."
+                },
+                "source_range": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "description": "Exact [start_seconds, end_seconds] in the occurrence's existing Recording. May shorten or extend the occurrence; end must be greater than start."
+                },
+                "boundary_evidence": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 128,
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "evidence_id": {
+                        "type": "string",
+                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                      },
+                      "inspection_token": {
+                        "type": "string",
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                      },
+                      "semantic_boundary": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "pattern": "^word_[a-z0-9]{20}$",
+                            "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                          },
+                          "edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "edge"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id",
+                "source_range",
+                "boundary_evidence"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.reframe"
+                  ]
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "Stable occurrence ID for one source-backed video clip."
+                },
+                "framing": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "fill",
+                        "fit"
+                      ],
+                      "description": "Fill covers the canvas; Fit preserves the whole picture with padding."
+                    },
+                    "canvas_fit": {
+                      "type": "string",
+                      "enum": [
+                        "4:5",
+                        "1:1"
+                      ],
+                      "description": "Optional intermediate crop ratio for Fill framing. Absent, the Fill crop covers the whole canvas. \"4:5\" or \"1:1\" crops at that ratio around the same focal point and letterboxes the picture onto the canvas with black mattes — an alternative that exists when episode_framing_guidance reports a person extent too_wide for the full-canvas crop window. Whether full bleed or a letterboxed ratio serves the story is your editorial judgment. Invalid with Fit, which already shows the whole picture."
+                    },
+                    "canvas_alignment": {
+                      "type": "string",
+                      "enum": [
+                        "center",
+                        "top",
+                        "bottom"
+                      ],
+                      "description": "Optional static placement of a 4:5 or 1:1 picture inside the canvas. Center keeps symmetric mattes; top reserves the full remaining lower matte as a stable subtitle band; bottom reserves it above. Invalid without canvas_fit."
+                    },
+                    "focal_point": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1,
+                          "description": "Horizontal subject position from left (0) to right (1)."
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1,
+                          "description": "Vertical subject position from top (0) to bottom (1)."
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "mode"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id",
+                "framing"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence.caption"
+                  ]
+                },
+                "selection": {
+                  "type": "object",
+                  "properties": {
+                    "occurrence_ids": {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "One or more contiguous source-backed occurrence IDs in current Program order."
+                    }
+                  },
+                  "required": [
+                    "occurrence_ids"
+                  ],
+                  "additionalProperties": false
+                },
+                "treatment": {
+                  "type": "object",
+                  "properties": {
+                    "schema": {
+                      "type": "string",
+                      "enum": [
+                        "bitterclip.caption_treatment.v1"
+                      ],
+                      "description": "Optional explicit schema marker."
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "inherit",
+                        "off",
+                        "on"
+                      ],
+                      "description": "Caption visibility for the selected occurrences. Off suppresses burned captions while retaining the authored style and placement for a later correction; On explicitly enables them; Inherit follows the Episode default."
+                    },
+                    "preset": {
+                      "type": "string",
+                      "enum": [
+                        "inherit",
+                        "clean_lower",
+                        "signal",
+                        "punch_word_highlight",
+                        "active_word"
+                      ],
+                      "description": "Active Word is BitterClip's expressive HTML social treatment with stable phrase geometry and a timed accent word. Signal is the restrained professional interview treatment. clean_lower keeps clean phrase captions; punch_word_highlight follows each spoken word. Inherit removes the occurrence-level preset override without changing caption visibility."
+                    },
+                    "placement": {
+                      "type": "object",
+                      "properties": {
+                        "lane": {
+                          "type": "string",
+                          "enum": [
+                            "auto",
+                            "upper",
+                            "lower",
+                            "custom"
+                          ],
+                          "description": "Auto keeps matte-aware/default placement. Upper or Lower locks one stable shot-level lane. Custom uses one static normalized box for Active Word and is the contract a future direct-manipulation editor can move; no lane follows a face box. Omit lane when correcting an already-authored placement."
+                        },
+                        "vertical_offset": {
+                          "type": "number",
+                          "minimum": -0.15,
+                          "maximum": 0.15,
+                          "description": "Small canvas-relative semantic-lane correction. Positive moves down; negative moves up. Auto requires zero; Custom uses anchor instead."
+                        },
+                        "anchor": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "minimum": 0.05,
+                              "maximum": 0.95,
+                              "description": "Static normalized box center from the canvas left; partial correction preserves an existing x."
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0.05,
+                              "maximum": 0.95,
+                              "description": "Static normalized box center from the canvas top; partial correction preserves an existing y."
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false
+                        },
+                        "width": {
+                          "type": "number",
+                          "minimum": 0.3,
+                          "maximum": 0.94,
+                          "description": "Custom box width as a normalized fraction of the destination canvas."
+                        },
+                        "alignment": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "center",
+                            "right"
+                          ],
+                          "description": "Text alignment inside the Custom box."
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    },
+                    "appearance": {
+                      "type": "object",
+                      "properties": {
+                        "accent_color": {
+                          "type": "string",
+                          "pattern": "^#[0-9A-Fa-f]{6}$",
+                          "description": "Active Word accent as a six-digit hex color; this remains typed data, never arbitrary CSS."
+                        },
+                        "font_scale": {
+                          "type": "number",
+                          "minimum": 0.8,
+                          "maximum": 1.25,
+                          "description": "Bounded Active Word type-size correction around the curated preset."
+                        }
+                      },
+                      "required": [],
+                      "additionalProperties": false
+                    },
+                    "word_corrections": {
+                      "type": "array",
+                      "maxItems": 32,
+                      "description": "Optional complete set of display-only token corrections for exactly one selected occurrence. Use only for a visibly misspelled word or proper noun. Request episode_zoom with include:[\"word_provenance\"] over the word's small window; copy word_id and exact text from that channel's word evidence into word_id and from. Compact transcript tuples omit IDs, and speech-alignment point IDs are not caption word IDs. Increase max_bytes or narrow the window if word_provenance was omitted by the response budget. to is rendered copy only; canonical transcript text and timing remain unchanged. Omit this field to preserve the current set; pass [] to clear all occurrence-local corrections.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "word_id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 255,
+                            "description": "Exact transcript word_id from episode_zoom include:[\"word_provenance\"] for this occurrence; do not use speech-alignment point IDs."
+                          },
+                          "from": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 160,
+                            "description": "Exact current transcript token; stale or mismatched copy fails without mutation."
+                          },
+                          "to": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 160,
+                            "description": "Corrected burned-caption display token. Do not use this to paraphrase speech."
+                          }
+                        },
+                        "required": [
+                          "word_id",
+                          "from",
+                          "to"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "op",
+                "selection",
+                "treatment"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "identity_part.customize"
+                  ]
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "Stable typed opener/outro occurrence ID from episode_read."
+                },
+                "set": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Optional editor label for this identity moment; null clears it."
+                    },
+                    "params": {
+                      "type": "object",
+                      "description": "Scene-specific typed parameters deep-merged into the existing identity moment. Omitted keys, scene choice, and sound remain unchanged; read the occurrence's current identity_customization first."
+                    },
+                    "gain_db": {
+                      "type": "number",
+                      "description": "Gain for the identity moment's existing sonic mark."
+                    },
+                    "sound_id": {
+                      "type": "string",
+                      "description": "Curated identity sound ID returned by identity_assets_list.assets.identity_sounds. Rebakes this opener or outro with the selected sonic mark while preserving its visual preset."
+                    },
+                    "requested_aspect_ratio": {
+                      "type": "string",
+                      "enum": [
+                        "9:16",
+                        "16:9",
+                        "1:1"
+                      ],
+                      "description": "Rebake the same typed identity moment for this destination shape. Use the Episode canvas aspect for a copied landscape-to-portrait opener or outro."
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id",
+                "set"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "identity_part.replace"
+                  ]
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "Stable self-contained typed opener/outro occurrence ID whose read capability reports identity_replace=true."
+                },
+                "configuration": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "project_default"
+                      ],
+                      "description": "Use the Project's saved default for this opener/outro role."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "library_entry_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Saved same-account opener/outro entry returned by identity_assets_list."
+                        }
+                      },
+                      "required": [
+                        "library_entry_id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "preset_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Checked-in identity preset whose placement matches the target role."
+                        },
+                        "params": {
+                          "type": "object",
+                          "description": "Typed preset or Signature Lab parameters. Account-authored scenes and curated sounds are validated by the shared identity resolver."
+                        },
+                        "gain_db": {
+                          "type": "number"
+                        },
+                        "sound_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Optional curated identity sound override."
+                        },
+                        "brand_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Optional account-owned brand pack ID; omit to use the Project's brand."
+                        }
+                      },
+                      "required": [
+                        "preset_id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id",
+                "configuration"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "junction.transition"
+                  ]
+                },
+                "junction": {
+                  "type": "object",
+                  "properties": {
+                    "base_revision": {
+                      "type": "integer",
+                      "description": "Must equal the top-level expected_revision."
+                    },
+                    "left_occurrence_id": {
+                      "type": "string",
+                      "description": "Stable occurrence immediately before the edit point."
+                    },
+                    "right_occurrence_id": {
+                      "type": "string",
+                      "description": "Stable occurrence immediately after the edit point."
+                    }
+                  },
+                  "required": [
+                    "base_revision",
+                    "left_occurrence_id",
+                    "right_occurrence_id"
+                  ],
+                  "additionalProperties": false
+                },
+                "transition": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "cut",
+                        "crossfade",
+                        "produced"
+                      ],
+                      "description": "Cut removes treatment. Crossfade overlaps source handles and ripples later Episode time earlier. Produced uses the Project's existing flash/swish seam while preserving Program source time."
+                    },
+                    "duration_seconds": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10.0,
+                      "description": "Crossfade duration up to 10 seconds; Produced duration 0.12–1.0 seconds controls the full visual-and-audio seam envelope; use 0 for Cut."
+                    },
+                    "sound_gain_db": {
+                      "type": "integer",
+                      "minimum": -40,
+                      "maximum": -6,
+                      "description": "Optional Produced-only sound gain. Omit to preserve the current or Project value; restrained interview seams are typically around -26 dB."
+                    },
+                    "intensity": {
+                      "type": "string",
+                      "enum": [
+                        "low",
+                        "medium",
+                        "high"
+                      ],
+                      "description": "Optional Produced-only visual intensity. Prefer low for a professional interview cold open."
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "duration_seconds"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "op",
+                "junction",
+                "transition"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "operation.revert"
+                  ]
+                },
+                "receipt_id": {
+                  "type": "string",
+                  "description": "Server-owned Program edit receipt ID."
+                }
+              },
+              "required": [
+                "op",
+                "receipt_id"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for exact retry. Same key plus changed input conflicts."
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "ops",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input",
+    "program_snapshot_invalid",
+    "program_occurrence_not_found",
+    "program_occurrence_identity_conflict",
+    "program_target_not_contiguous",
+    "program_range_invalid",
+    "program_boundary_invalid",
+    "program_boundary_evidence_required",
+    "program_boundary_evidence_invalid",
+    "program_junction_conflict",
+    "program_destination_inside_selection",
+    "program_attachment_conflict",
+    "program_typed_operation_required",
+    "program_would_be_empty",
+    "program_occurrence_limit",
+    "operation_receipt_not_found",
+    "operation_receipt_invalid",
+    "program_revert_conflict",
+    "picture_framing_invalid",
+    "picture_framing_unsupported",
+    "transition_source_handles_unavailable",
+    "program_source_range_unplayable",
+    "identity_slot_not_configured",
+    "identity_asset_not_found",
+    "identity_brand_mismatch",
+    "music_anchor_transform_unsupported",
+    "music_range_inverted",
+    "music_ranges_overlap",
+    "music_asset_too_short"
+  ],
+  "examples": [
+    {
+      "label": "Duplicate one Program occurrence immediately",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.duplicate",
+            "selection": {
+              "occurrence_ids": [
+                "occ_..."
+              ]
+            }
+          }
+        ],
+        "idempotency_key": "duplicate-1"
+      }
+    },
+    {
+      "label": "Move one Program occurrence to the end",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.move",
+            "selection": {
+              "occurrence_ids": [
+                "occ_..."
+              ]
+            },
+            "destination": {
+              "base_revision": 4,
+              "left_occurrence_id": "occ_last...",
+              "right_occurrence_id": null
+            }
+          }
+        ],
+        "idempotency_key": "move-1"
+      }
+    },
+    {
+      "label": "Trim an inspected prefix from the opening occurrence",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.remove",
+            "selection": {
+              "range": {
+                "start": {
+                  "occurrence_id": "occ_opening...",
+                  "source_seconds": 5.25
+                },
+                "end": {
+                  "occurrence_id": "occ_opening...",
+                  "source_seconds": 7.5
+                }
+              }
+            },
+            "boundary_evidence": [
+              {
+                "evidence_id": "biev_..."
+              }
+            ]
+          }
+        ],
+        "idempotency_key": "trim-opening-prefix-1"
+      }
+    },
+    {
+      "label": "Restore omitted footage between two adjacent occurrences",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.restore_cut",
+            "selection": {
+              "occurrence_ids": [
+                "occ_left...",
+                "occ_right..."
+              ]
+            }
+          }
+        ],
+        "idempotency_key": "restore-cut-1"
+      }
+    },
+    {
+      "label": "Extend one contextless excerpt earlier without rebuilding the Clip",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.trim",
+            "occurrence_id": "occ_excerpt...",
+            "source_range": [
+              625.02,
+              675.65
+            ],
+            "boundary_evidence": [
+              {
+                "evidence_id": "biev_..."
+              }
+            ]
+          }
+        ],
+        "idempotency_key": "extend-excerpt-context-1"
+      }
+    },
+    {
+      "label": "Fill a vertical frame around the subject",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.reframe",
+            "occurrence_id": "occ_...",
+            "framing": {
+              "mode": "fill",
+              "focal_point": {
+                "x": 0.42,
+                "y": 0.5
+              }
+            }
+          }
+        ],
+        "idempotency_key": "reframe-1"
+      }
+    },
+    {
+      "label": "Letterbox one clip at 4:5 inside the canvas",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "occurrence.reframe",
+            "occurrence_id": "occ_...",
+            "framing": {
+              "mode": "fill",
+              "canvas_fit": "4:5",
+              "focal_point": {
+                "x": 0.42,
+                "y": 0.5
+              }
+            }
+          }
+        ],
+        "idempotency_key": "reframe-2"
+      }
+    },
+    {
+      "label": "Rebake a copied opener for a portrait canvas",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "identity_part.customize",
+            "occurrence_id": "occ_opener...",
+            "set": {
+              "requested_aspect_ratio": "9:16"
+            }
+          }
+        ],
+        "idempotency_key": "portrait-opener-1"
+      }
+    },
+    {
+      "label": "Crossfade one edit point and ripple later Episode time",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 4,
+        "ops": [
+          {
+            "op": "junction.transition",
+            "junction": {
+              "base_revision": 4,
+              "left_occurrence_id": "occ_left...",
+              "right_occurrence_id": "occ_right..."
+            },
+            "transition": {
+              "kind": "crossfade",
+              "duration_seconds": 0.5
+            }
+          }
+        ],
+        "idempotency_key": "crossfade-1"
+      }
+    },
+    {
+      "label": "Revert one exact Program operation",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 5,
+        "ops": [
+          {
+            "op": "operation.revert",
+            "receipt_id": "rcpt_..."
+          }
+        ],
+        "idempotency_key": "revert-1"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "operation_type": {
+        "type": "string",
+        "description": "The exact occurrence operation settled by this receipt."
+      },
+      "selection_kind": {
+        "type": "string",
+        "enum": [
+          "range",
+          "occurrences"
+        ],
+        "description": "Whether the settled operation addressed a geometric Program Range or whole occurrences."
+      },
+      "base_revision": {
+        "type": "integer"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Revision committed by this operation."
+      },
+      "current_revision": {
+        "type": "integer",
+        "description": "Current durable head, which may be newer on an exact retry."
+      },
+      "current_program_digest": {
+        "type": "string",
+        "description": "Current durable occurrence-state fingerprint. On an exact retry, compare this with program_digest to detect later structural or occurrence-local changes even when the integer revision is unchanged."
+      },
+      "before_duration": {
+        "type": "number",
+        "description": "Kept (play) length in seconds immediately before this edit."
+      },
+      "duration": {
+        "type": "number",
+        "description": "Kept (play) length in seconds after the edit."
+      },
+      "duration_delta": {
+        "type": "number",
+        "description": "Exact after-minus-before change in kept length; negative means footage was removed."
+      },
+      "operation_receipt_id": {
+        "type": "string"
+      },
+      "reverts_receipt_id": {
+        "type": "string",
+        "description": "For operation.revert, the exact prior Program receipt restored by this result."
+      },
+      "before_program_digest": {
+        "type": "string"
+      },
+      "program_digest": {
+        "type": "string"
+      },
+      "resulting_order": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "minted_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "retired_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "surviving_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "occurrence_lineage": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "occurrence_id": {
+              "type": "string"
+            },
+            "settlement": {
+              "type": "string",
+              "enum": [
+                "minted",
+                "retired",
+                "surviving"
+              ]
+            },
+            "lineage": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "occurrence_id",
+            "settlement",
+            "lineage"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "inverse": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "operation.revert"
+            ]
+          },
+          "receipt_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "receipt_id"
+        ],
+        "additionalProperties": false
+      },
+      "stale_media": {
+        "type": "boolean",
+        "description": "true when a prior render is now behind the edit (re-render to refresh)."
+      },
+      "stale_copy": {
+        "type": "boolean",
+        "description": "true when title/description lag the current transcript revision (refresh copy)."
+      },
+      "already_applied": {
+        "type": "boolean",
+        "description": "true when this idempotency_key was already applied (the op was a no-op retry)."
+      },
+      "caption_visual_snapshot": {
+        "type": "object",
+        "description": "Receipt-protected render-plan, caption-execution, and selected-treatment digests captured under Export dependency locks for occurrence.caption. Automatic positioning proof requires this complete snapshot; legacy receipts omit it.",
+        "properties": {
+          "render_plan_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "caption_execution_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "caption_treatments_digest": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "occurrence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "render_plan_hash",
+          "caption_execution_digest",
+          "caption_treatments_digest",
+          "occurrence_ids"
+        ],
+        "additionalProperties": false
+      },
+      "materialization_status": {
+        "type": "string",
+        "enum": [
+          "ready",
+          "preparing",
+          "unavailable"
+        ],
+        "description": "For typed identity treatment, whether the destination-shaped media is ready."
+      },
+      "next_action": {
+        "type": "object",
+        "description": "Bounded continuation when typed media is still preparing."
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "episode_edit"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "unchanged",
+              "replayed"
+            ],
+            "description": "unchanged only for an identity-part edit that settled with nothing to change: the revision and Program digest did not move and no inverse is offered."
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "occurrence.split",
+              "occurrence.duplicate",
+              "occurrence.move",
+              "occurrence.remove",
+              "occurrence.restore_cut",
+              "occurrence.trim",
+              "occurrence.reframe",
+              "occurrence.caption",
+              "junction.transition",
+              "operation.revert",
+              "identity_part.insert",
+              "identity_part.remove",
+              "identity_part.replace",
+              "identity_part.customize"
+            ]
+          },
+          "selection_kind": {
+            "type": "string",
+            "enum": [
+              "range",
+              "occurrences"
+            ]
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "duration": {
+            "type": "object",
+            "properties": {
+              "before_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "after_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "delta_seconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "before_seconds",
+              "after_seconds",
+              "delta_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "operation.revert"
+                    ]
+                  },
+                  "receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "op",
+                  "receipt_id"
+                ],
+                "additionalProperties": false
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "program_move_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "destination": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "adjacency"
+                        ]
+                      },
+                      "left_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "right_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "left_occurrence_id",
+                      "right_occurrence_id"
+                    ],
+                    "additionalProperties": false,
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "left_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "right_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "point"
+                        ]
+                      },
+                      "occurrence_id": {
+                        "type": "string",
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "source_seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "occurrence_id",
+                      "source_seconds"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "destination",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "program_occurrence_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "operation",
+          "revisions",
+          "duration",
+          "receipt",
+          "digests"
+        ],
+        "additionalProperties": false
+      },
+      "caption_positioning_sample": {
+        "type": "object",
+        "description": "For occurrence.caption, automatic post-commit visual proof. ready carries one calm cue still or up to three timed active-word stills plus durable gallery/frame references. Each still also includes any committed speaker title visible at that instant so text-layer collisions are observable; superseded, unavailable, and not_applicable never undo the committed receipt."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

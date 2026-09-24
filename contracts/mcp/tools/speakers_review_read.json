@@ -1,0 +1,70 @@
+{
+  "name": "speakers_review_read",
+  "title": "List speaker review queue",
+  "description": "One speaker review read per call. kind:requests lists open account-owner speaker review requests — a read-only queue of possible duplicate people that a human should decide using merge preview and speakers_profile_mutate. kind:repair_findings lists read-only speaker identity review items (photos that may not match, missing saved photos, saved voices needing review, possible duplicates, label disagreements). Neither kind changes identity, voice memory, photos, captions, clips, exports, or published posts.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "kind": {
+        "type": "string",
+        "enum": [
+          "requests",
+          "repair_findings"
+        ],
+        "description": "Which review queue to read."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum items to return. Default 20, maximum 50."
+      }
+    },
+    "required": [
+      "kind"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "kind": {
+        "type": "string"
+      },
+      "requests": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "run_id": {
+        "type": "string"
+      },
+      "scanner_version": {
+        "type": "string"
+      },
+      "read_only": {
+        "type": "boolean"
+      },
+      "summary": {
+        "type": "object"
+      },
+      "limitations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "findings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "name": "identity_music_beds_generate",
+  "title": "Generate identity music bed",
+  "description": "App-only Brand/Music Studio generation. Composes a real instrumental music bed with a music model (Lyria 3 Pro by default, or Eleven Music) and materializes it as an account-owned IdentityMusicBed row, with the current project as origin when project_id is given (omit it to bake at the account level from Music Studio). The prompt describes the musical character (genre, instruments, mood, BPM); bed doctrine (instrumental, speech-friendly, loopable) is applied server-side. If provider/storage is unavailable, returns blockers without creating a browser-only library fork.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID. Omit to bake at the account level."
+      },
+      "prompt": {
+        "type": "string",
+        "description": "Musical character of the bed: genre, instruments, mood, tempo. Instrumental/speech-friendly framing is added automatically."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional display title."
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Optional track length in seconds (15-180, default 60)."
+      },
+      "prompt_influence": {
+        "type": "number",
+        "description": "Deprecated; ignored by the music providers."
+      },
+      "family": {
+        "type": "string",
+        "description": "Optional sound family."
+      },
+      "provider": {
+        "type": "string",
+        "enum": [
+          "lyria",
+          "eleven_music"
+        ],
+        "description": "Music engine. Defaults to lyria."
+      }
+    },
+    "required": [
+      "prompt"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input",
+    "sound_lab_s3_missing",
+    "elevenlabs_key_missing",
+    "gemini_key_missing"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "generated": {
+        "type": "boolean"
+      },
+      "music_bed": {
+        "type": "object"
+      },
+      "music_beds": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

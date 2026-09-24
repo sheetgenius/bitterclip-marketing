@@ -1,0 +1,62 @@
+{
+  "name": "identity_library_remove",
+  "title": "Remove saved Brand Studio asset",
+  "description": "App-only Brand Studio delete lifecycle. Removes an account-owned saved Signature asset or music bed from the library. If the removed asset is currently a project default anywhere in the account, that role is cleared for future reels and existing/frozen reels keep their baked identity values.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID used for edit authorization and refreshed shelf state."
+      },
+      "library_entry_id": {
+        "type": "string",
+        "description": "Saved identity library entry ID (ilib_...) or music-bed library ID (bed_...)."
+      }
+    },
+    "required": [
+      "project_id",
+      "library_entry_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "identity_library_entry_not_found",
+    "invalid_input",
+    "music_bed_in_use",
+    "music_bed_retained_for_undo"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "removed": {
+        "type": "boolean"
+      },
+      "receipt": {
+        "type": "object"
+      },
+      "defaults_cleared": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "defaults_cleared_count": {
+        "type": "integer"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

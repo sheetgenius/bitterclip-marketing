@@ -1,0 +1,132 @@
+{
+  "name": "output_public_url",
+  "title": "Create public MP4 review and download links",
+  "description": "Create expiring public review and direct-download URLs for one exact finished BitterClip render. The review URL is the practical human handoff; download_url remains the primitive for external services that ingest a public video URL (captioning/styling connectors like Submagic, Zapier steps, publishing tools). Pass exactly ONE target: episode_id when you have an Episode/derived-clip handle, OR render_id when you only have the ready render artifact; never pass both. A derived clip's comp_... handle goes in episode_id. This tool never starts or retries rendering: if render_not_ready, call render_create and wait for render_status to report ready, then retry with one target. Repeating the call for the same ready render is safe and does not enqueue or mutate a render; it only returns fresh expiring bearer URLs. A later render invalidates these links rather than silently showing a different cut. When a UI supplied expected_render_generation, pass it back so a stale card fails instead of sharing a newer Render. Pair download_url with title and dictionary when the receiving service wants context.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Use this single target when you have an Episode or derived-clip composition ID such as comp_...; recording handles src_... resolve to their episode-of-one. Do not also pass render_id."
+      },
+      "render_id": {
+        "type": "string",
+        "description": "Use this single target only when you have the ready rart_... render artifact from render_status. Do not also pass episode_id."
+      },
+      "expires_in_days": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 14,
+        "description": "Link lifetime in days. Default 7; minimum 1, maximum 14."
+      },
+      "expected_render_generation": {
+        "type": "string",
+        "description": "Optional opaque optimistic precondition from an Outputs result. If that exact rendered generation changed, this call fails instead of sharing a newer cut."
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "required": [
+          "episode_id"
+        ],
+        "not": {
+          "required": [
+            "render_id"
+          ]
+        }
+      },
+      {
+        "required": [
+          "render_id"
+        ],
+        "not": {
+          "required": [
+            "episode_id"
+          ]
+        }
+      }
+    ]
+  },
+  "errors": [
+    "render_not_ready",
+    "render_output_unavailable",
+    "render_changed",
+    "not_found",
+    "forbidden",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Handoff a ready Episode or derived clip",
+      "input": {
+        "episode_id": "comp_...",
+        "expires_in_days": 7
+      }
+    },
+    {
+      "label": "Handoff when only the ready render artifact is in context",
+      "input": {
+        "render_id": "rart_...",
+        "expires_in_days": 7
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "review_url": {
+        "type": "string",
+        "description": "Public, expiring review page for this exact Render."
+      },
+      "download_url": {
+        "type": "string",
+        "description": "Public, expiring direct-download MP4 URL."
+      },
+      "watch_url": {
+        "type": "string",
+        "description": "Compatibility alias for review_url."
+      },
+      "title": {
+        "type": "string",
+        "description": "Episode/clip title, for the receiving service."
+      },
+      "content_type": {
+        "type": "string",
+        "enum": [
+          "video/mp4"
+        ]
+      },
+      "duration_seconds": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "size_bytes": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "render_generation": {
+        "type": "string",
+        "description": "Opaque identity for the exact rendered bytes and poster bound to these URLs."
+      },
+      "expires_at": {
+        "type": "string",
+        "description": "ISO8601 expiry timestamp."
+      },
+      "dictionary": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Account, project, speaker, and brand names a captioning service should preserve."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

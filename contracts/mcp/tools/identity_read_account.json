@@ -1,0 +1,53 @@
+{
+  "name": "identity_read_account",
+  "title": "Read account FX identity",
+  "description": "App-only account FX read. Returns the account-wide brand name, starter/owned brand options, saved Signature library rows, and the new-project Signature defaults. This is the account home payload; project FX still uses identity_read_project for this project's on/off state.",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "account_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "account_id": {
+        "type": "string"
+      },
+      "account_name": {
+        "type": "string"
+      },
+      "brand_name": {
+        "type": "string"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "options": {
+        "type": "object"
+      },
+      "music_beds": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

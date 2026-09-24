@@ -1,0 +1,1871 @@
+{
+  "name": "episode_change_set_mutate",
+  "title": "Run, stop, resume, or revert a durable Program edit run",
+  "description": "One durable Program change-set action per call: start, resume, stop, or revert. start applies 1–250 ordered, receipt-backed Program occurrence operations under one durable change-set identity — the server settles each item through the ordinary episode_edit authority in bounded batches (at most 25 per internal batch), rechecks permission before every item, and admits each item on the Program it runs on: evidence binds to no revision, so split, Range and interior-destination items keep evidence zoomed once across earlier items and unrelated edits while each named occurrence and point survive; whole-occurrence items adopt an intervening edit only when every occurrence and Junction they touch is unchanged; revert items stay exact-head. A retired, shifted or overlapped target, or stale evidence, stops the run at that item with details.failed_check and its recovery. Use result_as plus change_set_ref to address identities minted earlier in the same run; the call directly commits authorized edits without proposals or per-edit approval, and supported self-contained typed occurrences participate through the same whole-occurrence Move/Duplicate/Remove operations. Partial removals planned together belong in one occurrence.remove item with selection.ranges (up to 64 disjoint Ranges) and short evidence_id handles: that one item settles atomically with one exact receipt. Keep several cuts inside one occurrence in that one item, because a split or partial Range retires the occurrence it cuts and a later item could not name it. resume continues the unsettled items after an interrupted request or expired worker lease; already receipted items replay idempotently and are never duplicated. stop requests a durable Stop barrier — the currently claimed atomic operation may finish, no later operation is claimed, and completed edits remain committed and individually recoverable. revert creates a new forward, revision-checked recovery change set applying the original receipts in reverse order, failing closed before the first inverse on any later overlapping work or missing receipt. The model-visible camera_program_set operation, audio-policy operations, and typed-specific object operations remain direct shared operations outside this grouped occurrence-edit schema; stop and whole-run revert do not cover them. Subject scope rides top-level: start takes episode_id; resume, stop, and revert take the durable change_set_id.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Required for start: the episode (composition) public ID, such as comp_..."
+      },
+      "change_set_id": {
+        "type": "string",
+        "description": "Required for resume, stop, and revert: durable Program change-set public ID returned by a prior start."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Required for start and revert: current episode revision from a fresh episode_read."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Required for start and revert: caller-stable key for exact retry. The same key plus changed input conflicts."
+      },
+      "action": {
+        "type": "object",
+        "description": "One durable change-set action. Subject ids ride top-level: episode_id for start; change_set_id for resume, stop, and revert.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "start"
+                ]
+              },
+              "ops": {
+                "type": "array",
+                "description": "Ordered stable occurrence operations. At most 25 settle in each internal batch; one change set may contain at most 250.",
+                "minItems": 1,
+                "maxItems": 250,
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "enum": [
+                            "occurrence.split"
+                          ]
+                        },
+                        "point": {
+                          "type": "object",
+                          "properties": {
+                            "occurrence_id": {
+                              "oneOf": [
+                                {
+                                  "type": "string",
+                                  "description": "Stable Program occurrence ID."
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "change_set_ref": {
+                                      "type": "string",
+                                      "description": "A prior result_as name from this same change set."
+                                    },
+                                    "field": {
+                                      "type": "string",
+                                      "enum": [
+                                        "minted_occurrence_ids",
+                                        "retired_occurrence_ids",
+                                        "surviving_occurrence_ids",
+                                        "resulting_order"
+                                      ]
+                                    },
+                                    "index": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "change_set_ref",
+                                    "field",
+                                    "index"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "source_seconds": {
+                              "type": "number",
+                              "description": "Exact inspected source-media second."
+                            }
+                          },
+                          "required": [
+                            "occurrence_id",
+                            "source_seconds"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "boundary_evidence": {
+                          "type": "array",
+                          "minItems": 1,
+                          "maxItems": 128,
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "evidence_id": {
+                                "type": "string",
+                                "description": "Preferred short biev_... handle."
+                              },
+                              "inspection_token": {
+                                "type": "string",
+                                "description": "The full signed receipt, for when its evidence_id is not held."
+                              },
+                              "semantic_boundary": {
+                                "type": "object",
+                                "properties": {
+                                  "word_id": {
+                                    "type": "string",
+                                    "pattern": "^word_[a-z0-9]{20}$",
+                                    "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                                  },
+                                  "edge": {
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "end"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "word_id",
+                                  "edge"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [],
+                            "additionalProperties": false
+                          }
+                        },
+                        "result_as": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                          "description": "Optional name used by later change_set_ref values in this run."
+                        }
+                      },
+                      "required": [
+                        "op",
+                        "point",
+                        "boundary_evidence"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "enum": [
+                            "occurrence.duplicate"
+                          ]
+                        },
+                        "selection": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_ids": {
+                                  "type": "array",
+                                  "minItems": 1,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "oneOf": [
+                                      {
+                                        "type": "string",
+                                        "description": "Stable Program occurrence ID."
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "change_set_ref": {
+                                            "type": "string",
+                                            "description": "A prior result_as name from this same change set."
+                                          },
+                                          "field": {
+                                            "type": "string",
+                                            "enum": [
+                                              "minted_occurrence_ids",
+                                              "retired_occurrence_ids",
+                                              "surviving_occurrence_ids",
+                                              "resulting_order"
+                                            ]
+                                          },
+                                          "index": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "change_set_ref",
+                                          "field",
+                                          "index"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "occurrence_ids"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "range": {
+                                  "type": "object",
+                                  "properties": {
+                                    "start": {
+                                      "type": "object",
+                                      "properties": {
+                                        "occurrence_id": {
+                                          "oneOf": [
+                                            {
+                                              "type": "string",
+                                              "description": "Stable Program occurrence ID."
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "change_set_ref": {
+                                                  "type": "string",
+                                                  "description": "A prior result_as name from this same change set."
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "minted_occurrence_ids",
+                                                    "retired_occurrence_ids",
+                                                    "surviving_occurrence_ids",
+                                                    "resulting_order"
+                                                  ]
+                                                },
+                                                "index": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "change_set_ref",
+                                                "field",
+                                                "index"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        "source_seconds": {
+                                          "type": "number",
+                                          "description": "Exact inspected source-media second."
+                                        }
+                                      },
+                                      "required": [
+                                        "occurrence_id",
+                                        "source_seconds"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "end": {
+                                      "type": "object",
+                                      "properties": {
+                                        "occurrence_id": {
+                                          "oneOf": [
+                                            {
+                                              "type": "string",
+                                              "description": "Stable Program occurrence ID."
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "change_set_ref": {
+                                                  "type": "string",
+                                                  "description": "A prior result_as name from this same change set."
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "minted_occurrence_ids",
+                                                    "retired_occurrence_ids",
+                                                    "surviving_occurrence_ids",
+                                                    "resulting_order"
+                                                  ]
+                                                },
+                                                "index": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "change_set_ref",
+                                                "field",
+                                                "index"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        "source_seconds": {
+                                          "type": "number",
+                                          "description": "Exact inspected source-media second."
+                                        }
+                                      },
+                                      "required": [
+                                        "occurrence_id",
+                                        "source_seconds"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "start",
+                                    "end"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "range"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "destination": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "left_occurrence_id": {
+                                  "oneOf": [
+                                    {
+                                      "type": "null"
+                                    },
+                                    {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "right_occurrence_id": {
+                                  "oneOf": [
+                                    {
+                                      "type": "null"
+                                    },
+                                    {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "left_occurrence_id",
+                                "right_occurrence_id"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "at": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occurrence_id": {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    },
+                                    "source_seconds": {
+                                      "type": "number",
+                                      "description": "Exact inspected source-media second."
+                                    }
+                                  },
+                                  "required": [
+                                    "occurrence_id",
+                                    "source_seconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "at"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "boundary_evidence": {
+                          "type": "array",
+                          "minItems": 1,
+                          "maxItems": 128,
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "evidence_id": {
+                                "type": "string",
+                                "description": "Preferred short biev_... handle."
+                              },
+                              "inspection_token": {
+                                "type": "string",
+                                "description": "The full signed receipt, for when its evidence_id is not held."
+                              },
+                              "semantic_boundary": {
+                                "type": "object",
+                                "properties": {
+                                  "word_id": {
+                                    "type": "string",
+                                    "pattern": "^word_[a-z0-9]{20}$",
+                                    "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                                  },
+                                  "edge": {
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "end"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "word_id",
+                                  "edge"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [],
+                            "additionalProperties": false
+                          }
+                        },
+                        "result_as": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                          "description": "Optional name used by later change_set_ref values in this run."
+                        }
+                      },
+                      "required": [
+                        "op",
+                        "selection"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "enum": [
+                            "occurrence.move"
+                          ]
+                        },
+                        "selection": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_ids": {
+                                  "type": "array",
+                                  "minItems": 1,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "oneOf": [
+                                      {
+                                        "type": "string",
+                                        "description": "Stable Program occurrence ID."
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "change_set_ref": {
+                                            "type": "string",
+                                            "description": "A prior result_as name from this same change set."
+                                          },
+                                          "field": {
+                                            "type": "string",
+                                            "enum": [
+                                              "minted_occurrence_ids",
+                                              "retired_occurrence_ids",
+                                              "surviving_occurrence_ids",
+                                              "resulting_order"
+                                            ]
+                                          },
+                                          "index": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "change_set_ref",
+                                          "field",
+                                          "index"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "occurrence_ids"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "range": {
+                                  "type": "object",
+                                  "properties": {
+                                    "start": {
+                                      "type": "object",
+                                      "properties": {
+                                        "occurrence_id": {
+                                          "oneOf": [
+                                            {
+                                              "type": "string",
+                                              "description": "Stable Program occurrence ID."
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "change_set_ref": {
+                                                  "type": "string",
+                                                  "description": "A prior result_as name from this same change set."
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "minted_occurrence_ids",
+                                                    "retired_occurrence_ids",
+                                                    "surviving_occurrence_ids",
+                                                    "resulting_order"
+                                                  ]
+                                                },
+                                                "index": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "change_set_ref",
+                                                "field",
+                                                "index"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        "source_seconds": {
+                                          "type": "number",
+                                          "description": "Exact inspected source-media second."
+                                        }
+                                      },
+                                      "required": [
+                                        "occurrence_id",
+                                        "source_seconds"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "end": {
+                                      "type": "object",
+                                      "properties": {
+                                        "occurrence_id": {
+                                          "oneOf": [
+                                            {
+                                              "type": "string",
+                                              "description": "Stable Program occurrence ID."
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "change_set_ref": {
+                                                  "type": "string",
+                                                  "description": "A prior result_as name from this same change set."
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "minted_occurrence_ids",
+                                                    "retired_occurrence_ids",
+                                                    "surviving_occurrence_ids",
+                                                    "resulting_order"
+                                                  ]
+                                                },
+                                                "index": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "change_set_ref",
+                                                "field",
+                                                "index"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        "source_seconds": {
+                                          "type": "number",
+                                          "description": "Exact inspected source-media second."
+                                        }
+                                      },
+                                      "required": [
+                                        "occurrence_id",
+                                        "source_seconds"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "start",
+                                    "end"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "range"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "destination": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "left_occurrence_id": {
+                                  "oneOf": [
+                                    {
+                                      "type": "null"
+                                    },
+                                    {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "right_occurrence_id": {
+                                  "oneOf": [
+                                    {
+                                      "type": "null"
+                                    },
+                                    {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "left_occurrence_id",
+                                "right_occurrence_id"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "at": {
+                                  "type": "object",
+                                  "properties": {
+                                    "occurrence_id": {
+                                      "oneOf": [
+                                        {
+                                          "type": "string",
+                                          "description": "Stable Program occurrence ID."
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "change_set_ref": {
+                                              "type": "string",
+                                              "description": "A prior result_as name from this same change set."
+                                            },
+                                            "field": {
+                                              "type": "string",
+                                              "enum": [
+                                                "minted_occurrence_ids",
+                                                "retired_occurrence_ids",
+                                                "surviving_occurrence_ids",
+                                                "resulting_order"
+                                              ]
+                                            },
+                                            "index": {
+                                              "type": "integer",
+                                              "minimum": 0
+                                            }
+                                          },
+                                          "required": [
+                                            "change_set_ref",
+                                            "field",
+                                            "index"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    },
+                                    "source_seconds": {
+                                      "type": "number",
+                                      "description": "Exact inspected source-media second."
+                                    }
+                                  },
+                                  "required": [
+                                    "occurrence_id",
+                                    "source_seconds"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "at"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "boundary_evidence": {
+                          "type": "array",
+                          "minItems": 1,
+                          "maxItems": 128,
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "evidence_id": {
+                                "type": "string",
+                                "description": "Preferred short biev_... handle."
+                              },
+                              "inspection_token": {
+                                "type": "string",
+                                "description": "The full signed receipt, for when its evidence_id is not held."
+                              },
+                              "semantic_boundary": {
+                                "type": "object",
+                                "properties": {
+                                  "word_id": {
+                                    "type": "string",
+                                    "pattern": "^word_[a-z0-9]{20}$",
+                                    "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                                  },
+                                  "edge": {
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "end"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "word_id",
+                                  "edge"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [],
+                            "additionalProperties": false
+                          }
+                        },
+                        "result_as": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                          "description": "Optional name used by later change_set_ref values in this run."
+                        }
+                      },
+                      "required": [
+                        "op",
+                        "selection",
+                        "destination"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "enum": [
+                            "occurrence.remove"
+                          ]
+                        },
+                        "selection": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "occurrence_ids": {
+                                  "type": "array",
+                                  "minItems": 1,
+                                  "uniqueItems": true,
+                                  "items": {
+                                    "oneOf": [
+                                      {
+                                        "type": "string",
+                                        "description": "Stable Program occurrence ID."
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "change_set_ref": {
+                                            "type": "string",
+                                            "description": "A prior result_as name from this same change set."
+                                          },
+                                          "field": {
+                                            "type": "string",
+                                            "enum": [
+                                              "minted_occurrence_ids",
+                                              "retired_occurrence_ids",
+                                              "surviving_occurrence_ids",
+                                              "resulting_order"
+                                            ]
+                                          },
+                                          "index": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "change_set_ref",
+                                          "field",
+                                          "index"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "occurrence_ids"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "range": {
+                                  "type": "object",
+                                  "properties": {
+                                    "start": {
+                                      "oneOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "occurrence_id": {
+                                              "oneOf": [
+                                                {
+                                                  "type": "string",
+                                                  "description": "Stable Program occurrence ID."
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "change_set_ref": {
+                                                      "type": "string",
+                                                      "description": "A prior result_as name from this same change set."
+                                                    },
+                                                    "field": {
+                                                      "type": "string",
+                                                      "enum": [
+                                                        "minted_occurrence_ids",
+                                                        "retired_occurrence_ids",
+                                                        "surviving_occurrence_ids",
+                                                        "resulting_order"
+                                                      ]
+                                                    },
+                                                    "index": {
+                                                      "type": "integer",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "change_set_ref",
+                                                    "field",
+                                                    "index"
+                                                  ],
+                                                  "additionalProperties": false
+                                                }
+                                              ]
+                                            },
+                                            "source_seconds": {
+                                              "type": "number",
+                                              "description": "Exact inspected source-media second."
+                                            }
+                                          },
+                                          "required": [
+                                            "occurrence_id",
+                                            "source_seconds"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "evidence_id": {
+                                              "type": "string",
+                                              "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                            }
+                                          },
+                                          "required": [
+                                            "evidence_id"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    },
+                                    "end": {
+                                      "oneOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "occurrence_id": {
+                                              "oneOf": [
+                                                {
+                                                  "type": "string",
+                                                  "description": "Stable Program occurrence ID."
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "change_set_ref": {
+                                                      "type": "string",
+                                                      "description": "A prior result_as name from this same change set."
+                                                    },
+                                                    "field": {
+                                                      "type": "string",
+                                                      "enum": [
+                                                        "minted_occurrence_ids",
+                                                        "retired_occurrence_ids",
+                                                        "surviving_occurrence_ids",
+                                                        "resulting_order"
+                                                      ]
+                                                    },
+                                                    "index": {
+                                                      "type": "integer",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "change_set_ref",
+                                                    "field",
+                                                    "index"
+                                                  ],
+                                                  "additionalProperties": false
+                                                }
+                                              ]
+                                            },
+                                            "source_seconds": {
+                                              "type": "number",
+                                              "description": "Exact inspected source-media second."
+                                            }
+                                          },
+                                          "required": [
+                                            "occurrence_id",
+                                            "source_seconds"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "evidence_id": {
+                                              "type": "string",
+                                              "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                            }
+                                          },
+                                          "required": [
+                                            "evidence_id"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "start",
+                                    "end"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "range"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "ranges": {
+                                  "type": "array",
+                                  "minItems": 1,
+                                  "maxItems": 64,
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "start": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "occurrence_id": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "description": "Stable Program occurrence ID."
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "change_set_ref": {
+                                                        "type": "string",
+                                                        "description": "A prior result_as name from this same change set."
+                                                      },
+                                                      "field": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                          "minted_occurrence_ids",
+                                                          "retired_occurrence_ids",
+                                                          "surviving_occurrence_ids",
+                                                          "resulting_order"
+                                                        ]
+                                                      },
+                                                      "index": {
+                                                        "type": "integer",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "change_set_ref",
+                                                      "field",
+                                                      "index"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "source_seconds": {
+                                                "type": "number",
+                                                "description": "Exact inspected source-media second."
+                                              }
+                                            },
+                                            "required": [
+                                              "occurrence_id",
+                                              "source_seconds"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "evidence_id": {
+                                                "type": "string",
+                                                "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                              }
+                                            },
+                                            "required": [
+                                              "evidence_id"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      },
+                                      "end": {
+                                        "oneOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "occurrence_id": {
+                                                "oneOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "description": "Stable Program occurrence ID."
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "change_set_ref": {
+                                                        "type": "string",
+                                                        "description": "A prior result_as name from this same change set."
+                                                      },
+                                                      "field": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                          "minted_occurrence_ids",
+                                                          "retired_occurrence_ids",
+                                                          "surviving_occurrence_ids",
+                                                          "resulting_order"
+                                                        ]
+                                                      },
+                                                      "index": {
+                                                        "type": "integer",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "change_set_ref",
+                                                      "field",
+                                                      "index"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  }
+                                                ]
+                                              },
+                                              "source_seconds": {
+                                                "type": "number",
+                                                "description": "Exact inspected source-media second."
+                                              }
+                                            },
+                                            "required": [
+                                              "occurrence_id",
+                                              "source_seconds"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "evidence_id": {
+                                                "type": "string",
+                                                "description": "An episode_zoom biev_... receipt alone: cut at the exact occurrence and source second it certifies. It also counts as that edge's boundary evidence."
+                                              }
+                                            },
+                                            "required": [
+                                              "evidence_id"
+                                            ],
+                                            "additionalProperties": false
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "start",
+                                      "end"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. Put every partial removal planned together in this one array; they settle atomically as one occurrence.remove item and one receipt, and a later item could not name an occurrence a partial cut retired."
+                                }
+                              },
+                              "required": [
+                                "ranges"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "boundary_evidence": {
+                          "type": "array",
+                          "minItems": 1,
+                          "maxItems": 128,
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "evidence_id": {
+                                "type": "string",
+                                "description": "Preferred short biev_... handle."
+                              },
+                              "inspection_token": {
+                                "type": "string",
+                                "description": "The full signed receipt, for when its evidence_id is not held."
+                              },
+                              "semantic_boundary": {
+                                "type": "object",
+                                "properties": {
+                                  "word_id": {
+                                    "type": "string",
+                                    "pattern": "^word_[a-z0-9]{20}$",
+                                    "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                                  },
+                                  "edge": {
+                                    "type": "string",
+                                    "enum": [
+                                      "start",
+                                      "end"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "word_id",
+                                  "edge"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [],
+                            "additionalProperties": false
+                          }
+                        },
+                        "result_as": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                          "description": "Optional name used by later change_set_ref values in this run."
+                        }
+                      },
+                      "required": [
+                        "op",
+                        "selection"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "enum": [
+                            "operation.revert"
+                          ]
+                        },
+                        "receipt_id": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "change_set_ref": {
+                                  "type": "string",
+                                  "description": "A prior result_as name from this same change set."
+                                },
+                                "field": {
+                                  "type": "string",
+                                  "enum": [
+                                    "operation_receipt_id"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "change_set_ref",
+                                "field"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "result_as": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                          "description": "Optional name used by later change_set_ref values in this run."
+                        }
+                      },
+                      "required": [
+                        "op",
+                        "receipt_id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type",
+              "ops"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "resume"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "stop"
+                ]
+              },
+              "expected_activity_revision": {
+                "type": "integer",
+                "description": "Optional exact activity revision from the latest episode_change_set_read. Pass it whenever available so a stale Stop request fails closed."
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "revert"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "program_change_set_not_found",
+    "stale_composition_revision",
+    "stale_change_set_revision",
+    "idempotency_conflict",
+    "invalid_input",
+    "change_set_operation_not_supported",
+    "change_set_reference_invalid",
+    "change_set_reference_unresolved",
+    "change_set_authority_revoked",
+    "change_set_in_progress",
+    "change_set_target_conflict",
+    "change_set_junction_conflict",
+    "change_set_operation_failed",
+    "change_set_receipt_invalid",
+    "change_set_revert_conflict",
+    "program_attachment_conflict",
+    "program_revert_conflict",
+    "program_boundary_evidence_required",
+    "program_boundary_evidence_invalid"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "change_set_id": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string",
+        "enum": [
+          "edit",
+          "revert"
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "activity_revision": {
+        "type": "integer"
+      },
+      "total_operations": {
+        "type": "integer"
+      },
+      "committed_operations": {
+        "type": "integer"
+      },
+      "counts": {
+        "type": "object"
+      },
+      "head_revision": {
+        "type": "integer"
+      },
+      "head_program_digest": {
+        "type": "string"
+      },
+      "attribution": {
+        "type": "string"
+      },
+      "can_stop": {
+        "type": "boolean"
+      },
+      "can_revert": {
+        "type": "boolean"
+      },
+      "exact_revertible": {
+        "type": "boolean"
+      },
+      "external_adoptions": {
+        "type": "integer"
+      },
+      "error": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "summary": {
+        "type": "object"
+      },
+      "started_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "finished_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "stopped_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverted_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverts_change_set_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverted_by_change_set_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "episode_change_set_mutate"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "stopping",
+              "completed",
+              "partial",
+              "stopped",
+              "conflicted",
+              "failed",
+              "reverted"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "change_set"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^chgset_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "parent": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "run_kind": {
+            "type": "string",
+            "enum": [
+              "edit",
+              "revert"
+            ]
+          },
+          "activity_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "operations": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "total",
+              "committed"
+            ],
+            "additionalProperties": false
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false,
+            "description": "The run's base revision, the revision after its last committed item, and the current Episode or Clip revision."
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false,
+            "description": "Program digests before and after this write, and now. Read continuations pin the digest; boundary evidence does not depend on it."
+          },
+          "checks": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "string",
+                "enum": [
+                  "advanced",
+                  "unchanged"
+                ]
+              },
+              "program_digest": {
+                "type": "string",
+                "enum": [
+                  "changed",
+                  "unchanged"
+                ]
+              }
+            },
+            "required": [
+              "revision",
+              "program_digest"
+            ],
+            "additionalProperties": false,
+            "description": "The currentness checks this write moved: the Composition revision and the Program digest. Boundary evidence depends on neither; the next edit re-verifies each token at its point."
+          },
+          "item_receipts": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "items": {
+                  "type": "string",
+                  "pattern": "^rcpt_[a-z0-9]+$"
+                }
+              },
+              "omitted": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "count",
+              "ids",
+              "omitted"
+            ],
+            "additionalProperties": false,
+            "description": "The latest committed item receipts in application order; each reverts individually through episode_edit operation.revert, newest first. omitted counts earlier ones episode_change_set_read pages through."
+          },
+          "inverse": {
+            "type": "object",
+            "properties": {
+              "op": {
+                "type": "string",
+                "enum": [
+                  "episode_change_set_mutate"
+                ]
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "revert"
+                ]
+              },
+              "change_set_id": {
+                "type": "string",
+                "pattern": "^chgset_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "op",
+              "action",
+              "change_set_id"
+            ],
+            "additionalProperties": false,
+            "description": "Present only for a completed edit run that still reverts exactly as a whole. A stopped or partial run offers its item receipts instead."
+          },
+          "reverts_change_set_id": {
+            "type": "string",
+            "pattern": "^chgset_[a-z0-9]+$"
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "parent",
+          "run_kind",
+          "activity_revision",
+          "operations",
+          "revisions",
+          "digests",
+          "checks"
+        ],
+        "additionalProperties": false,
+        "description": "The run as the subject inside its Episode or Clip; checks state what the whole run moved from its base to its head."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "name": "episode_update",
+  "title": "Update episode metadata",
+  "description": "Update the saved episode's own title, description, Episode-time chapters, and/or Episode date. Read the exact Episode first and pass its draft_revision; a stale token fails without overwriting newer human copy. Episode date is the durable project chronology field; date-only input is interpreted as 12:00 UTC and sets the basis to manual. This is metadata-only; structural timeline edits use the separate episode_edit patch primitive. Do not use this for YouTube/LinkedIn/X package copy unless the user explicitly asks to rename, redescribe, or correct the date of the episode itself; use publish_prepare or publish_update for channel/package copy.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode public ID."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional new title."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional new description."
+      },
+      "chapters": {
+        "type": "array",
+        "maxItems": 250,
+        "description": "Optional user-authored Episode-time chapters. Omit to preserve the current field; pass [] to clear it.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start_seconds": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Chapter start on the playable Episode clock."
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start_seconds",
+            "title"
+          ]
+        }
+      },
+      "episode_date": {
+        "type": "string",
+        "description": "Optional ISO8601 date or timestamp for the Episode date. Date-only values are stored at 12:00 UTC."
+      },
+      "expected_revision": {
+        "type": "string",
+        "description": "Required opaque draft_revision from a fresh episode_read or binding receipt. A stale token is rejected before any metadata write."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry."
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "draft_revision": {
+        "type": "string",
+        "description": "Authoritative opaque draft revision after the metadata write."
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "chapters": {
+        "type": "array"
+      },
+      "chapter_timebase": {
+        "type": "string",
+        "enum": [
+          "episode"
+        ]
+      },
+      "stale_media": {
+        "type": "boolean"
+      },
+      "episode_date": {
+        "type": "string"
+      },
+      "episode_date_basis": {
+        "type": "string"
+      },
+      "episode_date_label": {
+        "type": "string"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

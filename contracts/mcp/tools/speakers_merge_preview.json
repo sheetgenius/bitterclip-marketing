@@ -1,0 +1,65 @@
+{
+  "name": "speakers_merge_preview",
+  "title": "Preview speaker merge",
+  "description": "Preview a proposed duplicate-speaker merge before any profile is changed. Returns the recommended survivor, what would move, and the artifacts that will not be rewritten.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "survivor_profile_id": {
+        "type": "string",
+        "description": "SpeakerProfile public ID, slug, or UUID to keep if the user confirms this merge direction."
+      },
+      "merged_profile_id": {
+        "type": "string",
+        "description": "SpeakerProfile public ID, slug, or UUID to merge into the survivor."
+      }
+    },
+    "required": [
+      "survivor_profile_id",
+      "merged_profile_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "state_sentence": {
+        "type": "string"
+      },
+      "survivor_profile_id": {
+        "type": "string"
+      },
+      "merged_profile_id": {
+        "type": "string"
+      },
+      "recommended_survivor_profile_id": {
+        "type": "string"
+      },
+      "recommendation_reason": {
+        "type": "string"
+      },
+      "profiles": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "effects": {
+        "type": "object"
+      },
+      "unchanged_artifacts": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

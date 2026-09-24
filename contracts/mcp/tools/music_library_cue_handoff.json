@@ -1,0 +1,56 @@
+{
+  "name": "music_library_cue_handoff",
+  "title": "Carry a music range through the library",
+  "description": "App-only durable handoff from a Timeline music range to the account Music Library. Open stores revision and elastic range facts in a server receipt; apply revalidates them and replaces the track through music_cue_mutate. A changed Episode returns a reviewable draft instead of placing stale music.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "object",
+        "description": "One action: {type:\"open\", episode_id, music_id, expected_revision, return_to?, idempotency_key}; {type:\"read\", handoff_id}; or {type:\"apply\", handoff_id, library_entry_id, idempotency_key}."
+      }
+    },
+    "required": [
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "not_found",
+    "invalid_input",
+    "stale_composition_revision",
+    "idempotency_conflict"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "state": {
+        "type": "string"
+      },
+      "handoff_id": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "music_id": {
+        "type": "string"
+      },
+      "episode_range": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      },
+      "applied": {
+        "type": "boolean"
+      },
+      "mutation": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

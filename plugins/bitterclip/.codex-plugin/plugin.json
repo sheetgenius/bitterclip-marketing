@@ -1,0 +1,37 @@
+{
+  "name": "bitterclip",
+  "version": "0.2.1",
+  "description": "Turn recordings into editable clips and exact video exports.",
+  "author": {
+    "name": "SheetGenius, Inc.",
+    "url": "https://company.sheetgenius.com"
+  },
+  "homepage": "https://bitterclip.com/connect",
+  "repository": "https://github.com/sheetgenius/bitterclip-marketing",
+  "license": "MIT",
+  "keywords": [
+    "video",
+    "editing",
+    "clips",
+    "transcripts",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "BitterClip",
+    "shortDescription": "Turn recordings into editable clips and finished videos",
+    "longDescription": "Find the moment worth sharing in a recording, cut it into an editable clip, and render the exact finished video. BitterClip keeps every cut linked to its source recording, and every prepared post waits for your confirmation in BitterClip.",
+    "developerName": "SheetGenius, Inc.",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://bitterclip.com",
+    "defaultPrompt": [
+      "Using BitterClip, help me make my first clip. Briefly explain how you can help, then show my recent recordings or help me upload one."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

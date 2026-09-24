@@ -1,0 +1,1457 @@
+{
+  "name": "episode_sample_frames",
+  "title": "Sample video frames from an episode",
+  "description": "Sample up to 4 explicit episode-time points, or up to 8 deterministic frames inside one <=30s EPISODE region (longer spans: multiple windows) — pixel evidence for visual inspection (form, framing, screens, gestures, reveals). To judge the picture the current edit will show, pass projection:\"program\", presentation:\"canvas\"; the default original/source sample shows only the base Recording before canvas framing and may differ from the committed camera. For a treatment self-check, omit times/region/count and pass projection:\"program\", presentation:\"canvas\", delivery:\"inline\". treatment_preview:{type:\"speaker_title\",speaker_title_id} chooses one fully settled title frame. treatment_preview:{type:\"caption_treatment\",occurrence_ids:[...]} chooses one calm cue frame or up to three successive timed active-word frames, using the same frozen caption cue model and caption engine policy as Export. Treatment pixels include the Program canvas, the named treatment, and the other committed text layer visible at the sampled instant, so speaker-title/subtitle collisions can be judged directly; other overlays, transition motion, and audio are explicitly omitted. For synchronized multi-camera review, pass camera_refs with 2–3 exact camera handles from episode_read (use original for the base picture): BitterClip samples every camera at every supplied time, up to 8 total cells, and with delivery omitted returns one contact sheet ordered as times in rows and camera_refs in columns. Use that survey first, then request high detail only for a finalist. Split widely separated evidence into separate calls of at most 4 explicit times so each request remains bounded and retryable. presentation:\"source\" (default) returns the selected source picture before Episode canvas framing. Without treatment_preview, Program canvas pixels are before captions and overlays. Canvas presentation cannot be combined with original, angle, or comparison sampling. Every result publishes public, unguessable frame artifact URLs plus a shareable gallery_url. With delivery omitted, ordinary frames arrive as adjacent JPEG image blocks when their extracted bytes fit the aggregate inline budget; otherwise BitterClip returns linked delivery from the same sampled artifacts. camera_refs returns one bounded comparison sheet. Explicit delivery:\"inline\" or delivery:\"links\" overrides automatic choice. Captions and source/Program camera provenance remain inline in either mode. Times are EPISODE time; optional angle_id and camera_refs entries must be handles received from episode_read/episode_zoom — never invent times or pass raw source ids. Only exact projection:\"original\", presentation:\"source\" samples may return signed boundary_evidence for a structural edit when audio evidence is unavailable. Program, angle, comparison, and treatment samples are preview evidence only and never authorize Episode structure. Not for transcript understanding (episode_read). BitterClip samples; you interpret. Strategy details: bitterclip://docs/visual-evidence.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode public ID, such as comp_.... A recording src_... handle is accepted and resolves to that recording's episode-of-one, same as episode_read."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "times": {
+        "type": "array",
+        "description": "Explicit EPISODE-time seconds to sample. Use when you already know the moments to inspect. Exactly one of times or region is allowed. Maximum 4; split widely separated evidence into separate calls.",
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minItems": 1,
+        "maxItems": 4
+      },
+      "region": {
+        "type": "array",
+        "description": "EPISODE-time [start_seconds, end_seconds] region to sample at deterministic interior midpoints. Use for a short visible action. Exactly one of times or region is allowed. Hard cap 30 seconds.",
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "count": {
+        "type": "integer",
+        "description": "Number of frames to sample from one <=30s region. Default 5, maximum 8. Ignored when times is provided.",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "high"
+        ],
+        "description": "Frame detail level. standard is the default and caps the long edge at 768 px; high caps the long edge at 1280 px for body form, small UI text, or fine visual details while still respecting payload caps."
+      },
+      "delivery": {
+        "type": "string",
+        "enum": [
+          "inline",
+          "links"
+        ],
+        "description": "Optional explicit delivery override. When omitted, extracted JPEGs resolve to inline when their aggregate bytes fit the model-content budget and to links otherwise. inline returns adjacent JPEG image blocks plus URLs; links omits only the JPEG blocks while retaining inline captions, camera provenance, and public gallery/frame URLs."
+      },
+      "purpose": {
+        "type": "string",
+        "description": "Optional short reason for sampling, such as 'inspect squat form' or 'read the screen'. Echoed in the result for context."
+      },
+      "angle_id": {
+        "type": "string",
+        "description": "Optional camera-angle handle received from episode_read/episode_zoom. Times remain episode seconds; BitterClip maps them to that angle. Cannot be combined with projection."
+      },
+      "camera_refs": {
+        "type": "array",
+        "description": "Optional synchronized comparison columns: 2–3 unique camera handles from episode_read, using original for the base picture and ang_... for placed alternates. Requires explicit times, cannot combine with angle_id/projection/canvas, and times × camera_refs may not exceed 8. With delivery omitted the model receives one contact sheet, ordered as times in rows and this array in columns.",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 2,
+        "maxItems": 3,
+        "uniqueItems": true
+      },
+      "projection": {
+        "type": "string",
+        "enum": [
+          "original",
+          "program"
+        ],
+        "description": "Which picture to sample when angle_id is omitted. original (default) samples the factual base recording; program samples the resolved committed Episode picture. Cannot be combined with angle_id."
+      },
+      "presentation": {
+        "type": "string",
+        "enum": [
+          "source",
+          "canvas"
+        ],
+        "description": "How to present the sampled picture. source (default) returns source pixels before Episode canvas framing. canvas is exact Fit/Fill/focal-position proof on the Episode canvas before captions/overlays and requires projection:\"program\"."
+      },
+      "treatment_preview": {
+        "description": "Optional current-state treatment self-check. Omit times/region/count and set projection:\"program\", presentation:\"canvas\", delivery:\"inline\". Receipt provenance is reserved for the automatic post-mutation sample and cannot be supplied by callers.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "speaker_title"
+                ]
+              },
+              "speaker_title_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "speaker_title_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "caption_treatment"
+                ]
+              },
+              "occurrence_ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "type",
+              "occurrence_ids"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "required": [
+              "episode_id"
+            ]
+          },
+          {
+            "required": [
+              "composition_id"
+            ]
+          }
+        ]
+      },
+      {
+        "oneOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "times"
+                ]
+              },
+              {
+                "required": [
+                  "region"
+                ]
+              }
+            ],
+            "not": {
+              "required": [
+                "treatment_preview"
+              ]
+            }
+          },
+          {
+            "required": [
+              "treatment_preview"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "times"
+                  ]
+                },
+                {
+                  "required": [
+                    "region"
+                  ]
+                },
+                {
+                  "required": [
+                    "count"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "not": {
+          "required": [
+            "angle_id",
+            "projection"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "camera_refs",
+            "angle_id"
+          ]
+        }
+      },
+      {
+        "not": {
+          "required": [
+            "camera_refs",
+            "projection"
+          ]
+        }
+      },
+      {
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "camera_refs"
+              ]
+            }
+          },
+          {
+            "required": [
+              "camera_refs",
+              "times"
+            ]
+          }
+        ]
+      },
+      {
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "presentation"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "presentation": {
+                "enum": [
+                  "source"
+                ]
+              }
+            },
+            "required": [
+              "presentation"
+            ]
+          },
+          {
+            "properties": {
+              "presentation": {
+                "enum": [
+                  "canvas"
+                ]
+              },
+              "projection": {
+                "enum": [
+                  "program"
+                ]
+              }
+            },
+            "required": [
+              "presentation",
+              "projection"
+            ]
+          }
+        ]
+      },
+      {
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "treatment_preview"
+              ]
+            }
+          },
+          {
+            "properties": {
+              "projection": {
+                "enum": [
+                  "program"
+                ]
+              },
+              "presentation": {
+                "enum": [
+                  "canvas"
+                ]
+              },
+              "delivery": {
+                "enum": [
+                  "inline"
+                ]
+              }
+            },
+            "required": [
+              "projection",
+              "presentation",
+              "delivery"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "invalid_input",
+    "invalid_time_range",
+    "time_out_of_range",
+    "comparison_incomplete",
+    "source_media_unavailable",
+    "program_projection_unavailable",
+    "ffmpeg_busy",
+    "ffmpeg_missing",
+    "ffmpeg_timeout",
+    "frame_extraction_failed",
+    "frame_artifact_publish_failed",
+    "payload_budget_exceeded"
+  ],
+  "examples": [
+    {
+      "label": "Survey a visual action through automatically linked frames",
+      "input": {
+        "episode_id": "comp_...",
+        "region": [
+          1398.0,
+          1428.0
+        ],
+        "count": 5,
+        "purpose": "locate the squat rep"
+      }
+    },
+    {
+      "label": "Token-efficient raw-frame proof for CLI/no-vision hosts",
+      "input": {
+        "episode_id": "comp_...",
+        "region": [
+          1398.0,
+          1428.0
+        ],
+        "count": 3,
+        "delivery": "links",
+        "purpose": "confirm frame layer and share gallery"
+      }
+    },
+    {
+      "label": "Inspect form over one rep",
+      "input": {
+        "episode_id": "comp_...",
+        "region": [
+          1404.0,
+          1408.0
+        ],
+        "count": 5,
+        "detail": "high",
+        "delivery": "inline",
+        "purpose": "inspect squat form"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Resolved episode public ID."
+      },
+      "purpose": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Echo of the optional request purpose."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Composition revision sampled. Episode seconds are meaningful relative to this revision."
+      },
+      "program_digest": {
+        "type": "string",
+        "description": "Exact committed Episode picture/structure digest sampled. Re-sample after any later visual mutation, even if a caller still holds old frame URLs."
+      },
+      "render_plan_hash": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact full render-picture fingerprint for presentation:\"canvas\". Pass this value as expected_render_plan_hash to render_create to refuse rendering if camera, framing, canvas, or any other output dependency changed. Null for source presentation."
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Episode duration at this revision."
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "high"
+        ],
+        "description": "Resolved detail level."
+      },
+      "delivery": {
+        "type": "string",
+        "enum": [
+          "inline",
+          "links"
+        ],
+        "description": "Resolved delivery mode after applying an explicit override or the automatic aggregate-JPEG-byte budget. links omits only JPEG image blocks; captions, camera provenance, and gallery/frame URLs remain present."
+      },
+      "projection": {
+        "type": "string",
+        "enum": [
+          "original",
+          "program",
+          "angle",
+          "comparison"
+        ],
+        "description": "Resolved picture projection sampled by this call. comparison means synchronized camera_refs were sampled into one matrix."
+      },
+      "camera_refs": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "description": "Comparison contact-sheet column order; null for an ordinary single-camera sample.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "presentation": {
+        "type": "string",
+        "enum": [
+          "source",
+          "canvas"
+        ],
+        "description": "Resolved pixel presentation. canvas means the active Episode picture was framed through the target canvas before captions/overlays."
+      },
+      "treatment_preview": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Ready selected-treatment identity, settled Episode/render timestamps, exact layer inclusions/omissions, and snapshot binding; null for ordinary frame samples."
+      },
+      "model_image_delivery": {
+        "type": "string",
+        "enum": [
+          "frames",
+          "contact_sheet",
+          "none"
+        ],
+        "description": "Shape of model-visible image content for this result."
+      },
+      "model_image_count": {
+        "type": "integer",
+        "description": "Number of adjacent MCP image blocks: one for a comparison contact sheet, individual frame count for ordinary inline delivery, or zero for links."
+      },
+      "canvas": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Target Episode canvas for presentation:\"canvas\"; null for source presentation.",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Persisted canvas key, for example 1080x1920@30."
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "fps": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "width",
+          "height",
+          "fps"
+        ]
+      },
+      "angle_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Present only when sampling a camera angle."
+      },
+      "angle_label": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Human camera clip label when angle_id was used."
+      },
+      "content_bytes": {
+        "type": "integer",
+        "description": "Approximate total bytes of returned inline image content before JSON/base64 transport overhead; 0 when delivery is links."
+      },
+      "sampled_pixel_change": {
+        "type": "object",
+        "description": "Bounded mean-absolute channel difference between consecutive successful sampled stills in chronological Episode time on the same camera, compared on a 64×64 sRGB 3-band raster. Returned artifact dimensions stay native. This is a measurement at sampled instants only: it does not observe anything between samples and is not a motion, duration, payoff, quality, or taste claim. Camera comparison is unavailable rather than cross-camera compared. Decode failure is typed unavailable without fabricating a zero.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "measured",
+              "insufficient",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Typed reason when status is insufficient or unavailable."
+          },
+          "metric": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "mean_absolute_channel_difference when a pair could be scored."
+          },
+          "overall_level": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "none",
+              "near_zero",
+              "low",
+              "moderate",
+              "high",
+              null
+            ],
+            "description": "Coarse class of the largest measured adjacent pair; null when unmeasured."
+          },
+          "overall_normalized_difference": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Largest adjacent-pair difference in [0, 1] when measured."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Literal measurement sentence. Does not claim events between samples."
+          },
+          "pairs": {
+            "type": "array",
+            "description": "Chronological adjacent pairs on one camera. Request order is not used.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "from_seconds": {
+                  "type": "number"
+                },
+                "to_seconds": {
+                  "type": "number"
+                },
+                "time_axis": {
+                  "type": "string",
+                  "enum": [
+                    "episode",
+                    "source"
+                  ]
+                },
+                "from_camera_ref": {
+                  "type": "string"
+                },
+                "to_camera_ref": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "measured",
+                    "unavailable"
+                  ]
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "normalized_difference": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "level": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "none",
+                    "near_zero",
+                    "low",
+                    "moderate",
+                    "high",
+                    null
+                  ]
+                }
+              },
+              "required": [
+                "from_seconds",
+                "to_seconds",
+                "status"
+              ]
+            }
+          }
+        },
+        "required": [
+          "status",
+          "summary",
+          "pairs"
+        ]
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "times",
+          "region"
+        ],
+        "description": "Sampling mode used by the server."
+      },
+      "region": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "description": "Resolved [start, end] episode-time region when region mode was used.",
+        "items": {
+          "type": "number"
+        }
+      },
+      "sample_id": {
+        "type": "string",
+        "description": "Unguessable public frame-sample artifact ID for this sampling call."
+      },
+      "gallery_url": {
+        "type": "string",
+        "description": "Public gallery page showing the sampled frames with timestamp labels. Use this when the chat host will not inline markdown images."
+      },
+      "sample_expires_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Best-effort local artifact retention hint. CDN-backed image URLs are not signed grant URLs."
+      },
+      "manifest_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Public CDN manifest URL when durable object publishing is configured; null for local route fallback."
+      },
+      "frame_artifact_delivery": {
+        "type": "string",
+        "enum": [
+          "cdn",
+          "public_route"
+        ],
+        "description": "cdn when all frame assets were published to the configured CDN; public_route when local/dev returned app-hosted public asset routes."
+      },
+      "boundary_evidence": {
+        "type": "array",
+        "description": "Signed exact-point media-inspection receipts. Present only for successfully sampled projection:\"original\" frames; never returned for projection:\"program\" or angle_id.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "bitterclip.program_boundary_evidence.v2"
+              ]
+            },
+            "evidence_id": {
+              "type": "string"
+            },
+            "occurrence_id": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string",
+              "description": "The occurrence's own Recording; source_seconds is its second."
+            },
+            "inspected_recording_id": {
+              "type": "string",
+              "description": "The Recording inspected: the one Program Audio plays at this point (speech receipts), or the occurrence's own no-audio Recording (frame receipts). Absent on silent-authority receipts."
+            },
+            "audio_side": {
+              "type": "string",
+              "enum": [
+                "before",
+                "after",
+                "both"
+              ],
+              "description": "The Program Audio side this receipt certifies: before or after the point, or both when one authority plays through it. At an authority boundary zoom returns one receipt per side."
+            },
+            "audible_authority": {
+              "type": "object",
+              "properties": {
+                "authority": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence_base",
+                    "pinned_primary",
+                    "explicit_replace",
+                    "explicit_silence",
+                    "silence"
+                  ],
+                  "description": "occurrence_base: the occurrence's own Recording plays. pinned_primary: the Program Audio pin's Recording. explicit_replace: an interval Replace's Recording. explicit_silence: mute or an interval silence. silence: no usable audio."
+                },
+                "recording_id": {
+                  "type": "string",
+                  "description": "The Recording that plays, which zoom inspected. Absent under silence."
+                },
+                "source_seconds": {
+                  "type": "string",
+                  "description": "Its source second at this point."
+                },
+                "camera_group_key": {
+                  "type": "string",
+                  "description": "The pinned camera group (pinned_primary)."
+                },
+                "audio_attachment_id": {
+                  "type": "string",
+                  "description": "The interval policy (Replace or silence); a split keeps this identity."
+                }
+              },
+              "required": [
+                "authority"
+              ],
+              "additionalProperties": false,
+              "description": "Verified before the edit and again on the resulting Program: if what plays there changes, the receipt is stale."
+            },
+            "source_seconds": {
+              "type": "string"
+            },
+            "episode_seconds": {
+              "type": "string",
+              "description": "Where the point was when inspected. Later edits may move it; that does not stale the receipt."
+            },
+            "zoom_region": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "basis": {
+              "type": "string",
+              "enum": [
+                "aligned_gap",
+                "aligned_word_edge",
+                "sampled_frame",
+                "silent_authority"
+              ]
+            },
+            "speech_alignment": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "schema": {
+                      "type": "string",
+                      "enum": [
+                        "bitterclip.dialogue_boundary_probe.v1"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "supported"
+                      ]
+                    },
+                    "model": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "model_digest": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "pcm_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "offset_ms": {
+                      "type": "integer"
+                    },
+                    "relation": {
+                      "type": "string",
+                      "enum": [
+                        "inter_word_silence"
+                      ]
+                    },
+                    "between": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "safe_source_range": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "silence_source_range": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    }
+                  },
+                  "required": [
+                    "schema",
+                    "status",
+                    "relation",
+                    "model",
+                    "version",
+                    "model_digest",
+                    "pcm_sha256",
+                    "safe_source_range",
+                    "silence_source_range"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "schema": {
+                      "type": "string",
+                      "enum": [
+                        "bitterclip.dialogue_boundary_probe.v1"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "supported"
+                      ]
+                    },
+                    "model": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "model_digest": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "pcm_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "offset_ms": {
+                      "type": "integer"
+                    },
+                    "relation": {
+                      "type": "string",
+                      "enum": [
+                        "aligned_word_edge"
+                      ]
+                    },
+                    "word_edge": {
+                      "type": "string",
+                      "enum": [
+                        "start",
+                        "end"
+                      ]
+                    },
+                    "word": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "source_range": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "acoustic_density": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "text",
+                        "source_range",
+                        "acoustic_density"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "schema",
+                    "status",
+                    "relation",
+                    "model",
+                    "version",
+                    "model_digest",
+                    "pcm_sha256",
+                    "word_edge",
+                    "word"
+                  ],
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Signed forced-alignment disclosure. It exists only when the exact cut point lies inside an explicit aligned inter-word silence or at one exact acoustically aligned word edge; near-word, inside-word, and unresolved points never receive a structural receipt."
+            },
+            "semantic_boundaries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "word_id": {
+                    "type": "string",
+                    "pattern": "^word_[a-z0-9]{20}$",
+                    "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                  },
+                  "edge": {
+                    "type": "string",
+                    "enum": [
+                      "start",
+                      "end"
+                    ]
+                  }
+                },
+                "required": [
+                  "word_id",
+                  "edge"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Signed transcript anchors for this exact acoustic point. An aligned word edge carries that word and edge; an aligned gap carries left/end and right/start. These anchors narrow media evidence but never replace it."
+            },
+            "issued_at": {
+              "type": "string"
+            },
+            "inspection_token": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "schema",
+            "evidence_id",
+            "occurrence_id",
+            "source_id",
+            "source_seconds",
+            "episode_seconds",
+            "zoom_region",
+            "channels",
+            "basis",
+            "audio_side",
+            "audible_authority",
+            "issued_at",
+            "inspection_token"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "frames": {
+        "type": "array",
+        "description": "Sampled frames with exact episode/source/Program-camera provenance and public image URLs. Adjacent MCP image blocks are present only when resolved delivery is inline.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "frame_id": {
+              "type": "string",
+              "description": "Deterministic cache-key ID for this sampled frame artifact, not a persisted database row."
+            },
+            "sample_id": {
+              "type": "string",
+              "description": "Public sample set this frame belongs to."
+            },
+            "file_name": {
+              "type": "string",
+              "description": "Stable boring JPEG filename inside the sample set, e.g. frame-004.jpg."
+            },
+            "thumbnail_file_name": {
+              "type": "string"
+            },
+            "download_file_name": {
+              "type": "string",
+              "description": "Stable source-quality JPEG filename inside the sample set, e.g. frame-004-download.jpg."
+            },
+            "caption": {
+              "type": "string",
+              "description": "Short model-visible caption emitted adjacent to this frame image block."
+            },
+            "episode_seconds": {
+              "type": "number",
+              "description": "Frame timestamp on the stitched episode axis."
+            },
+            "source_seconds": {
+              "type": "number",
+              "description": "Frame timestamp in the underlying source recording."
+            },
+            "episode_timecode": {
+              "type": "string"
+            },
+            "source_timecode": {
+              "type": "string"
+            },
+            "angle_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Present only when this frame was sampled from a camera angle."
+            },
+            "angle_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "projection": {
+              "type": "string",
+              "enum": [
+                "original",
+                "program",
+                "angle"
+              ]
+            },
+            "presentation": {
+              "type": "string",
+              "enum": [
+                "source",
+                "canvas"
+              ]
+            },
+            "canvas": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "Full target canvas identity and dimensions for a canvas-presented frame.",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "key",
+                "width",
+                "height"
+              ]
+            },
+            "framing": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "Persisted occurrence framing applied to this canvas-presented frame.",
+              "properties": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "bitterclip.picture_framing.v1"
+                  ]
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "fill",
+                    "fit"
+                  ]
+                },
+                "canvas_fit": {
+                  "type": "string",
+                  "enum": [
+                    "fill",
+                    "4:5",
+                    "1:1"
+                  ],
+                  "description": "Persisted fit-at-ratio state of this frame: fill is the full-bleed crop; 4:5/1:1 letterbox the Fill crop at that ratio with black mattes."
+                },
+                "canvas_alignment": {
+                  "type": "string",
+                  "enum": [
+                    "center",
+                    "top",
+                    "bottom"
+                  ],
+                  "description": "Static placement of a fit-at-ratio picture. Center preserves symmetric mattes; top can reserve one lower subtitle band."
+                },
+                "crop_strategy": {
+                  "type": "string",
+                  "enum": [
+                    "center_crop",
+                    "fit_pad"
+                  ]
+                },
+                "focal_point": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ]
+                }
+              },
+              "required": [
+                "schema",
+                "mode",
+                "crop_strategy",
+                "focal_point"
+              ]
+            },
+            "sampled_camera_ref": {
+              "type": "string",
+              "description": "original or the stable ang_ handle actually sampled."
+            },
+            "sampled_camera_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "program_context_status": {
+              "type": "string",
+              "enum": [
+                "resolved",
+                "unavailable"
+              ],
+              "description": "Whether committed Program camera context resolved at this episode time. Original and explicit-angle evidence remain usable when this is unavailable; Program projection fails closed instead."
+            },
+            "program_camera_ref": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "original or the stable ang_ handle resolved by the committed Program at this episode time; null only when program_context_status is unavailable."
+            },
+            "program_camera_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "program_basis": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                "explicit",
+                "automatic",
+                "base",
+                null
+              ]
+            },
+            "program_recording_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Recording handle used by the committed Program at this episode time; null when Program context is unavailable."
+            },
+            "program_source_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Alias of program_recording_id for source provenance."
+            },
+            "program_source_seconds": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "description": "Source time in the Program's resolved recording at this episode point; null when Program context is unavailable."
+            },
+            "recording_id": {
+              "type": "string",
+              "description": "Underlying Recording public ID."
+            },
+            "source_id": {
+              "type": "string",
+              "description": "Alias of recording_id for source-time provenance."
+            },
+            "source_title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "revision": {
+              "type": "integer"
+            },
+            "occurrence_id": {
+              "type": "string",
+              "description": "Stable Program occurrence sampled at this exact point."
+            },
+            "segment_index": {
+              "type": "integer"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "mime_type": {
+              "type": "string"
+            },
+            "image_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "SHA-256 of the exact model-visible JPEG bytes for this frame."
+            },
+            "treatment_point_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Stable representative-point identity for a caption treatment preview."
+            },
+            "treatment_occurrence_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Selected occurrence represented by this caption treatment point."
+            },
+            "image_url": {
+              "type": "string",
+              "description": "Public direct JPEG URL. In production this is the clean CDN URL when durable object publishing is configured; in local/dev it is an unguessable public app route."
+            },
+            "thumbnail_url": {
+              "type": "string",
+              "description": "Public JPEG thumbnail URL for gallery/list display."
+            },
+            "download_url": {
+              "type": "string",
+              "description": "Public source-quality JPEG URL for user-facing download/share. This is not embedded into MCP image content and is not constrained by the chat payload budget."
+            },
+            "open_url": {
+              "type": "string",
+              "description": "Public gallery URL anchored to this frame."
+            },
+            "image_url_kind": {
+              "type": "string",
+              "enum": [
+                "cdn",
+                "public_route"
+              ]
+            },
+            "thumbnail_url_kind": {
+              "type": "string",
+              "enum": [
+                "cdn",
+                "public_route"
+              ]
+            },
+            "download_url_kind": {
+              "type": "string",
+              "enum": [
+                "cdn",
+                "public_route"
+              ]
+            },
+            "image_url_expires_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Null for CDN-backed durable URLs; set for local route fallback retention."
+            },
+            "download_url_expires_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Null for CDN-backed durable URLs; set for local route fallback retention."
+            },
+            "download_width": {
+              "type": "integer",
+              "description": "Pixel width of download_url rendition; source-native when available."
+            },
+            "download_height": {
+              "type": "integer",
+              "description": "Pixel height of download_url rendition; source-native when available."
+            },
+            "download_bytes": {
+              "type": "integer",
+              "description": "Byte size of the source-quality download rendition."
+            },
+            "download_mime_type": {
+              "type": "string"
+            },
+            "download_quality": {
+              "type": "string",
+              "enum": [
+                "source_native",
+                "canvas_native",
+                "display_fallback"
+              ],
+              "description": "source_native is a full source extraction; canvas_native is a full target-canvas presentation; display_fallback reuses the bounded display rendition."
+            }
+          },
+          "required": [
+            "frame_id",
+            "sample_id",
+            "file_name",
+            "caption",
+            "episode_seconds",
+            "source_seconds",
+            "recording_id",
+            "source_id",
+            "revision",
+            "occurrence_id",
+            "segment_index",
+            "projection",
+            "presentation",
+            "sampled_camera_ref",
+            "program_context_status",
+            "program_camera_ref",
+            "program_basis",
+            "program_recording_id",
+            "program_source_id",
+            "program_source_seconds",
+            "width",
+            "height",
+            "mime_type",
+            "image_sha256",
+            "image_url",
+            "thumbnail_url",
+            "download_url",
+            "open_url"
+          ]
+        }
+      },
+      "errors": {
+        "type": "array",
+        "description": "Always present. Per-request or per-timestamp sampling errors when partial success is possible.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "episode_seconds": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "error_code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "error_code",
+            "message"
+          ]
+        }
+      }
+    },
+    "required": [
+      "episode_id",
+      "sample_id",
+      "gallery_url",
+      "mode",
+      "projection",
+      "presentation",
+      "revision",
+      "program_digest",
+      "render_plan_hash",
+      "duration_seconds",
+      "detail",
+      "frames",
+      "errors",
+      "sampled_pixel_change"
+    ],
+    "additionalProperties": false
+  }
+}

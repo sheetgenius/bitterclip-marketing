@@ -1,0 +1,139 @@
+{
+  "name": "speakers_avatar_mutate",
+  "title": "Change a profile photo",
+  "description": "One profile-photo change per call: set_from_reference is the profile-picture chooser — it copies one cropped reference-gallery candidate (from speakers_list_avatar_candidates) into durable history and makes it current, and because it copies, later rejecting or invalidating that reference never alters the photo, and being the photo never adds it to the matching set; set_from_upload does the same from an uploaded image; clear removes the current photo while preserving history; restore brings back a prior history item. No action accepts a whole sampled frame — the retired set_from_candidate lane served frames that could show the wrong person; a recording's own frame pick lives on speakers_track_mutate set_avatar_from_recording and never touches the saved photo. App-only human repair actions — none of them change identity, voice memory, transcript labels, captions, exports, or merge state. Pass a caller-stable idempotency key with every action; the profile-photo lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string",
+        "description": "Person public ID, slug, or UUID that owns the profile photo."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Optional: carried toward the standard mutation contract. The profile-photo lane exposes no structural revision yet; omit until it does."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One profile-photo action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_from_reference"
+                ]
+              },
+              "reference_asset_id": {
+                "type": "string",
+                "description": "Reference-gallery asset ID from speakers_list_avatar_candidates. Those candidates are cropped and attributed to this person, never whole frames."
+              }
+            },
+            "required": [
+              "type",
+              "reference_asset_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_from_upload"
+                ]
+              },
+              "uploaded_blob_signed_id": {
+                "type": "string",
+                "description": "Signed ID for an uploaded image blob."
+              }
+            },
+            "required": [
+              "type",
+              "uploaded_blob_signed_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "clear"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "restore"
+                ]
+              },
+              "portrait_event_id": {
+                "type": "string",
+                "description": "Profile photo history item public ID."
+              }
+            },
+            "required": [
+              "type",
+              "portrait_event_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "speaker_profile_id",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string"
+      },
+      "avatar_id": {
+        "type": "string"
+      },
+      "avatar_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "receipt_id": {
+        "type": "string"
+      },
+      "state_sentence": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

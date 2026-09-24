@@ -10,7 +10,7 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY . .
-RUN NODE_OPTIONS=--max-old-space-size=768 bun run generate
+RUN NODE_OPTIONS=--max-old-space-size=1536 bun run generate
 
 FROM nginx:1.27-alpine
 

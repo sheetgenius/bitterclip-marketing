@@ -1,0 +1,1145 @@
+{
+  "name": "workspace_open",
+  "title": "Open BitterClip workspace",
+  "description": "Read-only. Requires exact target_type + target_id. Never use it for discovery or open a Project en route to a named Episode/Clip; discover first, then call once and last. Prepare BitterClip's review, edit, or publish workspace for a recording, Episode, Clip, or publish package. This tool never creates or changes an Episode, review point, or other saved state. To prepare one named read-only moment, pass target_type episode or clip, mode review, the exact expected_revision from episode_read, and focus_range:[start,end] in playable Episode time; the range is transient and never saved. A matching returned workspace_navigation proves BitterClip prepared the target, not that the host visibly mounted, played, or navigated it. Omit focus_range to open the whole target. Use review_points_place only when the user explicitly asks to save or mark reviewable Moments. In Embedded mode the host can mount the returned workspace resource. Every lane's result carries `open_status`. \"already_open\" means a live editor session for this exact target is beside the user and updates itself: direct attention to the exact place instead of presenting a link or claiming navigation. In Live Workspace mode without presence the result is \"link_ready\" plus an exact `workspace_url`; that does not prove a browser opened, so present the exact Open workspace link unless visible navigation is independently verified. In Embedded mode without presence it is \"prepared\": the host may mount the returned workspace resource, but nothing was navigated, so never claim you opened it unless your host visibly shows it. A just-created montage gives the user a playable stitched preview of the draft. A project target returns a concise handoff with bounded recent editable Episodes/Clips for rediscovery rather than an embedded library; use projects_list, recordings_list, and episodes_list for source discovery. On informational asks (\"do I have X?\", \"did we discuss X?\"), answer with receipts and OFFER to open related findings — prepare the handoff only when the user asked to open/show/review something.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "target_type": {
+        "type": "string",
+        "enum": [
+          "project",
+          "recording",
+          "episode",
+          "clip",
+          "publish_package"
+        ],
+        "description": "Object to hand off. Project targets produce a concise summary; exact media targets prepare the visual workspace."
+      },
+      "target_id": {
+        "type": "string",
+        "description": "Public ID for the target object."
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "review",
+          "edit",
+          "publish"
+        ],
+        "description": "Requested workspace mode."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional Project context for the exact target. To open a Project, pass target_type:\"project\" and its ID as target_id. For episode/clip targets OMIT this unless you hold the project id from a listing — it is never required, an episode id here is invalid_input, and a just-created clip's project may differ from what you assume."
+      },
+      "focus_range": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2,
+        "description": "Optional transient half-open [start_seconds, end_seconds) Episode-time focus. Valid only for episode/clip review with expected_revision; must be finite, nonempty, and fully in bounds. Never clamped or saved."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Exact structural revision from episode_read. Required with focus_range and rejected without it."
+      }
+    },
+    "required": [
+      "target_type",
+      "target_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "composition_not_found",
+    "recording_not_found",
+    "stale_composition_revision",
+    "episode_changed_during_read",
+    "invalid_time_range",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "workspace_open"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "workspace-prepared"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "prepared"
+            ]
+          },
+          "target": {
+            "type": "object"
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "next_action": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "kind",
+          "status",
+          "target",
+          "revision",
+          "next_action"
+        ],
+        "additionalProperties": false
+      },
+      "opened": {
+        "type": "boolean",
+        "description": "Embedded-mode resource acceptance only. This never proves a host browser visibly opened."
+      },
+      "open_status": {
+        "type": "string",
+        "enum": [
+          "link_ready",
+          "already_open",
+          "prepared"
+        ],
+        "description": "Handoff state. already_open (any lane): a live editor session for this exact target was seen within its presence window — the workspace beside the user updates itself, so direct attention to the exact place instead of presenting a link or claiming navigation. link_ready (Live Workspace, no presence): present workspace_url as the exact Open workspace link; visible navigation is not verified. prepared (Embedded, no presence): the workspace was prepared for the host to display; nothing was navigated, so do not claim you opened it unless your host visibly shows it."
+      },
+      "workspace_url": {
+        "type": "string",
+        "description": "Exact authorized BitterClip workspace URL."
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "project": {
+        "type": "object"
+      },
+      "recent_outputs": {
+        "type": "object",
+        "description": "Bounded newest-first editable Episode/Clip work for a project handoff, with exact reopen actions and no media URLs."
+      },
+      "recording": {
+        "type": "object"
+      },
+      "media": {
+        "type": "object"
+      },
+      "composition": {
+        "type": "object"
+      },
+      "focus_range": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "description": "Accepted transient Episode-time review range, when requested."
+      },
+      "focus_revision": {
+        "type": "integer",
+        "description": "Structural revision against which focus_range was validated."
+      },
+      "workspace_navigation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "target",
+          "route"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.workspace-nav.v1"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[A-Za-z0-9_-]{1,120}$"
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "mode"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "composition"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "review"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "editor_document": {
+        "type": "object",
+        "description": "Versioned application document consumed by the shared editor."
+      },
+      "moments": {
+        "type": "array"
+      },
+      "speaker_legend": {
+        "type": "array"
+      },
+      "speaker_model_context": {
+        "type": "object"
+      },
+      "publish_package_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Present when opening a publish package or approval for review."
+      },
+      "publish_package": {
+        "type": "object"
+      },
+      "publish_state": {
+        "type": "object",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "object": {
+            "type": "object",
+            "description": "Current publish object identity, using public IDs only.",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "recording_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "clip_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "composition_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "export_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "approval_id": {
+                "type": "string"
+              },
+              "platform": {
+                "type": "string"
+              }
+            }
+          },
+          "media": {
+            "type": "object",
+            "description": "Whether the media asset can be published.",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ready",
+                  "rendering",
+                  "failed",
+                  "missing",
+                  "render_required",
+                  "stale"
+                ]
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "source": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "download_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "package": {
+            "type": "object",
+            "description": "Reviewable package readiness and approval state.",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "missing",
+                  "needs_review",
+                  "approved",
+                  "published",
+                  "failed",
+                  "blocked",
+                  "manual_handoff",
+                  "ready",
+                  "rendering",
+                  "render_required",
+                  "stale"
+                ]
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "approval_status": {
+                "type": "string"
+              },
+              "explicit_approval_required": {
+                "type": "boolean"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "string"
+              },
+              "review_url": {
+                "type": "string"
+              },
+              "checks_summary": {
+                "type": "object"
+              }
+            }
+          },
+          "copy": {
+            "type": "object",
+            "description": "Destination-copy readiness and formatting state.",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "body_present": {
+                "type": "boolean"
+              },
+              "text_present": {
+                "type": "boolean"
+              },
+              "body_preview": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "description": "Plain-language copy readiness summary for primary UI and model responses."
+              },
+              "preview_lines": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "First non-empty destination-copy lines, preserving platform-native paragraph and bullet structure for compact UI."
+              },
+              "line_count": {
+                "type": "integer"
+              },
+              "character_count": {
+                "type": "integer"
+              },
+              "platform_native": {
+                "type": "boolean"
+              }
+            }
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "platform": {
+                  "type": "string"
+                },
+                "platform_key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "readiness": {
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "missing_auth",
+                    "permission_limited",
+                    "capped",
+                    "unsupported",
+                    "manual_handoff",
+                    "blocked"
+                  ]
+                },
+                "configured": {
+                  "type": "boolean"
+                },
+                "package_mode": {
+                  "type": "string"
+                },
+                "package": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ready": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "approval_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "approval_public_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "approval_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "review_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "mode": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "link_platform": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "attempt_state": {
+                  "type": "string"
+                },
+                "reconciliation_state": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cleanup_state": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "latest_publish_record_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "external_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "external_urls": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "safe_to_retry": {
+                  "type": "boolean"
+                },
+                "can_prepare_package": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "selected_by_default": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "can_publish_approval": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "attempts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "next_action": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "safe_to_retry": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "publish_record_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_record_public_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "cleanup_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reconcile_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "inspect_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "retry_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "tool_name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "poll_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "required_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "optional_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "platforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "approval_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "arguments": {
+                      "type": "object"
+                    },
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "review_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "settings_path": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "authorize_path": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "stage": {
+            "type": "object",
+            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "required": [
+              "status",
+              "label",
+              "message",
+              "blocking",
+              "ready_to_publish"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ready_to_publish",
+                  "ready_to_package",
+                  "needs_review",
+                  "needs_destination",
+                  "destination_blocked",
+                  "manual_handoff",
+                  "copy_needs_review",
+                  "needs_reconciliation",
+                  "cleanup_failed",
+                  "publishing",
+                  "published",
+                  "rendering",
+                  "render_required",
+                  "stale",
+                  "missing",
+                  "failed"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "blocking": {
+                "type": "boolean"
+              },
+              "ready_to_publish": {
+                "type": "boolean"
+              },
+              "action": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "safe_to_retry": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "publish_record_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "publish_record_public_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "cleanup_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reconcile_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "inspect_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "retry_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "publish_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "tool_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "poll_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "required_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "optional_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "approval_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "arguments": {
+                    "type": "object"
+                  },
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "review_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "settings_path": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "authorize_path": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "next_action": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "safe_to_retry": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "publish_record_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publish_record_public_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cleanup_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reconcile_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "inspect_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "retry_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publish_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tool_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "poll_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "required_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "optional_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "platforms": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "approval_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "arguments": {
+                "type": "object"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "review_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "settings_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "authorize_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "schema_version",
+          "object",
+          "media",
+          "package",
+          "copy",
+          "destinations",
+          "stage"
+        ]
+      },
+      "route": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "next_actions": {
+        "type": "array",
+        "description": "Optional follow-up BitterClip tool calls. Handles inside arguments are for tool calls only, not user-facing prose."
+      },
+      "handle_policy": {
+        "type": "string",
+        "description": "Reminder that raw BitterClip handles are tool-call-only and should not be shown to users."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "live_workspace": {
+    "title": "Get BitterClip workspace link",
+    "description": "Read-only. Return the exact authorized BitterClip workspace link for a recording, Episode, Clip, Project, or publish package. This prepares a link; it does not open a browser. Present the link and say it is ready to open unless visible navigation is independently verified.",
+    "opened_description": "Always false in Live Workspace mode; this tool prepares a link and does not prove browser navigation.",
+    "workspace_binding_schema": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bitterclip.workspace-binding.v2"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "live_workspace"
+          ]
+        },
+        "project_id": {
+          "type": "string"
+        },
+        "target_kind": {
+          "type": "string",
+          "enum": [
+            "episode",
+            "clip"
+          ]
+        },
+        "target_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "draft_revision": {
+          "type": "string"
+        },
+        "workspace_url": {
+          "type": "string"
+        },
+        "output_id": {
+          "type": "string"
+        },
+        "output_status": {
+          "type": "string",
+          "enum": [
+            "missing",
+            "stale",
+            "rendering",
+            "ready",
+            "failed"
+          ]
+        },
+        "output_revision": {
+          "type": "integer"
+        },
+        "parent_episode_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "mode",
+        "target_kind",
+        "target_id",
+        "revision",
+        "draft_revision",
+        "workspace_url",
+        "output_status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

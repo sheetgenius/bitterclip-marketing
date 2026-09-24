@@ -33,6 +33,31 @@ under a dated entry.
 - Regenerated the legacy `bitterclip-og.png` social card, which
   `/founder-onboarding` uses, from its SVG source so it reads "7-day trial ·
   $1 today · card required".
+- Consolidated the 113 authored MCP contracts, three public guides, and four
+  plugin skills in this repository. The static tool reference now includes
+  default, app-only, and Live Workspace descriptors captured from the serving
+  product release, with per-tool HTML, Markdown, JSON, and source provenance.
+- Claude Code and Codex install the plugin directly from this repository.
+
+
+- Added `/connect`, one page for connecting BitterClip to Claude, ChatGPT or
+  Claude Code: three numbered steps per assistant with one action each, a first
+  request to try, and short answers to setup questions. When the visitor is
+  signed in at app.bitterclip.com, the page shows live connection status and
+  notices a new connection after an Add click. Visitors from ChatGPT open on the
+  ChatGPT steps. `/plugin`, `/install` and `/mcp` now lead there, and it has a
+  Markdown twin and a sitemap entry.
+- Redirects stay relative, so a trailing-slash redirect keeps https.
+- Added Codex to `/connect` (Install opens Codex in the ChatGPT desktop app with
+  an install request, and says so when the app is missing) and an "or let
+  Claude Code do it" message for Claude Code.
+- Claude Code and Codex now install the BitterClip plugin from GitHub (the
+  connection plus editing skills) on `/connect` and in the agent instructions,
+  with the connection-only commands kept as a fallback.
+- Added `/docs/assistants/install`, instructions an AI agent follows to install
+  BitterClip in Claude Code or Codex, have the person sign in, verify and hand
+  off. `llms.txt` now opens with an Install section pointing people to
+  `/connect` and agents to these instructions.
 - Added a one-click "Add BitterClip to Claude" link to the assistant guides.
   It opens Claude's Add custom connector window with BitterClip's name and
   address filled in.

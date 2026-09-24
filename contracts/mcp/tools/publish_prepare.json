@@ -1,0 +1,119 @@
+{
+  "name": "publish_prepare",
+  "title": "Prepare a publish package",
+  "description": "Create reviewable publish packages for an episode or clip. This never publishes externally; a fresh server-bound final confirmation is required before any send and is ordinarily surfaced in the first-party workspace. App-only descriptor visibility does not itself restrict authenticated MCP transport or prove human review. Put improved YouTube/LinkedIn/X titles, descriptions, and copy here (or in publish_update) rather than mutating the saved episode with episode_update.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "target_type": {
+        "type": "string",
+        "enum": [
+          "episode",
+          "clip"
+        ],
+        "description": "Object to publish."
+      },
+      "target_id": {
+        "type": "string",
+        "description": "Rendered episode/clip public ID or ready export public ID."
+      },
+      "channels": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "youtube",
+            "linkedin",
+            "x"
+          ]
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional publish title."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional publish description."
+      },
+      "copy": {
+        "type": [
+          "object",
+          "string"
+        ],
+        "description": "Optional channel copy hints. Object values may be keyed by channel plus default."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry."
+      }
+    },
+    "required": [
+      "target_type",
+      "target_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "export_not_found",
+    "composition_not_ready",
+    "composition_has_no_source",
+    "publish_not_ready",
+    "invalid_platforms",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "publish_package_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "target_type": {
+        "type": "string"
+      },
+      "target_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "publish_mode": {
+        "type": "string",
+        "enum": [
+          "approval"
+        ]
+      },
+      "channels": {
+        "type": "array"
+      },
+      "approvals": {
+        "type": "array"
+      },
+      "approval_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "next_action": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

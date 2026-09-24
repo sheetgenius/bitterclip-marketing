@@ -54,25 +54,31 @@ response. Generated Markdown twins retain authored MDC directives; the help
 corpus reads the prerendered HTML article and includes each snippet's actual
 visible words. Review rendered pages for claims inside snippets.
 
-Exact MCP tool names, titles, descriptions, and schemas live in the Rails
-operation catalog. `bun run generate` fetches the deployed
-`https://app.bitterclip.com/api/v1/operation_catalog.json` once, validates its
-model-visible profile and product release, then builds the static
-`/docs/assistants/tool-reference` HTML, Markdown twin, JSON snapshot, and
-discovery entries from that response. The ignored `tmp/` snapshot is a build
-input, never an authored or committed copy. A failed fetch or invalid response
-fails the build; there is no fallback to an older snapshot. The page prints
-its source release, capture time, and catalog SHA-256. Creator explanations in
-`content/` remain authored here and should not restate descriptor details.
-The build command passes a one-build token with the snapshot to Nuxt; invoking
-Nuxt directly cannot reuse an old temporary file.
-The build also requires the new `help` tool and refuses the retired help-tool
-names, so this cutover cannot accidentally publish the old tool list.
+The 113 MCP tool names, titles, descriptions, schemas, errors, and examples are
+authored in `contracts/mcp/tools/*.json`. The four plugin skills and three
+extended public guides are authored here too. Rails pins one commit and owns
+handlers, authorization, visibility, effects, and private help pages. Validate
+the full tree with `bun run contract:validate`. For a contract change, commit
+and push a retained branch, pin its exact SHA and digest in the product repo,
+run product QA and verify the Rails release is serving, then merge this branch
+to `main`. The `main` push triggers Grid's static site rebuild. Both Claude
+Code and Codex can install directly from this repository; no plugin mirror is
+required.
 
-Release order for a tool change: deploy Rails first, then rebuild and deploy
-this static site. Independent deployments cannot update atomically; until the
-site rebuilds, its printed product release identifies the older catalog it
-reflects. The live Rails catalog and MCP `tools/list` update with Rails.
+`bun run generate` fetches model, app, and Live Workspace descriptor profiles
+from `https://app.bitterclip.com/api/v1/mcp_descriptors.json`. It refuses any
+serving digest different from the local authored contract. The ignored `tmp/`
+snapshot is a build input, never an authored copy. The build emits 113 HTML
+tool pages with exact served descriptors, Markdown and JSON twins, a full
+index, and discovery entries. It prints the serving product release, public
+contract commit, contract digest, and capture time. Host security schemes and
+resource URIs can vary by connector. If a site deploy trails Rails, the older
+printed provenance remains visible; do not describe it as current.
+
+Creator explanations in `content/` remain authored here and should not
+restate descriptor details. The build command passes a one-build token with
+the snapshot to Nuxt; invoking Nuxt directly cannot reuse an old temporary
+file. A failed or invalid fetch fails generation.
 
 Vue-owned routes outside the content collections—currently the homepage and
 legal/marketing pages—may have authored alternates under `public/`. When one of

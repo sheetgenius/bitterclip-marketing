@@ -1,0 +1,15 @@
+{
+  "name": "bitterclip",
+  "description": "Turn recordings into editable clips and exact video exports.",
+  "owner": {
+    "name": "SheetGenius, Inc."
+  },
+  "plugins": [
+    {
+      "name": "bitterclip",
+      "source": "./plugins/bitterclip",
+      "description": "Turn recordings into editable clips and exact video exports.",
+      "version": "0.2.1"
+    }
+  ]
+}

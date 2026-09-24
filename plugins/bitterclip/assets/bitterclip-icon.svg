@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="BitterClip">
+  <rect width="512" height="512" rx="80" fill="#060608"/>
+  <rect x="110" y="110" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="110" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="307" y="110" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="368" y="110" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="368" y="307" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <rect x="307" y="368" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="368" width="95" height="34" rx="17" fill="#ff9a8f"/>
+  <rect x="110" y="307" width="34" height="95" rx="17" fill="#ff9a8f"/>
+  <circle cx="256" cy="256" r="31" fill="#ff9a8f"/>
+</svg>

@@ -1,0 +1,200 @@
+{
+  "name": "episode_audio_evidence",
+  "title": "Read editor audio evidence",
+  "description": "App-only read of precomputed absolute-scale audio facts for source-time ranges already projected into an Episode timeline. Returns sample peak and RMS in tenths of dBFS plus EBU R128 short-term loudness in tenths of LUFS. Sources must belong to the named Episode graph. Resolution is selected from durable multiresolution evidence using pixels_per_second; this call never decodes media. A range with status analyzing has scheduled or coalesced an idempotent background backfill and may be retried after retry_after_ms. Status unavailable is terminal for this read, includes a reason, and does not schedule analysis or promise a retry. Status no_audio means accepted evidence found no audio; it is distinct from unavailable measurements.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode public ID (comp_...)."
+      },
+      "requests": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 64,
+        "description": "Visible source-time ranges from the editor's authoritative timeline projection.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string",
+              "description": "Optional caller key echoed in the result."
+            },
+            "source_id": {
+              "type": "string",
+              "description": "Recording public ID (src_...) present in this Episode."
+            },
+            "source_range": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Half-open source-time range [start_seconds, end_seconds]."
+            },
+            "pixels_per_second": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Current rendered density; the server selects the least wasteful stored evidence level."
+            }
+          },
+          "required": [
+            "source_id",
+            "source_range"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "episode_id",
+      "requests"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "enum": [
+          "bitterclip.episode_audio_evidence.v1"
+        ]
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "scales": {
+        "type": "object",
+        "properties": {
+          "waveform": {
+            "type": "string",
+            "enum": [
+              "dbfs_tenths"
+            ]
+          },
+          "loudness": {
+            "type": "string",
+            "enum": [
+              "lufs_tenths"
+            ]
+          },
+          "silence_floor_tenths": {
+            "type": "integer"
+          }
+        }
+      },
+      "ranges": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string"
+            },
+            "source_title": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "no_audio",
+                "analyzing",
+                "unavailable"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "description": "Why measurements are unavailable; does not imply analysis is scheduled."
+            },
+            "requested_source_range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "resolved_source_range": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "number"
+              }
+            },
+            "evidence_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evidence_version": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "retry_after_ms": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "waveform": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "loudness": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "summary": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "request_id",
+            "source_id",
+            "source_title",
+            "status",
+            "requested_source_range",
+            "resolved_source_range",
+            "waveform",
+            "loudness",
+            "summary"
+          ]
+        }
+      }
+    },
+    "required": [
+      "schema",
+      "episode_id",
+      "revision",
+      "scales",
+      "ranges"
+    ],
+    "additionalProperties": false
+  }
+}

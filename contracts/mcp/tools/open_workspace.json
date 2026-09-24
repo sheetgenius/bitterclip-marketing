@@ -1,0 +1,123 @@
+{
+  "name": "open_workspace",
+  "title": "Open BitterClip workspace",
+  "description": "App-only read. Open a Project handoff or an existing Episode/Clip in the shared BitterClip workspace without creating or changing saved state. Use the model-visible workspace_open tool for ordinary agent handoff and review_points_place for the sole revision-bound review-point write.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID to drill into immediately."
+      },
+      "episode_id": {
+        "type": "string",
+        "description": "Optional episode public ID (comp_...) to open directly in the transcript editor."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "composition_not_found",
+    "episode_changed_during_read",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "project": {
+        "type": "object"
+      },
+      "recent_outputs": {
+        "type": "object",
+        "description": "Bounded newest-first editable Episode/Clip work for a project handoff, with exact reopen actions and no media URLs."
+      },
+      "composition": {
+        "type": "object"
+      },
+      "workspace_navigation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "target",
+          "route"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.workspace-nav.v1"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[A-Za-z0-9_-]{1,120}$"
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "mode"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "composition"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "review"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "editor_document": {
+        "type": "object",
+        "description": "Versioned application document consumed by the shared editor."
+      },
+      "route": {
+        "type": "object"
+      },
+      "next_actions": {
+        "type": "array",
+        "description": "Optional follow-up BitterClip tool calls. Handles inside arguments are for tool calls only, not user-facing prose."
+      },
+      "handle_policy": {
+        "type": "string",
+        "description": "Reminder that raw BitterClip handles are tool-call-only and should not be shown to users."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

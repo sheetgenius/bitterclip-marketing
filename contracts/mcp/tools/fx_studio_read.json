@@ -1,0 +1,60 @@
+{
+  "name": "fx_studio_read",
+  "title": "Read FX Studio state",
+  "description": "App-only account effect library and current scene state. include_source adds the exact immutable source/context/asset snapshot for contained browser execution. Metadata reads support live updates without reopening the app. This tool never writes or executes authored source in the application process.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "scene_id": {
+        "type": "string"
+      },
+      "include_source": {
+        "type": "boolean"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "brand_id": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "account_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "account_id": {
+        "type": "string"
+      },
+      "scenes": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "scene": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "snapshot": {
+        "type": "object"
+      },
+      "studio_url": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

@@ -28,65 +28,112 @@ import { parse as parseHtml } from 'parse5'
 const SITE_ORIGIN = 'https://bitterclip.com'
 const TOOL_REFERENCE_PATH = '/docs/assistants/tool-reference'
 
+interface McpDescriptor {
+  name: string
+  title: string
+  description: string
+  inputSchema: unknown
+  outputSchema?: unknown
+  [key: string]: unknown
+}
+
+interface McpGuidance {
+  name: string
+  errors: string[]
+  examples: unknown[]
+}
+
 interface CatalogSnapshot {
   schema_version: string
-  surface: string
   source: string
   product_release: string
+  public_contract_commit: string
+  public_contract_digest: string
   retrieved_at: string
   digest: string
   build_id: string
-  operations: Array<Record<string, unknown> & { name: string; title: string; description: string; input_schema: unknown }>
+  profiles: Record<'model' | 'app' | 'live_workspace', { descriptors: McpDescriptor[]; guidance: McpGuidance[] }>
 }
 
 async function readCatalogSnapshot(): Promise<CatalogSnapshot> {
   const file = fileURLToPath(new URL('../tmp/mcp-catalog-snapshot.json', import.meta.url))
   const snapshot = JSON.parse(await fs.readFile(file, 'utf8')) as CatalogSnapshot
-  const digest = createHash('sha256').update(JSON.stringify(snapshot.operations)).digest('hex')
-  const expectedSource = process.env.BITTERCLIP_CATALOG_URL ?? 'https://app.bitterclip.com/api/v1/operation_catalog.json'
+  const digest = createHash('sha256').update(JSON.stringify(snapshot.profiles)).digest('hex')
+  const expectedSource = process.env.BITTERCLIP_CATALOG_URL ?? 'https://app.bitterclip.com/api/v1/mcp_descriptors.json'
   const ageMs = Date.now() - Date.parse(snapshot.retrieved_at)
-  if (snapshot.schema_version !== 'bitterclip.operation_catalog.v1' || snapshot.surface !== 'mcp_model_visible' ||
-      !snapshot.operations?.length || snapshot.digest !== digest || snapshot.source !== expectedSource ||
+  if (snapshot.schema_version !== 'bitterclip.mcp_surface_snapshot.v1' ||
+      snapshot.profiles?.app?.descriptors?.length !== 113 ||
+      snapshot.profiles?.model?.descriptors?.length !== 63 ||
+      snapshot.profiles?.live_workspace?.descriptors?.length !== 63 ||
+      snapshot.digest !== digest || snapshot.source !== expectedSource ||
       !process.env.BITTERCLIP_CATALOG_BUILD_ID || snapshot.build_id !== process.env.BITTERCLIP_CATALOG_BUILD_ID ||
       !/^[0-9a-f]{7,40}$/.test(snapshot.product_release) ||
+      !/^[0-9a-f]{40}$/.test(snapshot.public_contract_commit) ||
+      !/^[0-9a-f]{64}$/.test(snapshot.public_contract_digest) ||
       (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(snapshot.product_release)) ||
       !Number.isFinite(ageMs) || ageMs < 0 || ageMs > 30 * 60_000) {
-    throw new Error('Invalid or modified build-time Rails catalog snapshot')
+    throw new Error('Invalid or modified build-time Rails MCP descriptor snapshot')
   }
   return snapshot
 }
 
-function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
-  const lines = [
-    '# BitterClip tool reference',
-    '',
-    `Canonical HTML page: ${SITE_ORIGIN}${TOOL_REFERENCE_PATH}`,
-    '',
-    `Catalog profile: ${snapshot.surface}`,
+function toolDescriptor(snapshot: CatalogSnapshot, profile: keyof CatalogSnapshot['profiles'], name: string): McpDescriptor | undefined {
+  const servedName = profile === 'live_workspace' && name === 'workspace_open' ? 'workspace_get_link' : name
+  return snapshot.profiles[profile].descriptors.find((item) => item.name === servedName)
+}
+
+function toolProvenance(snapshot: CatalogSnapshot): string[] {
+  return [
     `Product release: ${snapshot.product_release}`,
-    `Catalog SHA-256: ${snapshot.digest}`,
+    `Public contract commit: ${snapshot.public_contract_commit}`,
+    `Public contract SHA-256: ${snapshot.public_contract_digest}`,
+    `Descriptor SHA-256: ${snapshot.digest}`,
     `Captured: ${snapshot.retrieved_at}`,
     `Source: ${snapshot.source}`,
-    '',
-    'This is the deployed Rails model-visible catalog at site build time. A host may filter or adapt its presentation. The model-only result profile omits output schemas; Live Workspace may rename its workspace-opening tool. Errors and examples are catalog guidance, not extra fields in MCP tools/list.',
-    '',
   ]
-  for (const operation of snapshot.operations) {
-    lines.push(`## ${operation.name}`, '', `Title: ${operation.title}`, '', operation.description, '')
-    for (const [label, key] of [
-      ['Input schema', 'input_schema'], ['Output schema', 'output_schema'],
-      ['Annotations', 'annotations'], ['Errors', 'errors'], ['Examples', 'examples'],
-    ]) {
-      if (!(key in operation)) continue
-      lines.push(`### ${label}`, '', '```json', JSON.stringify(operation[key], null, 2), '```', '')
-    }
+}
+
+function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
+  const lines = [
+    '# BitterClip MCP tool reference', '',
+    `Canonical HTML page: ${SITE_ORIGIN}${TOOL_REFERENCE_PATH}`, '',
+    ...toolProvenance(snapshot), '',
+    'This static reference captures the descriptors Rails was serving at build time. The default model profile has 63 tools; the app profile lists all 113 registered tools. Live Workspace adapts the default profile, including workspace_get_link. Host security schemes and resource URIs can vary by connector.', '',
+  ]
+  for (const descriptor of snapshot.profiles.app.descriptors) {
+    const model = toolDescriptor(snapshot, 'model', descriptor.name)
+    lines.push(`- [${descriptor.name}](${SITE_ORIGIN}/docs/assistants/tools/${descriptor.name}) — ${model ? 'default model' : 'app-only'}: ${descriptor.title}`)
   }
+  return lines.join('\n').trimEnd() + '\n'
+}
+
+function buildToolPageMarkdown(snapshot: CatalogSnapshot, name: string): string {
+  const descriptor = toolDescriptor(snapshot, 'app', name)
+  if (!descriptor) throw new Error(`Missing app descriptor for ${name}`)
+  const guidance = snapshot.profiles.app.guidance.find((item) => item.name === name)
+  if (!guidance) throw new Error(`Missing guidance for ${name}`)
+  const model = toolDescriptor(snapshot, 'model', name)
+  const live = toolDescriptor(snapshot, 'live_workspace', name)
+  const lines = [
+    `# ${name}`, '',
+    `Canonical HTML page: ${SITE_ORIGIN}/docs/assistants/tools/${name}`, '',
+    `Surface: ${model ? 'default model and app' : 'app-only'}`, '',
+    ...toolProvenance(snapshot), '',
+    descriptor.description, '',
+    'The JSON blocks below are the exact MCP descriptor projections served by Rails for the named profiles at capture time. Security schemes and resource URIs may vary by connected host.', '',
+  ]
+  for (const [label, value] of [['Default model', model], ['App', descriptor], ['Live Workspace', live]] as const) {
+    if (!value) continue
+    lines.push(`## ${label} descriptor`, '', '```json', JSON.stringify(value, null, 2), '```', '')
+  }
+  lines.push('## Errors', '', '```json', JSON.stringify(guidance.errors, null, 2), '```', '',
+    '## Examples', '', '```json', JSON.stringify(guidance.examples, null, 2), '```', '')
   return lines.join('\n').trimEnd() + '\n'
 }
 
 // Marketing routes that live outside the docs collection (Vue pages in app/pages/).
 // Kept here as the one place the static, non-docs URLs are enumerated for the sitemap.
-const MARKETING_ROUTES = ['/', '/founder-onboarding', '/privacy', '/terms', '/data-deletion', '/compare'] as const
+const MARKETING_ROUTES = ['/', '/connect', '/founder-onboarding', '/privacy', '/terms', '/data-deletion', '/compare'] as const
 
 interface DocPage {
   /** Source path relative to content/, e.g. "getting-started/your-first-clip.md". */
@@ -424,6 +471,17 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
       'hello@bitterclip.com.',
   )
   lines.push('')
+  lines.push('## Install')
+  lines.push('')
+  lines.push(`- [Connect BitterClip](${SITE_ORIGIN}/connect): the page for people. One-click setup for Claude, ChatGPT, Claude Code and Codex, with live connection status when signed in.`)
+  lines.push(
+    `- [Install BitterClip in Claude Code or Codex](${SITE_ORIGIN}/docs/assistants/install): instructions an agent follows to install, ` +
+      'have the person sign in, verify and hand off. Use it for any request to install BitterClip, including ' +
+      `"Read ${SITE_ORIGIN}/docs/assistants/install and follow it exactly to install BitterClip, then tell me how to start."`,
+  )
+  lines.push('- MCP server: https://app.bitterclip.com/mcp (streamable HTTP with OAuth sign-in; never paste a token).')
+  lines.push('- Optional editing skills: https://github.com/sheetgenius/bitterclip-plugin')
+  lines.push('')
   for (const section of ['getting-started', 'assistants', 'connect', 'publishing', 'help', 'changelog']) {
     const list = groups.get(section)
     if (!list || list.length === 0) continue
@@ -753,6 +811,16 @@ export default defineNuxtModule({
         const authoredPages = await readDocs(contentDir)
         const catalog = await readCatalogSnapshot()
         const toolMarkdown = buildToolReferenceMarkdown(catalog)
+        const toolPages: DocPage[] = catalog.profiles.app.descriptors.map((descriptor) => {
+          const markdown = buildToolPageMarkdown(catalog, descriptor.name)
+          const urlPath = `/docs/assistants/tools/${descriptor.name}`
+          return {
+            sourceRel: `assistants/tools/${descriptor.name}.md`, urlPath,
+            mdPath: `${urlPath}.md`, raw: markdown, body: markdown,
+            frontmatter: { title: `${descriptor.name} MCP tool`, description: descriptor.description.slice(0, 155),
+              section: 'assistants', updated: catalog.retrieved_at.slice(0, 10) },
+          }
+        })
         const pages: DocPage[] = [...authoredPages, {
           sourceRel: 'assistants/tool-reference.md',
           urlPath: TOOL_REFERENCE_PATH,
@@ -761,11 +829,11 @@ export default defineNuxtModule({
           body: toolMarkdown,
           frontmatter: {
             title: 'BitterClip tool reference',
-            description: 'Complete model-visible MCP tool catalog captured from the deployed product.',
+            description: 'All 113 MCP tools captured from the serving product.',
             section: 'assistants',
             updated: catalog.retrieved_at.slice(0, 10),
           },
-        }]
+        }, ...toolPages]
         const posts = await readBlogPosts(contentDir)
         const comparisons = await readComparePages(contentDir)
 
@@ -785,6 +853,20 @@ export default defineNuxtModule({
         }
         await writeFile(publicDir, '/blog.md', buildBlogIndexMarkdown(posts))
         await writeFile(publicDir, `${TOOL_REFERENCE_PATH}.json`, JSON.stringify(catalog) + '\n')
+        for (const descriptor of catalog.profiles.app.descriptors) {
+          const name = descriptor.name
+          await writeFile(publicDir, `/docs/assistants/tools/${name}.json`, JSON.stringify({
+            product_release: catalog.product_release,
+            public_contract_commit: catalog.public_contract_commit,
+            public_contract_digest: catalog.public_contract_digest,
+            descriptor_digest: catalog.digest,
+            surface: catalog.profiles.model.descriptors.some((item) => item.name === name) ? 'default_model_and_app' : 'app_only',
+            model: toolDescriptor(catalog, 'model', name),
+            app: descriptor,
+            live_workspace: toolDescriptor(catalog, 'live_workspace', name),
+            guidance: catalog.profiles.app.guidance.find((item) => item.name === name),
+          }) + '\n')
+        }
 
         // 2 + 3. llms.txt index + full corpus (replaces the stale hand-written ones).
         await writeFile(publicDir, '/llms.txt', buildLlmsIndex(pages, posts, comparisons))

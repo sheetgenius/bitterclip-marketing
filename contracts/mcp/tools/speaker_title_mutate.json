@@ -1,0 +1,361 @@
+{
+  "name": "speaker_title_mutate",
+  "title": "Change a stable speaker title",
+  "description": "Add, revise, hide, remove, or restore one sparse professional speaker label in an Episode. Read the Episode first and pass its current revision. A title lasts 0.8–12 seconds inside one source-backed occurrence and stays completely fixed in a semantic left/right + upper/lower slot; offsets are small canvas-relative nudges, never pixels, face boxes, or a tracking path. Frontier Clean uses crisp black type on a quiet white field with a restrained rail/lock reveal; give the entrance roughly 0.3–0.5 seconds when the title should feel authored rather than abrupt. Place titles only where identification earns the interruption—typically once during a cold open and once near a speaker's first sustained appearance in the body, not on every camera cut. Choose a slot that does not collide with the active caption lane or the speaker's face. For top-aligned 4:5 picture on a 9:16 canvas with a dedicated lower matte caption panel, lower places the title just inside the picture edge; the matte remains exclusively for centered subtitles. Use an upper slot only when the actual composition makes it the calmer negative-space choice. A title has one restrained entrance and fade-out, then remains fixed. Small feedback such as ‘move Jay left,’ ‘move it down,’ or ‘leave it up longer’ updates the same title without rerunning visual analysis. For an enabled title, the successful MCP response attempts to attach exactly one receipt-bound settled positioning JPEG using Export geometry, including any committed caption visible at that instant so title/subtitle collisions are observable. Inspect that image before deciding whether to nudge the same title. positioning_sample is always present: ready, not_applicable, unavailable, or superseded; unavailable never means the committed mutation failed. Re-read before another change. The idempotency key makes an exact retry safe.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current Episode revision returned by episode_read or the editor document."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact speaker-title change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One speaker-title action. Use the canonical fields in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "add"
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock. Must remain inside one source-backed occurrence and last 0.8–12 seconds."
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 80,
+                    "description": "Speaker name shown in the strong first line."
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "description": "Optional role, company, or other concise second line."
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "presentation": {
+                "type": "object",
+                "description": "Stable picture-aware treatment. Omitted add fields use Frontier Clean, left/lower, a restrained 320 ms rail/field/type reveal, and a 220 ms fade-out; omitted update fields keep their current values.",
+                "properties": {
+                  "preset": {
+                    "type": "string",
+                    "enum": [
+                      "frontier_clean"
+                    ]
+                  },
+                  "side": {
+                    "type": "string",
+                    "enum": [
+                      "left",
+                      "right"
+                    ],
+                    "description": "Stable horizontal anchor for the whole title appearance."
+                  },
+                  "lane": {
+                    "type": "string",
+                    "enum": [
+                      "upper",
+                      "lower"
+                    ],
+                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles. Otherwise choose against occupied face space and the active caption lane."
+                  },
+                  "horizontal_offset": {
+                    "type": "number",
+                    "minimum": -0.12,
+                    "maximum": 0.12,
+                    "description": "Small normalized nudge; positive moves right and negative moves left."
+                  },
+                  "vertical_offset": {
+                    "type": "number",
+                    "minimum": -0.15,
+                    "maximum": 0.15,
+                    "description": "Small normalized nudge; positive moves down and negative moves up."
+                  },
+                  "fade_in_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.5
+                  },
+                  "fade_out_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.5
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type",
+              "episode_range",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "update"
+                ]
+              },
+              "speaker_title_id": {
+                "type": "string",
+                "description": "Speaker-title ID returned by episode_read or an earlier speaker-title change."
+              },
+              "episode_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock. Must remain inside one source-backed occurrence and last 0.8–12 seconds."
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "maxLength": 120,
+                    "description": "Set to an empty string to remove the second line."
+                  }
+                },
+                "required": [],
+                "additionalProperties": false
+              },
+              "presentation": {
+                "type": "object",
+                "description": "Stable picture-aware treatment. Omitted add fields use Frontier Clean, left/lower, a restrained 320 ms rail/field/type reveal, and a 220 ms fade-out; omitted update fields keep their current values.",
+                "properties": {
+                  "preset": {
+                    "type": "string",
+                    "enum": [
+                      "frontier_clean"
+                    ]
+                  },
+                  "side": {
+                    "type": "string",
+                    "enum": [
+                      "left",
+                      "right"
+                    ],
+                    "description": "Stable horizontal anchor for the whole title appearance."
+                  },
+                  "lane": {
+                    "type": "string",
+                    "enum": [
+                      "upper",
+                      "lower"
+                    ],
+                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles. Otherwise choose against occupied face space and the active caption lane."
+                  },
+                  "horizontal_offset": {
+                    "type": "number",
+                    "minimum": -0.12,
+                    "maximum": 0.12,
+                    "description": "Small normalized nudge; positive moves right and negative moves left."
+                  },
+                  "vertical_offset": {
+                    "type": "number",
+                    "minimum": -0.15,
+                    "maximum": 0.15,
+                    "description": "Small normalized nudge; positive moves down and negative moves up."
+                  },
+                  "fade_in_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.5
+                  },
+                  "fade_out_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1.5
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type",
+              "speaker_title_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_enabled"
+                ]
+              },
+              "speaker_title_id": {
+                "type": "string",
+                "description": "Speaker-title ID returned by episode_read or an earlier speaker-title change."
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "type",
+              "speaker_title_id",
+              "enabled"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "remove"
+                ]
+              },
+              "speaker_title_id": {
+                "type": "string",
+                "description": "Speaker-title ID returned by episode_read or an earlier speaker-title change."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_title_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "revert"
+                ]
+              },
+              "receipt_id": {
+                "type": "string",
+                "description": "Receipt ID returned by the speaker-title change to restore."
+              }
+            },
+            "required": [
+              "type",
+              "receipt_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_title_export_in_progress",
+    "speaker_title_not_found",
+    "speaker_title_limit",
+    "speaker_title_receipt_not_found",
+    "speaker_title_revert_conflict",
+    "invalid_speaker_title",
+    "invalid_speaker_title_range",
+    "speaker_title_occurrence_unsupported",
+    "speaker_title_anchor_unavailable",
+    "speaker_title_overlap",
+    "speaker_title_anchor_transform_unsupported",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "changed": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "render_stale": {
+        "type": "boolean"
+      },
+      "speaker_titles_digest": {
+        "type": "string"
+      },
+      "speaker_titles": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "speaker_title": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "speaker_title_digest": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "positioning_sample": {
+        "type": "object",
+        "description": "Post-commit positioning feedback. ready means exactly one inline JPEG plus durable sample/frame references; other statuses carry a reason and safe retry guidance without changing mutation success."
+      },
+      "receipt": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

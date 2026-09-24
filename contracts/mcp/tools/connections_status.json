@@ -1,0 +1,112 @@
+{
+  "name": "connections_status",
+  "title": "Get publish connection status",
+  "description": "Use this before preparing or publishing packages for a platform. Returns whether this BitterClip account has a connected destination with the required permissions for the requested platform (YouTube: a channel with upload permission, plus whether the requested privacy will be honored or forced private; LinkedIn: a member account with w_member_social; X: an account with tweet.write and media.write), and the in-app path to start connection if not.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "platform": {
+        "type": "string",
+        "enum": [
+          "youtube",
+          "linkedin",
+          "x"
+        ],
+        "description": "Publish destination to check."
+      }
+    },
+    "required": [
+      "platform"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "platform": {
+        "type": "string",
+        "enum": [
+          "youtube",
+          "linkedin",
+          "x"
+        ]
+      },
+      "connected": {
+        "type": "boolean"
+      },
+      "connection": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "connections": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "default_connection_public_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "target_channel_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "YouTube only."
+      },
+      "target_channel_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "YouTube only."
+      },
+      "target_channel_required": {
+        "type": "boolean",
+        "description": "YouTube only."
+      },
+      "required_scope": {
+        "type": "string"
+      },
+      "required_scopes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "default_privacy_status": {
+        "type": "string",
+        "enum": [
+          "private",
+          "unlisted",
+          "public"
+        ],
+        "description": "YouTube only."
+      },
+      "privacy_policy": {
+        "type": "object",
+        "description": "YouTube only."
+      },
+      "settings_path": {
+        "type": "string"
+      },
+      "authorize_path": {
+        "type": "string"
+      },
+      "connection_management": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

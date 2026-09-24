@@ -1,0 +1,51 @@
+{
+  "name": "speakers_search",
+  "title": "Search remembered people",
+  "description": "Search people by name, alias, slug, or project presentation name. Use before asking the user to choose between similar names.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Name or alias to search."
+      },
+      "include_other_projects": {
+        "type": "boolean",
+        "description": "With project_id, include other people in that studio only when the caller owns it. Shared-project access remains project-scoped."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID to limit results."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum matches to return. Default 10, maximum 25."
+      }
+    },
+    "required": [
+      "query"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string"
+      },
+      "speakers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

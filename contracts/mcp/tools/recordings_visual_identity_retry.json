@@ -1,0 +1,45 @@
+{
+  "name": "recordings_visual_identity_retry",
+  "title": "Retry a saved image answer’s picture update",
+  "description": "Retry only native application of the current saved image answer. Preserves the answer and starts no recognition, transcription or render provider work. Existing pending work is reused; use the returned status and recovery action.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "visual_identity_decision_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "recording_id",
+      "visual_identity_decision_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "visual_identity_actor_required",
+    "visual_identity_supersession_stale",
+    "visual_identity_question_stale",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "decision": {
+        "type": "object"
+      },
+      "speaker_evidence": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

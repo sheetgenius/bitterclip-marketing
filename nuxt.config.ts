@@ -1,5 +1,14 @@
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import { existsSync, readFileSync } from 'node:fs'
+
+// `nuxt prepare` runs before the build-time Rails capture exists. Generation
+// itself requires the validated snapshot in generated-surfaces.ts.
+const snapshotPath = fileURLToPath(new URL('./tmp/mcp-catalog-snapshot.json', import.meta.url))
+const toolRoutes: string[] = existsSync(snapshotPath)
+  ? (JSON.parse(readFileSync(snapshotPath, 'utf8')).profiles?.app?.descriptors ?? [])
+      .map((tool: { name: string }) => `/docs/assistants/tools/${tool.name}`)
+  : []
 
 const description =
   'Footage in, episode out: BitterClip understands the whole recording, makes one coherent cut, and lets you keep directing it — with its built-in agent or yours.'
@@ -47,7 +56,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     // Keep prerender memory bounded on the shared Grid build host.
-    prerender: { routes: ['/docs/assistants/tool-reference'], concurrency: 1 },
+    prerender: { routes: ['/docs/assistants/tool-reference', ...toolRoutes], concurrency: 1 },
     // Emit immutable gzip/brotli sidecars for the production nginx/CDN path.
     // Lighthouse against an uncompressed toy server materially understates
     // the actual static delivery contract.

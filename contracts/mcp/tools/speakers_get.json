@@ -1,0 +1,67 @@
+{
+  "name": "speakers_get",
+  "title": "Get remembered person",
+  "description": "Read one remembered person, including names, saved voice examples, project names, merge history, and appearance counts. With project_id, it also reports that person's current recording-assignment exceptions; a confirmed person profile does not imply every track assignment is correct. This does not change identity.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string",
+        "description": "Person public ID, slug, or UUID."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID to scope project-limited access."
+      }
+    },
+    "required": [
+      "speaker_profile_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "speaker": {
+        "type": "object"
+      },
+      "aliases": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "voiceprints": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "project_presentations": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "merge_history": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "appearance_counts": {
+        "type": "object"
+      },
+      "assignment_review": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

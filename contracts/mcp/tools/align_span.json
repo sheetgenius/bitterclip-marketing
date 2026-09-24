@@ -1,0 +1,337 @@
+{
+  "name": "align_span",
+  "title": "Align or reject a span",
+  "description": "Promote a provisional transcript-backed span to a cited span, or explicitly reject it. Accepts exactly one target: a Program occurrence (episode_id plus the exact occ_... occurrence_id from episode_read's Program map) or a moment_id. Alignment only records transcript-unit anchors and boundary offsets; it preserves the existing media seconds and never invents anchors. Aligning or rejecting an occurrence changes the Program digest without advancing the revision; re-read the Episode before the next page or edit. Boundary evidence does not depend on the digest and stays valid. If the recording lacks a word-timed transcript or no units overlap the evidence window, the operation returns ok:false with a typed error instead of writing fake anchors.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode or Clip public ID (comp_...) that contains the occurrence. Alias: composition_id."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "occurrence_id": {
+        "type": "string",
+        "description": "Exact occ_... occurrence ID from episode_read's Program map, resolved inside episode_id. Segment UUIDs and positions refuse."
+      },
+      "moment_id": {
+        "type": "string",
+        "description": "Moment public ID to align or reject."
+      },
+      "action": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "accept",
+          "reject"
+        ],
+        "description": "auto/accept computes anchors when possible; reject records an explicit rejection marker and receipt while keeping the span provisional."
+      },
+      "transcript_window": {
+        "type": "object",
+        "description": "Optional source-time evidence window for transcript-unit overlap search. Omit to use the target's current media seconds.",
+        "properties": {
+          "start_seconds": {
+            "type": "number"
+          },
+          "end_seconds": {
+            "type": "number"
+          }
+        }
+      },
+      "reason": {
+        "type": "string",
+        "description": "Optional rejection reason or operator note."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "program_occurrence_not_found",
+    "moment_not_found",
+    "clip_not_found",
+    "invalid_time_range",
+    "transcript_not_word_timed",
+    "no_overlapping_units",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Align a Moment",
+      "input": {
+        "moment_id": "moment_...",
+        "action": "accept"
+      }
+    },
+    {
+      "label": "Reject a provisional occurrence span",
+      "input": {
+        "episode_id": "comp_...",
+        "occurrence_id": "occ_...",
+        "action": "reject",
+        "reason": "Imported range does not match transcript evidence."
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "aligned",
+          "rejected",
+          "failed"
+        ]
+      },
+      "target": {
+        "type": "object"
+      },
+      "span": {
+        "type": "object"
+      },
+      "error_code": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "receipt_id": {
+        "type": "string"
+      },
+      "receipt_public_id": {
+        "type": "string"
+      },
+      "transcript_id": {
+        "type": "string"
+      },
+      "transcript_version": {
+        "type": "string"
+      },
+      "unit_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "tool_outcome": {
+        "description": "Consequence of a successful alignment or rejection (absent when ok is false). An occurrence names its Episode or Clip as parent and the Program digest it moved; the revision never advances. A Moment reports only itself and its receipt. align_span has no retry key or inverse.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "bitterclip.tool_outcome.v1"
+                ]
+              },
+              "tool": {
+                "type": "string",
+                "enum": [
+                  "align_span"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "aligned",
+                  "rejected"
+                ]
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "occurrence"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^occ_[a-z0-9]{20}$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "parent": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "episode",
+                      "clip"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^comp_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "digests": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "current": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "before",
+                  "result",
+                  "current"
+                ],
+                "additionalProperties": false,
+                "description": "Program digests before and after this write, and now. Read continuations pin the digest; boundary evidence does not depend on it."
+              },
+              "checks": {
+                "type": "object",
+                "properties": {
+                  "revision": {
+                    "type": "string",
+                    "enum": [
+                      "advanced",
+                      "unchanged"
+                    ]
+                  },
+                  "program_digest": {
+                    "type": "string",
+                    "enum": [
+                      "changed",
+                      "unchanged"
+                    ]
+                  }
+                },
+                "required": [
+                  "revision",
+                  "program_digest"
+                ],
+                "additionalProperties": false,
+                "description": "The currentness checks this write moved: the Composition revision and the Program digest. Boundary evidence depends on neither; the next edit re-verifies each token at its point."
+              }
+            },
+            "required": [
+              "schema",
+              "tool",
+              "status",
+              "target",
+              "parent",
+              "receipt",
+              "digests",
+              "checks"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "bitterclip.tool_outcome.v1"
+                ]
+              },
+              "tool": {
+                "type": "string",
+                "enum": [
+                  "align_span"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "aligned",
+                  "rejected"
+                ]
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "moment"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "pattern": "^moment_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "schema",
+              "tool",
+              "status",
+              "target",
+              "receipt"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "name": "capture_session_build_episode",
+  "title": "Build editable episode from footage",
+  "description": "Revision-guarded projection of a settled footage-session chronology into its ordinary editable episode. Collapses real idle gaps, chooses a deterministic continuity-first program source, retains capture/source/episode mapping receipts, then enqueues one bounded whole-session speaker-reconciliation and semantic-synthesis pass. Chronology is always derived from the best available evidence — build immediately when next_action is build_episode or update_episode; the returned chronology_evidence and the manifest's inferences.chronology record how each recording was placed. It refuses unresolved footage, any covered interval with only audio and no renderable video, unsupported clock drift, and any automatic rewrite after the episode has been edited. Episode structure may finish before every Program or alternate-angle preview is playable or before whole-session understanding is complete: workspace_url is omitted until the complete media graph plus title, description, chapters, and visual understanding are ready for the working editor.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "capture_session_id": {
+        "type": "string",
+        "description": "Footage-session public ID."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current session revision from its manifest. A stale revision is rejected."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry of this exact projection request."
+      },
+      "acknowledge_chronology_review": {
+        "type": "boolean",
+        "description": "Deprecated; accepted and ignored. Chronology review is no longer a gate — placement provenance is always recorded in chronology_evidence."
+      }
+    },
+    "required": [
+      "capture_session_id",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "capture_session_not_found",
+    "stale_capture_session_revision",
+    "capture_session_not_ready",
+    "capture_session_audio_only_gap",
+    "capture_session_rate_mismatch",
+    "capture_episode_has_edits",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "capture_session_id": {
+        "type": "string"
+      },
+      "session_revision": {
+        "type": "integer"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "episode_revision": {
+        "type": "integer"
+      },
+      "segment_count": {
+        "type": "integer"
+      },
+      "angle_count": {
+        "type": "integer"
+      },
+      "duration_seconds": {
+        "type": "number"
+      },
+      "collapsed_gap_seconds": {
+        "type": "number"
+      },
+      "chronology_evidence": {
+        "type": "object",
+        "description": "How the accepted chronology placed each recording: placement-basis histogram, audio-linked recording count, and the accepted-run review receipt when one exists."
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "understanding_enqueued": {
+        "type": "boolean",
+        "description": "true when this projection queued a new bounded whole-session reconciliation/synthesis generation; false when the same generation was already underway or complete."
+      },
+      "workspace_url": {
+        "type": "string",
+        "description": "Present only when every Program and alternate-angle recording has playable preview media and whole-session understanding is terminal, so the working editor is ready to open."
+      },
+      "manifest": {
+        "type": "object"
+      },
+      "next_action": {
+        "type": "object",
+        "description": "edit_episode only when the working editor is ready; wait_for_episode_media while previews are pending; wait_for_understanding while title, description, chapters, and visual understanding finish; retry_understanding after a terminal preparation failure; repair_episode_media with recording_ids when preview repair is required."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

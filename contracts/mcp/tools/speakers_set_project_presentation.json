@@ -1,0 +1,112 @@
+{
+  "name": "speakers_set_project_presentation",
+  "title": "Set project speaker name",
+  "description": "Set how one remembered person appears inside a project: display name, export name, role, visibility, order, and short bio. This does not rename transcripts, old exports, or the account-wide person.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID, slug, or UUID."
+      },
+      "speaker_profile_id": {
+        "type": "string",
+        "description": "Person public ID, slug, or UUID. Required when creating a project row."
+      },
+      "show_speaker_profile_id": {
+        "type": "string",
+        "description": "Existing project speaker row public ID for updates."
+      },
+      "display_name": {
+        "type": "string",
+        "description": "Name shown inside this project."
+      },
+      "export_name": {
+        "type": "string",
+        "description": "Name used for future exports from this project."
+      },
+      "role": {
+        "type": "string",
+        "enum": [
+          "host",
+          "guest",
+          "narrator",
+          "panelist",
+          "customer",
+          "unknown",
+          "custom"
+        ]
+      },
+      "visibility": {
+        "type": "string",
+        "enum": [
+          "internal",
+          "export",
+          "public"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "active",
+          "hidden",
+          "archived"
+        ],
+        "description": "Project row state. Use hidden to remove a duplicate row from future project exports without deleting history."
+      },
+      "sort_order": {
+        "type": "integer"
+      },
+      "short_bio": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "project_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "speaker_profile_id": {
+        "type": "string"
+      },
+      "display_name": {
+        "type": "string"
+      },
+      "export_name": {
+        "type": "string"
+      },
+      "resolved_display_name": {
+        "type": "string"
+      },
+      "resolved_export_name": {
+        "type": "string"
+      },
+      "role": {
+        "type": "string"
+      },
+      "visibility": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "state_sentence": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

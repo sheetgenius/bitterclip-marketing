@@ -29,6 +29,15 @@ For page changes:
 - Update the source route inventory when adding or removing public routes.
 - Update `qa/smoke.spec.ts` when the public route contract changes.
 
+For MCP tool, guide, or plugin changes:
+
+- Edit `contracts/mcp/tools/*.json`, `contracts/mcp/guides/*.md`, or
+  `plugins/bitterclip/skills/*/SKILL.md` here. Do not copy Rails-private help.
+- Run `bun run contract:validate`. Pin the resulting exact commit and digest in
+  the product release before merging this repo to `main`; then verify the
+  static build captured that digest from serving Rails.
+- Claude Code and Codex marketplace manifests are checked in at the repo root.
+
 For repository-context changes:
 
 - Keep `README.md` factual and product-structural.
@@ -49,6 +58,7 @@ Run:
 
 ```bash
 bun install
+bun run contract:validate
 bun run docs:audit
 bun run generate
 bun run qa:smoke

@@ -1,0 +1,187 @@
+{
+  "name": "moments_mutate",
+  "title": "Change a saved moment",
+  "description": "One moment change per call: create, update_label, adjust_range, or set_state. create saves a moment on the recording from an explicit time range or transcript unit IDs (transcript editor save). update_label renames a saved moment and optionally updates its description. adjust_range changes a moment's start/end seconds (selected-moment trim). set_state saves or dismisses a suggested moment, optionally applying reviewed title and description atomically; discarded moments remain recoverable. recording_id scopes the moment lane (a bare id resolves as a recording); pass a caller-stable idempotency key with every action. The moments lane has no structural revision today — expected_revision is carried optionally so the lane converges on the standard mutation contract when revisions land.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID that owns this moment lane. create requires it; moment-scoped actions carry it as scope."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Optional: carried toward the standard mutation contract. The moments lane exposes no structural revision yet; omit until it does."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One moment action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "create"
+                ]
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "from_unit_id": {
+                "type": "string"
+              },
+              "to_unit_id": {
+                "type": "string"
+              },
+              "start_seconds": {
+                "type": "number"
+              },
+              "end_seconds": {
+                "type": "number"
+              },
+              "unit_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "type",
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "update_label"
+                ]
+              },
+              "moment_id": {
+                "type": "string",
+                "description": "Saved moment public ID."
+              },
+              "label": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional moment description; persisted as the moment's rationale (the clip's description)."
+              }
+            },
+            "required": [
+              "type",
+              "moment_id",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "adjust_range"
+                ]
+              },
+              "moment_id": {
+                "type": "string",
+                "description": "Saved moment public ID."
+              },
+              "start_seconds": {
+                "type": "number"
+              },
+              "end_seconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "type",
+              "moment_id",
+              "start_seconds",
+              "end_seconds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_state"
+                ]
+              },
+              "moment_id": {
+                "type": "string",
+                "description": "Saved moment public ID."
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "saved",
+                  "discarded",
+                  "suggested"
+                ],
+                "description": "Target state. saved=keep, discarded=hide (recoverable)."
+              },
+              "label": {
+                "type": "string",
+                "description": "Optional reviewed title, applied atomically when state is saved."
+              },
+              "description": {
+                "type": "string",
+                "description": "Optional reviewed description, applied atomically when state is saved."
+              }
+            },
+            "required": [
+              "type",
+              "moment_id",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "recording_id",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "moment_not_found",
+    "recording_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "moment": {
+        "type": "object"
+      },
+      "moment_id": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

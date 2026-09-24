@@ -1,0 +1,150 @@
+{
+  "name": "episode_clone",
+  "title": "Clone an episode",
+  "description": "Create a clean draft branch from an existing top-level episode only when the user explicitly wants a separate version for comparison or a workshop reset. The clone copies that one episode's source-backed segments, timeline music, overlays, title/copy, aspect ratio, caption setting, and project, but it does not copy rendered media, publish state, origin recording ownership, or revision history. Do not use clone to assemble a new reel from Project sources; use one episode_create with ordered source ranges. Use episode_edit when the current visible draft should change in place.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Top-level episode public ID to branch from. A recording id alias (src_...) resolves to that recording's episode-of-one."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional title for the clone. Defaults to 'Copy of <source title>'."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional description for the clone. Defaults to the source episode's displayed description."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry of the same clone request."
+      }
+    },
+    "required": [
+      "episode_id",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "recording_not_found",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Branch an episode before trying an alternate cut",
+      "input": {
+        "episode_id": "comp_...",
+        "title": "Workshop branch A",
+        "idempotency_key": "clone-branch-a"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "New clone episode public ID."
+      },
+      "source_episode_id": {
+        "type": "string",
+        "description": "Episode public ID the clone branched from."
+      },
+      "cloned_from_episode_id": {
+        "type": "string",
+        "description": "Alias for source_episode_id for lineage displays."
+      },
+      "cloned_from_revision": {
+        "type": "integer",
+        "description": "Source episode revision captured by the clone."
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Kept play length in seconds."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Durable revision counter, always 1 for a fresh clone."
+      },
+      "segments": {
+        "type": "array",
+        "description": "The cloned segment manifest (index, source_id, source_range, episode_range, boundary)."
+      },
+      "edge_warnings": {
+        "type": "array",
+        "description": "Always present. Non-mutating warnings for cloned cut edges that land strictly inside transcript words.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "segment_index": {
+              "type": "integer"
+            },
+            "edge": {
+              "type": "string",
+              "enum": [
+                "start",
+                "end"
+              ]
+            },
+            "at_seconds": {
+              "type": "number",
+              "description": "Recording source time for the flagged edge. This legacy field name is not Episode time."
+            },
+            "source_id": {
+              "type": "string",
+              "description": "Recording containing the flagged source edge."
+            },
+            "occurrence_id": {
+              "type": "string",
+              "description": "Exact created-target occurrence containing this edge, when mapped."
+            },
+            "episode_seconds": {
+              "type": "number",
+              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+            },
+            "word": {
+              "type": "string"
+            },
+            "word_range_source": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "status": {
+        "type": "string",
+        "description": "Always draft — cloned but not rendered."
+      },
+      "workspace_url": {
+        "type": "string",
+        "description": "Same-origin path that opens the new clone in the composite editor."
+      },
+      "already_applied": {
+        "type": "boolean",
+        "description": "true when this idempotency_key already created the same clone and the existing clone was returned."
+      },
+      "next_action": {
+        "type": "object",
+        "description": "Suggested next tool call: edit the clone with episode_edit using its current revision."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

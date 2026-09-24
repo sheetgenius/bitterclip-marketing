@@ -1,0 +1,63 @@
+{
+  "name": "identity_read_project",
+  "title": "Read project Brand Studio identity",
+  "description": "App-only Brand Studio read. Returns the project default reel identity pack, apply receipt, prewarm status, selectable presets/cut styles, account-scoped music-bed library, and authorized account scene identifiers for this project. This is a mirror/read path; it does not re-resolve existing reels.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID."
+      }
+    },
+    "required": [
+      "project_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "project_title": {
+        "type": "string"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "options": {
+        "type": "object"
+      },
+      "music_beds": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "account_scenes": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

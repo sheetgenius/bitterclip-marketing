@@ -1,0 +1,71 @@
+{
+  "name": "identity_asset_ingest",
+  "title": "Add an image or texture to FX Studio",
+  "description": "Ingest an image/logo/texture from HTTPS or base64 into your account's asset library. Omit project_id for account authoring or supply an accessible Project for its account. Add returned asset IDs to a scene's settings.asset_ids to admit those exact bytes to the isolated scene runtime. A scene has no ambient network or account credentials.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID; this is the account boundary for the uploaded asset."
+      },
+      "url": {
+        "type": "string",
+        "description": "HTTPS image URL to fetch. Pass either url or data_base64, not both."
+      },
+      "data_base64": {
+        "type": "string",
+        "description": "Base64 image bytes, optionally as a data:image/...;base64 URL. Pass either data_base64 or url, not both."
+      },
+      "kind": {
+        "type": "string",
+        "enum": [
+          "logo",
+          "image"
+        ],
+        "description": "Use logo for a brand mark/wordmark asset; image for supporting imagery."
+      },
+      "name": {
+        "type": "string",
+        "description": "Human name for the asset."
+      }
+    },
+    "required": [
+      "kind",
+      "name"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Upload a logo for a new brand",
+      "input": {
+        "project_id": "show_...",
+        "url": "https://example.com/logo.png",
+        "kind": "logo",
+        "name": "Acme mark"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "asset": {
+        "type": "object",
+        "description": "Account-scoped asset ref with asset_id, kind, content_type, sha256, and authenticated url."
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

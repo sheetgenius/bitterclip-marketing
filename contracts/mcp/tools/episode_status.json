@@ -1,0 +1,256 @@
+{
+  "name": "episode_status",
+  "title": "Check an episode's render status (and get the file)",
+  "description": "Poll the render status of an episode (composition) after episode_render — the episode-vocabulary materialize poll, so you never switch to the compositions_* tools. Returns the render lifecycle state (status: draft | queued | rendering | ready | failed), the media sub-status (ready | stale | missing), and progress. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: inspect every flagged timestamp before accepting the edit; no markers means only that deterministic checks were clear, never that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When media is ready, download_url is the exact private/current Download action; pair it with editor Open. playback_url is embedded-app media plumbing and is never user-facing delivery. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence. After episode_render returns \"queued\", call episode_status with the same episode_id until status is \"ready\".",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode (composition) public ID, such as comp_..., to check."
+      },
+      "wait_for_seconds": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 20
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "expected_render_plan_hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "required": [
+      "episode_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Poll an episode render until it is ready",
+      "input": {
+        "episode_id": "comp_..."
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "render_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Current Render artifact public ID when one exists."
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Current structural revision of the Episode."
+      },
+      "render_plan_hash": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact current render-plan fingerprint."
+      },
+      "status": {
+        "type": "string",
+        "description": "Render lifecycle state: draft | queued | rendering | ready | failed."
+      },
+      "progress": {
+        "type": "number",
+        "description": "0.0–1.0 render progress."
+      },
+      "render_phase": {
+        "type": "string",
+        "description": "Current render phase when the renderer reports one."
+      },
+      "span_summary": {
+        "type": "object",
+        "description": "Compact authored-span readiness summary for this Episode."
+      },
+      "media": {
+        "type": "object",
+        "description": "The §7 media sub-status.",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "ready (current playable media, including imported playback) | stale (the Composition changed) | missing (no settled playback)."
+          },
+          "render_plan_hash": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Current Episode picture fingerprint; null for imported playback."
+          },
+          "playback_origin": {
+            "type": "string",
+            "enum": [
+              "imported"
+            ],
+            "description": "Present when playback was adopted from a verified file without claiming a completed render."
+          },
+          "rendered_revision": {
+            "type": "string",
+            "description": "Compatibility revision token for the current media."
+          },
+          "rendered_structural_revision": {
+            "type": "integer",
+            "description": "Exact Episode structural revision encoded into the current media."
+          },
+          "rendered_render_plan_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Picture fingerprint encoded into the current media."
+          }
+        }
+      },
+      "playback_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Embedded-app-only inline media for the current Render. Never expose it as user-facing review or delivery; use private/current download_url plus editor Open."
+      },
+      "poster_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Embedded-app-only exact current Render poster. Never expose or retain it in model prose."
+      },
+      "render_generation": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Opaque immutable identity for the exact ready MP4/poster generation."
+      },
+      "exact_export_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rxpt_[a-z0-9]+$",
+        "description": "Immutable retained Export identity for an Episode or Clip."
+      },
+      "export_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rxpt_[a-z0-9]+$",
+        "description": "Immutable retained exact Export matching this completed render; null for imported playback without render evidence. Its absence does not prevent basic playback."
+      },
+      "download_available": {
+        "type": "boolean"
+      },
+      "download_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "A time-limited download URL to the rendered MP4 — present only when media.state is ready."
+      },
+      "expires_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "ISO8601 expiry of download_url (present with download_url)."
+      },
+      "poll": {
+        "type": "object",
+        "description": "Polling instruction present while the Render is queued or rendering."
+      },
+      "next_action": {
+        "type": "object",
+        "description": "What to do next (poll_until_ready / download / failed)."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers and their recovery actions."
+      },
+      "dialogue_seam_review": {
+        "type": "object",
+        "description": "Exact-render, measurement-only evidence for ordinary dialogue Junctions, including treated Crossfade regions. Markers prioritize bounded review; they are not a quality score or automatic rejection."
+      },
+      "picture_program_render_receipt": {
+        "type": "object",
+        "description": "Bounded authoritative receipt for a simultaneous Picture Program materialized in this exact current MP4: layout keys, scene count, maximum simultaneous pictures, and Program-audio authority. Present only when the renderer used a Picture Program; not a framing-quality score."
+      },
+      "error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Public current render-failure reason when status is failed."
+      },
+      "render_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Last public render failure, retained while a retry is in flight."
+      },
+      "last_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Compatibility-explicit alias of render_error."
+      },
+      "render_error_history": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "At most the three most recent public render failures."
+      },
+      "render_request_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rrq_[a-z0-9]+$",
+        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+      },
+      "render_attempt": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "render_attempt_started_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

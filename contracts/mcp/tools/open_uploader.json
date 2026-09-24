@@ -1,0 +1,60 @@
+{
+  "name": "open_uploader",
+  "title": "Get a recording upload link",
+  "description": "Use this when the user wants to add a local audio or video recording to BitterClip. Returns a shareable, token-gated upload link (a hosted drop-zone page) the user opens in a browser to drop their file — it uploads straight to storage and starts transcribing on its own. Pass `project` (a project name, slug, or public ID like \"Landing 100\") to scope the upload to that project, or omit it for the account's default uploads project. Give the returned `upload_url` to the user. Prefer this over asking the user for a public download URL.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project": {
+        "type": "string",
+        "description": "Optional project to attach uploads to — a project name, slug, or public ID. Omit for the default uploads project."
+      },
+      "capture_session_id": {
+        "type": "string",
+        "description": "Optional footage-session public ID. Every file uploaded through the link joins this same capture chronology."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "mode": {
+        "type": "string",
+        "description": "\"upload_link\" when a shareable upload link is returned."
+      },
+      "upload_url": {
+        "type": "string",
+        "description": "The token-gated drop-zone page URL to give the user."
+      },
+      "project": {
+        "type": "object",
+        "description": "The resolved project the uploads land in, or null for the default project."
+      },
+      "capture_session": {
+        "type": "object",
+        "description": "The footage session the uploads join, when requested."
+      },
+      "expires_at": {
+        "type": "string",
+        "description": "ISO8601 link expiry (7 days out)."
+      },
+      "accepted_content_types": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "max_bytes": {
+        "type": "integer"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

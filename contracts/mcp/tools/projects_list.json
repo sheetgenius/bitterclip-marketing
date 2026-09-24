@@ -1,0 +1,31 @@
+{
+  "name": "projects_list",
+  "title": "List projects",
+  "description": "List or find BitterClip projects/shows visible to this person, including projects shared with them. Use this before recordings_list or episodes_list when the user names a show/project, says a project was shared by another account, or needs the project_id for a shared shell. Pass query to filter by project title, description, or owning studio; multi-word queries tolerate punctuation differences (for example, \"andrew adrian\" can match \"andrew & adrian\"). Returned project_id values can be passed directly to recordings_list, episodes_list, and upload tools. To open a Project with workspace_open, pass target_type:\"project\" and that project_id as target_id.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Optional case-insensitive filter across project title, description, owning studio name, and relationship (owned/shared)."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Find a shared show by name",
+      "input": {
+        "query": "Science Based AI"
+      }
+    },
+    {
+      "label": "List accessible projects",
+      "input": {}
+    }
+  ]
+}

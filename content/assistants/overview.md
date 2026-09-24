@@ -104,6 +104,9 @@ Using Claude? Add it in one click:
 ::add-to-claude
 ::
 
+The [connect page](/connect) has one-click setup for Claude, ChatGPT and Claude Code, and
+shows what's connected when you're signed in.
+
 Or choose the guide for the host you use:
 
 - **[Connect Claude](/docs/assistants/connect-claude)**: add BitterClip under
@@ -111,9 +114,10 @@ Or choose the guide for the host you use:
 - **[Connect ChatGPT](/docs/assistants/connect-chatgpt)**: BitterClip isn't in ChatGPT's
   plugin directory yet, so you add it as a custom app in **Developer mode**.
 
-Connecting is all you need. BitterClip also publishes an optional
-[plugin](https://github.com/sheetgenius/bitterclip-plugin) that adds editing skills for
-Claude Code and Codex.
+Connecting is all you need. BitterClip's built-in Agent already receives the
+editing skills. For Claude Code and Codex, an optional
+[plugin](https://github.com/sheetgenius/bitterclip-marketing) provides those skills
+alongside the connection.
 
 If the connection doesn't take or your recordings don't show up, the
 [troubleshooting guide](/docs/help/troubleshooting) covers the usual fixes, and you can

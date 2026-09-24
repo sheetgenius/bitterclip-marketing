@@ -1,0 +1,92 @@
+{
+  "name": "fx_template_preview",
+  "title": "Preview an FX template",
+  "description": "App-only, provider-free preview of one checked-in opener or outro template using its exact supported details. Returns the canonical renderer HTML without creating media or changing an Episode.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID."
+      },
+      "template_key": {
+        "type": "string",
+        "description": "Key from identity_read_project.options.fx_templates."
+      },
+      "params": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "subtitle": {
+            "type": "string",
+            "maxLength": 180
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "sting": {
+            "type": "string",
+            "enum": [
+              "none",
+              "chime",
+              "bass",
+              "glitch",
+              "shutter"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16",
+          "16:9",
+          "1:1"
+        ]
+      }
+    },
+    "required": [
+      "project_id",
+      "template_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "template": {
+        "type": "object"
+      },
+      "aspect_ratio": {
+        "type": "string"
+      },
+      "canvas": {
+        "type": "object"
+      },
+      "html": {
+        "type": "string"
+      },
+      "receipt": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

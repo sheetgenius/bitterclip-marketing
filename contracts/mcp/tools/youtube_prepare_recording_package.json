@@ -1,0 +1,886 @@
+{
+  "name": "youtube_prepare_recording_package",
+  "title": "Prepare full recording for YouTube",
+  "description": "Use this after the user or agent has drafted the YouTube title and detailed description for a full recording. It creates a reviewable YouTube package backed by the original recording media. This does not publish externally.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID."
+      },
+      "title": {
+        "type": "string",
+        "description": "YouTube video title. Defaults to the recording title."
+      },
+      "description": {
+        "type": "string",
+        "description": "Detailed YouTube description, including show notes, chapters, links, and hashtags when appropriate."
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Optional YouTube tags."
+      },
+      "privacy_status": {
+        "type": "string",
+        "enum": [
+          "private",
+          "unlisted",
+          "public"
+        ],
+        "description": "Requested YouTube privacy. Honored unless deployment policy forces private uploads."
+      },
+      "category_id": {
+        "type": "string",
+        "description": "YouTube category id. Defaults to 22 (People & Blogs)."
+      },
+      "made_for_kids": {
+        "type": "boolean",
+        "description": "YouTube made-for-kids declaration. Defaults to false."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key so safe retries don't create duplicate packages."
+      }
+    },
+    "required": [
+      "recording_id",
+      "description",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "approval_id": {
+        "type": "string"
+      },
+      "approval_public_id": {
+        "type": "string"
+      },
+      "export_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "publish_ready": {
+        "type": "boolean"
+      },
+      "publish_state": {
+        "type": "object",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "properties": {
+          "schema_version": {
+            "type": "string"
+          },
+          "object": {
+            "type": "object",
+            "description": "Current publish object identity, using public IDs only.",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "recording_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "clip_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "composition_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "export_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "approval_id": {
+                "type": "string"
+              },
+              "platform": {
+                "type": "string"
+              }
+            }
+          },
+          "media": {
+            "type": "object",
+            "description": "Whether the media asset can be published.",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ready",
+                  "rendering",
+                  "failed",
+                  "missing",
+                  "render_required",
+                  "stale"
+                ]
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "source": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "download_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "package": {
+            "type": "object",
+            "description": "Reviewable package readiness and approval state.",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "missing",
+                  "needs_review",
+                  "approved",
+                  "published",
+                  "failed",
+                  "blocked",
+                  "manual_handoff",
+                  "ready",
+                  "rendering",
+                  "render_required",
+                  "stale"
+                ]
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "approval_status": {
+                "type": "string"
+              },
+              "explicit_approval_required": {
+                "type": "boolean"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "string"
+              },
+              "review_url": {
+                "type": "string"
+              },
+              "checks_summary": {
+                "type": "object"
+              }
+            }
+          },
+          "copy": {
+            "type": "object",
+            "description": "Destination-copy readiness and formatting state.",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              },
+              "ready": {
+                "type": "boolean"
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "body_present": {
+                "type": "boolean"
+              },
+              "text_present": {
+                "type": "boolean"
+              },
+              "body_preview": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "description": "Plain-language copy readiness summary for primary UI and model responses."
+              },
+              "preview_lines": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "First non-empty destination-copy lines, preserving platform-native paragraph and bullet structure for compact UI."
+              },
+              "line_count": {
+                "type": "integer"
+              },
+              "character_count": {
+                "type": "integer"
+              },
+              "platform_native": {
+                "type": "boolean"
+              }
+            }
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "platform": {
+                  "type": "string"
+                },
+                "platform_key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "readiness": {
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "missing_auth",
+                    "permission_limited",
+                    "capped",
+                    "unsupported",
+                    "manual_handoff",
+                    "blocked"
+                  ]
+                },
+                "configured": {
+                  "type": "boolean"
+                },
+                "package_mode": {
+                  "type": "string"
+                },
+                "package": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "ready": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "approval_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "approval_public_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "approval_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "review_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "mode": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "link_platform": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reason": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "attempt_state": {
+                  "type": "string"
+                },
+                "reconciliation_state": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cleanup_state": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "latest_publish_record_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "external_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "external_urls": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "safe_to_retry": {
+                  "type": "boolean"
+                },
+                "can_prepare_package": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "selected_by_default": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "can_publish_approval": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "attempts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "next_action": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "message": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "safe_to_retry": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "publish_record_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_record_public_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "cleanup_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "reconcile_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "inspect_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "retry_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "publish_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "tool_name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "poll_tool": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "required_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "optional_fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "platforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "approval_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "arguments": {
+                      "type": "object"
+                    },
+                    "url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "review_url": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "settings_path": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "authorize_path": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "stage": {
+            "type": "object",
+            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "required": [
+              "status",
+              "label",
+              "message",
+              "blocking",
+              "ready_to_publish"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ready_to_publish",
+                  "ready_to_package",
+                  "needs_review",
+                  "needs_destination",
+                  "destination_blocked",
+                  "manual_handoff",
+                  "copy_needs_review",
+                  "needs_reconciliation",
+                  "cleanup_failed",
+                  "publishing",
+                  "published",
+                  "rendering",
+                  "render_required",
+                  "stale",
+                  "missing",
+                  "failed"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "blocking": {
+                "type": "boolean"
+              },
+              "ready_to_publish": {
+                "type": "boolean"
+              },
+              "action": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "properties": {
+                  "kind": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "message": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "safe_to_retry": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "publish_record_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "publish_record_public_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "cleanup_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "reconcile_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "inspect_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "retry_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "publish_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "tool_name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "poll_tool": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "required_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "optional_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "approval_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "arguments": {
+                    "type": "object"
+                  },
+                  "url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "review_url": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "settings_path": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "authorize_path": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "next_action": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "message": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "safe_to_retry": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "publish_record_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publish_record_public_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "cleanup_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reconcile_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "inspect_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "retry_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "publish_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tool_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "poll_tool": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "required_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "optional_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "platforms": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "approval_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "arguments": {
+                "type": "object"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "review_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "settings_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "authorize_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "schema_version",
+          "object",
+          "media",
+          "package",
+          "copy",
+          "destinations",
+          "stage"
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

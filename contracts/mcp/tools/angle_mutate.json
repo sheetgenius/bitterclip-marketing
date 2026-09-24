@@ -1,0 +1,184 @@
+{
+  "name": "angle_mutate",
+  "title": "Change a camera angle",
+  "description": "One camera-angle change per call: hide, show, trim, nudge, or remove. A camera is positioned by its footage session's clock, so there is no action that moves one by hand; nudge is how a slightly-off placement is corrected. hide/show exclude or return an angle from automatic picture selection without touching saved explicit picture choices. trim persists source-clip trim handles; nudge persists a small user timing offset without rewriting measured sync times; remove deletes the clip while leaving media archived. Pass the Episode's current revision and a caller-stable idempotency key with every action.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID that scopes this change."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current Episode structural revision from the editor document."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One camera-angle action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "hide"
+                ]
+              },
+              "angle_id": {
+                "type": "string",
+                "description": "Camera-angle anchor public ID from the Episode camera roster."
+              }
+            },
+            "required": [
+              "type",
+              "angle_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "show"
+                ]
+              },
+              "angle_id": {
+                "type": "string",
+                "description": "Camera-angle anchor public ID from the Episode camera roster."
+              }
+            },
+            "required": [
+              "type",
+              "angle_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "trim"
+                ]
+              },
+              "angle_id": {
+                "type": "string",
+                "description": "Camera-angle anchor public ID from the Episode camera roster."
+              },
+              "trim_start_seconds": {
+                "type": "number",
+                "description": "Seconds trimmed from the source clip start."
+              },
+              "trim_end_seconds": {
+                "type": "number",
+                "description": "Seconds trimmed from the source clip end."
+              }
+            },
+            "required": [
+              "type",
+              "angle_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "nudge"
+                ]
+              },
+              "angle_id": {
+                "type": "string",
+                "description": "Camera-angle anchor public ID from the Episode camera roster."
+              },
+              "delta_seconds": {
+                "type": "number",
+                "description": "Small user timing offset to add."
+              }
+            },
+            "required": [
+              "type",
+              "angle_id",
+              "delta_seconds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "remove"
+                ]
+              },
+              "angle_id": {
+                "type": "string",
+                "description": "Camera-angle anchor public ID from the Episode camera roster."
+              }
+            },
+            "required": [
+              "type",
+              "angle_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "recording_not_found",
+    "angle_not_found",
+    "camera_program_conflict",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_time_range",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "composition_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "render_stale": {
+        "type": "boolean"
+      },
+      "angle": {
+        "type": "object"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "audit_receipt_id": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

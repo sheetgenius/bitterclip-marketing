@@ -1,0 +1,287 @@
+{
+  "name": "episode_framing_guidance",
+  "title": "Read per-person framing evidence for episode occurrences",
+  "description": "Read bounded, source-time framing EVIDENCE for up to 12 named source-backed occurrences in an Episode or Clip. Per occurrence: crop_window arithmetic for this canvas (pure math, not a preference) and every person with reviewed face-core geometry in the interval — horizontal extent with an honest observation state, spoke as current-transcript evidence (never a subject choice; \"unknown\" when the transcript is not current), a position-free fits/too_wide width fact, and a descriptive title_safe_side. It never recommends: no anointed subject, no framing to apply, no ranking. Choosing whom to show — the speaker, a listener's reaction, whatever is visually right — is your editorial judgment; correlate spoke/word_share with extents yourself, compute your own focal point, and apply it through episode_edit occurrence.reframe at this result's revision. people:[] with no_person_evidence means no face-core evidence exists for those seconds, not that nobody is visible. Read-only.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode or Clip public ID (comp_...). A recording src_... handle resolves through its episode-of-one, as with episode_read."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "occurrence_ids": {
+        "type": "array",
+        "description": "Exact source-backed occurrence IDs from a fresh episode_read. Required; 1–12 IDs keeps this a bounded evidence read. Read the resulting revision again before each occurrence.reframe mutation.",
+        "items": {
+          "type": "string",
+          "pattern": "^occ_"
+        },
+        "minItems": 1,
+        "maxItems": 12,
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "occurrence_ids"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "required": [
+              "episode_id"
+            ]
+          },
+          {
+            "required": [
+              "composition_id"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Read per-person framing evidence before reframing a portrait Clip",
+      "input": {
+        "episode_id": "comp_...",
+        "occurrence_ids": [
+          "occ_..."
+        ]
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "enum": [
+          "bitterclip.episode_framing_guidance.v2"
+        ]
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Program revision whose occurrence/source mapping was read. Pass this as expected_revision to the next episode_edit."
+      },
+      "program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Current Program digest for the evidence mapping."
+      },
+      "canvas": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "fps": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "width",
+          "height",
+          "fps"
+        ]
+      },
+      "occurrences": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "occurrence_id": {
+              "type": "string"
+            },
+            "recording_id": {
+              "type": "string"
+            },
+            "source_range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "evidence",
+                "unavailable"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "occurrence_not_found",
+                "occurrence_not_source_backed",
+                "recording_not_video",
+                "subject_geometry_unavailable"
+              ],
+              "description": "Only for state:unavailable. subject_geometry_unavailable means no current face-core geometry pass exists for this Recording's bytes."
+            },
+            "crop_window": {
+              "type": "object",
+              "description": "Pure aspect arithmetic for this canvas, no preference: width_fraction is the crop width as a fraction of source width at the target aspect; full_width means no horizontal crop is needed at all.",
+              "properties": {
+                "source_display_aspect": {
+                  "type": "number"
+                },
+                "target_aspect": {
+                  "type": "number"
+                },
+                "width_fraction": {
+                  "type": "number"
+                },
+                "full_width": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "source_display_aspect",
+                "target_aspect",
+                "width_fraction",
+                "full_width"
+              ]
+            },
+            "people": {
+              "type": "array",
+              "description": "Every person with face-core geometry evidence in the interval, widest extent first (order is geometry, not precedence). Identity, geometry, and speech are independent evidence: a listener with spoke:false is as servable a frame as the speaker.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "person": {
+                    "type": "string",
+                    "enum": [
+                      "identified",
+                      "unidentified"
+                    ]
+                  },
+                  "speaker_map_id": {
+                    "type": "string",
+                    "description": "Only when the person's speaker track is current for the current transcript; evidence bound to stale tracks stays, unnamed."
+                  },
+                  "display_name": {
+                    "type": "string"
+                  },
+                  "observation": {
+                    "type": "string",
+                    "enum": [
+                      "observed",
+                      "uncertain",
+                      "unknown"
+                    ]
+                  },
+                  "extent": {
+                    "type": "object",
+                    "description": "Normalized horizontal envelope where this person's face was observed inside the interval. Present only for observation:observed.",
+                    "properties": {
+                      "x_min": {
+                        "type": "number"
+                      },
+                      "x_max": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "x_min",
+                      "x_max"
+                    ]
+                  },
+                  "spoke": {
+                    "type": [
+                      "boolean",
+                      "string"
+                    ],
+                    "enum": [
+                      true,
+                      false,
+                      "unknown"
+                    ],
+                    "description": "Whether current-transcript words by this person overlap the interval. false only against a current transcript; \"unknown\" when no current transcript or the person cannot be currently named."
+                  },
+                  "word_share": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Descriptive share of the interval's words attributed to this person; a weight, never a ranking."
+                  },
+                  "fit": {
+                    "type": "string",
+                    "enum": [
+                      "fits",
+                      "too_wide",
+                      "uncertain",
+                      "unknown"
+                    ],
+                    "description": "Position-free width arithmetic: fits means this extent CAN fit a crop of width_fraction, not where to place one."
+                  },
+                  "title_safe_side": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "left",
+                      "right",
+                      null
+                    ],
+                    "description": "Descriptive side-room derivation: which side would hold clear width if a crop were centered on this person. Names room that exists, never a placement to make."
+                  }
+                },
+                "required": [
+                  "person",
+                  "observation",
+                  "spoke",
+                  "fit"
+                ]
+              }
+            },
+            "people_truncated": {
+              "type": "boolean",
+              "description": "True when more than 6 people had evidence; the widest extents were kept."
+            },
+            "no_person_evidence": {
+              "type": "boolean",
+              "description": "True when the current geometry pass has no face-core rows for these seconds. Absence of evidence, not evidence of absence."
+            }
+          },
+          "required": [
+            "occurrence_id",
+            "state"
+          ]
+        }
+      }
+    },
+    "required": [
+      "schema",
+      "episode_id",
+      "revision",
+      "program_digest",
+      "canvas",
+      "occurrences"
+    ],
+    "additionalProperties": false
+  }
+}

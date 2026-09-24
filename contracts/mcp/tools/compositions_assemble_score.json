@@ -1,0 +1,125 @@
+{
+  "name": "compositions_assemble_score",
+  "title": "Assemble the composition transcript score",
+  "description": "UI helper for the composition editor: assemble an ordered set of (recording, start, end) segments into ONE continuous transcript score — the words from every recording stitched in order onto a single composition timeline, with a merged speaker legend and the recording-boundary seams between chunks. Read-only and stateless (nothing is persisted, no render). The editor calls this on every edit to re-render the spliced transcript; rendering an MP4 is episode.render.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "segments": {
+        "type": "array",
+        "description": "Ordered segments, same shape as episode.create. Output stitches them in this order.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "recording_id": {
+              "type": "string",
+              "description": "Recording public ID the segment is taken from."
+            },
+            "occurrence_id": {
+              "type": "string",
+              "description": "Stable Program occurrence identity when previewing an existing authored use."
+            },
+            "start_seconds": {
+              "type": "number"
+            },
+            "end_seconds": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "recording_id",
+            "start_seconds",
+            "end_seconds"
+          ]
+        }
+      },
+      "selection": {
+        "type": "object",
+        "description": "Optional { start_seconds, end_seconds } range (composition time) to open pre-selected/highlighted on the assembled transcript.",
+        "properties": {
+          "start_seconds": {
+            "type": "number"
+          },
+          "end_seconds": {
+            "type": "number"
+          }
+        }
+      },
+      "row_seconds": {
+        "type": "number",
+        "description": "Optional transcript score row duration, in seconds. The web workspace sets this from rendered score width so narrow panes get shorter rows and dense speech remains legible."
+      },
+      "include_rows": {
+        "type": "boolean",
+        "description": "Whether to include timeline score rows. Defaults to true."
+      },
+      "include_reading_rows": {
+        "type": "boolean",
+        "description": "Whether to include reading-view prose rows. Defaults to true; the web workspace may request them lazily after first paint."
+      },
+      "row_format": {
+        "type": "string",
+        "enum": [
+          "default",
+          "compact_v1"
+        ],
+        "description": "Optional timeline-row wire format. Defaults to object rows; compact_v1 returns positional row arrays for browser/widget transfer and must be expanded by the caller."
+      }
+    },
+    "required": [
+      "segments"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "invalid_time_range",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "rows": {
+        "type": "array",
+        "description": "Assembled transcript-score rows in composition time."
+      },
+      "row_format": {
+        "type": "string",
+        "description": "Present when rows use a non-default wire format such as compact_v1."
+      },
+      "reading_rows": {
+        "type": "array",
+        "description": "Assembled reading-view prose lines (beer-goggles toggle)."
+      },
+      "reading_rows_deferred": {
+        "type": "boolean",
+        "description": "True when reading rows were intentionally omitted and may be fetched later."
+      },
+      "legend": {
+        "type": "array",
+        "description": "Merged speaker legend across the sources in range."
+      },
+      "seams": {
+        "type": "array",
+        "description": "Recording boundaries (composition_seconds + provenance labels)."
+      },
+      "cuts": {
+        "type": "array",
+        "description": "Display-only omitted same-recording transcript spans for expandable cut review, including timeline rows, reading-view rows, and a collapsed_by_default hint for long omissions. Rendering and playback still use the kept segments."
+      },
+      "speaker_stats": {
+        "type": "array",
+        "description": "Per-speaker share of the assembled composition (label, class_name, word_count, share)."
+      },
+      "total_seconds": {
+        "type": "number"
+      },
+      "segment_count": {
+        "type": "integer"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

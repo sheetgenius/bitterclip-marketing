@@ -1,0 +1,93 @@
+{
+  "name": "recordings_finalize_upload",
+  "title": "Finalize a recording upload",
+  "description": "Use this after uploading bytes to a grant from recordings_request_upload. Finalizes the storage object into a BitterClip recording and starts transcription when the account allows it. Multipart uploads must pass every part_number/etag returned by storage.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "upload_token": {
+        "type": "string"
+      },
+      "parts": {
+        "type": "array",
+        "description": "Required for multipart uploads: one object per uploaded part.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "part_number": {
+              "type": "integer"
+            },
+            "etag": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "part_number",
+            "etag"
+          ]
+        }
+      }
+    },
+    "required": [
+      "upload_token"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_upload_token",
+    "upload_not_found",
+    "upload_incomplete",
+    "upload_mismatch",
+    "multipart_upload_failed",
+    "billing_required",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "deduped": {
+        "type": "boolean"
+      },
+      "recording_id": {
+        "type": "string"
+      },
+      "recording_public_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "transcript_status": {
+        "type": "string"
+      },
+      "original_filename": {
+        "type": "string"
+      },
+      "duration_seconds": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "insertable": {
+        "type": "boolean",
+        "description": "True when the finalized source has enough media duration to be inserted into a composition."
+      },
+      "byte_size": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "workspace_url": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}
