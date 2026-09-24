@@ -69,8 +69,10 @@ This repository owns:
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - public blog RSS at `/blog/rss.xml`
 - public AI-assistant and MCP guidance under `/docs/assistants`
-- a static full tool reference at `/docs/assistants/tool-reference`, built from
-  the deployed Rails model-visible catalog with source release and digest
+- all 113 authored MCP tool contracts under `contracts/mcp/tools/`, three public
+  extended guides, and the four canonical Claude Code/Codex plugin skills
+- static per-tool references and a full index built from the descriptors Rails
+  actually serves, labelled with product release, contract commit, and digest
 - the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 

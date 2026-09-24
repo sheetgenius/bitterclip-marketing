@@ -1,0 +1,347 @@
+{
+  "name": "episode_subject_presence",
+  "title": "Read who is on screen over an episode window",
+  "description": "App-only read of who is visually on screen across one bounded EPISODE-time window, as intervals rather than detections. Each interval reports both episode and source time plus one of four distinct answers: identified (named people, with the identity basis that justified each name), unidentified (somebody was on screen and nothing named them), nobody_detected (the detector looked and saw no one), or not_sampled (nothing ever looked at these seconds). Those four are never merged: a stretch that was checked and found empty is a different fact from a stretch nobody ever looked at. Returns a per-window roster with on-screen seconds and a coverage ledger whose totals include an explicit no_evidence_seconds for occurrences whose Recording carries no usable identity pass. This is evidence, not editorial authority: it never changes the Program, never authorizes a cut or a boundary, and returns no detection rows, box coordinates, detector scores, or media URLs. Raw per-instant boxes stay in recordings_get_person_detections; reviewed face-core geometry for framing stays in episode_framing_guidance.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode or Clip public ID (comp_...). A recording src_... handle resolves through its episode-of-one, as with episode_read."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "window": {
+        "type": "object",
+        "description": "Optional EPISODE-time span. Spans are clamped to 900 seconds and to the Episode; the window actually served is always reported back.",
+        "properties": {
+          "from": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Window start in episode seconds. Omit for the Episode start."
+          },
+          "to": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Window end in episode seconds. Omit for a default span from the start."
+          }
+        }
+      },
+      "max_intervals": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 400,
+        "description": "Maximum intervals per occurrence. Truncation is reported rather than silently applied."
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "required": [
+              "episode_id"
+            ]
+          },
+          {
+            "required": [
+              "composition_id"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "See who is on screen across a candidate cut",
+      "input": {
+        "episode_id": "comp_...",
+        "window": {
+          "from": 120.0,
+          "to": 240.0
+        }
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "enum": [
+          "bitterclip.episode_subject_presence.v1"
+        ]
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Program revision this presence mapping was read against."
+      },
+      "program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "window": {
+        "type": "object",
+        "properties": {
+          "start_seconds": {
+            "type": "number"
+          },
+          "end_seconds": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "start_seconds",
+          "end_seconds"
+        ]
+      },
+      "occurrences": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "occurrence_id": {
+              "type": "string"
+            },
+            "recording_id": {
+              "type": "string"
+            },
+            "episode_range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "source_range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "available",
+                "unavailable",
+                "stale"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "description": "Present whenever state is not available; names why this occurrence has no presence evidence."
+            },
+            "evidence": {
+              "type": "object",
+              "description": "Producer, coverage state, identity attribution key, and sampling grid of the pass this answer came from."
+            },
+            "intervals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "episode_range": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "source_range": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "presence": {
+                    "type": "string",
+                    "enum": [
+                      "identified",
+                      "unidentified",
+                      "nobody_detected",
+                      "not_sampled"
+                    ]
+                  },
+                  "speakers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recording-local speaker track handles named in this interval."
+                  },
+                  "identity_bases": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "face_anchor",
+                        "visual_identity_anchor",
+                        "track_propagated",
+                        "appearance_reassociation",
+                        "escalation_arbitrated",
+                        "voice_turn_binding"
+                      ]
+                    }
+                  },
+                  "unnamed_person_present": {
+                    "type": "boolean",
+                    "description": "True when an accepted detection in this interval carried no identity even though somebody else was named."
+                  },
+                  "identity_escalation_reasons": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recorded reasons identity was refused rather than guessed."
+                  },
+                  "sampled_frames": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "episode_range",
+                  "source_range",
+                  "presence",
+                  "sampled_frames"
+                ]
+              }
+            },
+            "roster": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "coverage": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "truncated": {
+              "type": "boolean"
+            },
+            "total_interval_count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "occurrence_id",
+            "state",
+            "intervals",
+            "roster"
+          ]
+        }
+      },
+      "roster": {
+        "type": "array",
+        "description": "One row per named person across the whole window. Two people can share the picture, so on_screen_seconds may overlap between rows and may exceed coverage.identified_seconds; it is time-on-screen per person, never a partition of the window.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "speaker_id": {
+              "type": "string"
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name_basis": {
+              "type": "string",
+              "enum": [
+                "human_confirmed",
+                "profile_linked",
+                "unconfirmed"
+              ],
+              "description": "Where this row's NAME came from, which is a different question from identity_bases. unconfirmed means the display name is provider-derived and nobody confirmed it, so treat it as a label rather than an identity."
+            },
+            "speaker_profile_id": {
+              "type": "string"
+            },
+            "on_screen_seconds": {
+              "type": "number"
+            },
+            "sampled_frames": {
+              "type": "integer"
+            },
+            "identity_bases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "speaker_id",
+            "name_basis",
+            "on_screen_seconds",
+            "sampled_frames",
+            "identity_bases"
+          ]
+        }
+      },
+      "coverage": {
+        "type": "object",
+        "description": "Confidence ledger for the served window. The five totals are distinct claims and are never summed into one 'unknown'.",
+        "properties": {
+          "identified_seconds": {
+            "type": "number"
+          },
+          "unidentified_person_seconds": {
+            "type": "number"
+          },
+          "nobody_detected_seconds": {
+            "type": "number"
+          },
+          "not_sampled_seconds": {
+            "type": "number"
+          },
+          "no_evidence_seconds": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "identified_seconds",
+          "unidentified_person_seconds",
+          "nobody_detected_seconds",
+          "not_sampled_seconds",
+          "no_evidence_seconds"
+        ]
+      },
+      "truncated": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "schema",
+      "episode_id",
+      "revision",
+      "program_digest",
+      "window",
+      "occurrences",
+      "roster",
+      "coverage",
+      "truncated"
+    ],
+    "additionalProperties": false
+  }
+}

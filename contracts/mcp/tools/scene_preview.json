@@ -1,0 +1,108 @@
+{
+  "name": "scene_preview",
+  "title": "Inspect rendered FX scene frames",
+  "description": "Render exact frames of a saved scene in a contained browser and return real MCP PNG images. Inspect the images before judging a change, then iterate with scene_read and scene_edit. The snapshot binds source revision, settings, assets and runtime; it uses the same programmable scene contract as FX Studio. Omit project_id/brand_id for account FX authoring. at_ms selects explicit scene times; burst selects an evenly spaced set. contact_sheet returns one tiled image. This renders preview evidence without changing the scene, production defaults or an Episode.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID; this is the account boundary for the scene and brand."
+      },
+      "scene_id": {
+        "type": "string",
+        "description": "Account scene id written by scene_write."
+      },
+      "recipe": {
+        "type": "object",
+        "description": "Optional recipe object; scene_id/scene may be read from it."
+      },
+      "brand_id": {
+        "type": "string",
+        "description": "Checked-in brand id or account pack id returned by brand_pack_write."
+      },
+      "at_ms": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 6,
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "description": "Exact scene times in milliseconds, including fractional frame boundaries. Max 6."
+      },
+      "burst": {
+        "type": "object",
+        "description": "Alternative to at_ms: {count, duration_ms}. Max count 6."
+      },
+      "aspect": {
+        "type": "string",
+        "enum": [
+          "16:9",
+          "9:16",
+          "1:1",
+          "4:5"
+        ],
+        "description": "Preview aspect. Defaults to the saved scene aspect."
+      },
+      "contact_sheet": {
+        "type": "boolean",
+        "description": "When true, model-visible content returns one tiled PNG contact sheet instead of individual frame image blocks. Per-frame data URLs remain in private app hydration and web-bridge results."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Preview the reveal at start, peak, and hold",
+      "input": {
+        "project_id": "show_...",
+        "scene_id": "acme-two-tone-reveal",
+        "brand_id": "acct-acme-acme-two-tone",
+        "at_ms": [
+          0,
+          420,
+          900
+        ],
+        "aspect": "16:9"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "frames": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Frame metadata with phase, width, height and byte_size. Web-bridge results also include data_url; MCP app hydration receives it privately."
+      },
+      "model_image_delivery": {
+        "type": "string",
+        "description": "How MCP image content was delivered: frames, sampled_frames, contact_sheet, or none."
+      },
+      "model_image_count": {
+        "type": "integer",
+        "description": "Number of model-visible image content blocks returned alongside text labels."
+      },
+      "content_bytes": {
+        "type": "integer",
+        "description": "Approximate bytes of model-visible PNG image content before JSON/base64 overhead."
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

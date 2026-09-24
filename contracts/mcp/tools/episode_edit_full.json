@@ -1,0 +1,595 @@
+{
+  "name": "episode_edit_full",
+  "title": "Edit an episode from the app editor",
+  "description": "App-only wrapper over the full shared episode edit primitive used by the BitterClip editor and MCP Apps widget. It accepts the same occurrence operations as episode_edit plus metadata.set and typed identity operations. Occurrence operations still require expected_revision and settle through the exact same receipt-backed engine. The retired segment.insert, segment.update and segment.remove batches refuse on every entrance with program_occurrence_operation_required naming the occurrence operations. The editor-only gestures junction.roll (move one edit point by a signed delta_seconds, keeping duration), occurrence.insert (a source_id Recording slice at a destination Junction or point) and program.restore_recording (collapse a single-Recording Program to the whole Recording) settle as one receipt with an exact inverse; MCP callers, including connector tokens, are refused them. Hidden from the model picker.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode (composition) public ID."
+      },
+      "op": {
+        "type": "object",
+        "description": "A single edit op: an occurrence operation, metadata.set or a typed identity operation. Legacy segment.* ops are the signed-in editor's only."
+      },
+      "ops": {
+        "type": "array",
+        "description": "Atomic batch of full edit ops.",
+        "items": {
+          "type": "object"
+        }
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Optional optimistic revision guard used by the app editor."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry."
+      }
+    },
+    "required": [
+      "episode_id",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "recording_not_found",
+    "invalid_time_range",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input",
+    "identity_slot_not_configured",
+    "stale_boundary",
+    "part_not_found",
+    "program_snapshot_invalid",
+    "program_occurrence_not_found",
+    "program_occurrence_identity_conflict",
+    "program_target_not_contiguous",
+    "program_range_invalid",
+    "program_boundary_invalid",
+    "program_boundary_evidence_required",
+    "program_boundary_evidence_invalid",
+    "program_junction_conflict",
+    "program_destination_inside_selection",
+    "program_attachment_conflict",
+    "program_typed_operation_required",
+    "program_would_be_empty",
+    "program_occurrence_limit",
+    "operation_receipt_not_found",
+    "operation_receipt_invalid",
+    "program_revert_conflict",
+    "picture_framing_invalid",
+    "picture_framing_unsupported",
+    "music_anchor_transform_unsupported",
+    "music_range_inverted",
+    "music_ranges_overlap",
+    "music_asset_too_short",
+    "program_source_unavailable",
+    "program_restore_recording_unavailable",
+    "program_source_range_unplayable",
+    "program_occurrence_operation_required"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "operation_type": {
+        "type": "string",
+        "description": "Occurrence operations only: exact operation settled by this receipt."
+      },
+      "selection_kind": {
+        "type": "string",
+        "enum": [
+          "range",
+          "occurrences"
+        ],
+        "description": "Occurrence operations only: geometric Range or whole-occurrence selection."
+      },
+      "base_revision": {
+        "type": "integer",
+        "description": "Occurrence operations only: revision the receipt was based on."
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "current_revision": {
+        "type": "integer",
+        "description": "Occurrence operations only: current durable head, which may be newer on exact retry."
+      },
+      "current_program_digest": {
+        "type": "string",
+        "description": "Occurrence operations only: current durable occurrence-state fingerprint."
+      },
+      "before_duration": {
+        "type": "number",
+        "description": "Occurrence operations only: kept length immediately before this edit."
+      },
+      "duration": {
+        "type": "number"
+      },
+      "duration_delta": {
+        "type": "number",
+        "description": "Occurrence operations only: exact after-minus-before kept-length change."
+      },
+      "changed_segments": {
+        "type": "array"
+      },
+      "inserted_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Legacy/full insert operations only: exact stable Program occurrence identities minted by this atomic edit, in operation order."
+      },
+      "edge_warnings": {
+        "type": "array",
+        "description": "Non-mutating warnings for edited boundaries that land strictly inside spoken words.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "segment_index": {
+              "type": "integer"
+            },
+            "edge": {
+              "type": "string",
+              "enum": [
+                "start",
+                "end"
+              ]
+            },
+            "at_seconds": {
+              "type": "number",
+              "description": "Recording source time for the flagged edge. This legacy field name is not Episode time."
+            },
+            "source_id": {
+              "type": "string",
+              "description": "Recording containing the flagged source edge."
+            },
+            "occurrence_id": {
+              "type": "string",
+              "description": "Exact created-target occurrence containing this edge, when mapped."
+            },
+            "episode_seconds": {
+              "type": "number",
+              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+            },
+            "word": {
+              "type": "string"
+            },
+            "word_range_source": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "operation_receipt_id": {
+        "type": "string",
+        "description": "Occurrence operations only: durable receipt used for targeted Revert."
+      },
+      "reverts_receipt_id": {
+        "type": "string",
+        "description": "For operation.revert, the exact prior Program receipt restored by this result."
+      },
+      "before_program_digest": {
+        "type": "string"
+      },
+      "program_digest": {
+        "type": "string"
+      },
+      "resulting_order": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "minted_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "retired_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "surviving_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "occurrence_lineage": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "occurrence_id": {
+              "type": "string"
+            },
+            "settlement": {
+              "type": "string",
+              "enum": [
+                "minted",
+                "retired",
+                "surviving"
+              ]
+            },
+            "lineage": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "occurrence_id",
+            "settlement",
+            "lineage"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "inverse": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "operation.revert"
+            ]
+          },
+          "receipt_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "receipt_id"
+        ],
+        "additionalProperties": false
+      },
+      "stale_media": {
+        "type": "boolean"
+      },
+      "stale_copy": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "episode_edit"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "unchanged",
+              "replayed"
+            ],
+            "description": "unchanged only for an identity-part edit that settled with nothing to change: the revision and Program digest did not move and no inverse is offered."
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "occurrence.split",
+              "occurrence.duplicate",
+              "occurrence.move",
+              "occurrence.remove",
+              "occurrence.restore_cut",
+              "occurrence.trim",
+              "occurrence.reframe",
+              "occurrence.caption",
+              "junction.transition",
+              "operation.revert",
+              "identity_part.insert",
+              "identity_part.remove",
+              "identity_part.replace",
+              "identity_part.customize",
+              "junction.roll",
+              "occurrence.insert",
+              "program.restore_recording"
+            ]
+          },
+          "selection_kind": {
+            "type": "string",
+            "enum": [
+              "range",
+              "occurrences"
+            ]
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "duration": {
+            "type": "object",
+            "properties": {
+              "before_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "after_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "delta_seconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "before_seconds",
+              "after_seconds",
+              "delta_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "operation.revert"
+                    ]
+                  },
+                  "receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "op",
+                  "receipt_id"
+                ],
+                "additionalProperties": false
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "program_move_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "destination": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "adjacency"
+                        ]
+                      },
+                      "left_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "right_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "left_occurrence_id",
+                      "right_occurrence_id"
+                    ],
+                    "additionalProperties": false,
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "left_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "right_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "point"
+                        ]
+                      },
+                      "occurrence_id": {
+                        "type": "string",
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "source_seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "occurrence_id",
+                      "source_seconds"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "destination",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "program_occurrence_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "operation",
+          "revisions",
+          "duration",
+          "receipt",
+          "digests"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

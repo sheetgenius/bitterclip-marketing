@@ -1,0 +1,58 @@
+{
+  "name": "episodes_list",
+  "title": "List episodes",
+  "description": "List or find top-level EPISODES — the unit of work; the front door for browse, latest/open, project recaps or coaching prep. `query` matches episode, project, recording, or speaker names across fields (\"mike john\" finds the Mike & John Show; \"me\" usually means the studio owner). Rows carry `match_reason`, a dense indexed description, and `episode_shape`/`latest_open_hint` separating ready full-length episodes from short drafts — for \"latest episode\" asks prefer a ready full-length row and pass `order:\"latest\"`. Chronological project recaps: keep the default chronological order and read each episode before synthesizing. Returns row-carrying prose only, with each exact `episode_id` in brackets for the next tool call. For a relevant/latest Episode ask: episodes_list(query), shortlist 2–4; for Project content evidence, use transcript_search first, then returned-window episode_read. For a whole Episode, call workspace_open once and last. For a named read-only moment, first read the Episode, then call workspace_open once and last with focus_range and that exact expected_revision; this focuses transiently without saving. An explicit request to save or mark a range uses review_points_place instead. For an explicitly comprehensive recap, read the requested scope. Use episode_zoom only for a candidate edit/review boundary or measurable acoustic/scene seam, never physical-progress proof or post-open exploration. Raw recordings are a drawer (recordings_list); excludes render outputs and derived clips. Read-only.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID — scope the list to a single project's episodes."
+      },
+      "query": {
+        "type": "string",
+        "description": "Optional case-insensitive filter across episode title, project title, segment recording/source titles, and speaker names. Use this before reading a named episode."
+      },
+      "order": {
+        "type": "string",
+        "description": "Optional order: `latest` for newest-first latest/last/refresher tasks, or `chronological` for oldest-to-newest project recaps. Project-scoped default is chronological; account-wide default is latest."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Optional maximum number of recent episodes to return. For 'last few', pass 3 unless the user names another count."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Find a named episode",
+      "input": {
+        "query": "Visual Analysis Prototype and Coaching Workflows"
+      }
+    },
+    {
+      "label": "List recent episodes",
+      "input": {}
+    },
+    {
+      "label": "List a project's episodes",
+      "input": {
+        "project_id": "proj_..."
+      }
+    },
+    {
+      "label": "Find latest session in a project",
+      "input": {
+        "project_id": "proj_...",
+        "order": "latest",
+        "limit": 3
+      }
+    }
+  ]
+}

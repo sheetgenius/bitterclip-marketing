@@ -1,0 +1,220 @@
+{
+  "name": "episode_render",
+  "title": "Render an episode to a downloadable file",
+  "description": "Render a persisted episode (composition) into a downloadable MP4 — the materialize step after episode_create / episode_edit. Music authored by the development preview is refused before queueing or charging until music export ships. Otherwise this charges one export credit, queues the render asynchronously, and returns the render status. IDEMPOTENT: re-rendering an episode that is already rendered for its current revision (or already queued/rendering) is a NO-OP — it does NOT charge a second credit or re-queue (so a retry is safe). An episode that was edited since its last render (stale_media) renders again. After this returns status \"queued\", poll episode_status with the same episode_id until \"ready\"; episode_status then returns separate playback and download capabilities (stay in the episode tools). Optionally pass title / aspect_ratio to set them on this render.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode (composition) public ID, such as comp_..., to render."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional title to set on this render."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16",
+          "16:9",
+          "1:1"
+        ],
+        "description": "Optional aspect ratio for this render."
+      }
+    },
+    "required": [
+      "episode_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "music_asset_missing",
+    "music_asset_mismatch",
+    "music_anchor_unavailable",
+    "music_range_inverted",
+    "music_ranges_overlap",
+    "music_asset_too_short",
+    "music_trim_out_of_range",
+    "music_fades_too_long",
+    "music_presentation_map_unsupported",
+    "angle_interval_exceeds_recording",
+    "invalid_input",
+    "billing_required"
+  ],
+  "examples": [
+    {
+      "label": "Render an episode after editing it",
+      "input": {
+        "episode_id": "comp_..."
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "composition_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "render_plan_hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "status": {
+        "type": "string",
+        "description": "Render lifecycle state: draft | queued | rendering | ready | failed."
+      },
+      "progress": {
+        "type": "number",
+        "description": "0.0–1.0 render progress."
+      },
+      "media": {
+        "type": "object",
+        "description": "The §7 media sub-status.",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "ready (current playable media, including imported playback) | stale (the Composition changed) | missing (no settled playback)."
+          },
+          "rendered_revision": {
+            "type": "string",
+            "description": "Compatibility revision token for the current media."
+          },
+          "rendered_structural_revision": {
+            "type": "integer",
+            "description": "Exact Episode structural revision encoded into the current media."
+          }
+        }
+      },
+      "skipped": {
+        "type": "boolean",
+        "description": "true when the render was an idempotent no-op (already current or in flight) — no credit charged."
+      },
+      "render_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "render_generation": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "export_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "download_available": {
+        "type": "boolean"
+      },
+      "playback_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "poster_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "download_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "expires_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "poll": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "dialogue_seam_review": {
+        "type": "object",
+        "description": "Exact-render, measurement-only evidence when this idempotent call reuses an already-current MP4."
+      },
+      "picture_program_render_receipt": {
+        "type": "object",
+        "description": "Bounded authoritative receipt when this idempotent call reuses an exact current MP4 with a simultaneous Picture Program."
+      },
+      "error": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "render_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Last public render failure, retained while a retry is in flight."
+      },
+      "last_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Compatibility-explicit alias of render_error."
+      },
+      "render_error_history": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "At most the three most recent public render failures."
+      },
+      "render_request_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rrq_[a-z0-9]+$",
+        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+      },
+      "render_attempt": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "render_attempt_started_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "next_action": {
+        "type": "object",
+        "description": "What to do next (poll_until_ready / download / failed)."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

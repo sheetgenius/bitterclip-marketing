@@ -1,0 +1,373 @@
+{
+  "name": "render_status",
+  "title": "Check render status",
+  "description": "Check render lifecycle and return the target's current structural revision, available render-plan hash, current-render custody, and its private/current Download when ready. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: inspect every flagged timestamp before accepting the edit; no markers means only that deterministic checks were clear, never that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When render_create is needed, copy next_action.arguments exactly: they bind the current revision and available render-plan hash, so do not search documentation or reconstruct the call. Prefer render_id when available; target lookup is allowed when the target identifies one current render. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. A never-rendered draft omits its hash on ordinary polls; include_render_plan_hash true resolves the current fingerprint for an interactive Export preflight without starting work. An in-flight hash names the queued attempt, not a newly computed current plan. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence. When next_action.kind is poll_until_ready, wait at least next_action.poll_after_seconds and call render_status again until ready. When ready, inspect exact Export pixels with export_sample_frames using the returned exact export_id, render_generation, and render_plan_hash. Report private Download/editor Open; never quote or retain download_url. playback_url is embedded-app media plumbing and must never be shown or labeled as human review.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "read_scope": {
+        "type": "string",
+        "enum": [
+          "current",
+          "recorded"
+        ],
+        "description": "Default current keeps existing editor semantics. recorded observes only the named target and expected_revision, optionally pinned by plan, request or exact Export. It never starts work. Its result is bitterclip.result_delivery.v1, separate from current-render status."
+      },
+      "exact_export_id": {
+        "type": "string",
+        "pattern": "^rxpt_[a-z0-9]+$",
+        "description": "Recorded scope only: immutable exact Export (rxpt_...). Never redirects to a newer version."
+      },
+      "render_request_id": {
+        "type": "string",
+        "pattern": "^rrq_[a-z0-9]+$",
+        "description": "Recorded scope only: exact admitted render request."
+      },
+      "include_download": {
+        "type": "boolean",
+        "description": "Recorded scope only: reauthorize an exact retained Export for an explicit download. Capabilities are ephemeral; do not retain them in history or model prose."
+      },
+      "render_id": {
+        "type": "string",
+        "description": "Render public ID when available."
+      },
+      "target_type": {
+        "type": "string",
+        "enum": [
+          "episode",
+          "clip"
+        ]
+      },
+      "target_id": {
+        "type": "string",
+        "description": "Episode or clip public ID."
+      },
+      "episode_id": {
+        "type": "string",
+        "description": "Compatibility alias for a target Episode handle."
+      },
+      "clip_id": {
+        "type": "string",
+        "description": "Compatibility alias for a target Clip handle."
+      },
+      "include_render_plan_hash": {
+        "type": "boolean",
+        "description": "Current scope only: resolve the exact current fingerprint for a never-rendered draft before interactive Export. Default false keeps ordinary polls plan-free. In-flight status still reports its queued attempt hash; imported playback has no computed render hash. Does not start a render."
+      },
+      "wait_for_seconds": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 20,
+        "description": "Optional server-backed bounded wait. Returns immediately on ready, failed, stale identity, or another terminal state; default 0."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Optional exact structural revision. A mismatch fails immediately instead of settling a newer edit."
+      },
+      "expected_render_plan_hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Optional exact render-plan fingerprint. Missing or changed identity fails closed."
+      },
+      "format": {
+        "type": "string",
+        "enum": [
+          "mp4"
+        ]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16",
+          "16:9",
+          "1:1"
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "anyOf": [
+      {
+        "required": [
+          "render_id"
+        ]
+      },
+      {
+        "required": [
+          "target_id"
+        ]
+      },
+      {
+        "required": [
+          "episode_id"
+        ]
+      },
+      {
+        "required": [
+          "clip_id"
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "const": "bitterclip.result_delivery.v1",
+        "description": "Present only for read_scope recorded; fields below describe the exact recorded work, with no replacement title."
+      },
+      "target": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "episode",
+              "clip"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "execution": {
+        "type": "string",
+        "enum": [
+          "saved",
+          "queued",
+          "rendering",
+          "ready",
+          "failed",
+          "cancelling",
+          "cancelled",
+          "unknown"
+        ]
+      },
+      "current_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Recorded reads only: current visible structural revision, independent of the recorded revision."
+      },
+      "currentness": {
+        "type": "string",
+        "enum": [
+          "current",
+          "earlier"
+        ]
+      },
+      "availability": {
+        "type": "string",
+        "enum": [
+          "available",
+          "unavailable"
+        ]
+      },
+      "request_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rrq_[a-z0-9]+$"
+      },
+      "attempt_id": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string",
+        "enum": [
+          "ambiguous_result",
+          "export_unavailable",
+          "no_admitted_render",
+          "superseded"
+        ]
+      },
+      "render_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "target_type": {
+        "type": "string"
+      },
+      "target_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string",
+        "description": "Current title of the exact render target."
+      },
+      "episode_id": {
+        "type": "string",
+        "description": "Present when target_type is episode."
+      },
+      "clip_id": {
+        "type": "string",
+        "description": "Present when target_type is clip."
+      },
+      "revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Current structural revision of the target."
+      },
+      "render_plan_hash": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Resolved current fingerprint when available; during an in-flight attempt this is the durable queued fingerprint, and imported playback has none. Never-rendered drafts return it only with include_render_plan_hash true. When available for render_create, it is also present as next_action.arguments.expected_render_plan_hash."
+      },
+      "status": {
+        "type": "string"
+      },
+      "progress": {
+        "type": "number"
+      },
+      "render_phase": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "span_summary": {
+        "type": "object"
+      },
+      "media": {
+        "type": "object"
+      },
+      "render_generation": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Opaque immutable identity of the exact ready MP4/poster generation. It is not render_id."
+      },
+      "exact_export_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rxpt_[a-z0-9]+$",
+        "description": "Immutable retained Export identity for an Episode or Clip."
+      },
+      "export_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rxpt_[a-z0-9]+$",
+        "description": "Immutable retained exact Export matching this completed render; null for imported playback without render evidence. Its absence does not prevent basic playback."
+      },
+      "download_available": {
+        "type": "boolean",
+        "description": "True only when a current private Download capability is present, including verified imported playback."
+      },
+      "playback_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Embedded-app-only inline media. Never expose it as user-facing review or delivery; use private/current download_url plus editor Open."
+      },
+      "poster_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Embedded-app-only exact current Render poster. Never expose or retain it in model prose."
+      },
+      "download_url": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "expires_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "poll": {
+        "type": "object",
+        "description": "Model-visible polling instruction; when present, wait at least poll.after_seconds before calling render_status again."
+      },
+      "next_action": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "dialogue_seam_review": {
+        "type": "object",
+        "description": "Exact-render, measurement-only evidence for ordinary dialogue Junctions, including treated Crossfade regions. Markers prioritize bounded review; they are not a quality score or automatic rejection."
+      },
+      "picture_program_render_receipt": {
+        "type": "object",
+        "description": "Bounded authoritative receipt for a simultaneous Picture Program materialized in this exact current MP4: layout keys, scene count, maximum simultaneous pictures, and Program-audio authority. Present only when the renderer used a Picture Program; not a framing-quality score."
+      },
+      "error": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "render_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Last public render failure, retained while a retry is in flight."
+      },
+      "last_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Compatibility-explicit alias of render_error."
+      },
+      "render_error_history": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "At most the three most recent public render failures."
+      },
+      "render_request_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "pattern": "^rrq_[a-z0-9]+$",
+        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+      },
+      "render_attempt": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "render_attempt_started_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

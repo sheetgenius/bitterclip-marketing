@@ -1,0 +1,619 @@
+{
+  "name": "music_cue_mutate",
+  "title": "Change music in an Episode",
+  "description": "Add, move, trim, replace, mute, remove, or restore one music cue in an Episode. Read the Episode first and pass its current revision. Each cue uses one ready song from the project's music library, an Episode range, volume, fades, a song start offset, and trim or loop-to-fill behavior. Music cues cannot overlap. The idempotency key makes an exact retry safe. Music authoring remains available only where the project has enabled it.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current Episode revision from the editor document."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One music action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "add"
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock."
+              },
+              "bed_id": {
+                "type": "string",
+                "description": "Ready song ID returned by identity_assets_list under assets.music_beds."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Optional music settings. Omitted fields keep their current values; a new cue uses the documented defaults.",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Optional plain-language label for this cue."
+                  },
+                  "asset_offset_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Where to begin inside the selected song."
+                  },
+                  "gain_db": {
+                    "type": "number",
+                    "description": "Music volume in decibels."
+                  },
+                  "fade_in_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fade_out_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "ducking_db": {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ],
+                    "description": "Reserved music-side speech ducking amount. Use 0 until speech-aware ducking is available."
+                  },
+                  "fit_mode": {
+                    "type": "string",
+                    "enum": [
+                      "trim_to_range",
+                      "loop_crossfade"
+                    ],
+                    "description": "Trim the song to the cue or loop it to fill the cue range."
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether this cue plays."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type",
+              "episode_range",
+              "bed_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "update"
+                ]
+              },
+              "music_id": {
+                "type": "string",
+                "description": "Music cue ID returned by the Episode music projection or an earlier music change."
+              },
+              "episode_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Optional music settings. Omitted fields keep their current values; a new cue uses the documented defaults.",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Optional plain-language label for this cue."
+                  },
+                  "asset_offset_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Where to begin inside the selected song."
+                  },
+                  "gain_db": {
+                    "type": "number",
+                    "description": "Music volume in decibels."
+                  },
+                  "fade_in_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fade_out_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "ducking_db": {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ],
+                    "description": "Reserved music-side speech ducking amount. Use 0 until speech-aware ducking is available."
+                  },
+                  "fit_mode": {
+                    "type": "string",
+                    "enum": [
+                      "trim_to_range",
+                      "loop_crossfade"
+                    ],
+                    "description": "Trim the song to the cue or loop it to fill the cue range."
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether this cue plays."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type",
+              "music_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "replace"
+                ]
+              },
+              "music_id": {
+                "type": "string",
+                "description": "Music cue ID returned by the Episode music projection or an earlier music change."
+              },
+              "bed_id": {
+                "type": "string",
+                "description": "Ready song ID returned by identity_assets_list under assets.music_beds."
+              },
+              "episode_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Optional music settings. Omitted fields keep their current values; a new cue uses the documented defaults.",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "Optional plain-language label for this cue."
+                  },
+                  "asset_offset_seconds": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Where to begin inside the selected song."
+                  },
+                  "gain_db": {
+                    "type": "number",
+                    "description": "Music volume in decibels."
+                  },
+                  "fade_in_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fade_out_seconds": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "ducking_db": {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ],
+                    "description": "Reserved music-side speech ducking amount. Use 0 until speech-aware ducking is available."
+                  },
+                  "fit_mode": {
+                    "type": "string",
+                    "enum": [
+                      "trim_to_range",
+                      "loop_crossfade"
+                    ],
+                    "description": "Trim the song to the cue or loop it to fill the cue range."
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Whether this cue plays."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "type",
+              "music_id",
+              "bed_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_enabled"
+                ]
+              },
+              "music_id": {
+                "type": "string",
+                "description": "Music cue ID returned by the Episode music projection or an earlier music change."
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "type",
+              "music_id",
+              "enabled"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "remove"
+                ]
+              },
+              "music_id": {
+                "type": "string",
+                "description": "Music cue ID returned by the Episode music projection or an earlier music change."
+              }
+            },
+            "required": [
+              "type",
+              "music_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "revert"
+                ]
+              },
+              "receipt_id": {
+                "type": "string",
+                "description": "Receipt ID returned by the music change to restore."
+              }
+            },
+            "required": [
+              "type",
+              "receipt_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "music_export_in_progress",
+    "music_not_found",
+    "music_cue_not_found",
+    "music_cue_limit",
+    "music_receipt_not_found",
+    "music_revert_conflict",
+    "music_unavailable",
+    "invalid_music_cue",
+    "invalid_music_range",
+    "music_anchor_unavailable",
+    "music_anchor_transform_unsupported",
+    "music_range_inverted",
+    "music_ranges_overlap",
+    "music_asset_too_short",
+    "music_trim_out_of_range",
+    "music_fades_too_long",
+    "identity_music_bed_not_ready",
+    "identity_music_bed_audio_missing",
+    "identity_music_bed_content_type_invalid",
+    "identity_music_bed_too_large",
+    "identity_music_bed_duration_invalid",
+    "identity_music_bed_codec_invalid",
+    "identity_music_bed_channels_invalid",
+    "identity_music_bed_sample_rate_invalid",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "changed": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "render_stale": {
+        "type": "boolean"
+      },
+      "music_digest": {
+        "type": "string"
+      },
+      "music": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "cue": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "receipt": {
+        "type": "object"
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "music_cue_mutate"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "unchanged",
+              "replayed"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "music_cue"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^lyr_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false,
+            "description": "The music cue this write settled, named even after a remove."
+          },
+          "parent": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "add",
+              "update",
+              "replace",
+              "set_enabled",
+              "remove",
+              "revert"
+            ]
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "music_cue_mutate"
+                    ]
+                  },
+                  "receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "op",
+                  "receipt_id",
+                  "expires_at"
+                ],
+                "additionalProperties": false,
+                "description": "Present only when this write changed music and its Revert is still honored: call music_cue_mutate with action { type: revert, receipt_id } before expires_at."
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false,
+            "description": "Program digests before and after this write, and now. Read continuations pin the digest; boundary evidence does not depend on it."
+          },
+          "checks": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "string",
+                "enum": [
+                  "advanced",
+                  "unchanged"
+                ]
+              },
+              "program_digest": {
+                "type": "string",
+                "enum": [
+                  "changed",
+                  "unchanged"
+                ]
+              }
+            },
+            "required": [
+              "revision",
+              "program_digest"
+            ],
+            "additionalProperties": false,
+            "description": "The currentness checks this write moved: the Composition revision and the Program digest. Boundary evidence depends on neither; the next edit re-verifies each token at its point."
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "parent",
+          "operation",
+          "revisions",
+          "receipt",
+          "digests",
+          "checks"
+        ],
+        "additionalProperties": false,
+        "description": "Receipt-derived consequence of this music write: the cue, its Episode or Clip, and what the write moved. Music never moves the Program digest."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

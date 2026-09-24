@@ -793,49 +793,44 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   ).digest('hex'))
 })
 
-test('publishes the complete Rails catalog as one static tool reference', async ({ page, request }) => {
+test('publishes all serving MCP profiles and individual tool pages', async ({ page, request }) => {
   const snapshotResponse = await request.get('/docs/assistants/tool-reference.json')
   expect(snapshotResponse.ok()).toBeTruthy()
   const snapshot = await snapshotResponse.json()
-  expect(snapshot.schema_version).toBe('bitterclip.operation_catalog.v1')
-  expect(snapshot.surface).toBe('mcp_model_visible')
+  expect(snapshot.schema_version).toBe('bitterclip.mcp_surface_snapshot.v1')
   expect(snapshot.product_release).toMatch(/^[0-9a-f]{7,40}$/)
-  expect(snapshot.digest).toBe(createHash('sha256').update(JSON.stringify(snapshot.operations)).digest('hex'))
-  const names = snapshot.operations.map((operation: { name: string }) => operation.name)
+  expect(snapshot.public_contract_commit).toMatch(/^[0-9a-f]{40}$/)
+  expect(snapshot.public_contract_digest).toMatch(/^[0-9a-f]{64}$/)
+  expect(snapshot.digest).toBe(createHash('sha256').update(JSON.stringify(snapshot.profiles)).digest('hex'))
+  expect(snapshot.profiles.model.descriptors).toHaveLength(63)
+  expect(snapshot.profiles.app.descriptors).toHaveLength(113)
+  expect(snapshot.profiles.live_workspace.descriptors).toHaveLength(63)
+  const names = snapshot.profiles.app.descriptors.map((operation: { name: string }) => operation.name)
+  expect(new Set(names).size).toBe(113)
   expect(names).toContain('help')
   expect(names).not.toContain('list_docs')
-  expect(names).not.toContain('search_docs')
-  expect(names).not.toContain('read_doc')
+  expect(snapshot.profiles.live_workspace.descriptors.map((item: { name: string }) => item.name)).toContain('workspace_get_link')
 
   const htmlResponse = await request.get('/docs/assistants/tool-reference')
   expect(htmlResponse.ok()).toBeTruthy()
   const html = await htmlResponse.text()
   expect(html).toContain(snapshot.product_release)
-  expect(html).toContain(snapshot.digest)
-  expect(html).toContain('rel="alternate"')
-
+  expect(html).toContain(snapshot.public_contract_digest)
   await page.goto('/docs/assistants/tool-reference')
-  await expect(page.getByRole('heading', { level: 1, name: 'BitterClip tool reference' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'BitterClip MCP tool reference' })).toBeVisible()
   await expect(page.locator('.docs-sidebar a[href="/docs/assistants/tool-reference"]')).toBeVisible()
-  const rendered = await page.locator('.tool-reference__tool').evaluateAll((sections) => sections.map((section) => ({
-    name: section.querySelector('h2 code')?.textContent,
-    title: section.querySelector('h3')?.textContent,
-    description: section.querySelector('.tool-reference__description')?.textContent,
-    input_schema: JSON.parse(section.querySelector('pre code')?.textContent || '{}'),
-  })))
-  expect(rendered).toEqual(snapshot.operations.map((operation: any) => ({
-    name: operation.name,
-    title: operation.title,
-    description: operation.description,
-    input_schema: operation.input_schema,
-  })))
+  expect(await page.locator('.tool-reference__index a').count()).toBe(113)
 
-  const markdown = await (await request.get('/docs/assistants/tool-reference.md')).text()
-  expect(markdown).toContain(snapshot.digest)
-  for (const operation of snapshot.operations) {
-    expect(markdown).toContain(`## ${operation.name}\n`)
-    expect(markdown).toContain(operation.description)
+  for (const name of ['help', 'episode_edit_full', 'workspace_open']) {
+    const descriptor = snapshot.profiles.app.descriptors.find((item: { name: string }) => item.name === name)
+    const json = await (await request.get(`/docs/assistants/tools/${name}.json`)).json()
+    expect(json.public_contract_digest).toBe(snapshot.public_contract_digest)
+    expect(json.app).toEqual(descriptor)
+    await page.goto(`/docs/assistants/tools/${name}`)
+    await expect(page.locator('.tool-page__description')).toHaveText(descriptor.description)
+    const markdown = await (await request.get(`/docs/assistants/tools/${name}.md`)).text()
+    expect(markdown).toContain(JSON.stringify(descriptor, null, 2))
   }
-  expect(await (await request.get('/llms.txt')).text()).toContain('https://bitterclip.com/docs/assistants/tool-reference')
-  expect(await (await request.get('/sitemap.xml')).text()).toContain('https://bitterclip.com/docs/assistants/tool-reference')
+  expect(await (await request.get('/llms.txt')).text()).toContain('https://bitterclip.com/docs/assistants/tools/help')
+  expect(await (await request.get('/sitemap.xml')).text()).toContain('https://bitterclip.com/docs/assistants/tools/episode_edit_full')
 })

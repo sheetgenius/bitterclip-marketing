@@ -1,0 +1,91 @@
+{
+  "name": "transcript_search",
+  "title": "Search library content",
+  "description": "Search what was SAID across the library using approximate time-anchored transcript units, saved moments, and Episode descriptions/chapters; visual annotations are searchable where analysis exists. Hits locate semantic neighborhoods; text/times never authorize a structural boundary. Keyword hits are exact unstemmed tokens; issue morphological variants; quoted phrases are exact and exhaustive. Semantic hits are labeled retrieval_mode:semantic — read before quoting. Every response carries coverage, interpretation, and freshness. Person grains: person_speaking vs person_present; combinable; facets_only:true gives the bare map. Narrow wide results via facets, not pagination. Escalate through episode_read on the returned window; source media only for an edit/review boundary, never as physical-progress proof. A FIND tool, not a judge. Use returned handles exactly (projects_list/episodes_list for title discovery). Read bitterclip://docs/tool-workflows. Read-only.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Keyword or phrase to find. Exact-token, unstemmed; \"quoted phrases\" match exactly. Required unless facets_only is true with a project, person, or date filter."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID returned by projects_list/episodes_list (show_... or UUID) — scope the search to one readable project. Do not pass a project title/name here; use projects_list(query:) or episodes_list(query:) first."
+      },
+      "person_speaking": {
+        "type": "string",
+        "description": "Optional person (profile public ID or name). Returns only transcript hits where THIS PERSON IS TALKING — 'what did X say about Y'. Resolves real people across renames and generic diarization labels; resolution (and any ambiguity) is reported in interpretation. May be combined with person_present to find one person speaking while another appears in the same episode."
+      },
+      "person_present": {
+        "type": "string",
+        "description": "Optional person (profile public ID or name). Returns hits from episodes where this person APPEARS AT ALL, whoever is speaking — silent-participant safe ('sessions with Adrian'). May be combined with person_speaking. Presence is speech-derived for now; interpretation says so."
+      },
+      "speaker": {
+        "type": "string",
+        "description": "LEGACY raw diarization-label filter, kept for compatibility. Matches transcript_units.speaker_label verbatim and does NOT resolve people — prefer person_speaking."
+      },
+      "date_from": {
+        "type": "string",
+        "description": "Optional ISO date; include episodes with episode_date on or after this date."
+      },
+      "date_to": {
+        "type": "string",
+        "description": "Optional ISO date; include episodes with episode_date on or before this date."
+      },
+      "scope": {
+        "type": "string",
+        "enum": [
+          "recordings",
+          "all"
+        ],
+        "description": "Optional. Slice 1 supports recording-backed library search. `all` is accepted as an alias for recordings; true episode-projection search is a fast-follow."
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "concise",
+          "detailed"
+        ],
+        "description": "Optional response detail level. concise is default; detailed may return more hit text within budget."
+      },
+      "facets_only": {
+        "type": "boolean",
+        "description": "Optional. Return the exhaustive episode/project/person/month facet map with no hits."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum hits to return. Default 8, maximum 10."
+      },
+      "page": {
+        "type": "integer",
+        "description": "1-indexed page of compact search hits. Default 1. Use next_page from the response to continue."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input",
+    "project_not_found"
+  ],
+  "examples": [
+    {
+      "label": "Find recordings where Andrew was present in June",
+      "input": {
+        "query": "pricing",
+        "person_present": "Andrew",
+        "date_from": "2026-06-01",
+        "date_to": "2026-06-30",
+        "limit": 8
+      }
+    },
+    {
+      "label": "Exhaustive map of every episode mentioning the sponsor (for set algebra / complements)",
+      "input": {
+        "query": "\"sponsor read\"",
+        "facets_only": true
+      }
+    }
+  ]
+}

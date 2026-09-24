@@ -1,0 +1,219 @@
+{
+  "name": "open_recording",
+  "title": "Open a recording for editing",
+  "description": "Use this when the user wants to open, edit, trim, or pick a clip from a specific recording. Opens the recording as an episode (a composition-of-one) in the composite TRANSCRIPT editor — the full transcript (speaker lanes + waveform), where the user selects/trims a range and renders. To recommend clips, first read the episode with episode_read to choose a candidate, then episode_zoom over that range to verify a clean boundary before placing the selection. Use start_line/end_line or start_word_id/end_word_id with transcript_fingerprint to identify the semantic moment; use explicit start_seconds/end_seconds for the actual media boundaries when audio valleys, silence, visual resting points, scene changes, visible payoff, or trailing breath make a better cut than the exact word edge. The server creates suggested Moments shown on the transcript for review, trimming, save/dismiss, and export.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "The recording public ID to open."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional parent project public ID for context."
+      },
+      "selections": {
+        "type": "array",
+        "description": "Optional candidate moments to pre-resolve for triage. Use transcript lines or word IDs as semantic anchors. Choose the actual review range from all available evidence; pass explicit start_seconds/end_seconds when pre-roll, trailing breath, visible payoff/resolution, silence, scene timing, or nearby marker evidence makes a better boundary than the exact word edge. The server creates a `suggested` Moment; unresolved selectors come back in selection_results.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start_line": {
+              "type": "integer",
+              "description": "First numbered transcript line (a line handle from episode_read)."
+            },
+            "end_line": {
+              "type": "integer",
+              "description": "Last numbered transcript line (a line handle from episode_read)."
+            },
+            "start_seconds": {
+              "type": "number",
+              "description": "Explicit review-range start in source seconds. When provided with end_seconds, seconds define the actual moment boundary and may intentionally differ from line/word anchors."
+            },
+            "end_seconds": {
+              "type": "number",
+              "description": "Explicit review-range end in source seconds. Use to include trailing breath, silence, visual payoff, or a marker-backed quiet cut after the last word."
+            },
+            "transcript_fingerprint": {
+              "type": "string",
+              "description": "Required when selecting by line or word ID; the recording's current line-segmentation fingerprint (from episode_read)."
+            },
+            "segmentation_version": {
+              "type": "string",
+              "description": "Optional segmentation version for the recording's current line segmentation."
+            },
+            "start_word_id": {
+              "type": "string",
+              "description": "First word_id anchor (a word handle from episode_zoom)."
+            },
+            "end_word_id": {
+              "type": "string",
+              "description": "Last word_id anchor (a word handle from episode_zoom)."
+            },
+            "title": {
+              "type": "string",
+              "description": "Punchy title, <= 8 words."
+            },
+            "description": {
+              "type": "string",
+              "description": "One sentence on why it's worth clipping."
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "episode_changed_during_read",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording": {
+        "type": "object"
+      },
+      "media": {
+        "type": "object"
+      },
+      "composition": {
+        "type": "object",
+        "description": "Seeded composition-of-one (the recording as one segment) the transcript editor opens on."
+      },
+      "workspace_navigation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "target",
+          "route"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.workspace-nav.v1"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[A-Za-z0-9_-]{1,120}$"
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "mode"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "composition"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "review"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "editor_document": {
+        "type": "object",
+        "description": "Versioned application document consumed by the shared editor."
+      },
+      "speaker_legend": {
+        "type": "array"
+      },
+      "speaker_model_context": {
+        "type": "object",
+        "description": "Compact speaker identity context shared with the model while the full speaker evidence stays in result metadata."
+      },
+      "moments": {
+        "type": "array"
+      },
+      "selection_results": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "description": "Per-selection outcome when selections were supplied: ok:true with moment_id, or ok:false with a reason (stale_transcript, transcript_fingerprint_required, line not found, start/end word not found) so you can recover by re-reading the episode with episode_read.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "moment_id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "start_seconds": {
+              "type": "number"
+            },
+            "end_seconds": {
+              "type": "number"
+            },
+            "start_line": {
+              "type": "integer"
+            },
+            "end_line": {
+              "type": "integer"
+            },
+            "start_word_id": {
+              "type": "string"
+            },
+            "end_word_id": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "ok"
+          ]
+        }
+      },
+      "route": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

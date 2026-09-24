@@ -1,0 +1,67 @@
+{
+  "name": "recordings_prepare_preview",
+  "title": "Prepare a recording preview",
+  "description": "Idempotently prepare or repair the browser-playable preview for an existing video recording. Repeating the call while repair is active reuses that work. This does not re-transcribe the recording or change speaker, Moment, Clip, edit, Render, or Publish state. Returns immediately while media inspection or preview preparation continues.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID whose playable preview should be prepared."
+      },
+      "retry_media_evidence_execution_id": {
+        "type": "string",
+        "description": "Exact failed media-evidence execution returned by next_action. Supplying it is an explicit same-generation cell retry on the current admission pipeline; a retired predecessor pipeline or worker image (for example media-foundation-v1 while serving media-understanding-v1) is refused. Ordinary preview polling must omit it."
+      },
+      "repair_media_cell_poster_execution_id": {
+        "type": "string",
+        "description": "Exact current published media-evidence execution whose physically missing/corrupt poster should be restored from its immutable staged poster. This never reads source media or reruns provider work."
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "invalid_input",
+    "media_cell_recovery_pipeline_retired",
+    "media_cell_recovery_worker_image_retired"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "preview": {
+        "type": "object",
+        "description": "Current preview state: ready, preparing, failed, or missing, plus a renewed media URL only when ready. A media-evidence-owned generation includes its exact typed blocker and never starts legacy probe or preview work."
+      },
+      "preserves": {
+        "type": "object",
+        "description": "Explicit confirmation that transcript, speaker, Moment, and Clip work is preserved."
+      },
+      "outcome": {
+        "type": "string",
+        "description": "Present as refused when the Recording generation is owned by the media-evidence pipeline."
+      },
+      "reason": {
+        "type": "string",
+        "description": "Typed refusal reason when legacy preview repair is fenced, or media_cell_recovery_pipeline_retired / media_cell_recovery_worker_image_retired when same-generation retry is closed."
+      },
+      "next_action": {
+        "type": "object",
+        "description": "Typed wait, explicit media-evidence retry on the current admission pipeline, or replace_recording when the predecessor pipeline or worker image is retired."
+      },
+      "poster_repair": {
+        "type": "object",
+        "description": "Exact generation, published execution, durable repair job, and status for an explicitly requested media-cell poster restoration."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "name": "review_points_place",
+  "title": "Place review points",
+  "description": "Save 1–20 source-backed, reviewable Moments on one existing Episode, then open the same workspace. If exactly one placement succeeds, it is focused; multiple successful points are visible but not auto-focused. Use this once and last only when the user explicitly asks to save or mark reviewable Moments; never use it for a read-only open/show request, and never follow it with workspace_open. Each range is a half-open [start_seconds, end_seconds) interval on the playable Episode clock. Retries converge on an existing active Moment at the exact same source-time range. This changes review metadata only; it never changes source footage or the Program, creates a reel, or renders media.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Exact Episode or derived Clip handle returned by BitterClip."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Exact structural revision returned by episode_read. Stale revisions fail before any Moment is written."
+      },
+      "selections": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 20,
+        "description": "Review points to place in Episode time.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "range",
+            "title"
+          ],
+          "properties": {
+            "range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Half-open [start_seconds, end_seconds) range on the playable Episode clock."
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Short label for the review point."
+            },
+            "rationale": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "Optional editorial reason the moment is useful."
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "selections"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "invalid_input",
+    "stale_composition_revision",
+    "episode_changed_during_read"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "opened": {
+        "type": "boolean"
+      },
+      "workspace_url": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "project": {
+        "type": "object"
+      },
+      "composition": {
+        "type": "object"
+      },
+      "workspace_navigation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "target",
+          "route"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.workspace-nav.v1"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[A-Za-z0-9_-]{1,120}$"
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "mode"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "composition"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "review"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "editor_document": {
+        "type": "object",
+        "description": "Versioned application document consumed by the shared editor."
+      },
+      "moments": {
+        "type": "array",
+        "description": "Active source-backed review points visible on this Episode."
+      },
+      "selection_results": {
+        "type": "array",
+        "description": "One compact, handle-free placement result per requested review point.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok"
+          ],
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "title": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "episode_start_seconds": {
+              "type": "number",
+              "description": "Requested Episode start."
+            },
+            "episode_end_seconds": {
+              "type": "number",
+              "description": "Requested Episode end."
+            },
+            "placed_episode_start_seconds": {
+              "type": "number",
+              "description": "Actual persisted Episode start."
+            },
+            "placed_episode_end_seconds": {
+              "type": "number",
+              "description": "Actual persisted Episode end."
+            },
+            "reason": {
+              "type": "string",
+              "description": "Closed placement, clamp, or failure reason."
+            },
+            "message": {
+              "type": "string"
+            },
+            "deduped": {
+              "type": "boolean",
+              "description": "True when an exact active review point already existed."
+            }
+          }
+        }
+      },
+      "route": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "next_actions": {
+        "type": "array"
+      },
+      "handle_policy": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

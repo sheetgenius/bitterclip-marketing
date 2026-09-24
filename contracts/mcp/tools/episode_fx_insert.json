@@ -1,0 +1,645 @@
+{
+  "name": "episode_fx_insert",
+  "title": "Insert an FX clip",
+  "description": "Insert one configured opener or outro as ordinary, time-bearing media at a revision-bound Episode point or edit point. Use this for the built-in FX artifacts; do not describe them as overlays. Read the Episode first, pass its current revision, and use either a playable Episode second or the exact neighboring occurrence IDs. The operation uses the same identity-part planner, source bake, camera settlement, music validation, idempotency, and exact reversible receipt path as the visible editor.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current integer revision from a fresh episode_read."
+      },
+      "role": {
+        "type": "string",
+        "enum": [
+          "opener",
+          "outro"
+        ],
+        "description": "FX category to insert."
+      },
+      "at": {
+        "type": "object",
+        "description": "Revision-bound insertion target: a playable Episode point or a semantic edit point.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "base_revision": {
+                "type": "integer"
+              },
+              "composition_seconds": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Playable Episode second."
+              }
+            },
+            "required": [
+              "base_revision",
+              "composition_seconds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "base_revision": {
+                "type": "integer"
+              },
+              "left_occurrence_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "right_occurrence_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              }
+            },
+            "required": [
+              "base_revision",
+              "left_occurrence_id",
+              "right_occurrence_id"
+            ],
+            "additionalProperties": false,
+            "anyOf": [
+              {
+                "properties": {
+                  "left_occurrence_id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "right_occurrence_id": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "configuration": {
+        "description": "Which saved FX asset or checked-in typed template to use. Omit only when the project already has a default for this role.",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "project_default"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "library_entry_id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Saved account FX library entry."
+              }
+            },
+            "required": [
+              "library_entry_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "template_key": {
+                "type": "string",
+                "enum": [
+                  "outro/sting_bass",
+                  "outro/sting_chime",
+                  "outro/sting_glitch",
+                  "outro/sting_shutter",
+                  "show_open/aperture_beam",
+                  "show_open/obscura_signal",
+                  "show_open/studio_dissolve"
+                ],
+                "description": "Checked-in template key."
+              },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "maxLength": 180
+                  },
+                  "accent": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$"
+                  },
+                  "sting": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "chime",
+                      "bass",
+                      "glitch",
+                      "shutter"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "template_key"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact insertion."
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "role",
+      "at",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "stale_boundary",
+    "idempotency_conflict",
+    "invalid_input",
+    "invalid_time_range",
+    "identity_slot_not_configured",
+    "identity_asset_not_found",
+    "identity_brand_mismatch",
+    "camera_program_conflict",
+    "music_anchor_transform_unsupported",
+    "operation_receipt_invalid",
+    "program_revert_conflict"
+  ],
+  "examples": [
+    {
+      "label": "Insert a configured opener after a sizzle",
+      "input": {
+        "episode_id": "comp_...",
+        "expected_revision": 7,
+        "role": "opener",
+        "at": {
+          "base_revision": 7,
+          "composition_seconds": 18.4
+        },
+        "configuration": {
+          "template_key": "show_open/studio_dissolve",
+          "params": {
+            "title": "Park Session",
+            "accent": "#f28f84",
+            "sting": "none"
+          }
+        },
+        "idempotency_key": "park-opener-after-sizzle-v1"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "operation_type": {
+        "type": "string",
+        "enum": [
+          "identity_part.insert"
+        ]
+      },
+      "base_revision": {
+        "type": "integer"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Revision committed by this insertion."
+      },
+      "current_revision": {
+        "type": "integer",
+        "description": "Current durable head, which may be newer on an exact retry."
+      },
+      "before_duration": {
+        "type": "number",
+        "description": "Kept length in seconds immediately before the insertion."
+      },
+      "duration": {
+        "type": "number",
+        "description": "Kept length in seconds after the insertion."
+      },
+      "duration_delta": {
+        "type": "number"
+      },
+      "changed_segments": {
+        "type": "array",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "inserted_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "edge_warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "stale_media": {
+        "type": "boolean"
+      },
+      "stale_copy": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "operation_receipt_id": {
+        "type": "string",
+        "description": "Exact reversible edit receipt."
+      },
+      "before_program_digest": {
+        "type": "string"
+      },
+      "program_digest": {
+        "type": "string"
+      },
+      "current_program_digest": {
+        "type": "string"
+      },
+      "camera_program_digest": {
+        "type": "string"
+      },
+      "picture_program_digest": {
+        "type": "string"
+      },
+      "current_picture_program_digest": {
+        "type": "string"
+      },
+      "audio_program_digest": {
+        "type": "string"
+      },
+      "inverse": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "operation.revert"
+            ]
+          },
+          "receipt_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "receipt_id"
+        ],
+        "additionalProperties": false
+      },
+      "materialization_status": {
+        "type": "string",
+        "enum": [
+          "ready",
+          "preparing",
+          "unavailable"
+        ]
+      },
+      "next_action": {
+        "type": "object"
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "episode_fx_insert"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "unchanged",
+              "replayed"
+            ],
+            "description": "unchanged only for an identity-part edit that settled with nothing to change: the revision and Program digest did not move and no inverse is offered."
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "identity_part.insert"
+            ]
+          },
+          "selection_kind": {
+            "type": "string",
+            "enum": [
+              "range",
+              "occurrences"
+            ]
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "duration": {
+            "type": "object",
+            "properties": {
+              "before_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "after_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "delta_seconds": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "before_seconds",
+              "after_seconds",
+              "delta_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "operation.revert"
+                    ]
+                  },
+                  "receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "op",
+                  "receipt_id"
+                ],
+                "additionalProperties": false
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "program_move_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "destination": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "adjacency"
+                        ]
+                      },
+                      "left_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "right_occurrence_id": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "left_occurrence_id",
+                      "right_occurrence_id"
+                    ],
+                    "additionalProperties": false,
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "left_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "right_occurrence_id": {
+                            "type": "string",
+                            "pattern": "^occ_[a-z0-9]{20}$"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "point"
+                        ]
+                      },
+                      "occurrence_id": {
+                        "type": "string",
+                        "pattern": "^occ_[a-z0-9]{20}$"
+                      },
+                      "source_seconds": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "occurrence_id",
+                      "source_seconds"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "destination",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "program_occurrence_target": {
+            "type": "object",
+            "properties": {
+              "occurrence_id": {
+                "type": "string",
+                "pattern": "^occ_[a-z0-9]{20}$"
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "occurrence_id",
+              "episode_range"
+            ],
+            "additionalProperties": false,
+            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "operation",
+          "revisions",
+          "duration",
+          "receipt",
+          "digests"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

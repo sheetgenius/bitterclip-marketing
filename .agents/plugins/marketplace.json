@@ -1,0 +1,20 @@
+{
+  "name": "bitterclip",
+  "interface": {
+    "displayName": "BitterClip"
+  },
+  "plugins": [
+    {
+      "name": "bitterclip",
+      "source": {
+        "source": "local",
+        "path": "./plugins/bitterclip"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

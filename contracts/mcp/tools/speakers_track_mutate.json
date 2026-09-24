@@ -1,0 +1,670 @@
+{
+  "name": "speakers_track_mutate",
+  "title": "Change a recording speaker track",
+  "description": "One diarized-track change per call, scoped to the recording (a bare id resolves as a recording). withdraw_answer withdraws one saved human answer and its dependent automatic names using the current explanation scope fingerprint, without ruling a person out, forgetting them or settling another name; confirm fixes a track to a person (may queue a quarantined voice sample); change_confirmed reassigns an already-confirmed track and relabels this recording's captions; dispute is the human Not-them tap on an unconfirmed machine-named track (a trusted auto-match): it withdraws the automatic trust, rules that person out through the track review truth, quarantines voice memory learned from that exact track, and reopens the track for review without naming anyone in their place; confirm_same_as binds a track to another confirmed track's person without merging profiles; confirm_splinter_same_as binds a diarization splinter to the person its settled sibling track already carries (the sibling stays as it is; nothing is learned about the voice). not_same_as is the other answer to that pairing: it records that the two tracks are not one person so the pairing is never proposed again, without naming anybody, moving either track or learning a voice. confirm_with_face is the human face-card tap: it accepts only an exact current unbound crop plus its fingerprint, confirms the track, appends reviewed face-core geometry, promotes that crop as a human-confirmed reference, and copies it into profile-photo history as the current display photo in one transaction. undo_face_confirmation accepts only that composite receipt and compensates while every affected head is still current; stale work refuses and requires reopening review. No-face uses confirm; when the person has no saved photo yet, confirm derives this recording's best turn-aligned single-face crop as a candidate reference (never in the matching set, never replacing an existing photo) and reports it as speaker_photo: proposed, because a picture is never set without a human tap or a face-reference match (set with basis reference_match only when the crop matches one of the person's human-confirmed references). accept_speaker_photo is the human Yes on that proposal: it promotes the crop to a human-confirmed reference and copies it into profile-photo history as the current picture; reject_speaker_photo is Not them: the crop is set aside as not this person and nothing is saved in its place. Not sure makes no call. enroll_voiceprint saves a quarantined candidate voice sample from a clean confirmed track; rename_label relabels a legacy speaker strip without creating a person; rename_only relabels one diarized track without creating a person; set_role sets the track role (embedded-media and duplicate-cluster roles quarantine voice memory learned from that exact track); set_avatar_from_recording chooses a sampled track image without touching the saved profile photo. Pass a caller-stable idempotency key with every action; the recording speaker lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID that owns the diarized track."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Optional: carried toward the standard mutation contract. The recording speaker lane exposes no structural revision yet; omit until it does."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One recording speaker-track action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "withdraw_answer"
+                ]
+              },
+              "decision_id": {
+                "type": "string",
+                "description": "Saved human answer to withdraw, including an answer whose location is lost."
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "expected_scope_fingerprint": {
+                "type": "string",
+                "description": "Current scope from recordings_get_speaker_evidence with decision_id. Refuses changed consequences."
+              }
+            },
+            "required": [
+              "type",
+              "expected_scope_fingerprint"
+            ],
+            "additionalProperties": false,
+            "oneOf": [
+              {
+                "required": [
+                  "decision_id"
+                ],
+                "not": {
+                  "required": [
+                    "speaker_map_id"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "speaker_map_id"
+                ],
+                "not": {
+                  "required": [
+                    "decision_id"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "expected_assignment_fingerprint": {
+                "type": "string",
+                "description": "Served assignment fingerprint. Refuses a stale chooser without changing identity."
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "name": {
+                "type": "string",
+                "description": "Person name. Optional when the track already has a suggested name or speaker_profile_id is supplied."
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Existing person public ID to use when the user chose one."
+              },
+              "teach_voice": {
+                "type": "boolean",
+                "description": "Whether this change may enqueue voice learning. Open reviewed repair exceptions never teach from the disputed track."
+              },
+              "create_separate": {
+                "type": "boolean",
+                "description": "Set true only when the user explicitly chose to create a separate same-name person."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "confirm"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "expected_assignment_fingerprint": {
+                "type": "string",
+                "description": "Served assignment fingerprint. Refuses a stale chooser without changing identity."
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "name": {
+                "type": "string",
+                "description": "Person name. Optional when the track already has a suggested name or speaker_profile_id is supplied."
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Existing person public ID to use when the user chose one."
+              },
+              "teach_voice": {
+                "type": "boolean",
+                "description": "Whether this change may enqueue voice learning. Open reviewed repair exceptions never teach from the disputed track."
+              },
+              "create_separate": {
+                "type": "boolean",
+                "description": "Set true only when the user explicitly chose to create a separate same-name person."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "change_confirmed"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "dispute"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "expected_assignment_fingerprint": {
+                "type": "string",
+                "description": "Served assignment fingerprint. Refuses a stale row without changing identity."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "confirm_same_as"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "reference_speaker_map_id": {
+                "type": "string",
+                "description": "Confirmed SpeakerMap public ID in the same recording to reuse."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "reference_speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "confirm_splinter_same_as"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "reference_speaker_map_id": {
+                "type": "string",
+                "description": "The settled SpeakerMap public ID this splinter duplicates (identity.duplicate_of_speaker_key); it may be a trusted auto-match, and it stays as it is."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "reference_speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "not_same_as"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "reference_speaker_map_id": {
+                "type": "string",
+                "description": "The SpeakerMap public ID this track was paired with. The pair is ruled out; neither track changes hands and nobody is named."
+              },
+              "expected_assignment_fingerprint": {
+                "type": "string",
+                "description": "Served assignment fingerprint. Refuses a stale card without changing identity."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "reference_speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "confirm_with_face"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "name": {
+                "type": "string",
+                "description": "Exact proposed person name displayed with the retained face crop."
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Existing person public ID when the displayed proposal names one unambiguous profile."
+              },
+              "face_detection_id": {
+                "type": "string",
+                "description": "Exact current unbound face-crop ID returned in face_attribution."
+              },
+              "fingerprint": {
+                "type": "string",
+                "description": "Current face-attribution fingerprint returned beside that exact crop and proposal."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "name",
+              "face_detection_id",
+              "fingerprint"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "undo_face_confirmation"
+                ]
+              },
+              "receipt_id": {
+                "type": "string",
+                "description": "Composite face-confirmation receipt ID returned by confirm_with_face."
+              }
+            },
+            "required": [
+              "type",
+              "receipt_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "accept_speaker_photo"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "reference_asset_id": {
+                "type": "string",
+                "description": "The proposed crop's reference asset ID, from speaker_photo.reference_asset_id on the confirm result or the track's speaker_photo_proposal."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "reference_asset_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "reject_speaker_photo"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "reference_asset_id": {
+                "type": "string",
+                "description": "The proposed crop's reference asset ID to set aside as not this person."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "reference_asset_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "enroll_voiceprint"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Optional person public ID. Defaults to the confirmed person on the track."
+              },
+              "force": {
+                "type": "boolean",
+                "description": "Capture a fresh candidate even when active voice memory already exists."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "rename_label"
+                ]
+              },
+              "from_label": {
+                "type": "string",
+                "description": "Current speaker label; empty or omitted targets the unnamed (no-label) bucket."
+              },
+              "to_label": {
+                "type": "string",
+                "description": "The corrected speaker name."
+              }
+            },
+            "required": [
+              "type",
+              "to_label"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "rename_only"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "name": {
+                "type": "string",
+                "description": "New display label for this recording."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_role"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "live_participant",
+                  "embedded_media_speaker",
+                  "system_or_playback_audio",
+                  "duplicate_cluster",
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_avatar_from_recording"
+                ]
+              },
+              "speaker_map_id": {
+                "type": "string",
+                "description": "SpeakerMap public ID for the diarized track."
+              },
+              "blob_signed_id": {
+                "type": "string",
+                "description": "Signed ID for one of this track's available avatar candidate images."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_map_id",
+              "blob_signed_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "recording_id",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "speaker_not_found",
+    "billing_required",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "recording_public_id": {
+        "type": "string"
+      },
+      "speaker_map_id": {
+        "type": "string"
+      },
+      "speaker_map_public_id": {
+        "type": "string"
+      },
+      "speaker_profile_id": {
+        "type": "string"
+      },
+      "speaker_profile_public_id": {
+        "type": "string"
+      },
+      "previous_speaker_profile_id": {
+        "type": "string"
+      },
+      "previous_speaker_profile_public_id": {
+        "type": "string"
+      },
+      "confirmed": {
+        "type": "boolean"
+      },
+      "assignment_changed": {
+        "type": "boolean"
+      },
+      "teaches_voice": {
+        "type": "boolean"
+      },
+      "voice_sample_queued_for_verification": {
+        "type": "boolean"
+      },
+      "voice_enrollment_status": {
+        "type": "string"
+      },
+      "voice_enrollment_reason": {
+        "type": "string"
+      },
+      "voice_enrollment_inference_run_id": {
+        "type": "string"
+      },
+      "voice_enrollment_requires_operator_resolution": {
+        "type": "boolean"
+      },
+      "voice_enrollment_state_sentence": {
+        "type": "string"
+      },
+      "create_separate": {
+        "type": "boolean"
+      },
+      "quarantined_voiceprint_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "archived_project_speaker_row_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "assignment_review_resolution_receipt_id": {
+        "type": "string"
+      },
+      "disputed_speaker_profile_id": {
+        "type": "string"
+      },
+      "disputed_name": {
+        "type": "string"
+      },
+      "face_detection_id": {
+        "type": "string"
+      },
+      "geometry_generation_id": {
+        "type": "string"
+      },
+      "reference_asset_id": {
+        "type": "string"
+      },
+      "avatar_id": {
+        "type": "string"
+      },
+      "withdrawal": {
+        "type": "object",
+        "description": "Completed withdrawal with the exact affected answer and automatic names."
+      },
+      "receipt_id": {
+        "type": "string",
+        "description": "Composite confirmation receipt for the exact Undo action, or the inverse receipt after Undo."
+      },
+      "undone_receipt_id": {
+        "type": "string"
+      },
+      "review_reopened": {
+        "type": "boolean"
+      },
+      "undo_label": {
+        "type": "string"
+      },
+      "from_label": {
+        "type": "string"
+      },
+      "to_label": {
+        "type": "string"
+      },
+      "same_as_speaker_map_id": {
+        "type": "string"
+      },
+      "track_role": {
+        "type": "string"
+      },
+      "role_changed": {
+        "type": "boolean"
+      },
+      "avatar_selected": {
+        "type": "boolean"
+      },
+      "speaker_photo": {
+        "type": "object",
+        "description": "What confirm did about the person's saved picture: proposed (a candidate crop to accept or reject), set (basis reference_match or human_confirmed), kept_existing, skipped or rejected, each with its reason."
+      },
+      "status": {
+        "type": "string"
+      },
+      "reason": {
+        "type": "string"
+      },
+      "inference_run_id": {
+        "type": "string"
+      },
+      "requires_operator_resolution": {
+        "type": "boolean"
+      },
+      "state_sentence": {
+        "type": "string"
+      },
+      "speaker_evidence": {
+        "type": "object"
+      },
+      "speaker_model_context": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

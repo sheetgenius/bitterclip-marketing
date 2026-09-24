@@ -1,0 +1,93 @@
+{
+  "name": "project_brief_set",
+  "title": "Confirm the Project working brief",
+  "description": "Confirm the Project's working brief — the durable steering text every host and ingest synthesis reads for this Project (what to make, tone, audience, what to avoid). It is STANDING direction: follow it for Project work, and when the person's explicit current request conflicts with it, their request wins. Use it when the person states or corrects standing direction for the Project as a whole; it replaces the whole brief, so carry forward anything still current. Read the current brief first — episode_read on an Episode in the Project renders the exact current PROJECT WORKING BRIEF block with its revision — and pass that exact revision as expected_revision (0 when no brief exists yet); a stale revision fails without overwriting a newer confirmation. Retrying the exact same confirmation with the same idempotency_key replays as a no-op, even after a later confirmation; the same key with different text fails closed. Pass an empty brief to clear steering. Confirming never touches sibling direction settings such as canonical vocabulary or copy preferences, and causes no Program edit, Clip, Render, publication, or public-link effect. Not for Episode metadata (episode_update) or channel/package copy (publish_prepare / publish_update).",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID (show_...) or UUID from projects_list / episode_read."
+      },
+      "brief": {
+        "type": "string",
+        "maxLength": 2000,
+        "description": "The complete working brief text to confirm — it replaces the current brief. An empty string clears steering. Limited to 2000 characters."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "The current working-brief revision from a fresh episode_read (its PROJECT WORKING BRIEF block states the revision). Pass 0 for a Project with no confirmed brief yet."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for an exact safe retry of this one confirmation."
+      }
+    },
+    "required": [
+      "project_id",
+      "brief",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "stale_brief_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Set standing direction for a Project",
+      "input": {
+        "project_id": "show_...",
+        "brief": "Audience: prospective customers. Tone: direct, no hype. Prefer moments showing the product working.",
+        "expected_revision": 0,
+        "idempotency_key": "brief-2026-08-13-a"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "brief": {
+        "type": "string",
+        "description": "The exact current confirmed brief after this call."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "The current monotonic brief revision."
+      },
+      "confirmed_by_public_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "confirmed_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "already_applied": {
+        "type": "boolean",
+        "description": "true when this exact confirmation had already been applied and nothing changed."
+      },
+      "applied_revision": {
+        "type": "integer",
+        "description": "The revision this confirmation originally produced; equals revision unless a later confirmation superseded it."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

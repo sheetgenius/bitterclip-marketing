@@ -1,0 +1,92 @@
+{
+  "name": "identity_part_promote_to_brand",
+  "title": "Save identity object variant to Brand Studio",
+  "description": "App-only explicit promotion for an already-inserted opener/outro object. Reads the addressed Program occurrence, promotes its preset params and gain to the project Brand Studio default opener/outro slot or to that role's alternates through the same identity_apply_to_project path, writes a promotion receipt, and affects future reels only. It does not mutate this or any other composition, and it never changes the pack enabled state.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Composition/episode public ID containing the identity object."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID; must match the episode project when supplied."
+      },
+      "part_id": {
+        "type": "string",
+        "description": "Identity part segment id."
+      },
+      "segment_id": {
+        "type": "string",
+        "description": "Alias for part_id."
+      },
+      "identity_layer_instance_key": {
+        "type": "string",
+        "description": "Stable identity layer instance key stamped on the segment."
+      },
+      "role": {
+        "type": "string",
+        "enum": [
+          "opener",
+          "outro"
+        ],
+        "description": "Allowed only when exactly one matching identity object exists."
+      },
+      "promote_as": {
+        "type": "string",
+        "enum": [
+          "default",
+          "alternate"
+        ],
+        "description": "Where to save the object variant. Defaults to default; alternate adds it to the role's bounded alternates list."
+      },
+      "prewarm": {
+        "type": "boolean",
+        "description": "Whether to enqueue opener/outro source-backed prewarm. Defaults true."
+      }
+    },
+    "required": [
+      "episode_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "project_not_found",
+    "part_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "promoted": {
+        "type": "boolean"
+      },
+      "promoted_slot": {
+        "type": "string"
+      },
+      "promoted_as": {
+        "type": "string"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "receipt": {
+        "type": "object"
+      },
+      "promotion_receipt": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

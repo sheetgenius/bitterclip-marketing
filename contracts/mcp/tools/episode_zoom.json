@@ -1,0 +1,671 @@
+{
+  "name": "episode_zoom",
+  "title": "Inspect episode media at a candidate boundary",
+  "description": "Inspect chosen cut boundaries: at most 6 windows per call, each <=12 seconds (aim for 5–6), and at most 4 measured edges TOTAL across all windows. Use episode_read for broad transcript discovery. Paired boundary request: `{\"episode_id\":\"comp_...\",\"regions\":[{\"region\":[122.5,128.0],\"edges\":[124.5]},{\"region\":[148.5,154.0],\"edges\":[151.0]}]}`. With detail omitted, nonempty edges selects edit and includes signed receipts for supported exact points; without edges the default stays lean. Explicit detail:\"lean\" keeps measurements without receipts. Inspect one or more narrow EPISODE-time regions with a compact, budgeted evidence payload: approximate word annotations, occurrence mapping, nearby silence/scene/visual measurements, the resolved Program camera plus alternative coverage, and compact cut measurements for requested edges. Each measured edge also carries `speech`: local forced alignment binding the same decoded PCM to nearby ORIGINAL source words, including words omitted by Program. If a wide disfluent phrase cannot align, the same probe retries a point-focused source window; `speech.scope` and `speech.source_window` disclose which PCM/word scope produced the result. At an existing Junction, `junction_sides` exposes the distinct outgoing and incoming occurrence/source coordinates; inspect both because one Program timestamp does not imply one source boundary. Zoom measures what resolved Program Audio plays at each point: the occurrence's own Recording, a pinned or Replace Recording at its mapped source second (named `inspected_recording_id`; speech source coordinates are in it), or nothing under mute or silence, where a `silent_authority` receipt certifies only that no Program Audio speech edge is there. `audible_authority` names the side and authority (occurrence_base, pinned_primary, explicit_replace, explicit_silence, silence; `unresolved` certifies nothing). Where an authority begins exactly at a point, its before and after sides are measured and signed separately; an edit needs the receipt for each side it plays. A receipt stays valid across other edits until its occurrence, the inspected media or transcript, or Program Audio at that point changes. `rejected` + `inside_word` means do not use that point. A successful initial alignment may also return up to two `speech.candidate_points` per unsupported query: exact nearby word or safe-silence endpoints from that same PCM. These alternatives never replace the rejected query or choose the edit; choose explicitly and use a matching returned boundary evidence_id. No candidate means no additional authority. `supported` + `inter_word_silence` names a point inside explicit aligned silence; `supported` + `aligned_word_edge` names the exact acoustically aligned start/end of one word when natural speech has no silence. The latter authorizes the selected phoneme boundary but does not certify that the resulting seam sounds good. `near_word_edge`, `no_supported_boundary`, and `unresolved` remain diagnostic; query the disclosed exact aligned endpoint rather than asking BitterClip to snap a merely nearby point. For one changed Trim edge, use at most one narrow discovery read and one `detail:\"edit\"` measurement at the chosen point; once that point is supported, pass its exact evidence handle to `episode_edit` without repeating zoom or fetching a raw envelope. For a \"next boundary\" Trim, do not spend that measurement on the unchanged current occurrence edge: choose the next candidate from the discovery payload and measure that candidate once. Use after episode_read locates candidate boundaries. `speech.points[].relation` vocabulary: inter_word_silence | aligned_word_edge | near_word_edge | inside_word | no_supported_boundary | listen_required (only a human ear can decide; no receipt exists there). Unresolved `speech.reason` values and what to do: probe_busy — the aligner is ONE serialized resource, so issue zoom calls one at a time and simply retry; alignment_failed | alignment_sequence_mismatch | unsupported_transcript_token | out_of_vocabulary — the probe already retried a point-focused (and, where eligible, tail) window before answering, so re-zooming the same edge will not change the verdict: move the edge or treat the point as listen_required; remaining reasons describe invalid or insufficient input. Batch related windows to reduce model turns, but decoding and alignment work scales with the measured source sides. This is not for routine Project recap or post-open exploration. `detail` controls progressive disclosure: lean (semantic discovery), cut (adds raw audio envelopes), edit (adds signed exact boundary receipts), or diagnostic (adds raw detector provenance). Pass every evidence_id or inspection_token back unchanged when a structural Split or partial Range requires it. Transcript words remain approximate semantic locators; a millisecond-scale token tail or overlap is not by itself an edit-worthy defect. Forced alignment and amplitude are independent measurements, not taste or sentence-completeness proof. Require source-linked context plus exact rendered seam evidence for quality; when rendered speech and seam evidence are materially unchanged, preserve the cut rather than polishing timing metadata. Acoustic recommended_at/confidence describe envelope and onset geometry only: even confidence `ok` is not semantic, clause/sentence, or word-boundary proof and can land inside a spoken word. Inspect adjacent timed words, reconcile each source side with `speech.points`, keep every chosen point out of spoken-word interiors, and then listen to the rendered seam. Timestamps are episode time unless a field ends in _source. Measurements only—you judge and place the cut. Read-only. Details: bitterclip://docs/timestamp-rules.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode public ID, such as comp_...; a recording src_... handle is also accepted for a recording's episode-of-one."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "region": {
+        "type": "array",
+        "description": "EPISODE-time region [start_seconds, end_seconds] — a SMALL edge window only (target ~5–6s, hard cap 12s; a longer region is rejected). Zoom a tight window around ONE cut point, never the clip body — the full transcript is already in episode_read. Both bounds required; end must exceed start.",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "edges": {
+        "type": "array",
+        "description": "Optional candidate cut edges in EPISODE time. Nonempty edges with detail omitted selects edit, including signed receipts for supported exact points. Explicit lean omits receipts. Returns compact next-onset/gap measurements plus local speech alignment: point verdicts, aligned word ranges, and supported gaps. An existing Junction returns outgoing and incoming `junction_sides`; both must be inspected. Recommendation/confidence are amplitude geometry only; `ok` is not semantic or word-boundary proof and can be inside a word, so reconcile it with `speech`. Use detail:cut or include:[\"audio_envelope\"] only when raw 30ms bins are genuinely needed. Each edge must fall within this region. Up to 4.",
+        "items": {
+          "type": "number"
+        },
+        "maxItems": 4
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "lean",
+          "cut",
+          "edit",
+          "diagnostic"
+        ],
+        "description": "Evidence depth. When omitted, nonempty edges selects edit and no edges selects lean. Explicit lean keeps compact measurements without signed receipts; cut adds raw audio envelopes; edit adds signed boundary receipts; diagnostic adds raw word/visual/detector provenance."
+      },
+      "include": {
+        "type": "array",
+        "description": "Optional additive evidence channels, combined with the selected or inferred detail. For an occurrence.caption word correction, request word_provenance to get the exact caption word_id and text; compact transcript tuples omit IDs and speech-alignment IDs are different. Request other raw channels only when needed.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "audio_envelope",
+            "boundary_tokens",
+            "detector_provenance",
+            "visual_detail",
+            "word_provenance"
+          ]
+        },
+        "uniqueItems": true
+      },
+      "max_bytes": {
+        "type": "integer",
+        "minimum": 4000,
+        "maximum": 32000,
+        "description": "Hard serialized UTF-8 JSON byte budget. Default 18000; omitted evidence is counted explicitly instead of overflowing the host."
+      },
+      "regions": {
+        "type": "array",
+        "description": "ONE-SHOT multi-window zoom: an array of SMALL candidate-boundary windows to inspect in a SINGLE call. Use this INSTEAD of `region` when placing a clip's two edges — a 45s clip = 2 small windows here, not one big region and not two calls. Each window is an edge window only (target ~5–6s, hard cap 12s; a longer window is rejected) — never the clip body. Each item: { region: [start_seconds, end_seconds], edges?: [episode-time points within that window] }. Up to 6 semantic windows and at most 4 measured edges total per call; all measured edges share one admitted local speech-alignment pass. Returns { episode_id, revision, regions: [<one result per window, same shape as a single zoom>] }.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "Optional caller label echoed on this result window; maximum 64 serialized UTF-8 bytes (ASCII labels satisfy maxLength directly)."
+            },
+            "region": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "One EPISODE-time [start_seconds, end_seconds] window: end minus start must be <=12s (aim for 5–6s)."
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 4,
+              "description": "Candidate EPISODE-time points inside this window. All windows share ONE budget of 4 measured edges: sum every regions[].edges length across the entire call. Two windows with 2 edges each use the whole budget; additional semantic-only windows may omit edges."
+            }
+          },
+          "required": [
+            "region"
+          ],
+          "additionalProperties": false
+        },
+        "minItems": 1,
+        "maxItems": 6
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "anyOf": [
+          {
+            "required": [
+              "episode_id"
+            ]
+          },
+          {
+            "required": [
+              "composition_id"
+            ]
+          }
+        ]
+      },
+      {
+        "oneOf": [
+          {
+            "required": [
+              "region"
+            ],
+            "not": {
+              "required": [
+                "regions"
+              ]
+            }
+          },
+          {
+            "required": [
+              "regions"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "region"
+                  ]
+                },
+                {
+                  "required": [
+                    "edges"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "Place a clip's two edges in one call: a small start-window AND end-window (one-shot)",
+      "input": {
+        "episode_id": "comp_...",
+        "regions": [
+          {
+            "id": "start",
+            "region": [
+              122.5,
+              128.0
+            ],
+            "edges": [
+              124.5
+            ]
+          },
+          {
+            "id": "end",
+            "region": [
+              148.5,
+              154.0
+            ],
+            "edges": [
+              151.0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "Request signed exact receipts only when preparing a structural edit",
+      "input": {
+        "episode_id": "comp_...",
+        "region": [
+          148.5,
+          154.0
+        ],
+        "edges": [
+          151.0
+        ],
+        "detail": "edit"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string",
+        "enum": [
+          "bitterclip.episode_zoom.v2"
+        ]
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "detail": {
+        "type": "string",
+        "enum": [
+          "lean",
+          "cut",
+          "edit",
+          "diagnostic"
+        ]
+      },
+      "refs": {
+        "type": "object",
+        "description": "Request-local occurrence, speaker, and camera dictionaries used by compact rows."
+      },
+      "regions": {
+        "type": "array",
+        "description": "One result per requested window, in caller order. A single-region request also returns one item here.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "maxLength": 64,
+              "description": "Optional caller-provided region label (maximum 64 serialized UTF-8 bytes)."
+            },
+            "region": {
+              "type": "array",
+              "description": "The resolved [start, end] region in episode seconds."
+            },
+            "transcript": {
+              "type": "object",
+              "description": "Compact word tuples [start, end, text, speaker_ref, occurrence_ref] plus the total raw word count. Approximate annotations only."
+            },
+            "total_mappings": {
+              "type": "integer"
+            },
+            "mapping": {
+              "type": "array",
+              "description": "Compact object-form episode↔source mapping. Kept object-shaped for exact editor boundary verification."
+            },
+            "markers": {
+              "type": "object",
+              "description": "Budgeted silence, scene-change, and visual-action rows with total counts."
+            },
+            "cameras": {
+              "type": "object",
+              "description": "Resolved Program camera intervals and available alternative coverage, using refs.cameras handles."
+            },
+            "total_edges": {
+              "type": "integer"
+            },
+            "edges": {
+              "type": "array",
+              "description": "Compact edge summaries combining amplitude geometry with local forced speech alignment over original source context. Existing Junctions include outgoing and incoming junction_sides because one Program point maps to two source edges; where a Program Audio authority begins exactly at a point, its before and after sides are measured the same way. Acoustic recommendation/confidence do not certify a word, clause, or sentence boundary; speech.points reports supported/rejected/unresolved separately, while nearby_words and safe_intervals bind waveform time to words. Each edge and side measures the Recording resolved Program Audio plays there (inspected_recording_id, absent where nothing plays) and names that side and authority in audible_authority (unresolved, with a reason, certifies nothing); speech source coordinates are in the inspected Recording. Raw amplitude bins appear only when explicitly requested."
+            },
+            "boundary_evidence": {
+              "type": "array",
+              "description": "Signed exact receipts, present only for edit detail or boundary_tokens include. Prefer the exact evidence_id when editing. Model responses omit the long inspection_token only while its matching token is cached; app/direct and diagnostic responses retain it, as does the cache-unavailable fallback. If using inspection_token, copy it unchanged.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "schema": {
+                    "type": "string",
+                    "enum": [
+                      "bitterclip.program_boundary_evidence.v2"
+                    ]
+                  },
+                  "evidence_id": {
+                    "type": "string"
+                  },
+                  "occurrence_id": {
+                    "type": "string"
+                  },
+                  "source_id": {
+                    "type": "string",
+                    "description": "The occurrence's own Recording; source_seconds is its second."
+                  },
+                  "inspected_recording_id": {
+                    "type": "string",
+                    "description": "The Recording inspected: the one Program Audio plays at this point (speech receipts), or the occurrence's own no-audio Recording (frame receipts). Absent on silent-authority receipts."
+                  },
+                  "audio_side": {
+                    "type": "string",
+                    "enum": [
+                      "before",
+                      "after",
+                      "both"
+                    ],
+                    "description": "The Program Audio side this receipt certifies: before or after the point, or both when one authority plays through it. At an authority boundary zoom returns one receipt per side."
+                  },
+                  "audible_authority": {
+                    "type": "object",
+                    "properties": {
+                      "authority": {
+                        "type": "string",
+                        "enum": [
+                          "occurrence_base",
+                          "pinned_primary",
+                          "explicit_replace",
+                          "explicit_silence",
+                          "silence"
+                        ],
+                        "description": "occurrence_base: the occurrence's own Recording plays. pinned_primary: the Program Audio pin's Recording. explicit_replace: an interval Replace's Recording. explicit_silence: mute or an interval silence. silence: no usable audio."
+                      },
+                      "recording_id": {
+                        "type": "string",
+                        "description": "The Recording that plays, which zoom inspected. Absent under silence."
+                      },
+                      "source_seconds": {
+                        "type": "string",
+                        "description": "Its source second at this point."
+                      },
+                      "camera_group_key": {
+                        "type": "string",
+                        "description": "The pinned camera group (pinned_primary)."
+                      },
+                      "audio_attachment_id": {
+                        "type": "string",
+                        "description": "The interval policy (Replace or silence); a split keeps this identity."
+                      }
+                    },
+                    "required": [
+                      "authority"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Verified before the edit and again on the resulting Program: if what plays there changes, the receipt is stale."
+                  },
+                  "source_seconds": {
+                    "type": "string"
+                  },
+                  "episode_seconds": {
+                    "type": "string",
+                    "description": "Where the point was when inspected. Later edits may move it; that does not stale the receipt."
+                  },
+                  "zoom_region": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "channels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "basis": {
+                    "type": "string",
+                    "enum": [
+                      "aligned_gap",
+                      "aligned_word_edge",
+                      "sampled_frame",
+                      "silent_authority"
+                    ]
+                  },
+                  "speech_alignment": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "schema": {
+                            "type": "string",
+                            "enum": [
+                              "bitterclip.dialogue_boundary_probe.v1"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "supported"
+                            ]
+                          },
+                          "model": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "version": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "model_digest": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          },
+                          "pcm_sha256": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          },
+                          "offset_ms": {
+                            "type": "integer"
+                          },
+                          "relation": {
+                            "type": "string",
+                            "enum": [
+                              "inter_word_silence"
+                            ]
+                          },
+                          "between": {
+                            "type": "array",
+                            "items": {
+                              "type": "object"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                          },
+                          "safe_source_range": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                          },
+                          "silence_source_range": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                          }
+                        },
+                        "required": [
+                          "schema",
+                          "status",
+                          "relation",
+                          "model",
+                          "version",
+                          "model_digest",
+                          "pcm_sha256",
+                          "safe_source_range",
+                          "silence_source_range"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "schema": {
+                            "type": "string",
+                            "enum": [
+                              "bitterclip.dialogue_boundary_probe.v1"
+                            ]
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "supported"
+                            ]
+                          },
+                          "model": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "version": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "model_digest": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          },
+                          "pcm_sha256": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{64}$"
+                          },
+                          "offset_ms": {
+                            "type": "integer"
+                          },
+                          "relation": {
+                            "type": "string",
+                            "enum": [
+                              "aligned_word_edge"
+                            ]
+                          },
+                          "word_edge": {
+                            "type": "string",
+                            "enum": [
+                              "start",
+                              "end"
+                            ]
+                          },
+                          "word": {
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string"
+                              },
+                              "source_range": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                },
+                                "minItems": 2,
+                                "maxItems": 2
+                              },
+                              "acoustic_density": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "text",
+                              "source_range",
+                              "acoustic_density"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "schema",
+                          "status",
+                          "relation",
+                          "model",
+                          "version",
+                          "model_digest",
+                          "pcm_sha256",
+                          "word_edge",
+                          "word"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "description": "Signed forced-alignment disclosure. It exists only when the exact cut point lies inside an explicit aligned inter-word silence or at one exact acoustically aligned word edge; near-word, inside-word, and unresolved points never receive a structural receipt."
+                  },
+                  "semantic_boundaries": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "word_id": {
+                          "type": "string",
+                          "pattern": "^word_[a-z0-9]{20}$",
+                          "description": "Stable public transcript-word handle returned by the same Episode evidence surface."
+                        },
+                        "edge": {
+                          "type": "string",
+                          "enum": [
+                            "start",
+                            "end"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "word_id",
+                        "edge"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Signed transcript anchors for this exact acoustic point. An aligned word edge carries that word and edge; an aligned gap carries left/end and right/start. These anchors narrow media evidence but never replace it."
+                  },
+                  "issued_at": {
+                    "type": "string"
+                  },
+                  "inspection_token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema",
+                  "evidence_id",
+                  "occurrence_id",
+                  "source_id",
+                  "source_seconds",
+                  "episode_seconds",
+                  "zoom_region",
+                  "channels",
+                  "basis",
+                  "audio_side",
+                  "audible_authority",
+                  "issued_at",
+                  "inspection_token"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "boundary_evidence_total": {
+              "type": "integer"
+            },
+            "boundary_evidence_status": {
+              "type": "string",
+              "enum": [
+                "present",
+                "none_found",
+                "not_requested",
+                "no_edges_supplied"
+              ],
+              "description": "Why boundary_evidence is empty, when it is. present means receipts are attached; none_found means the window was inspected and yielded nothing; not_requested means this detail level did not ask for it; no_edges_supplied means the call named no edges to certify."
+            },
+            "diagnostics": {
+              "type": "object",
+              "description": "Budgeted raw evidence requested through diagnostic detail or explicit include channels."
+            },
+            "diagnostics_total": {
+              "type": "integer"
+            },
+            "omitted": {
+              "type": "object",
+              "description": "Exact counts of rows omitted by the serialized UTF-8 byte budget."
+            }
+          },
+          "required": [
+            "region",
+            "transcript",
+            "total_mappings",
+            "mapping",
+            "markers",
+            "cameras",
+            "total_edges",
+            "edges"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "partial": {
+        "type": "boolean",
+        "description": "True when the budget omitted any rows; each region reports exact omitted counts."
+      },
+      "budget": {
+        "type": "object",
+        "properties": {
+          "limit_bytes": {
+            "type": "integer",
+            "description": "Applied serialized UTF-8 JSON byte limit."
+          },
+          "used_bytes": {
+            "type": "integer",
+            "description": "Actual bytes in the complete serialized response, including this budget object."
+          }
+        },
+        "required": [
+          "limit_bytes",
+          "used_bytes"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "schema",
+      "episode_id",
+      "revision",
+      "detail",
+      "refs",
+      "regions",
+      "partial",
+      "budget"
+    ],
+    "additionalProperties": false
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "name": "identity_music_beds_curate",
+  "title": "Curate music library track",
+  "description": "App-only account Music Library curation. Rename, favorite, tag, archive, reject, or restore a reusable track without deleting its audio or changing existing Episode music.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "library_entry_id": {
+        "type": "string",
+        "description": "Music library track ID."
+      },
+      "title": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Optional account display name. Empty clears a custom name."
+      },
+      "favorite": {
+        "type": "boolean",
+        "description": "Optional keeper/favorite state."
+      },
+      "disposition": {
+        "type": "string",
+        "enum": [
+          "active",
+          "archived",
+          "rejected"
+        ],
+        "description": "Optional non-destructive library disposition."
+      },
+      "tags": {
+        "type": "array",
+        "maxItems": 8,
+        "items": {
+          "type": "string",
+          "maxLength": 48
+        },
+        "description": "Optional house-style/family tags."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Stable retry key."
+      }
+    },
+    "required": [
+      "library_entry_id",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "not_found",
+    "invalid_input",
+    "idempotency_conflict"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "music_bed": {
+        "type": "object"
+      },
+      "music_beds": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "receipt_id": {
+        "type": "string"
+      },
+      "already_applied": {
+        "type": "boolean"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

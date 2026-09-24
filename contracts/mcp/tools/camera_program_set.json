@@ -1,0 +1,1248 @@
+{
+  "name": "camera_program_set",
+  "title": "Direct or restore the Picture Program for an Episode",
+  "description": "Perform exactly one Picture Program command without changing Program Audio, transcript timing, Episode chronology, or duration. Read episode_read first and use its current revision, exact scene summaries, placed ang_... handles (including handles labeled hidden when the request explicitly chooses them), and Episode-scoped piev_... evidence handles. For a simultaneous layout, pass scenes:[{episode_range:[start,end],layout:{key:\"custom.v1\"},slots:[...]}]. Use exactly one role:\"primary\" slot; name the other role:\"secondary\" for a two-person stack. Every custom slot needs role, box:{x,y,width,height}, and a distinct z_index integer. Use binding:{kind:\"original.v1\"} for the base Recording in any slot; use framing:{mode:\"fill\",focal_point:{x:0.5,y:0.5}} or framing:{mode:\"fit\"}, never a slot-level fit field. One to 64 disjoint scenes are accepted. A complete same-recording stack example is in bitterclip://docs/source-crops. The primary may omit binding to use program.v1. The ID-less original.v1 binding may fill any role with the underlying base Program Recording; it refuses unless one base Recording truthfully covers the complete scene, and callers never supply its source ID. Every additional slot otherwise needs original.v1, angle.v1, or evidence_range.v1. When the simultaneous layout belongs on a new derived Clip, prove complete coverage for every distinct secondary camera before clip_create. Create the Clip once, then author its scene; never create a throwaway Clip to test camera coverage. If truthful coverage begins after the user's requested point, explain the shift before writing. Side-by-side, PiP, five-picture speaker rail, grid, and custom geometry are presets or direct arrangements over the same slots primitive; custom.v1 accepts normalized boxes with x, y, width, and height in 0..1 plus local z_index. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views, after which you inspect the composed canvas. Optional source_crop:{x,y,w,h} selects a static normalized Recording display-frame region before Fit/Fill; focal points are relative to that region. Inspect the Recording frame to crop each participant tightly enough to exclude baked-in gallery padding and labels, then inspect the composed canvas before rendering. Layout boxes do not reposition captions: when reserving a caption gap, inspect any visible captions and use episode_edit occurrence.caption to place them in that gap if needed. Omit source_crop to remove it; never send null. Two slots may crop the same admitted camera and source range independently. Every slot is silent: the existing Program Audio remains the one audible authority. This release is configured to preview and render at most five enabled slots. The saved/read schema remains compatible with sixteen-slot scenes, but new work above the five-slot runtime maximum refuses before persistence, debit, queue state, media acquisition, or provider work. Evidence ranges must exactly match scene duration; v1 does not retime, hold, loop, phase-warp, or run a slot-local continuous clock. For a local camera correction, change the inspected interval and preserve other camera choices unless inspected evidence supports a broader change. Fit bars alone do not establish that a useful alternate should be discarded; judge subject visibility and the requested coverage. Pass episode_range plus camera, with optional picture_time. For a coherent legacy directing pass, pass 1–64 disjoint decisions under one revision and receipt; each decision is {episode_range,camera} with optional picture_time. Camera is an ang_... synchronized alternate exposed by episode_read, original to lock the base Program picture, or auto to remove explicit intent for that range. To Undo an exact receipt-backed camera or scene command, pass only revert_receipt_id; recovery fails closed if Program, camera, or Picture Program state has moved since that receipt. Direct recording or Episode ranges already chosen by episode_create determine the base picture, so do not restate them mechanically, and never pass a src_... Recording ID as camera or slot binding. When choosing autonomously, use episode_sample_frames to inspect the base picture and each candidate at the same evidence-backed Episode times before deciding; skip that comparison only when the human explicitly instructs which camera to use. For a compressed internal dialogue splice, inspect a truthful same-exchange listener angle on both sides of the removed source interval; enter that listener before the audio seam, hold through it, and return after retained speech is established. A placed-angle decision may set picture_time:'continuous' to keep that listener's source footage advancing continuously across compressed Program chronology; the default synchronized mode follows Program source time. Continuous placed-angle time is for truthful listener coverage and never the speaking camera. Original may use continuous picture time only as a split-edit bridge of at most 0.5 seconds: it carries one unchanged base Recording across the audio splice and returns to synchronized Original at the explicit, quieter resynchronization point. When inspected frames prove that hard resynchronization still exposes a pose jump, that same Original decision may add resync_blend_seconds up to 0.2; this is a duration-neutral picture-only fade into synchronized Original at the decision end and never changes or overlaps Program Audio. Do not add it to clean hard landings or to placed angles. Because Original may keep a speaking face visible, use it only when dense frame inspection shows the temporary lip-sync offset and landing are less distracting than the synchronized jump. Original continuity fails closed across Recordings, when accumulated desync exceeds 1.0 seconds, or when the occurrence has a rendered Crossfade. Continuous Auto and explicit scene slots remain unsupported. Every continuous decision fails closed when its persisted source anchor cannot survive a later structural edit. Never borrow a reaction from unrelated source time. At a speaker handoff, a motivated J- or L-cut may lead or lag the picture instead of switching on the first phoneme. Every selected angle must cover its complete requested range. One atomic program is preferred over many tiny mutation turns. The idempotency key makes an exact retry safe.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Episode public ID whose picture program is being edited."
+      },
+      "episode_range": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+          "type": "number"
+        },
+        "description": "Half-open [start_seconds, end_seconds) range on the stitched episode clock."
+      },
+      "camera": {
+        "type": "string",
+        "description": "Camera choice: original, auto, or a synchronized camera angle ID such as ang_...."
+      },
+      "picture_time": {
+        "type": "string",
+        "enum": [
+          "synchronized",
+          "continuous"
+        ],
+        "description": "Optional legacy single-choice picture clock. synchronized follows Program source time; continuous advances one placed ang_... camera or one-Recording Original picture across compressed chronology until the explicit decision end. Never put this field inside scenes or slots."
+      },
+      "revert_receipt_id": {
+        "type": "string",
+        "pattern": "^rcpt_[a-z0-9]+$",
+        "description": "Exact v2 camera operation receipt to Undo. Do not also pass episode_range or camera."
+      },
+      "decisions": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 64,
+        "description": "Bounded atomic camera program. Ranges must be disjoint; adjacent equal choices are consolidated automatically.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "episode_range": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              },
+              "description": "Half-open [start_seconds,end_seconds) range on the Episode clock."
+            },
+            "camera": {
+              "type": "string",
+              "description": "original, auto, or an ang_... ID exposed by episode_read."
+            },
+            "picture_time": {
+              "type": "string",
+              "enum": [
+                "synchronized",
+                "continuous"
+              ],
+              "description": "Optional picture clock. synchronized (default) follows compressed Program source time. continuous advances adjacent source footage for a placed ang_... listener or one-Recording Original base picture through a bounded internal dialogue splice; synchronized picture resumes at the explicit decision end."
+            },
+            "resync_blend_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 0.2,
+              "description": "Optional only for original + continuous. Duration-neutral picture-only fade from the carried clock into synchronized Original at this decision's end; Program Audio is untouched. Use only after frame evidence rejects the hard landing."
+            }
+          },
+          "required": [
+            "episode_range",
+            "camera"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "scenes": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 64,
+        "description": "Bounded atomic Picture Scene program. Ranges must be disjoint. Presets and custom geometry use the same slot primitive; all slot media are silent.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "episode_range": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number",
+                "minimum": 0
+              },
+              "description": "Half-open [start_seconds,end_seconds) range on source-backed Episode content."
+            },
+            "layout": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "enum": [
+                    "solo.v1",
+                    "two_up.v1",
+                    "pip_top_right.v1",
+                    "pip_bottom_right.v1",
+                    "speaker_rail_right.v1",
+                    "grid.v1",
+                    "custom.v1"
+                  ],
+                  "description": "Familiar preset or custom geometry. Presets resolve server-owned boxes; custom.v1 requires every slot box."
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            "background": {
+              "description": "Optional scene base. Omit on new coverage for black or on one complete existing Scene to preserve it; ambiguous replacements require an explicit value.",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "policy": {
+                      "type": "string",
+                      "enum": [
+                        "black.v1"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "policy"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "policy": {
+                      "type": "string",
+                      "enum": [
+                        "still.source.v1"
+                      ]
+                    },
+                    "source_id": {
+                      "type": "string",
+                      "pattern": "^src_[a-z0-9]{20}$"
+                    },
+                    "source_seconds": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "policy",
+                    "source_id",
+                    "source_seconds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "policy": {
+                      "type": "string",
+                      "enum": [
+                        "html.graphic.v1"
+                      ]
+                    },
+                    "scene_id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9-]*$"
+                    },
+                    "at_ms": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 59999
+                    }
+                  },
+                  "required": [
+                    "policy",
+                    "scene_id",
+                    "at_ms"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "slots": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 16,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40,
+                    "pattern": "^[a-z][a-z0-9_]{0,39}$",
+                    "description": "Scene-local semantic role such as primary, secondary, or inset. Roles must be unique inside the scene."
+                  },
+                  "binding": {
+                    "description": "Omit only on the primary to use Program picture. Prefer a typed object. The schema also publishes the unambiguous host shorthands program/program.v1, original/original.v1, and an exact ang_... handle; the shared operation normalizes them to the same typed contract and never accepts a raw Recording ID or URL.",
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "program.v1"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "original.v1"
+                            ],
+                            "description": "Underlying base Program Recording and occurrence source clock. Allowed in any role; no caller-supplied source ID."
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "angle.v1"
+                            ]
+                          },
+                          "angle_id": {
+                            "type": "string",
+                            "pattern": "^ang_[a-z0-9]{20}$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "angle_id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "evidence_range.v1"
+                            ]
+                          },
+                          "evidence_id": {
+                            "type": "string",
+                            "pattern": "^piev_[a-z0-9]{20}$"
+                          },
+                          "source_range": {
+                            "type": "array",
+                            "minItems": 2,
+                            "maxItems": 2,
+                            "items": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "description": "Exact independent-source range; its duration must equal the complete scene duration in v1."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "evidence_id",
+                          "source_range"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "program",
+                          "program.v1",
+                          "original",
+                          "original.v1"
+                        ],
+                        "description": "Unambiguous compact binding normalized to program.v1 or original.v1."
+                      },
+                      {
+                        "type": "string",
+                        "pattern": "^ang_[a-z0-9]{20}$",
+                        "description": "Exact Episode camera handle normalized to an angle.v1 binding."
+                      }
+                    ]
+                  },
+                  "box": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "width": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 1
+                      },
+                      "height": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Normalized canvas box. x+width and y+height must each be at most 1."
+                  },
+                  "z_index": {
+                    "type": "integer",
+                    "minimum": -16,
+                    "maximum": 16,
+                    "description": "Scene-local stacking order from -16 through 16; values must be unique. Required with custom.v1."
+                  },
+                  "framing": {
+                    "type": "object",
+                    "properties": {
+                      "schema": {
+                        "type": "string",
+                        "enum": [
+                          "bitterclip.picture_framing.v1"
+                        ]
+                      },
+                      "mode": {
+                        "type": "string",
+                        "enum": [
+                          "fill",
+                          "fit"
+                        ]
+                      },
+                      "focal_point": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "y": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "mode"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "source_crop": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "w": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 1
+                      },
+                      "h": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y",
+                      "w",
+                      "h"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Optional static source region in the Recording display frame, normalized to 0..1. x+w and y+h must be at most 1. Inward-rounded decoded edges must retain at least 32 pixels on each axis for every resolved source interval. Fit/Fill and framing.focal_point operate inside this cropped region. Omit the key for the full source frame or to remove a saved crop; never send null. Choose from inspected source pixels; person boxes are evidence, never an automatic crop."
+                  },
+                  "mask": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "rectangle.v1"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Defaults true. Disabled slots remain saved but do not consume live/render capacity."
+                  }
+                },
+                "required": [
+                  "role"
+                ],
+                "additionalProperties": false
+              },
+              "description": "One local camera position per role. Exactly one enabled slot must have role primary; every slot is silent."
+            }
+          },
+          "required": [
+            "episode_range",
+            "layout",
+            "slots"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current structural revision returned by episode_read or the editor document."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for a safe retry of this exact camera decision."
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "required": [
+          "episode_range",
+          "camera"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "decisions"
+              ]
+            },
+            {
+              "required": [
+                "scenes"
+              ]
+            },
+            {
+              "required": [
+                "revert_receipt_id"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "required": [
+          "decisions"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "episode_range"
+              ]
+            },
+            {
+              "required": [
+                "camera"
+              ]
+            },
+            {
+              "required": [
+                "picture_time"
+              ]
+            },
+            {
+              "required": [
+                "scenes"
+              ]
+            },
+            {
+              "required": [
+                "revert_receipt_id"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "required": [
+          "scenes"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "episode_range"
+              ]
+            },
+            {
+              "required": [
+                "camera"
+              ]
+            },
+            {
+              "required": [
+                "picture_time"
+              ]
+            },
+            {
+              "required": [
+                "decisions"
+              ]
+            },
+            {
+              "required": [
+                "revert_receipt_id"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "required": [
+          "revert_receipt_id"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "episode_range"
+              ]
+            },
+            {
+              "required": [
+                "camera"
+              ]
+            },
+            {
+              "required": [
+                "picture_time"
+              ]
+            },
+            {
+              "required": [
+                "decisions"
+              ]
+            },
+            {
+              "required": [
+                "scenes"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "angle_not_found",
+    "camera_not_available",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_time_range",
+    "invalid_input",
+    "camera_operation_receipt_not_found",
+    "camera_operation_receipt_invalid",
+    "camera_operation_not_revertible",
+    "camera_program_projection_conflict",
+    "camera_program_revert_conflict",
+    "camera_program_recovery_unavailable",
+    "camera_program_recovery_failed",
+    "picture_layout_capacity_exceeded",
+    "picture_program_authoring_disabled",
+    "picture_program_conflict",
+    "picture_program_integrity_failed",
+    "picture_program_recovery_failed",
+    "picture_program_recovery_unavailable",
+    "picture_program_revert_conflict",
+    "picture_program_transition_conflict",
+    "picture_program_write_failed",
+    "picture_scene_invalid",
+    "picture_source_not_available",
+    "picture_source_evidence_stale",
+    "source_crop_raster_too_small",
+    "source_media_unavailable"
+  ],
+  "examples": [
+    {
+      "label": "Put the Program and one synchronized camera side by side",
+      "input": {
+        "episode_id": "comp_...",
+        "scenes": [
+          {
+            "episode_range": [
+              12.0,
+              18.0
+            ],
+            "layout": {
+              "key": "two_up.v1"
+            },
+            "slots": [
+              {
+                "role": "primary"
+              },
+              {
+                "role": "secondary",
+                "binding": {
+                  "kind": "angle.v1",
+                  "angle_id": "ang_..."
+                }
+              }
+            ]
+          }
+        ],
+        "expected_revision": 8,
+        "idempotency_key": "two-up-12-18-v8"
+      }
+    },
+    {
+      "label": "Show admitted comparison footage as a bottom-right inset",
+      "input": {
+        "episode_id": "comp_...",
+        "scenes": [
+          {
+            "episode_range": [
+              20.0,
+              25.0
+            ],
+            "layout": {
+              "key": "pip_bottom_right.v1"
+            },
+            "slots": [
+              {
+                "role": "primary"
+              },
+              {
+                "role": "inset",
+                "binding": {
+                  "kind": "evidence_range.v1",
+                  "evidence_id": "piev_...",
+                  "source_range": [
+                    42.0,
+                    47.0
+                  ]
+                },
+                "framing": {
+                  "mode": "fill",
+                  "focal_point": {
+                    "x": 0.5,
+                    "y": 0.45
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "expected_revision": 9,
+        "idempotency_key": "comparison-pip-v9"
+      }
+    },
+    {
+      "label": "Crop a solo portrait scene to one participant's static gallery region",
+      "input": {
+        "episode_id": "comp_...",
+        "scenes": [
+          {
+            "episode_range": [
+              12.0,
+              18.0
+            ],
+            "layout": {
+              "key": "solo.v1"
+            },
+            "slots": [
+              {
+                "role": "primary",
+                "source_crop": {
+                  "x": 0.02,
+                  "y": 0.09,
+                  "w": 0.46,
+                  "h": 0.82
+                },
+                "framing": {
+                  "mode": "fill",
+                  "focal_point": {
+                    "x": 0.5,
+                    "y": 0.5
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "expected_revision": 8,
+        "idempotency_key": "solo-source-crop-v8"
+      }
+    },
+    {
+      "label": "Crop one admitted camera into two stacked portrait views with a clear caption band",
+      "input": {
+        "episode_id": "comp_...",
+        "scenes": [
+          {
+            "episode_range": [
+              12.0,
+              18.0
+            ],
+            "layout": {
+              "key": "custom.v1"
+            },
+            "slots": [
+              {
+                "role": "primary",
+                "binding": {
+                  "kind": "evidence_range.v1",
+                  "evidence_id": "piev_...",
+                  "source_range": [
+                    42.0,
+                    48.0
+                  ]
+                },
+                "box": {
+                  "x": 0.0,
+                  "y": 0.0,
+                  "width": 1.0,
+                  "height": 0.42
+                },
+                "z_index": 0,
+                "source_crop": {
+                  "x": 0.05,
+                  "y": 0.15,
+                  "w": 0.4,
+                  "h": 0.7
+                },
+                "framing": {
+                  "mode": "fill",
+                  "focal_point": {
+                    "x": 0.5,
+                    "y": 0.5
+                  }
+                }
+              },
+              {
+                "role": "secondary",
+                "binding": {
+                  "kind": "evidence_range.v1",
+                  "evidence_id": "piev_...",
+                  "source_range": [
+                    42.0,
+                    48.0
+                  ]
+                },
+                "box": {
+                  "x": 0.0,
+                  "y": 0.58,
+                  "width": 1.0,
+                  "height": 0.42
+                },
+                "z_index": 1,
+                "source_crop": {
+                  "x": 0.55,
+                  "y": 0.15,
+                  "w": 0.4,
+                  "h": 0.7
+                },
+                "framing": {
+                  "mode": "fill",
+                  "focal_point": {
+                    "x": 0.5,
+                    "y": 0.5
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "expected_revision": 8,
+        "idempotency_key": "stack-source-crops-v8"
+      }
+    },
+    {
+      "label": "Undo the exact Picture Program receipt",
+      "input": {
+        "episode_id": "comp_...",
+        "revert_receipt_id": "rcpt_...",
+        "expected_revision": 10,
+        "idempotency_key": "undo-picture-receipt-v10"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "command_type": {
+        "type": "string",
+        "enum": [
+          "camera.set",
+          "camera.clear",
+          "camera.program_set",
+          "camera.revert",
+          "picture_program.scene.set",
+          "picture_program.revert"
+        ]
+      },
+      "affected_episode_range": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+          "type": "number"
+        }
+      },
+      "base_revision": {
+        "type": "integer"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Revision committed by this receipt."
+      },
+      "current_revision": {
+        "type": "integer",
+        "description": "Current Episode revision, which may be later on exact replay."
+      },
+      "changed": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "render_stale": {
+        "type": "boolean"
+      },
+      "operation_receipt_id": {
+        "type": "string",
+        "pattern": "^rcpt_[a-z0-9]+$"
+      },
+      "reverts_receipt_id": {
+        "type": "string",
+        "pattern": "^rcpt_[a-z0-9]+$"
+      },
+      "before_camera_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "camera_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "current_camera_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "before_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "current_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "before_picture_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "picture_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "current_picture_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "inverse": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "camera_program_set"
+            ]
+          },
+          "revert_receipt_id": {
+            "type": "string",
+            "pattern": "^rcpt_[a-z0-9]+$"
+          }
+        },
+        "required": [
+          "op",
+          "revert_receipt_id"
+        ],
+        "additionalProperties": false
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "camera_program_set"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "replayed"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "command_type": {
+            "type": "string",
+            "enum": [
+              "camera.set",
+              "camera.clear",
+              "camera.program_set",
+              "camera.revert",
+              "picture_program.scene.set",
+              "picture_program.revert"
+            ]
+          },
+          "affected_episode_range": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "applied_decision_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64
+          },
+          "applied_scene_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 64
+          },
+          "picture_scene_target": {
+            "type": "object",
+            "properties": {
+              "scene_id": {
+                "type": "string",
+                "pattern": "^pscn_[a-z0-9]+$"
+              },
+              "layout_key": {
+                "type": "string",
+                "enum": [
+                  "solo.v1",
+                  "two_up.v1",
+                  "pip_top_right.v1",
+                  "pip_bottom_right.v1",
+                  "speaker_rail_right.v1",
+                  "grid.v1",
+                  "custom.v1"
+                ]
+              },
+              "episode_range": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "scene_id",
+              "layout_key",
+              "episode_range"
+            ],
+            "additionalProperties": false
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "camera_program_set"
+                    ]
+                  },
+                  "revert_receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "op",
+                  "revert_receipt_id"
+                ],
+                "additionalProperties": false
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id",
+              "inverse"
+            ],
+            "additionalProperties": false
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "camera_program": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "current": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "before",
+                  "result",
+                  "current"
+                ],
+                "additionalProperties": false
+              },
+              "program": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "current": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "before",
+                  "result",
+                  "current"
+                ],
+                "additionalProperties": false
+              },
+              "picture_program": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "result": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "current": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "before",
+                  "result",
+                  "current"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "camera_program",
+              "program"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "command_type",
+          "affected_episode_range",
+          "revisions",
+          "receipt",
+          "digests"
+        ],
+        "additionalProperties": false
+      },
+      "program": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Resolved picture intervals used identically by immediate preview and render, including automatic fallback."
+      },
+      "decisions": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Sparse persisted explicit angle or Original decisions after this edit."
+      },
+      "applied_decision_count": {
+        "type": "integer",
+        "description": "Present for an atomic multi-range directing pass."
+      },
+      "picture_program": {
+        "type": "object",
+        "description": "Current canonical Picture Program resolver document used by browser/editor preview and render. Model-context MCP replaces this field with picture_program_summary and keeps full app hydration private."
+      },
+      "picture_program_summary": {
+        "type": "object",
+        "description": "Bounded current consequence summary with affected counts and a revision-pinned episode_read next step."
+      },
+      "picture_program_availability": {
+        "type": "object",
+        "description": "Current bounded ready/degraded counts for committed Picture Slot sources."
+      },
+      "applied_scene_count": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 64
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

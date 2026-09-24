@@ -1,0 +1,214 @@
+{
+  "name": "identity_apply_to_project",
+  "title": "Apply Brand Studio identity to project",
+  "description": "Model-visible Signature apply for saving authored or selected Brand Studio defaults. Saves project defaults as account-library refs for NEW highlight reels; future episode_create calls can then trust identity:\"project_default\" when the user asks for their branding. Use it after an Identity scene preview is intentionally good enough to save the authored scene as the project's default opener or outro. Accepts opener/outro preset strings or structured slot objects, materializes them into the account identity library, imports alternates into the library without storing project alternates, validates enabled packs through the frozen identity resolver, writes an apply receipt, prewarms opener/outro sources through the existing identity moment bake path, and broadcasts the update to open editors. On first apply, callers must pass enabled/enabled_for_reels:true to turn identity on; omitting both flags saves the pack disabled. Set uses_title only for title-enabled openers/outros; static assets should leave it false so opener_title produces the typed ignored warning. Pass cut_style_id:\"none\" (or a cut_style style_id of \"none\") for normal cuts with no branded seam layer.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID."
+      },
+      "brand_id": {
+        "type": "string",
+        "description": "Identity brand id. Defaults to the current project identity or BitterClip."
+      },
+      "opener_preset_id": {
+        "type": [
+          "string",
+          "object",
+          "null"
+        ],
+        "description": "Source-backed opener preset id or structured opener slot {preset_id, params, gain_db}.",
+        "properties": {
+          "preset_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          },
+          "gain_db": {
+            "type": "number"
+          },
+          "uses_title": {
+            "type": "boolean",
+            "description": "When true, new reels may fill this opener's title slot from episode_create opener_title."
+          }
+        }
+      },
+      "cut_style_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Duration-neutral cut style id. Pass none/null for normal cuts with no branded seam layer."
+      },
+      "cut_style": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Optional duration-neutral cut style payload. Used by Brand Studio controls for intensity/density without changing segment durations. Use style_id:none/null to clear the slot.",
+        "properties": {
+          "style_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "intensity": {
+            "type": "string"
+          },
+          "density": {
+            "type": "string"
+          }
+        }
+      },
+      "outro_preset_id": {
+        "type": [
+          "string",
+          "object",
+          "null"
+        ],
+        "description": "Source-backed outro preset id or structured outro slot {preset_id, params, gain_db}.",
+        "properties": {
+          "preset_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          },
+          "gain_db": {
+            "type": "number"
+          },
+          "uses_title": {
+            "type": "boolean",
+            "description": "Reserved for title-capable source-backed slots; default false."
+          }
+        }
+      },
+      "music_bed": {
+        "type": "object",
+        "description": "Music-bed slot. Pass enabled:false for no bed, or library_entry_id for an account-owned bed. Fades and ducking are optional; omitted values keep the current setting or the server defaults (400ms in, 1200ms out, 0dB duck).",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "library_entry_id": {
+            "type": "string"
+          },
+          "span": {
+            "type": "string",
+            "enum": [
+              "content_only",
+              "content_and_outro"
+            ]
+          },
+          "fit": {
+            "type": "string",
+            "enum": [
+              "trim",
+              "loop"
+            ]
+          },
+          "gain_db": {
+            "type": "number"
+          },
+          "duck_db": {
+            "type": "number"
+          },
+          "fade_in_ms": {
+            "type": "integer",
+            "description": "Fade-in length in milliseconds."
+          },
+          "fade_out_ms": {
+            "type": "integer",
+            "description": "Fade-out length in milliseconds."
+          }
+        }
+      },
+      "alternates": {
+        "type": "object",
+        "description": "Additive library entries by role. Supported keys: opener, outro, cut_style/cut_effect, music_bed. Opener/outro/cut_style entries are added to the account library; project defaults remain explicit refs only."
+      },
+      "star_alternate": {
+        "type": "object",
+        "description": "Promote a saved account-library entry to the project role default without mutating existing compositions. Shape: {role, library_entry_id}, {role, index}, or {role, alternate}.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "opener",
+              "outro",
+              "cut_style",
+              "cut_effect",
+              "music_bed"
+            ]
+          },
+          "index": {
+            "type": "integer"
+          },
+          "alternate": {
+            "type": "object"
+          },
+          "library_entry_id": {
+            "type": "string"
+          }
+        }
+      },
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether the identity pack is enabled for future reels. Required to be true on first apply when the caller intends to turn identity on; omitted first apply defaults false."
+      },
+      "enabled_for_reels": {
+        "type": "boolean",
+        "description": "Alias for enabled, matching Brand Studio UI language. Required to be true on first apply when the caller intends to turn identity on; omitted first apply defaults false."
+      },
+      "prewarm": {
+        "type": "boolean",
+        "description": "Whether to enqueue opener/outro source-backed prewarm. Defaults true."
+      }
+    },
+    "required": [
+      "project_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input",
+    "identity_music_bed_not_found"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "applied": {
+        "type": "boolean"
+      },
+      "receipt": {
+        "type": "object"
+      },
+      "prewarm": {
+        "type": "object"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

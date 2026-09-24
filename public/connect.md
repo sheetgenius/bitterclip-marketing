@@ -28,7 +28,7 @@ back a video you can post.
 ## Claude Code
 
 1. Install the plugin (the connection plus editing skills):
-   `claude plugin marketplace add sheetgenius/bitterclip-plugin`, then
+   `claude plugin marketplace add sheetgenius/bitterclip-marketing`, then
    `claude plugin install bitterclip@bitterclip`.
 2. In a new Claude Code session, run `/mcp`, choose BitterClip, then
    Authenticate. Your browser opens BitterClip; click Allow.
@@ -41,7 +41,7 @@ follow it exactly to install BitterClip, then tell me how to start."
 1. Install in Codex: in the ChatGPT desktop app's Codex, send
    "/goal Read https://bitterclip.com/docs/assistants/install and follow it
    exactly to install BitterClip, then tell me how to start." Or run
-   `codex plugin marketplace add https://github.com/sheetgenius/bitterclip-plugin.git --ref main`
+   `codex plugin marketplace add https://github.com/sheetgenius/bitterclip-marketing.git --ref main`
    and `codex plugin add bitterclip@bitterclip`.
 2. Sign in: `codex mcp login bitterclip` opens your browser; sign in to
    BitterClip and click Allow.
@@ -70,7 +70,7 @@ then show my recent recordings or help me upload one."
   any connector suggested by a link until it is listed in Claude's directory.
   Check the address is https://app.bitterclip.com/mcp, then click Continue.
 - Do I need to install anything? Not for Claude or ChatGPT. In Claude Code and
-  Codex, the BitterClip plugin (https://github.com/sheetgenius/bitterclip-plugin)
+  Codex, the BitterClip plugin (https://github.com/sheetgenius/bitterclip-marketing)
   adds the connection and editing skills in one step.
 - What can the assistant do with my account? BitterClip shows you before you
   allow it: see your recordings and transcripts, make and edit clips, render

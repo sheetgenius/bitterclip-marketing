@@ -61,10 +61,13 @@ generation in `modules/generated-surfaces.ts` emits docs Markdown twins,
 `llms.txt`, `llms-full.txt`, sitemap entries, and feeds. Do not hand-edit those
 generated outputs.
 
-The static tool reference is the exception to `content/` authoring: its
-descriptors are fetched from the deployed Rails model-visible catalog during
-`bun run generate`. Change a tool description in the product catalog, deploy
-Rails, then rebuild this site. An unavailable or invalid catalog fails the build.
+The 113 MCP tool contracts in `contracts/mcp/tools/`, extended public guides
+in `contracts/mcp/guides/`, and four plugin skills in `plugins/bitterclip/skills/`
+are authored here. Rails imports one pinned commit and owns handlers,
+authorization, visibility, effects, and private operating guidance. The static
+tool reference captures descriptors from serving Rails during `bun run generate`;
+the captured digest must match this checkout's contract digest. Deploy Rails
+with the pinned commit before publishing this site's generated tool pages.
 
 Vue-owned marketing routes such as the homepage and legal pages retain their
 checked-in Markdown alternates under `public/`. Follow

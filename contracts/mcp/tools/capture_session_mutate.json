@@ -1,0 +1,287 @@
+{
+  "name": "capture_session_mutate",
+  "title": "Change a footage session",
+  "description": "One footage-session change per call: add_recordings, camera_group_set, listening_reference_set, remove_recording, set_recording_start, or retry_analysis. add_recordings attaches existing project recordings (top-level recording_ids) and schedules incremental chronology analysis — use upload_link_create with capture_session_id instead when bytes are still local or another camera operator uploads later; membership is retry-safe and never creates unrelated top-level episodes. camera_group_set assigns the top-level recording_ids to one stable camera group without changing chronology, source identity, or coverage: it never advances the chronology revision, never returns the session to analysis, and never queues another solve (omit camera_group_key to mint a new group; camera_label renames without becoming identity; camera identity carries its own generation, and expected_camera_generation is REQUIRED so a concurrent camera edit cannot be silently overwritten; the receipt retains prior keys and labels so grouping reverses through the same action). listening_reference_set chooses the default speech-rich listening reference camera via top-level recording_id, or omits it to restore automatic selection; it never selects Program camera or audio, discards transcripts, or overrides speaker identity. remove_recording is a revision-guarded, audited exclusion of one recording (top-level recording_id) that preserves the original recording, membership history, observations, and solve receipts. set_recording_start is an audited placement correction setting one unresolved recording's start on the stable capture clock; read the manifest first, cite the evidence or human instruction in reason, and never guess a gap. retry_analysis retries the same evidence revision after bounded automatic chronology attempts have failed — call it only when next_action.kind is retry_analysis, keeping one idempotency key per exact terminal failure generation. Subject references ride top-level: capture_session_id always; recording_id / recording_ids per action.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "capture_session_id": {
+        "type": "string",
+        "description": "Footage-session public ID."
+      },
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID for listening_reference_set (optional; omit for automatic), remove_recording, and set_recording_start."
+      },
+      "recording_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 200,
+        "description": "Recording public IDs for add_recordings and camera_group_set."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current footage-session revision. Required for every action except add_recordings; a stale revision is rejected."
+      },
+      "expected_camera_generation": {
+        "type": "integer",
+        "description": "REQUIRED for camera_group_set: the camera-identity generation this decision was made against, from manifest.camera_grouping.camera_generation. Camera identity has its own generation because grouping never advances the footage-session revision, so expected_revision cannot detect a concurrent camera decision. Omitting it is rejected; a stale one is rejected."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for safe retry of this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One footage-session action. Subject references (capture_session_id, recording_id, recording_ids) ride top-level.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "add_recordings"
+                ]
+              },
+              "relative_paths": {
+                "type": "object",
+                "description": "Optional map from recording ID to a safe device/folder-relative path retained as ingest context."
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "camera_group_set"
+                ]
+              },
+              "camera_group_key": {
+                "type": "string",
+                "description": "Optional existing group key from this session. Omit to create a new group."
+              },
+              "camera_label": {
+                "type": "string",
+                "description": "Optional human label. Renaming never changes group identity."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Required evidence or explicit human instruction supporting the grouping."
+              }
+            },
+            "required": [
+              "type",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "listening_reference_set"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional concise reason retained with the preference receipt."
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "remove_recording"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional concise reason retained in the audit receipt."
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_recording_start"
+                ]
+              },
+              "capture_start_seconds": {
+                "type": "number",
+                "description": "Recording start on the session's stable capture clock. May be negative when footage predates the coordinate origin."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Required concise rationale citing the capture evidence or explicit human instruction that establishes this placement. Never guess a gap."
+              }
+            },
+            "required": [
+              "type",
+              "capture_start_seconds",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "retry_analysis"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "capture_session_id",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "capture_session_not_found",
+    "capture_session_not_failed",
+    "recording_not_found",
+    "stale_capture_session_revision",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "capture_session_id": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "status": {
+        "type": "string"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "analysis_enqueued": {
+        "type": "boolean"
+      },
+      "dispatch_status": {
+        "type": "string",
+        "enum": [
+          "dispatching",
+          "queued",
+          "observed",
+          "enqueue_failed"
+        ],
+        "description": "retry_analysis only: durable queue-delivery state for this retry receipt."
+      },
+      "recording_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "recording_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "added_recording_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "camera_group_key": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "camera_label": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "camera_generation": {
+        "type": "integer",
+        "description": "camera_group_set only: the footage session's camera-identity generation after this call. Send it back as expected_camera_generation on the next camera edit."
+      },
+      "prior_memberships": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "removed_membership_id": {
+        "type": "string"
+      },
+      "source_preserved": {
+        "type": "boolean"
+      },
+      "correction_id": {
+        "type": "string"
+      },
+      "capture_start_seconds": {
+        "type": "number"
+      },
+      "selection_basis": {
+        "type": "string",
+        "enum": [
+          "automatic",
+          "user_selected"
+        ]
+      },
+      "audit_receipt_id": {
+        "type": "string"
+      },
+      "manifest": {
+        "type": "object"
+      },
+      "next_action": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

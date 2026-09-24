@@ -1,0 +1,112 @@
+{
+  "name": "speakers_get_appearances",
+  "title": "Get where a person appears",
+  "description": "Read a person's current Recording voices, saved answers with lost placement, and editorial Moments. Each voice carries its current identity state, source timing when available, and the recording_id/speaker_map_id selector for recordings_get_speaker_evidence. Unplaced answers retain their recording_id/decision_id selector when available; no current occurrence or timing is inferred. Sightings are faces currently named as this person, each with its image_answer_id or automatic basis and source seconds. Each recent group reports truncation separately. A suggestion is not an attached person. With project_id, all rows are project-scoped and assignment exceptions are reported separately. Moment rows keep the transcript speaker_label and use current project presentation for display_label. Legacy clips and exports groups are empty; exact finished Export labels are not recalculated.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string",
+        "description": "Person public ID, slug, or UUID."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "all",
+          "current",
+          "stale"
+        ],
+        "description": "Optional Moment status filter. Defaults to all. Voices always describe current placements; their standing reports any stale review separately."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID to limit results."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum rows per group. Default 20, maximum 50."
+      },
+      "cursor": {
+        "type": "string",
+        "description": "Optional next_cursor from a previous call, to read the next page of voices, saved answers and sightings."
+      }
+    },
+    "required": [
+      "speaker_profile_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "speaker": {
+        "type": "object"
+      },
+      "status": {
+        "type": "string"
+      },
+      "counts": {
+        "type": "object"
+      },
+      "assignment_review": {
+        "type": "object"
+      },
+      "moments": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "voices": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "voices_has_more": {
+        "type": "boolean"
+      },
+      "unplaced_answers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "unplaced_answers_has_more": {
+        "type": "boolean"
+      },
+      "sightings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "sightings_has_more": {
+        "type": "boolean"
+      },
+      "next_cursor": {
+        "type": "string"
+      },
+      "clips": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "exports": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

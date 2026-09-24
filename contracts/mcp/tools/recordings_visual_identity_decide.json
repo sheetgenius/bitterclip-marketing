@@ -1,0 +1,95 @@
+{
+  "name": "recordings_visual_identity_decide",
+  "title": "Answer a visible-person identity check",
+  "description": "Record one source-current human answer about the exact visible person marked in one Recording frame. Yes confirms only the displayed face-to-person proposal; Someone else records the rejected proposed person and one separately selected displayed candidate atomically; Not sure is neutral; Not a person rejects only that exact detection. This never confirms or renames an audio speaker track, changes captions, chooses a Thumbnail, approves a Speaker photo, trusts a face reference, stores a reusable face template, or changes recognition consent. A non-neutral answer queues a bounded person-evidence generation so affected automatic Thumbnail evidence can be reconsidered without overwriting a manual Thumbnail.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID that owns the exact current visual question."
+      },
+      "visual_identity_question_id": {
+        "type": "string",
+        "description": "Opaque source-current question ID returned inside recording speaker evidence."
+      },
+      "decision": {
+        "type": "string",
+        "enum": [
+          "confirmed",
+          "identified",
+          "someone_else",
+          "not_sure",
+          "not_a_person"
+        ],
+        "description": "Exact visual answer. The UI presents these as Yes, Use the selected person, Someone else, Not sure, and Not a person."
+      },
+      "selected_speaker_profile_id": {
+        "type": "string",
+        "description": "Required for identified or someone_else; must be one of the canonical scoped candidates displayed with this exact question."
+      },
+      "new_person_name": {
+        "type": "string",
+        "maxLength": 120,
+        "description": "A new visible person’s name, instead of a selected profile. Creates a project-local person without assigning a voice or approving memory."
+      },
+      "question_context": {
+        "type": "string",
+        "description": "Copy the opaque displayed question_context unchanged. It preserves exact-image and proposal meaning across background publication."
+      },
+      "reason": {
+        "type": "string",
+        "description": "Optional short human context retained with the decision receipt."
+      },
+      "supersedes_decision_id": {
+        "type": "string",
+        "description": "Optional current decision ID when deliberately appending a correction to the same exact question."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact answer."
+      }
+    },
+    "required": [
+      "recording_id",
+      "visual_identity_question_id",
+      "decision",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "invalid_input",
+    "visual_identity_actor_required",
+    "visual_identity_question_stale",
+    "visual_identity_question_already_answered",
+    "visual_identity_supersession_stale",
+    "visual_identity_candidate_not_shown",
+    "idempotency_conflict"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "recording_id": {
+        "type": "string"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "decision": {
+        "type": "object"
+      },
+      "speaker_evidence": {
+        "type": "object",
+        "description": "Refreshed bounded speaker evidence and remaining visual identity questions."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

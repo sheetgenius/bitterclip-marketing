@@ -1,0 +1,85 @@
+{
+  "name": "episode_read",
+  "title": "Read an episode",
+  "description": "Read an EPISODE (comp_...) as stitched transcript prose with inline navigation hints, visual evidence, segment manifest, speaker legend (per-speaker word share/talk_seconds — \"who spoke how much\" is answerable here), and duration/revision. The Program map reports each source-backed occurrence's current caption treatment and each Junction's current Cut, Crossfade, or Produced transition treatment. The Camera Program reports exact Episode-local explicit picture decisions—including source-linked synchronized versus continuous picture time—plus access-scoped inherited/automatic intervals the renderer currently selects, so `none` means no local override rather than necessarily base footage. The Picture Program reports bounded exact simultaneous-layout reauthoring segments and Episode-scoped evidence; its continuation also carries `picture_read_token`. Typed opener/outro occurrences include safe current `identity_customization` state. A parent Episode read also returns bounded derived-Clip titles and exact reopen handles: to find a named existing Clip, read its likely parent once, then workspace_open the exact matching Clip once and last; docs and speaker tools are not Clip-title discovery. For a Project content-evidence ask, use transcript_search first and read its returned windows; unless the user explicitly requests a comprehensive recap, reserve at most one unwindowed Episode for wider context. For editing a chosen Episode, read it whole before judging. Also ACCEPTS a recording handle (src_...) and reads it as that recording's episode-of-one. All timestamps are EPISODE time unless a field ends in _source. Long transcripts are PAGINATED — read pages in sequence via `page`. Every continuation (page or picture_page after 1) must echo the `expected_revision` and `expected_program_digest` its hint prints (plus `picture_read_token` when the hint carries one); a missing or changed pin refuses, and the read restarts at page 1. The pins hold one Program revision and digest (and Picture read token), not the transcript: a retranscription between pages can pass them and show as changed words, so re-read page 1 if the transcript changed. Transcript words and times are approximate read-only semantic locators; inspect source media with narrow episode_zoom audio evidence or exact episode_sample_frames projection:\"original\" samples before placing a structural boundary. Program and angle previews never authorize structural boundaries. For a whole-Episode open, call workspace_open. For a read-only named range, open the Episode and report the timestamp without claiming focus. Only when the user explicitly asks to save or mark reviewable Moments, call review_points_place with exact Episode-time ranges and the revision returned here. Merely naming a timestamp in chat is not an open or saved review point. Returns prose only, never word-level rows. Does not modify anything.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "The episode public ID, such as comp_...; a recording src_... handle is also accepted for a recording's episode-of-one."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Backward-compatible alias for episode_id."
+      },
+      "window": {
+        "type": "object",
+        "description": "Optional EPISODE-time span to read for long episodes. Lines overlapping the window are returned; omit for the whole episode.",
+        "properties": {
+          "from": {
+            "type": "number",
+            "description": "Window start in episode seconds. Omit for open start."
+          },
+          "to": {
+            "type": "number",
+            "description": "Window end in episode seconds. Omit for open end."
+          }
+        }
+      },
+      "page": {
+        "type": "integer",
+        "description": "1-indexed page of the transcript prose (default 1). A long transcript is split into M pages so each stays under the host's tool-output size cap; the returned page's header says 'page N of M' and its footer says how to fetch the next. Composes with `window`: `window` picks the time range, `page` paginates that range's prose."
+      },
+      "picture_page": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Independent 1-indexed page of bounded Picture Scene and Picture Evidence summaries. Follow the exact continuation returned in Picture Program prose."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Required on every continuation (page or picture_page after 1): the revision the previous page's continuation hint prints. A changed Episode refuses; restart at page 1."
+      },
+      "expected_program_digest": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Required with expected_revision on every continuation: the Program digest the previous page's continuation hint prints. It also moves on a same-revision occurrence change such as align_span; a changed Program refuses, restart at page 1."
+      },
+      "picture_read_token": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Required exact media-generation pin returned by Picture Program page 1 when following a Picture or transcript continuation that carries Picture content."
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "anyOf": [
+      {
+        "required": [
+          "episode_id"
+        ]
+      },
+      {
+        "required": [
+          "composition_id"
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "stale_program_digest",
+    "stale_picture_read",
+    "invalid_input"
+  ],
+  "examples": [
+    {
+      "label": "See a whole episode before clipping it",
+      "input": {
+        "episode_id": "comp_..."
+      }
+    }
+  ]
+}

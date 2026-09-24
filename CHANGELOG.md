@@ -30,6 +30,13 @@ under a dated entry.
 
 ### Website
 
+- Consolidated the 113 authored MCP contracts, three public guides, and four
+  plugin skills in this repository. The static tool reference now includes
+  default, app-only, and Live Workspace descriptors captured from the serving
+  product release, with per-tool HTML, Markdown, JSON, and source provenance.
+- Claude Code and Codex install the plugin directly from this repository.
+
+
 - Added `/connect`, one page for connecting BitterClip to Claude, ChatGPT or
   Claude Code: three numbered steps per assistant with one action each, a first
   request to try, and short answers to setup questions. When the visitor is

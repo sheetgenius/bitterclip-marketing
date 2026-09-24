@@ -1,0 +1,81 @@
+{
+  "name": "publish_status",
+  "title": "Get publish status",
+  "description": "Check package, approval, or external publish lifecycle. Returns concrete external URLs only when BitterClip has verified them.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "publish_package_id": {
+        "type": "string",
+        "description": "Approval/package public ID."
+      },
+      "approval_id": {
+        "type": "string",
+        "description": "Approval/package public ID alias."
+      },
+      "publish_record_id": {
+        "type": "string",
+        "description": "Publish record public ID."
+      }
+    },
+    "required": [],
+    "additionalProperties": false,
+    "anyOf": [
+      {
+        "required": [
+          "publish_package_id"
+        ]
+      },
+      {
+        "required": [
+          "approval_id"
+        ]
+      },
+      {
+        "required": [
+          "publish_record_id"
+        ]
+      }
+    ]
+  },
+  "errors": [
+    "approval_not_found",
+    "publish_record_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "publish_package_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "approvals": {
+        "type": "array"
+      },
+      "publish_records": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "recovery": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

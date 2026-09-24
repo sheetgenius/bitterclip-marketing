@@ -1,0 +1,48 @@
+{
+  "name": "account_context_get",
+  "title": "Read the studio working context",
+  "description": "Read the OWNER's optional studio-wide working context — one bounded paragraph of standing context that spans Projects (who the studio is, recurring audience, standing constraints). OWNER-ONLY: it fails closed as not-found for guests and non-owner members, and it must NEVER be quoted or summarized into a conversation with anyone but the owner. Precedence is fixed: the person's explicit request wins over a confirmed Project working brief, which ALWAYS wins over this context, which sits above the general constitution. When a Project has no confirmed brief, this context may inform a brief you PROPOSE — draft it, show it, and confirm it only through project_brief_set with the owner's agreement; never treat the context itself as Project direction, and never write it anywhere silently. Read-only; no media effect.",
+  "input_schema": {
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "account_not_found"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "account_id": {
+        "type": "string"
+      },
+      "brief": {
+        "type": "string",
+        "description": "The exact current confirmed context text; empty when none is confirmed."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "The current monotonic context revision (0 when none exists)."
+      },
+      "confirmed_by_public_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "confirmed_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

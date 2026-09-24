@@ -1,0 +1,52 @@
+{
+  "name": "recordings_get_speaker_evidence",
+  "title": "Get recording speaker evidence",
+  "description": "Read the first-class speaker evidence for a recording. Returns one row per diarized speaker track, profile bindings, confirmation state, voiceprint/transcript/visual evidence, roles, bounded source-time subject geometry when a current evidence generation exists, summary counts, and a compact model context. Geometry is evidence, never an already-chosen crop or title placement.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID."
+      },
+      "decision_id": {
+        "type": "string",
+        "description": "Optional saved identity answer on this Recording. Returns its support and current withdrawal scope."
+      },
+      "speaker_map_id": {
+        "type": "string",
+        "description": "Alternatively inspect the answer on this exact voice, including an older human confirmation."
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "transcript_not_ready",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "identity_answer": {
+        "type": "object",
+        "description": "Selected answer, accessible source evidence, human dependency and withdrawal scope fingerprint."
+      },
+      "speaker_evidence": {
+        "type": "object"
+      },
+      "speaker_model_context": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

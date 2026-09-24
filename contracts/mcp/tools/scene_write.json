@@ -1,0 +1,111 @@
+{
+  "name": "scene_write",
+  "title": "Write FX scene source",
+  "description": "Create or replace a complete programmable effect, not a fixed-template parameter preset. Supply an ES module exporting scene with id, mount(ctx), reset(ctx), frame(ctx), and optional dispose(ctx). mount appends under ctx.layer and returns refs including root. HTML/CSS, SVG, Canvas and WebGL are supported; ctx.elapsedMs is the authored clock. No ambient application, network or provider authority is available. New scenes use expected_revision:0. Before replacing an existing scene, read it and supply both its revision and sha256; a stale edit refuses without overwriting. Saved source versions are retained. Use scene_preview to inspect actual pixels and iterate; saving source does not apply an opener/outro or change any Episode. Omit project_id for your account library, or supply an accessible Project for its account scope. See bitterclip://docs/identity-scene-authoring for the runtime contract.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Optional Project scope; omitted means your own account."
+      },
+      "scene_id": {
+        "type": "string",
+        "description": "Stable account scene identifier, lowercase letters/numbers/hyphens."
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 120
+      },
+      "source": {
+        "type": "string",
+        "maxLength": 131072,
+        "description": "Complete ES module source, up to 128 KiB."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "0 for creation; current scene revision for an existing scene."
+      },
+      "expected_sha256": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$",
+        "description": "Required for changes to existing scenes; sha256 from scene_read."
+      },
+      "settings": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 60000
+          },
+          "fps": {
+            "type": "integer",
+            "enum": [
+              24,
+              30,
+              60
+            ]
+          },
+          "aspect": {
+            "type": "string",
+            "enum": [
+              "1:1",
+              "16:9",
+              "9:16",
+              "4:5"
+            ]
+          },
+          "asset_ids": {
+            "type": "array",
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Explicit account image/texture asset IDs from identity_asset_ingest; the runtime receives only these admitted bytes."
+          }
+        }
+      }
+    },
+    "required": [
+      "scene_id",
+      "source",
+      "expected_revision"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input",
+    "revision_conflict"
+  ],
+  "examples": [
+    {
+      "label": "Create a minimal scene",
+      "input": {
+        "scene_id": "light-study",
+        "expected_revision": 0,
+        "source": "export const scene = { id: 'light-study', mount(ctx) { const root = document.createElement('div'); root.textContent = 'Light'; ctx.layer.append(root); return { root }; }, reset() {}, frame(ctx) { ctx.refs.root.style.opacity = String(Math.min(1, ctx.elapsedMs / 1000)); } };"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "scene": {
+        "type": "object"
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

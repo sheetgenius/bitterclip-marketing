@@ -1,0 +1,158 @@
+{
+  "name": "compositions_get_draft",
+  "title": "Load the saved composition edit document",
+  "description": "Restore the saved working draft when opening the editor (so prior trims/cuts come back after a reload). Pass recording_id for the per-recording draft, or composition_id. Returns { draft: nil } when none exists. This is a REPAIRING read, not a pure one: when the caller has edit authority and the Episode's resting suggestion was authored under a superseded Project objective, this read may admit ONE bounded, deduplicated, paid recommendation refresh for exactly this Episode (a durable admission receipt on the synthesis manifest plus one background job). That is its only side effect — it never edits a Program, creates a Clip, starts a Render, publishes, or creates a public link, and read-only callers admit nothing.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "composition_id": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "composition_not_found",
+    "episode_changed_during_read",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "draft": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "composition_id": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "string",
+        "description": "Opaque draft CAS token."
+      },
+      "structural_revision": {
+        "type": "integer",
+        "description": "Monotonic Episode structure revision."
+      },
+      "workspace_navigation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "target",
+          "route"
+        ],
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.workspace-nav.v1"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[A-Za-z0-9_-]{1,120}$"
+              }
+            }
+          },
+          "route": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "mode"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "composition"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "review"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "episode_date": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Current authoritative Episode date, when set."
+      },
+      "episode_date_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "How the current Episode date was established."
+      },
+      "episode_date_label": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Compact human-readable current Episode date."
+      },
+      "aspect_ratio": {
+        "type": "string"
+      },
+      "captions_enabled": {
+        "type": "boolean"
+      },
+      "status": {
+        "type": "string"
+      },
+      "segments": {
+        "type": "array"
+      },
+      "overlays": {
+        "type": "array"
+      },
+      "editor_document": {
+        "type": "object",
+        "description": "Versioned application document consumed by the shared editor."
+      }
+    },
+    "required": [],
+    "additionalProperties": true
+  }
+}

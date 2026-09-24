@@ -1,0 +1,73 @@
+{
+  "name": "speaker_rename",
+  "title": "Rename a speaker on a recording",
+  "description": "Relabel one diarized speaker track inside a recording or that recording's episode-of-one, without confirming identity, creating a SpeakerProfile, or enrolling/saving a voiceprint. Use this when the user asks to fix captions such as \"Speaker 2 is Adrian\" and wants future captioned exports from this recording to use the corrected name. This is rename-only: biometric voice memory and identity confirmation require a human web action in speaker review.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID (`src_...`) or an episode/composition public ID (`comp_...`) that resolves to one recording."
+      },
+      "speaker": {
+        "type": "string",
+        "description": "Current speaker display label, speaker_key, or SpeakerMap public ID for the diarized track to rename."
+      },
+      "new_name": {
+        "type": "string",
+        "description": "New recording-local display name for this speaker track."
+      },
+      "confirm": {
+        "type": "boolean",
+        "description": "Optional; must be false or omitted. This tool does not confirm identity or save a voiceprint."
+      }
+    },
+    "required": [
+      "recording_id",
+      "speaker",
+      "new_name"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "speaker_map_id": {
+        "type": "string"
+      },
+      "from_label": {
+        "type": "string"
+      },
+      "to_label": {
+        "type": "string"
+      },
+      "confirmed": {
+        "type": "boolean"
+      },
+      "teaches_voice": {
+        "type": "boolean"
+      },
+      "speaker_map_summary": {
+        "type": "object",
+        "description": "Updated speaker map summary with display_name, needs_confirmation, confirmed, and appearances_count."
+      },
+      "speaker_evidence": {
+        "type": "object"
+      },
+      "speaker_model_context": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

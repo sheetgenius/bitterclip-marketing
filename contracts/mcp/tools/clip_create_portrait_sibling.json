@@ -1,0 +1,167 @@
+{
+  "name": "clip_create_portrait_sibling",
+  "title": "Create a portrait sibling clip",
+  "description": "Create a separate 9:16 portrait sibling from one current rendered 16:9 landscape Clip. Read the landscape Clip first and pass its exact revision, draft_revision, and program_digest. BitterClip copies only its source-backed editorial timing, captions, audio policy, transitions, and safely mappable music; the child starts as a draft with independently editable centered framing and no Render, Export, package, credit, or publication. It does not invent speaker geometry or silently carry landscape crop decisions: apply source-time geometry through episode_edit occurrence.reframe before render_create. A 9:16 canvas over 16:9 footage keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown). Local camera choices, overlays, identity/baked material, malformed music anchors, stale source state, or a non-landscape/unrendered source fail before a child exists. Retrying the identical idempotency key returns the same sibling.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "source_clip_id": {
+        "type": "string",
+        "description": "Current derived landscape Clip public ID (comp_...). Read it first; a top-level Episode or legacy Clip row is refused."
+      },
+      "expected_source_revision": {
+        "type": "integer",
+        "description": "Current integer revision from episode_read for source_clip_id."
+      },
+      "expected_source_draft_revision": {
+        "type": "string",
+        "description": "Current opaque draft_revision from episode_read for source_clip_id."
+      },
+      "expected_source_program_digest": {
+        "type": "string",
+        "description": "Current SHA-256 program_digest from episode_read for source_clip_id."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional title for the portrait sibling. Omit to derive one from the landscape Clip."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for an exact safe retry."
+      }
+    },
+    "required": [
+      "source_clip_id",
+      "expected_source_revision",
+      "expected_source_draft_revision",
+      "expected_source_program_digest",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_input",
+    "portrait_sibling_source_not_clip",
+    "portrait_sibling_source_not_landscape",
+    "portrait_sibling_source_empty",
+    "portrait_sibling_source_not_currently_rendered",
+    "portrait_sibling_source_invalid_lineage",
+    "portrait_sibling_overlays_unsupported",
+    "portrait_sibling_local_camera_program_unsupported",
+    "portrait_sibling_identity_unsupported",
+    "portrait_sibling_baked_material_unsupported",
+    "portrait_sibling_music_unsupported",
+    "music_asset_missing",
+    "music_asset_mismatch",
+    "music_anchor_unavailable",
+    "music_range_inverted",
+    "music_ranges_overlap",
+    "music_asset_too_short",
+    "music_trim_out_of_range",
+    "music_fades_too_long",
+    "music_presentation_map_unsupported",
+    "angle_interval_exceeds_recording"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "clip_id": {
+        "type": "string",
+        "description": "New independently editable portrait Clip (comp_...)."
+      },
+      "parent_episode_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Shared top-level Episode lineage, when present."
+      },
+      "source_clip_id": {
+        "type": "string"
+      },
+      "source_revision": {
+        "type": "integer"
+      },
+      "source_draft_revision": {
+        "type": "string"
+      },
+      "source_program_digest": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "draft_revision": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "draft"
+        ]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16"
+        ]
+      },
+      "canvas": {
+        "type": "string",
+        "enum": [
+          "1080x1920@30"
+        ]
+      },
+      "duration_seconds": {
+        "type": "number"
+      },
+      "occurrence_map": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Landscape Clip occurrence to portrait Clip occurrence mapping; composition decisions remain child-local."
+      },
+      "framing": {
+        "type": "object",
+        "description": "Truthful initial framing state and the next geometry-aware action."
+      },
+      "render_status": {
+        "type": "string",
+        "enum": [
+          "not_requested"
+        ]
+      },
+      "receipt_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "next_action": {
+        "type": "object"
+      },
+      "render_next_action": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

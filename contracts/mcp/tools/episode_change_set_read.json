@@ -1,0 +1,146 @@
+{
+  "name": "episode_change_set_read",
+  "title": "Read a Program edit run",
+  "description": "Read authoritative progress, recovery state, and a bounded page of individual operation receipts for one durable Program change set. This does not move the Program, transport, selection, focus, viewport, zoom, or Peek state.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "change_set_id": {
+        "type": "string",
+        "description": "Durable Program change-set public ID."
+      },
+      "after": {
+        "type": "integer",
+        "description": "Optional last item position already seen."
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100,
+        "description": "Optional item page size; defaults to 50."
+      }
+    },
+    "required": [
+      "change_set_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "program_change_set_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "change_set_id": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "kind": {
+        "type": "string",
+        "enum": [
+          "edit",
+          "revert"
+        ]
+      },
+      "status": {
+        "type": "string"
+      },
+      "activity_revision": {
+        "type": "integer"
+      },
+      "total_operations": {
+        "type": "integer"
+      },
+      "committed_operations": {
+        "type": "integer"
+      },
+      "counts": {
+        "type": "object"
+      },
+      "head_revision": {
+        "type": "integer"
+      },
+      "head_program_digest": {
+        "type": "string"
+      },
+      "attribution": {
+        "type": "string"
+      },
+      "can_stop": {
+        "type": "boolean"
+      },
+      "can_revert": {
+        "type": "boolean"
+      },
+      "exact_revertible": {
+        "type": "boolean"
+      },
+      "external_adoptions": {
+        "type": "integer"
+      },
+      "error": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "summary": {
+        "type": "object"
+      },
+      "started_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "finished_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "stopped_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverted_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverts_change_set_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "reverted_by_change_set_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "next_after": {
+        "type": "integer"
+      },
+      "has_more": {
+        "type": "boolean"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

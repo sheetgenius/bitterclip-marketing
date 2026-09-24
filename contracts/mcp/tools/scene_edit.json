@@ -1,0 +1,83 @@
+{
+  "name": "scene_edit",
+  "title": "Edit FX scene source",
+  "description": "Apply a literal string replacement to the current scene source. Read first and supply expected_revision plus expected_sha256. old_string must match exactly once unless replace_all:true; include enough context to identify the intended code. Replacement bytes are literal, including JavaScript backslashes and dollar signs. Conflicts preserve source and return the current revision for rereading. Successful edits update the same open FX Studio view; inspect scene_preview images and revise again. JavaScript source changes do not mutate production defaults or an admitted Export.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string"
+      },
+      "scene_id": {
+        "type": "string"
+      },
+      "expected_revision": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "expected_sha256": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      },
+      "old_string": {
+        "type": "string",
+        "maxLength": 131072
+      },
+      "new_string": {
+        "type": "string",
+        "maxLength": 131072
+      },
+      "replace_all": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "scene_id",
+      "old_string",
+      "new_string",
+      "expected_revision",
+      "expected_sha256"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input",
+    "revision_conflict"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "scene": {
+        "type": "object"
+      },
+      "replacements": {
+        "type": "integer"
+      },
+      "message": {
+        "type": "string"
+      },
+      "before_bytes": {
+        "type": "integer"
+      },
+      "after_bytes": {
+        "type": "integer"
+      },
+      "bytes_delta": {
+        "type": "integer"
+      },
+      "post_edit_context": {
+        "type": "string"
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

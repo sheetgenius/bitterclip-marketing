@@ -1,0 +1,68 @@
+{
+  "name": "recordings_update",
+  "title": "Update recording metadata",
+  "description": "Use this when the user wants to rename a BitterClip recording or set/replace its description or chapters. Video visual analysis is automatic; audio-only recordings skip it. This does not re-transcribe, edit media, create clips, render, or publish.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "Recording public ID."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional new recording title. Blank titles are rejected."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional recording description. Pass an empty string to clear it."
+      },
+      "chapters": {
+        "type": "array",
+        "description": "Optional user-authored recording chapters. Each item needs start_seconds and title.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start_seconds": {
+              "type": "number"
+            },
+            "title": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "object",
+        "description": "Updated source payload with title and description."
+      },
+      "recording": {
+        "type": "object",
+        "description": "Updated project recording payload."
+      },
+      "project": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Parent project payload when the recording belongs to a project."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

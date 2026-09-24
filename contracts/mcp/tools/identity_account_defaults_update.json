@@ -1,0 +1,75 @@
+{
+  "name": "identity_account_defaults_update",
+  "title": "Update account Signature defaults",
+  "description": "App-only account FX write. Sets or clears the account-wide Signature defaults that new projects inherit. Pass opener_library_entry_id/outro_library_entry_id to point at saved account library entries, pass opener_slot/outro_slot from account Signature Studio to save a new library entry and make it the default, and pass blank/none/disabled to clear a role. enabled controls whether new projects start with the Signature on.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "opener_library_entry_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Saved opener entry id (ilib_...). Blank/none clears the opener default. Omit to preserve it."
+      },
+      "outro_library_entry_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Saved outro entry id (ilib_...). Blank/none clears the outro default. Omit to preserve it."
+      },
+      "opener_slot": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Optional opener slot payload {preset_id, params, gain_db, uses_title}; creates/reuses an account library row and sets it as the default."
+      },
+      "outro_slot": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Optional outro slot payload {preset_id, params, gain_db, uses_title}; creates/reuses an account library row and sets it as the default."
+      },
+      "enabled": {
+        "type": "boolean",
+        "description": "Whether new projects start with the account Signature on. Omit to preserve the current value; first slot save defaults true."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "account_not_found",
+    "identity_library_entry_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "applied": {
+        "type": "boolean"
+      },
+      "defaults": {
+        "type": "object"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "options": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

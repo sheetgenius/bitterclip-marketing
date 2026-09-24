@@ -116,7 +116,7 @@ Or choose the guide for the host you use:
 
 Connecting is all you need. BitterClip's built-in Agent already receives the
 editing skills. For Claude Code and Codex, an optional
-[plugin](https://github.com/sheetgenius/bitterclip-plugin) provides those skills
+[plugin](https://github.com/sheetgenius/bitterclip-marketing) provides those skills
 alongside the connection.
 
 If the connection doesn't take or your recordings don't show up, the

@@ -1,0 +1,58 @@
+{
+  "name": "speakers_list_avatar_candidates",
+  "title": "List profile photo choices",
+  "description": "App-only repair helper. Lists the current profile photo, prior profile-photo history, and the cropped reference-gallery candidates a human can choose from. Each candidate is a crop attributed to this person by reviewed subject geometry — never a whole frame — and carries reference_asset_id for speakers_avatar_mutate set_from_reference. in_matching_set says whether that crop is also used for matching; the two roles are independent. Returns image handles for the app; it does not change identity, voice memory, transcript labels, captions, exports, or merge state.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string",
+        "description": "Person public ID, slug, or UUID."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum photos per group. Default 24."
+      }
+    },
+    "required": [
+      "speaker_profile_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_id": {
+        "type": "string"
+      },
+      "speaker_profile_name": {
+        "type": "string"
+      },
+      "active_avatar": {
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "candidates": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "history": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

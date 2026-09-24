@@ -1,0 +1,24 @@
+{
+  "name": "help",
+  "title": "BitterClip help",
+  "description": "Discover BitterClip help with no input, ask a natural-language question for short sourced passages, or pass an exact bitterclip://docs URI to read a page. Covers live public creator docs and private agent operating guidance. Read-only; no customer media.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "description": "Question or exact bitterclip://docs URI. Omit to discover help."
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum search matches (1-5, default 3)."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input"
+  ],
+  "examples": []
+}

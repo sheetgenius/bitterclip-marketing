@@ -1,0 +1,157 @@
+{
+  "name": "recordings_request_upload",
+  "title": "Request a recording upload grant",
+  "description": "Use this when an agent has a local audio or video file and needs to upload it programmatically. Returns a short-lived direct-to-storage upload grant: either a single PUT URL or multipart part URLs. After the agent uploads the bytes, call recordings_finalize_upload with the upload_token and uploaded part ETags if multipart. To add a device file to a Footage session, pass capture_session_id and its optional relative_path. To add camera footage to an existing episode instead, pass target:{type:\"episode\", id:\"comp_...\"}, upload_role:\"episode_footage\", and batch_id/batch_expected_count/batch_index for the batch; the two targets are mutually exclusive.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "Original filename, such as john-questions.mp4."
+      },
+      "byte_size": {
+        "type": "integer",
+        "description": "Exact file size in bytes."
+      },
+      "content_type": {
+        "type": "string",
+        "description": "Media content type, such as video/mp4 or audio/mpeg."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID to attach the recording to."
+      },
+      "show_slug": {
+        "type": "string",
+        "description": "Optional project slug fallback."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional recording title."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional recording description."
+      },
+      "recorded_at": {
+        "type": "string",
+        "description": "Optional ISO-8601 recorded timestamp."
+      },
+      "captured_at": {
+        "type": "string",
+        "description": "Optional ISO-8601 captured timestamp fallback."
+      },
+      "last_modified_at": {
+        "type": "string",
+        "description": "Optional ISO-8601 local file mtime fallback."
+      },
+      "capture_session_id": {
+        "type": "string",
+        "description": "Optional Footage-session public ID. The finalized recording joins this session and triggers incremental chronology analysis."
+      },
+      "relative_path": {
+        "type": "string",
+        "description": "Optional safe device/folder-relative path retained for a Footage-session upload."
+      },
+      "target": {
+        "type": "object",
+        "description": "Optional upload target. For camera footage, pass {type:\"episode\", id:\"comp_...\"}; no source-addressed target is accepted.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "episode"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "Existing episode id to receive the camera footage."
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ]
+      },
+      "upload_role": {
+        "type": "string",
+        "enum": [
+          "episode_footage"
+        ],
+        "description": "Set to episode_footage when the uploaded file is camera footage for target episode."
+      },
+      "batch_id": {
+        "type": "string",
+        "description": "Shared id for every file added to target episode in one batch."
+      },
+      "batch_expected_count": {
+        "type": "integer",
+        "description": "How many files this batch contains. Required with upload_role episode_footage."
+      },
+      "batch_index": {
+        "type": "integer",
+        "description": "This file's 0-based position in the batch. Required with upload_role episode_footage."
+      }
+    },
+    "required": [
+      "filename",
+      "byte_size",
+      "content_type"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "billing_required",
+    "email_verification_required",
+    "file_too_large",
+    "upload_not_configured",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "upload_strategy": {
+        "type": "string",
+        "enum": [
+          "single_put",
+          "multipart"
+        ]
+      },
+      "upload_url": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Single PUT URL when upload_strategy is single_put."
+      },
+      "upload_token": {
+        "type": "string"
+      },
+      "expires_at": {
+        "type": "string"
+      },
+      "headers": {
+        "type": "object"
+      },
+      "part_size": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "part_count": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "parts": {
+        "type": "array",
+        "description": "Multipart upload part grants when upload_strategy is multipart."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

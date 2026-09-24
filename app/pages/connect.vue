@@ -12,10 +12,10 @@ type TabKey = 'claude' | 'chatgpt' | 'claude_code' | 'codex'
 const APP_ORIGIN = 'https://app.bitterclip.com'
 const MCP_URL = `${APP_ORIGIN}/mcp`
 const STARTER_PROMPT = 'Using BitterClip, help me make my first clip. Briefly explain how you can help, then show my recent recordings or help me upload one.'
-const CLAUDE_CODE_COMMAND = 'claude plugin marketplace add sheetgenius/bitterclip-plugin\nclaude plugin install bitterclip@bitterclip'
+const CLAUDE_CODE_COMMAND = 'claude plugin marketplace add sheetgenius/bitterclip-marketing\nclaude plugin install bitterclip@bitterclip'
 const INSTALL_DOC_URL = 'https://bitterclip.com/docs/assistants/install'
 const AGENT_INSTALL_PROMPT = `Read ${INSTALL_DOC_URL} and follow it exactly to install BitterClip, then tell me how to start.`
-const CODEX_COMMANDS = 'codex plugin marketplace add https://github.com/sheetgenius/bitterclip-plugin.git --ref main\ncodex plugin add bitterclip@bitterclip\ncodex mcp login bitterclip'
+const CODEX_COMMANDS = 'codex plugin marketplace add https://github.com/sheetgenius/bitterclip-marketing.git --ref main\ncodex plugin add bitterclip@bitterclip\ncodex mcp login bitterclip'
 const codexUrl = (prompt: string) => `codex://new?prompt=${encodeURIComponent(prompt)}`
 const TAB_STORAGE_KEY = 'bc.connect.client'
 const TABS: { key: TabKey, label: string }[] = [
@@ -510,7 +510,7 @@ useHead({
             It signs in with OAuth; never paste a token.
           </p>
           <p>
-            The <a href="https://github.com/sheetgenius/bitterclip-plugin" class="text-[#f28f84] hover:underline">BitterClip plugin</a>
+            The <a href="https://github.com/sheetgenius/bitterclip-marketing" class="text-[#f28f84] hover:underline">BitterClip plugin</a>
             adds editing skills in Claude Code and Codex. For the connection alone:
             <code class="text-zinc-200">claude mcp add --scope user --transport http bitterclip {{ MCP_URL }}</code> or
             <code class="text-zinc-200">codex mcp add bitterclip --url {{ MCP_URL }}</code>.

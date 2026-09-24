@@ -1,0 +1,52 @@
+{
+  "name": "identity_brand_update",
+  "title": "Set the account brand name",
+  "description": "App-only Brand Studio write. Sets the account's brand display name — the starter-brand wordmark shown in FX previews, Signature Studio start points, and rendered openers/outros. Account-level: every project of the account picks it up. Pass project_id when updating from a project FX tab; omit project_id from the account FX home. Pass an empty brand_name to clear the override back to the creator-name default. Project-addressed updates refresh prewarm when an identity is applied so preview media re-bakes with the new name.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Optional project public ID. When omitted, the current account owner is the authorization boundary."
+      },
+      "brand_name": {
+        "type": "string",
+        "description": "Brand display name, 60 characters max. Empty string clears the override."
+      }
+    },
+    "required": [
+      "brand_name"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "account_id": {
+        "type": "string"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "options": {
+        "type": "object"
+      },
+      "brand_name": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

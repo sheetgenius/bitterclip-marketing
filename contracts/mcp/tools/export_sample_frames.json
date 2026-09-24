@@ -1,0 +1,168 @@
+{
+  "name": "export_sample_frames",
+  "title": "Sample pixels from the exact current Export",
+  "description": "Pure-read pixel inspection of one exact rendered Export MP4, including burned overlays and captions. Pass the exact export_id, expected_render_generation, and expected_render_plan_hash from render_status plus 1–4 finite nonnegative Export-timeline seconds. This does not settle status, mint URLs, publish frames, bill, render, or mutate. Exact retained Export frames establish only the content of each sampled still, including burned overlays and captions at that instant. Report only literal visible content at that sampled instant. A visible anomaly may be described as a candidate for further review. A still alone does not establish an objective Export or renderer defect, its cause, a violated invariant, or overall quality. Those conclusions require independently bound temporal or implementation evidence, or human review. Keep Program structure, sampled still pixels, decoded temporal artifact evidence, implementation evidence, and human judgment distinct. Not observable from isolated stills: motion, transition smoothness, cut abruptness or naturalness, caption synchronization or correctness across time, audio, overall taste, and human acceptance. Plan one bounded 1–4-frame board for this still inspection pass; do not repeat identical or subset points in the same user turn. At most one explicitly novel follow-up may add evidence. For a short multi-cut Export, retained inspection includes the opening picture, the near-EOF final picture, and both sides of every render_status-flagged Junction. When four frames cannot cover that set, use the allowed novel follow-up. A seam-only board leaves endpoint inspection incomplete and cannot support a quality-ready or finished claim. Render-ready remains lifecycle state. Tool-use-only custody; no capability URLs. Do not use render_status as a pixel observer. Frames are tool-use-only; no capability URLs.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "export_id": {
+        "type": "string",
+        "description": "Exact retained Export handle (rxpt_...) from render_status or result delivery. Foreign handles fail closed and no handle redirects to another generation."
+      },
+      "expected_render_generation": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact 64-hex current render generation for this Export. A mismatch fails closed."
+      },
+      "expected_render_plan_hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact 64-hex current render-plan hash for this Export. A mismatch fails closed."
+      },
+      "times": {
+        "type": "array",
+        "description": "Explicit Export-timeline seconds to sample from the finished MP4. Plan one bounded 1–4-frame board for this still inspection pass; do not repeat identical or subset points in the same user turn. One through four finite nonnegative values only. At most one explicitly novel follow-up may add evidence.",
+        "items": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minItems": 1,
+        "maxItems": 4
+      }
+    },
+    "required": [
+      "export_id",
+      "expected_render_generation",
+      "expected_render_plan_hash",
+      "times"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input",
+    "time_out_of_range",
+    "export_not_found",
+    "export_not_current",
+    "render_changed",
+    "render_output_unavailable",
+    "ffmpeg_busy",
+    "ffmpeg_missing",
+    "export_sample_timeout",
+    "frame_extraction_failed",
+    "frame_extraction_containment_unknown",
+    "frame_sample_cleanup_failed",
+    "payload_budget_exceeded"
+  ],
+  "examples": [
+    {
+      "label": "Inspect two points on the exact current Export",
+      "input": {
+        "export_id": "rxpt_...",
+        "expected_render_generation": "0000000000000000000000000000000000000000000000000000000000000000",
+        "expected_render_plan_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "times": [
+          0.0,
+          1.2
+        ]
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "export_id": {
+        "type": "string",
+        "description": "Exact Export sampled."
+      },
+      "clip_id": {
+        "type": "string",
+        "description": "Composition handle of the Clip or Episode that owns this Export."
+      },
+      "composition_id": {
+        "type": "string",
+        "description": "Same Composition handle as clip_id."
+      },
+      "render_generation": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact generation sampled."
+      },
+      "render_plan_hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$",
+        "description": "Exact render-plan hash sampled."
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Export timeline duration."
+      },
+      "model_image_count": {
+        "type": "integer",
+        "description": "Number of adjacent JPEG image blocks; at most four."
+      },
+      "custody": {
+        "type": "string",
+        "enum": [
+          "tool_use_only"
+        ],
+        "description": "Frames exist only for this tool turn. They mint no capability URLs."
+      },
+      "limitations": {
+        "type": "string",
+        "description": "Exact retained Export frames establish only the content of each sampled still, including burned overlays and captions at that instant. Report only literal visible content at that sampled instant. A visible anomaly may be described as a candidate for further review. A still alone does not establish an objective Export or renderer defect, its cause, a violated invariant, or overall quality. Those conclusions require independently bound temporal or implementation evidence, or human review. Keep Program structure, sampled still pixels, decoded temporal artifact evidence, implementation evidence, and human judgment distinct. Not observable from isolated stills: motion, transition smoothness, cut abruptness or naturalness, caption synchronization or correctness across time, audio, overall taste, and human acceptance. Plan one bounded 1–4-frame board for this still inspection pass; do not repeat identical or subset points in the same user turn. At most one explicitly novel follow-up may add evidence. For a short multi-cut Export, retained inspection includes the opening picture, the near-EOF final picture, and both sides of every render_status-flagged Junction. When four frames cannot cover that set, use the allowed novel follow-up. A seam-only board leaves endpoint inspection incomplete and cannot support a quality-ready or finished claim. Render-ready remains lifecycle state. Tool-use-only custody; no capability URLs."
+      },
+      "frames": {
+        "type": "array",
+        "description": "Per-frame Export-timeline captions and dimensions. Adjacent MCP image blocks are the pixels; no gallery or capability URLs.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "caption": {
+              "type": "string",
+              "description": "Truthful Export-timeline caption bound to this export, generation, and plan. Each still establishes only that frame's pixels; isolated stills cannot observe motion, cut abruptness, or caption synchronization across time. Report only literal visible content at that sampled instant. A visible anomaly may be described as a candidate for further review. A still alone does not establish an objective Export or renderer defect, its cause, a violated invariant, or overall quality. Those conclusions require independently bound temporal or implementation evidence, or human review. Keep Program structure, sampled still pixels, decoded temporal artifact evidence, implementation evidence, and human judgment distinct."
+            },
+            "export_seconds": {
+              "type": "number"
+            },
+            "export_timecode": {
+              "type": "string"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "mime_type": {
+              "type": "string",
+              "enum": [
+                "image/jpeg"
+              ]
+            }
+          },
+          "required": [
+            "caption",
+            "export_seconds",
+            "export_timecode",
+            "width",
+            "height",
+            "mime_type"
+          ]
+        }
+      }
+    },
+    "required": [
+      "export_id",
+      "clip_id",
+      "composition_id",
+      "render_generation",
+      "render_plan_hash",
+      "duration_seconds",
+      "model_image_count",
+      "custody",
+      "limitations",
+      "frames"
+    ],
+    "additionalProperties": false
+  }
+}

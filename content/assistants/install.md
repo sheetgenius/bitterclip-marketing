@@ -55,7 +55,7 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
    It brings the connection and BitterClip's editing skills:
 
    ```bash
-   claude plugin marketplace add sheetgenius/bitterclip-plugin
+   claude plugin marketplace add sheetgenius/bitterclip-marketing
    claude plugin install bitterclip@bitterclip
    ```
 
@@ -107,7 +107,7 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
    connection and BitterClip's editing skills:
 
    ```bash
-   codex plugin marketplace add https://github.com/sheetgenius/bitterclip-plugin.git --ref main
+   codex plugin marketplace add https://github.com/sheetgenius/bitterclip-marketing.git --ref main
    codex plugin add bitterclip@bitterclip
    ```
 
@@ -147,5 +147,5 @@ Read https://bitterclip.com/docs/assistants/install and follow it exactly to ins
 - **A tool call is refused:** BitterClip's response says why and what to do; relay it to the
   person.
 
-The [BitterClip plugin](https://github.com/sheetgenius/bitterclip-plugin) is the source of
+The [BitterClip plugin](https://github.com/sheetgenius/bitterclip-marketing) is the source of
 the marketplaces above.

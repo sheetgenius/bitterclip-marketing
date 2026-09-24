@@ -1,0 +1,73 @@
+{
+  "name": "identity_prewarm_project",
+  "title": "Prewarm project Brand Studio identity",
+  "description": "App-only explicit retry/prep for a project's current Brand Studio identity. Reuses the existing IdentityMomentBake source-backed opener/outro path and never renders through a second renderer.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID."
+      },
+      "placements": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "opener",
+            "outro"
+          ]
+        },
+        "description": "Optional placements to prepare. Defaults to opener and outro."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16",
+          "16:9",
+          "1:1"
+        ],
+        "description": "Aspect materialization target. Defaults 16:9."
+      },
+      "canvas": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Optional render canvas key or dimensions."
+      },
+      "force": {
+        "type": "boolean",
+        "description": "If true, enqueue a bake job even when a matching preparing source already exists."
+      }
+    },
+    "required": [
+      "project_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "project_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "prewarm": {
+        "type": "object"
+      },
+      "brand_identity": {
+        "type": "object"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

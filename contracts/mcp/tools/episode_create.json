@@ -1,0 +1,559 @@
+{
+  "name": "episode_create",
+  "title": "Create an episode or derived reel",
+  "description": "Assemble a new EPISODE or derived reel from ordered recording/episode/template ranges into ONE combined video. For a reel cut from an Episode, pass derived_from_id for lineage and one segment row per chosen moment in the canonical shape {episode_id, range:[start_seconds,end_seconds]}; segments[].range is a half-open [start,end) interval in EPISODE time. derived_from_id does not select a range. Creation selects Program ranges; compose simultaneous participant boxes afterwards with camera_program_set, never extra segment fields. Use when the user asks to make/cut together/export a multi-segment highlight, reel, montage, or supercut — NOT for suggestions alone (offer source-backed candidates; save Moments with review_points_place only when asked) and NOT for a single-range Clip (use clip_create). Choose the opening and key visual beats from actual source-linked images before measuring all cut boundaries. Before keeping any materially long candidate in a reel intended for strangers, inspect representative source-linked pixels across the candidate's beginning, middle, and end for visual progression/payoff; shorten or omit a span when those samples add no new visual information. A static or screen-share span is not automatically no-payoff; keep an intentional, legible demonstration or reveal when its duration is needed to understand the payoff. Branding: pass identity:\"project_default\" when the project has saved Signature defaults and the user asks for their branding; browse identity_assets_list only when defaults are absent/unclear or a specific asset is named (full rules: bitterclip://docs/identity-signature). Episode-range slices keep what their parent plays there (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried, such as a pinned microphone in a montage without derived_from_id, refuses with program_audio_not_preservable and its exact span. Persists the edit only — does not render or charge. For ordinary multi-segment make/cut/create highlight, reel, or shareable-video intent, continue with render_create and render_status until ready using the exact returned target_type, target_id, and revision unless the user asks for draft-only, review-first, or no-render; publishing stays explicit. Always returns edge_warnings. A warning means a cut edge overlaps an approximate transcript word span, not that acoustic evidence proved a mid-word cut: keep the same created target and inspect each supplied episode_seconds directly with narrow episode_zoom regions and edges before rendering; occurrence_id and source_id identify the exact side. Read the target to map an edge only when these coordinates are absent. Preserve the point when speech evidence is supported inter_word_silence or supported aligned_word_edge; otherwise revise that same target with episode_edit using an exact supported point. Acoustic envelope/onset suggestions alone are not boundary authority. Do not call episode_create again or create/supersede another Clip merely to resolve edge_warnings (bitterclip://docs/errors). Accepts idempotency_key. A creation with derived_from_id produces a Clip (a derived Episode IS a Clip): pass target_type:\"clip\" to render_create/render_status/workspace_open for it. A canvas taller than the source picture (a portrait canvas over landscape footage) keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown), and episode_edit occurrence.reframe carries the framing decision.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "segments": {
+        "type": "array",
+        "description": "Ordered episode/recording/template segments. The only model-visible boundary field is range: use {episode_id, range:[start,end]} in EPISODE time or {recording_id, range:[start,end]} in SOURCE time. Both are half-open [start,end) intervals. Do not send episode_range or start_seconds/end_seconds. Template rows use {template, params} and have no range.",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "oneOf": [
+            {
+              "required": [
+                "episode_id",
+                "range"
+              ]
+            },
+            {
+              "required": [
+                "recording_id",
+                "range"
+              ]
+            },
+            {
+              "required": [
+                "template"
+              ],
+              "not": {
+                "required": [
+                  "range"
+                ]
+              }
+            }
+          ],
+          "properties": {
+            "episode_id": {
+              "type": "string",
+              "description": "Source Episode public ID. This row must also provide range in half-open EPISODE time."
+            },
+            "recording_id": {
+              "type": "string",
+              "description": "Source Recording public ID. This row must also provide range in half-open SOURCE time."
+            },
+            "template": {
+              "type": "string",
+              "description": "Curated block template key, such as show_open/studio_dissolve or outro/sting_chime."
+            },
+            "params": {
+              "type": "object",
+              "description": "Template parameters.",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "subtitle": {
+                  "type": "string"
+                },
+                "accent": {
+                  "type": "string",
+                  "description": "Hex color, for example #f28f84."
+                },
+                "sting": {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "chime",
+                    "bass",
+                    "glitch",
+                    "shutter"
+                  ]
+                }
+              }
+            },
+            "range": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "Required for episode_id and recording_id rows. The field is named range and contains the half-open interval [start_seconds, end_seconds): EPISODE time for episode_id, SOURCE time for recording_id."
+            },
+            "crop_strategy": {
+              "type": "string",
+              "enum": [
+                "center_crop",
+                "fit_pad"
+              ]
+            },
+            "audio_policy": {
+              "type": "string",
+              "enum": [
+                "source",
+                "mute"
+              ]
+            },
+            "caption_mode": {
+              "type": "string",
+              "enum": [
+                "inherit",
+                "off",
+                "on"
+              ]
+            },
+            "boundary_rationale": {
+              "type": "object",
+              "description": "Optional audit notes for selected boundaries.",
+              "properties": {
+                "start": {
+                  "type": "string"
+                },
+                "end": {
+                  "type": "string"
+                }
+              }
+            },
+            "zoom_regions": {
+              "type": "array",
+              "description": "Optional audit list of consulted source/episode windows.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title for the new episode."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional episode description."
+      },
+      "derived_from_id": {
+        "type": "string",
+        "description": "Optional parent Episode public ID used only for lineage/filing. It does not select media or replace segments[].range. Set it when a multi-segment reel is cut from one existing Episode and should be filed under that parent rather than listed as a primary project Episode."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "enum": [
+          "9:16",
+          "16:9",
+          "1:1"
+        ],
+        "description": "OMIT THIS unless the user asked for a specific shape or named a vertical destination (Reels/Shorts/TikTok). Left alone it follows the footage — the source recording's native aspect, nearest of 9:16/16:9/1:1, and 16:9 when unprobed — which is almost always what you want. \"Reel\" describes the edit, NOT the shape: setting 9:16 on landscape footage crops the sides away and can cut a second person out of frame."
+      },
+      "transition": {
+        "type": "string",
+        "enum": [
+          "cut",
+          "dip_to_black",
+          "overlap_dissolve"
+        ],
+        "description": "Optional seam transition for segment boundaries. Defaults to cut."
+      },
+      "identity": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "project_default",
+              "none"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "opener": {
+                "type": "string",
+                "description": "Explicit opener library_entry_id returned by identity_assets_list, or none. Use only when choosing a specific saved asset instead of project_default."
+              },
+              "outro": {
+                "type": "string",
+                "description": "Explicit outro library_entry_id returned by identity_assets_list, or none. Use only when choosing a specific saved asset instead of project_default."
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "description": "Optional highlight-reel Signature. Use project_default when the project has saved Signature defaults and the user wants their branding; saved project music becomes a full-Episode music cue. Discover first with identity_assets_list only when defaults are absent or unclear, the user names a specific opener or outro, or you need uses_title. Use the object form to choose explicit saved opener and outro assets. Add or change a specific song with music_cue_mutate after creation. Omitted object keys mean none."
+      },
+      "opener_title": {
+        "type": "string",
+        "description": "Optional per-reel opener title. Pass only when the selected opener asset has uses_title:true; static or absent openers return identity_warnings:[\"opener_title_ignored_static_opener\"] and ignore this value."
+      },
+      "supersedes_episode_id": {
+        "type": "string",
+        "description": "Optional explicit lineage when the user deliberately asks for a replacement draft. Never use this for edge_warnings: verify and revise the same created target with episode_edit."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Opaque key unique across the account for this logical creation. For a new create under a v3 editor ask, use the full requestId plus a distinct action suffix; otherwise choose a fresh opaque key once. Exact retry/recovery reuses the original complete key and arguments, including across later messages. Never derive keys from titles or media ranges or re-key an ambiguous write. A near-duplicate this same session already created comes back with near_duplicate:true instead of a second row."
+      }
+    },
+    "required": [
+      "segments",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "recording_not_found",
+    "invalid_time_range",
+    "invalid_input",
+    "identity_asset_not_found",
+    "identity_brand_mismatch",
+    "music_range_derivation_unsupported",
+    "program_audio_not_preservable",
+    "program_source_range_unplayable",
+    "stale_composition_revision"
+  ],
+  "examples": [
+    {
+      "label": "Create a top-level episode from recording ranges",
+      "input": {
+        "segments": [
+          {
+            "recording_id": "src_...",
+            "range": [
+              0.0,
+              300.0
+            ]
+          }
+        ],
+        "title": "Episode 3",
+        "idempotency_key": "episode-1"
+      }
+    },
+    {
+      "label": "Create a derived highlight reel under one parent episode",
+      "input": {
+        "derived_from_id": "comp_parent",
+        "segments": [
+          {
+            "episode_id": "comp_parent",
+            "range": [
+              124.5,
+              151.0
+            ]
+          },
+          {
+            "episode_id": "comp_parent",
+            "range": [
+              421.0,
+              455.0
+            ]
+          }
+        ],
+        "title": "Best moments",
+        "idempotency_key": "episode-reel-1"
+      }
+    },
+    {
+      "label": "Create a top-level montage from multiple episodes",
+      "input": {
+        "segments": [
+          {
+            "episode_id": "comp_a",
+            "range": [
+              124.5,
+              151.0
+            ]
+          },
+          {
+            "episode_id": "comp_b",
+            "range": [
+              421.0,
+              455.0
+            ]
+          }
+        ],
+        "title": "Cross-episode best moments",
+        "idempotency_key": "episode-montage-1"
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "near_duplicate": {
+        "type": "boolean",
+        "description": "True when nothing was created because this session already made a near-identical derived clip — the returned handles are that existing clip's. Refine it with episode_edit; do not retry the create."
+      },
+      "already_applied": {
+        "type": "boolean",
+        "description": "True when the returned persisted Clip was already in place: either an exact same-key replay, or (with near_duplicate:true) same-session range convergence."
+      },
+      "clip_id": {
+        "type": "string",
+        "description": "Present when target_type is clip. The episode_id alias remains for compatibility."
+      },
+      "target_type": {
+        "type": "string",
+        "enum": [
+          "episode",
+          "clip"
+        ],
+        "description": "Structural kind of the created composition."
+      },
+      "target_id": {
+        "type": "string",
+        "description": "Canonical handle for the created Episode or Clip."
+      },
+      "title": {
+        "type": "string",
+        "description": "Persisted title of the created Episode or Clip."
+      },
+      "segment_count": {
+        "type": "integer",
+        "description": "Number of persisted Program segments in the returned target."
+      },
+      "creation_disposition": {
+        "type": "string",
+        "enum": [
+          "created",
+          "replayed",
+          "converged"
+        ],
+        "description": "Whether this call created a target, replayed the exact idempotent create, or converged onto an existing near-duplicate."
+      },
+      "duration_seconds": {
+        "type": "number",
+        "description": "Kept play length in seconds."
+      },
+      "total_duration_seconds": {
+        "type": "number",
+        "description": "Total Program duration, including applied identity segments."
+      },
+      "content_duration_seconds": {
+        "type": "number",
+        "description": "Duration of the requested editorial content before identity additions."
+      },
+      "derived_from_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Parent Episode handle when the created target is a Clip."
+      },
+      "identity_opener": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Compact applied opener summary when present."
+      },
+      "project_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Owning Project handle when present."
+      },
+      "workspace_url": {
+        "type": "string",
+        "description": "BitterClip workspace URL for the created target."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Durable revision counter (starts at 1 for a fresh episode)."
+      },
+      "tool_outcome": {
+        "type": "object",
+        "description": "Persisted production receipt with the exact target, revision, and next Open action."
+      },
+      "segments": {
+        "type": "array",
+        "description": "The persisted segment manifest (index, source_id, source_label, source_range, episode_range, boundary)."
+      },
+      "block_segments": {
+        "type": "array",
+        "description": "Template-backed segments created during this request.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "integer"
+            },
+            "template": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "preparing",
+                "failed"
+              ],
+              "description": "Whether the template-backed Recording is already renderable or still baking."
+            }
+          }
+        }
+      },
+      "edge_warnings": {
+        "type": "array",
+        "description": "Always present. Non-mutating flags for cut edges that overlap approximate transcript word spans; acoustic verification decides whether the existing point is supported.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "segment_index": {
+              "type": "integer"
+            },
+            "edge": {
+              "type": "string",
+              "enum": [
+                "start",
+                "end"
+              ]
+            },
+            "at_seconds": {
+              "type": "number",
+              "description": "Recording source time for the flagged edge. This legacy field name is not Episode time."
+            },
+            "source_id": {
+              "type": "string",
+              "description": "Recording containing the flagged source edge."
+            },
+            "occurrence_id": {
+              "type": "string",
+              "description": "Exact created-target occurrence containing this edge, when mapped."
+            },
+            "episode_seconds": {
+              "type": "number",
+              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+            },
+            "word": {
+              "type": "string"
+            },
+            "word_range_source": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "identity_plan": {
+        "type": "object",
+        "description": "Frozen resolved identity plan when identity: project_default resolved to an applied project identity."
+      },
+      "identity_layers": {
+        "type": "array",
+        "description": "Resolved Signature layers such as opener, cut style, and outro."
+      },
+      "identity_segments": {
+        "type": "array",
+        "description": "Identity-inserted segment rows with role, final_position, and segment_id for follow-up edits."
+      },
+      "identity_warnings": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Identity warnings such as project_identity_missing or unsupported identity config."
+      },
+      "request_row_map": {
+        "type": "array",
+        "description": "Mapping from requested rows to final composition positions, including segment_id. Identity insertion shifts these positions."
+      },
+      "derived": {
+        "type": "boolean",
+        "description": "True when this edit is filed under a parent episode via derived_from_id and hidden from the primary episode index."
+      },
+      "derived_episode": {
+        "type": "boolean",
+        "description": "Present and true only for a top-level montage assembled from episode_id segments without derived_from_id."
+      },
+      "derived_from_episode_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Source episode IDs used to assemble a top-level montage episode."
+      },
+      "program_audio": {
+        "type": "object",
+        "description": "Present on a fresh create cut from existing Episodes/Clips: preserved is true because each selected range was proven to play the same Recording and source second (or silence) as its parent. settled says how: none (plain occurrence audio), pin, intervals or pin_and_intervals.",
+        "properties": {
+          "preserved": {
+            "type": "boolean"
+          },
+          "settled": {
+            "type": "string",
+            "enum": [
+              "none",
+              "pin",
+              "intervals",
+              "pin_and_intervals"
+            ]
+          },
+          "pinned_camera_group_key": {
+            "type": "string",
+            "description": "The camera group the new target's Program audio is pinned to, when settled includes pin."
+          },
+          "authorities": {
+            "type": "array",
+            "description": "Seconds of the new target played by each authority and Recording.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "authority": {
+                  "type": "string",
+                  "enum": [
+                    "occurrence_base",
+                    "pinned_primary",
+                    "explicit_replace",
+                    "explicit_silence",
+                    "silence"
+                  ]
+                },
+                "recording_id": {
+                  "type": "string"
+                },
+                "seconds": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "status": {
+        "type": "string",
+        "description": "Always draft — persisted but not rendered."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "required": [
+      "edge_warnings"
+    ],
+    "additionalProperties": false
+  }
+}

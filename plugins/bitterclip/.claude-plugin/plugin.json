@@ -1,0 +1,11 @@
+{
+  "name": "bitterclip",
+  "version": "0.2.1",
+  "description": "Turn recordings into editable clips and exact video exports.",
+  "homepage": "https://bitterclip.com/",
+  "license": "MIT",
+  "author": {
+    "name": "SheetGenius, Inc.",
+    "url": "https://company.sheetgenius.com"
+  }
+}

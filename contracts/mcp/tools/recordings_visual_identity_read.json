@@ -1,0 +1,51 @@
+{
+  "name": "recordings_visual_identity_read",
+  "title": "Read image identifications and application status",
+  "description": "Read saved exact-image answers, current native background work, capability limits and guarded recovery actions. Optional contextual image questions include source time, marked box, media evidence and a signed question_context. Inspect the actual evidence before answering; raw examples are not a recognition-training checklist. Poll pending application with include_questions false. A completed update does not establish identity throughout a Recording.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "source_seconds": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Deliberately inspect retained marked images nearest this Recording time. Returned times are exact; do not assume the requested time was sampled."
+      },
+      "include_questions": {
+        "type": "boolean",
+        "default": true
+      },
+      "visual_identity_decision_id": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "visual_identity_decision_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "visual_identity_questions": {
+        "type": "object"
+      },
+      "decision": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

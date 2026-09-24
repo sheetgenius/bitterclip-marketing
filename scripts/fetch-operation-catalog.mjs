@@ -2,58 +2,83 @@ import { createHash, randomUUID } from 'node:crypto'
 import { spawn } from 'node:child_process'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
+import { readPublicAgentContract } from './public-agent-contract.mjs'
 
-// The static tool reference is a snapshot of the *deployed* product catalog.
-// A failed fetch fails the build; an old local snapshot is never a fallback.
-const source = process.env.BITTERCLIP_CATALOG_URL || 'https://app.bitterclip.com/api/v1/operation_catalog.json'
-const target = resolve('tmp/mcp-catalog-snapshot.json')
-await rm(target, { force: true })
+// Capture only what the serving Rails McpServer projects. A failed fetch or
+// provenance mismatch fails the static build; no prior snapshot is a fallback.
+const source = process.env.BITTERCLIP_CATALOG_URL || 'https://app.bitterclip.com/api/v1/mcp_descriptors.json'
 const url = new URL(source)
 if (process.env.BITTERCLIP_CATALOG_URL && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) {
-  throw new Error('Catalog source override is only for local tests')
+  throw new Error('Descriptor source override is only for local tests')
 }
-
-const response = await fetch(url, { signal: AbortSignal.timeout(20_000), headers: { accept: 'application/json' } })
-if (!response.ok) throw new Error(`Catalog fetch failed: ${response.status} ${source}`)
-const release = response.headers.get('x-bitterclip-release')
-if (!release || !/^[0-9a-f]{7,40}$/.test(release) || (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(release))) {
-  throw new Error('Catalog response has no valid X-BitterClip-Release header')
-}
-const catalog = await response.json()
-if (catalog?.schema_version !== 'bitterclip.operation_catalog.v1' || catalog?.surface !== 'mcp_model_visible') {
-  throw new Error('Catalog has an unexpected schema or surface')
-}
-if (!Array.isArray(catalog.operations) || catalog.operations.length === 0) throw new Error('Catalog has no operations')
-const names = new Set()
-for (const operation of catalog.operations) {
-  if (typeof operation.name !== 'string' || !/^[a-z][a-z0-9_]*$/.test(operation.name) || names.has(operation.name) ||
-      typeof operation.title !== 'string' || !operation.title.trim() ||
-      typeof operation.description !== 'string' || !operation.description.trim() ||
-      !operation.input_schema || typeof operation.input_schema !== 'object' || Array.isArray(operation.input_schema)) {
-    throw new Error(`Invalid or duplicate catalog operation: ${operation?.name}`)
+const target = resolve('tmp/mcp-catalog-snapshot.json')
+const localContract = await readPublicAgentContract()
+await rm(target, { force: true })
+const profiles = {}
+let release
+let commit
+let contractDigest
+for (const profile of ['model', 'app', 'live_workspace']) {
+  const endpoint = new URL(url)
+  endpoint.searchParams.set('profile', profile)
+  endpoint.searchParams.set('connector_family', 'chatgpt')
+  const response = await fetch(endpoint, { signal: AbortSignal.timeout(20_000), headers: { accept: 'application/json' } })
+  if (!response.ok) throw new Error(`MCP descriptor fetch failed: ${response.status} ${endpoint}`)
+  const servedRelease = response.headers.get('x-bitterclip-release')
+  if (!servedRelease || !/^[0-9a-f]{7,40}$/.test(servedRelease) ||
+      (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(servedRelease))) {
+    throw new Error(`${profile} descriptor response has no valid X-BitterClip-Release header`)
   }
-  names.add(operation.name)
+  const body = await response.json()
+  if (body.public_contract_digest !== localContract.digest) {
+    throw new Error(`${profile} serving Rails contract digest ${body.public_contract_digest} differs from this site's ${localContract.digest}`)
+  }
+  if (body?.schema_version !== 'bitterclip.mcp_descriptors.v1' || body.profile !== profile ||
+      body.connector_family !== 'chatgpt' || !Array.isArray(body.descriptors) ||
+      !Array.isArray(body.guidance) || body.descriptors.length !== ({ model: 63, app: 113, live_workspace: 63 })[profile] ||
+      body.guidance.length !== body.descriptors.length ||
+      !/^[a-f0-9]{40}$/.test(body.public_contract_commit) ||
+      !/^[a-f0-9]{64}$/.test(body.public_contract_digest)) {
+    throw new Error(`Invalid ${profile} MCP descriptor profile`)
+  }
+  const names = new Set()
+  for (const item of body.descriptors) {
+    if (typeof item.name !== 'string' || names.has(item.name) ||
+        typeof item.title !== 'string' || typeof item.description !== 'string' ||
+        !item.inputSchema || typeof item.inputSchema !== 'object') {
+      throw new Error(`Invalid or duplicate ${profile} descriptor: ${item?.name}`)
+    }
+    names.add(item.name)
+  }
+  if (!names.has(profile === 'live_workspace' ? 'workspace_get_link' : 'help') ||
+      ['list_docs', 'search_docs', 'read_doc'].some((name) => names.has(name))) {
+    throw new Error(`${profile} descriptor profile has missing or retired help tools`)
+  }
+  if (release && release !== servedRelease || commit && commit !== body.public_contract_commit ||
+      contractDigest && contractDigest !== body.public_contract_digest) {
+    throw new Error(`MCP descriptor profiles came from different product or contract releases`)
+  }
+  release = servedRelease
+  commit = body.public_contract_commit
+  contractDigest = body.public_contract_digest
+  profiles[profile] = { descriptors: body.descriptors, guidance: body.guidance }
 }
-if (!names.has('help') || ['list_docs', 'search_docs', 'read_doc'].some((name) => names.has(name))) {
-  throw new Error('Catalog still exposes retired help tools; deploy the Rails help cutover before building the site')
-}
-
-const operations = catalog.operations
-const digest = createHash('sha256').update(JSON.stringify(operations)).digest('hex')
+const digest = createHash('sha256').update(JSON.stringify(profiles)).digest('hex')
 const buildId = randomUUID()
 const snapshot = {
-  schema_version: catalog.schema_version,
-  surface: catalog.surface,
+  schema_version: 'bitterclip.mcp_surface_snapshot.v1',
   source: url.toString(),
   product_release: release,
+  public_contract_commit: commit,
+  public_contract_digest: contractDigest,
   retrieved_at: new Date().toISOString(),
   digest,
   build_id: buildId,
-  operations,
+  profiles,
 }
 await mkdir(resolve('tmp'), { recursive: true })
 await writeFile(target, JSON.stringify(snapshot) + '\n')
-console.log(`Catalog snapshot: ${operations.length} tools, product ${release.slice(0, 12)}, SHA-256 ${digest}`)
+console.log(`MCP snapshot: 113 tools, product ${release.slice(0, 12)}, contract ${commit.slice(0, 12)} / ${contractDigest}`)
 
 const command = process.argv[2]
 if (command) {

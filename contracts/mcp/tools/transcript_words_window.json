@@ -1,0 +1,71 @@
+{
+  "name": "transcript_words_window",
+  "title": "Read approximate word annotations for transcript lines",
+  "description": "App/internal read-only semantic locator for a small set of transcript lines on a RAW recording (the drawer, not an episode). Word annotations are approximate and must never authorize a structural cut. For episode editing, use episode_read to locate candidate media, then inspect narrow audio/frame evidence with episode_zoom or episode_sample_frames before placing a precise boundary.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "The recording public ID whose transcript lines to inspect."
+      },
+      "line_numbers": {
+        "type": "array",
+        "description": "Specific transcript line numbers to inspect, such as [31, 33].",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "start_line": {
+        "type": "integer",
+        "description": "First line in an inclusive contiguous range."
+      },
+      "end_line": {
+        "type": "integer",
+        "description": "Last line in an inclusive contiguous range. Defaults to start_line when omitted by internal callers."
+      },
+      "transcript_fingerprint": {
+        "type": "string",
+        "description": "Required fingerprint for the recording's current line segmentation; prevents stale line numbers after retranscription or speaker-label changes."
+      },
+      "segmentation_version": {
+        "type": "string",
+        "description": "Optional segmentation version for the recording's current line segmentation."
+      }
+    },
+    "required": [
+      "recording_id",
+      "transcript_fingerprint"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "transcript_not_ready",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "segmentation_version": {
+        "type": "string"
+      },
+      "transcript_fingerprint": {
+        "type": "string"
+      },
+      "line_count": {
+        "type": "integer"
+      },
+      "transcript": {
+        "type": "string",
+        "description": "Plain text timing for the requested line(s). Word-timed transcripts include word_id values for semantic anchors and local timing reference; unit fallback rows are line-selection only."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

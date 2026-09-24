@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bitterclip": {
+      "type": "http",
+      "url": "https://app.bitterclip.com/mcp"
+    }
+  }
+}

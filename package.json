@@ -14,6 +14,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "docs:audit": "node qa/docs-audit.mjs",
+    "contract:validate": "node scripts/public-agent-contract.mjs",
     "artifact:status": "node qa/iso4-artifact-status.mjs",
     "artifact:bake": "node qa/iso4-artifact-bake.mjs",
     "artifact:encode": "node qa/iso4-artifact-encode.mjs",

@@ -1,0 +1,95 @@
+{
+  "name": "recordings_create_from_url",
+  "title": "Queue recording URL ingest",
+  "description": "Use this to programmatically add a media file to BitterClip without the web UI. The caller provides a fetchable URL; BitterClip validates that the URL is public, creates an ingest job, returns immediately, then fetches and stores the bytes in the background before starting transcription. Prefer open_uploader when the user has a local file.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "source_url": {
+        "type": "string",
+        "description": "Fetchable public http(s) URL the server can GET to retrieve the media bytes. Private, localhost, link-local, and credential-bearing URLs are rejected."
+      },
+      "filename": {
+        "type": "string",
+        "description": "Original filename (used for title fallback and stored in metadata)."
+      },
+      "content_hash": {
+        "type": "string",
+        "description": "Lowercase hex SHA-256 of the bytes. When provided, the server verifies it matches the downloaded bytes and uses it for idempotency."
+      },
+      "byte_size": {
+        "type": "integer",
+        "description": "Expected byte length. Verified after download."
+      },
+      "mtime": {
+        "type": "string",
+        "description": "ISO-8601 source mtime; stored in metadata for the agent's own bookkeeping."
+      },
+      "folder": {
+        "type": "string",
+        "description": "Caller-supplied folder/path string for bookkeeping; stored in metadata."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Optional existing project public ID to attach the recording to."
+      },
+      "title": {
+        "type": "string",
+        "description": "Optional title; defaults to a title-cased version of the filename."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional human description."
+      }
+    },
+    "required": [
+      "source_url"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "invalid_input",
+    "invalid_source_url",
+    "billing_required",
+    "unsupported_ingress_transport"
+  ],
+  "examples": [
+    {
+      "label": "Ingest the latest show from a fetchable URL",
+      "input": {
+        "source_url": "https://example.com/uploads/show-6.mp4",
+        "filename": "20260526-show-6.mp4",
+        "content_hash": "d41d8cd98f00b204e9800998ecf8427e..."
+      }
+    }
+  ],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "status": {
+        "type": "string",
+        "description": "queued"
+      },
+      "ingest_job_id": {
+        "type": "string"
+      },
+      "job_id": {
+        "type": "string"
+      },
+      "source_url_host": {
+        "type": "string"
+      },
+      "source_url_path": {
+        "type": "string"
+      },
+      "workspace_url": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

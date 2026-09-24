@@ -1,0 +1,244 @@
+{
+  "name": "speakers_profile_mutate",
+  "title": "Change a remembered person",
+  "description": "One account-level person governance change per call. merge applies an explicitly reviewed duplicate merge (moves bindings, aliases, and saved voice examples to the survivor, tombstones the duplicate, writes a review receipt; never rewrites transcript words, rendered captions, approval copy, published posts, or old export labels). keep_separate records that two similar people were reviewed and stay separate. set_memory_scope chooses how far a saved voice reaches (global_host or one project); admitted voice evidence re-verifies for the new scope. clear_unusable_voice quarantines unusable saved voice examples and clears invalid legacy voice memory. Profile ids ride inside the action; resolution is account-scoped. Pass a caller-stable idempotency key with every action; the person lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "expected_revision": {
+        "type": "integer",
+        "description": "Optional: carried toward the standard mutation contract. The person lane exposes no structural revision yet; omit until it does."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable retry key for this exact change."
+      },
+      "action": {
+        "type": "object",
+        "description": "One person governance action. Profile ids ride inside the action; resolution is account-scoped.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "merge"
+                ]
+              },
+              "survivor_profile_id": {
+                "type": "string",
+                "description": "SpeakerProfile public ID, slug, or UUID to keep."
+              },
+              "merged_profile_id": {
+                "type": "string",
+                "description": "SpeakerProfile public ID, slug, or UUID to merge into the survivor."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional human-readable review reason."
+              }
+            },
+            "required": [
+              "type",
+              "survivor_profile_id",
+              "merged_profile_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "keep_separate"
+                ]
+              },
+              "profile_id": {
+                "type": "string",
+                "description": "SpeakerProfile public ID, slug, or UUID."
+              },
+              "duplicate_profile_id": {
+                "type": "string",
+                "description": "Possible duplicate SpeakerProfile public ID, slug, or UUID."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional human-readable review reason."
+              }
+            },
+            "required": [
+              "type",
+              "profile_id",
+              "duplicate_profile_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set_memory_scope"
+                ]
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Person public ID, slug, or UUID."
+              },
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "global_host",
+                  "project"
+                ],
+                "description": "global_host: recognize this person across all projects. project: use this voice for one project only."
+              },
+              "project_id": {
+                "type": "string",
+                "description": "Project public ID, slug, or UUID. Required when scope is project."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_profile_id",
+              "scope"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "clear_unusable_voice"
+                ]
+              },
+              "speaker_profile_id": {
+                "type": "string",
+                "description": "Person public ID, slug, or UUID."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Optional human-readable reason for the repair receipt."
+              }
+            },
+            "required": [
+              "type",
+              "speaker_profile_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "speaker_not_found",
+    "project_not_found",
+    "invalid_input",
+    "idempotency_conflict",
+    "speaker_memory_scope_busy",
+    "voiceprint_evidence_policy_invalid"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "speaker_profile_merge_id": {
+        "type": "string"
+      },
+      "survivor_profile_id": {
+        "type": "string"
+      },
+      "merged_profile_id": {
+        "type": "string"
+      },
+      "moved_speaker_maps_count": {
+        "type": "integer"
+      },
+      "moved_voiceprints_count": {
+        "type": "integer"
+      },
+      "moved_aliases_count": {
+        "type": "integer"
+      },
+      "moved_reference_assets_count": {
+        "type": "integer"
+      },
+      "reference_asset_outcomes": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "kept_separate": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "profile_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "speaker_profile_id": {
+        "type": "string"
+      },
+      "speaker_profile_name": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "memory_scope": {
+        "type": "string"
+      },
+      "host_across_projects": {
+        "type": "boolean"
+      },
+      "home_project_id": {
+        "type": "string"
+      },
+      "home_project_title": {
+        "type": "string"
+      },
+      "invalidated_voiceprint_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "quarantined_voiceprint_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "cleared_legacy_voice": {
+        "type": "boolean"
+      },
+      "status": {
+        "type": "string"
+      },
+      "receipt_id": {
+        "type": "string"
+      },
+      "state_sentence": {
+        "type": "string"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

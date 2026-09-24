@@ -1,0 +1,50 @@
+{
+  "name": "recordings_visual_identity_undo",
+  "title": "Undo an image identification",
+  "description": "Append a guarded withdrawal of the current exact-image answer, or restore the answer it corrected. Preserves newer and unrelated answers. The durable Undo is separate from its native background picture update; read status until settled.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "visual_identity_decision_id": {
+        "type": "string"
+      },
+      "idempotency_key": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "recording_id",
+      "visual_identity_decision_id",
+      "idempotency_key"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "visual_identity_actor_required",
+    "visual_identity_supersession_stale",
+    "visual_identity_question_stale",
+    "idempotency_conflict",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "decision": {
+        "type": "object"
+      },
+      "speaker_evidence": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

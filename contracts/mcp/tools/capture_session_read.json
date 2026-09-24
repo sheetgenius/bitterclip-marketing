@@ -1,0 +1,91 @@
+{
+  "name": "capture_session_read",
+  "title": "Read a footage session",
+  "description": "Read the evidence-backed Footage-session manifest. Returns source facts, typed observations, solve receipts, exact capture-time gaps and overlaps, source/capture/episode mappings, corrections, revision, uncertainty, and the next safe action. Capture time preserves real gaps; episode time collapses idle gaps after an explicit build.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "capture_session_id": {
+        "type": "string",
+        "description": "Footage-session public ID."
+      }
+    },
+    "required": [
+      "capture_session_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "capture_session_not_found",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "schema": {
+        "type": "string"
+      },
+      "capture_session_id": {
+        "type": "string"
+      },
+      "episode_id": {
+        "type": "string"
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "revision": {
+        "type": "integer"
+      },
+      "zoom_import": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Safe lifecycle projection for an autonomous Zoom recording import, when this Footage session came from Zoom."
+      },
+      "coordinate_origin_recording_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Recording that defines capture-time zero for the accepted chronology."
+      },
+      "capture_origin_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "ISO 8601 wall-clock instant corresponding to capture-time zero when trusted clock evidence exists."
+      },
+      "facts": {
+        "type": "object"
+      },
+      "inferences": {
+        "type": "object"
+      },
+      "episode_projection": {
+        "type": "object"
+      },
+      "listening_reference": {
+        "type": "object",
+        "description": "Automatic or user-selected speech-rich listening reference. This preference does not replace per-recording transcription or Precision-2 speaker identity."
+      },
+      "corrections": {
+        "type": "array"
+      },
+      "next_action": {
+        "type": "object"
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

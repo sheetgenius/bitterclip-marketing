@@ -1,0 +1,421 @@
+{
+  "name": "audio_program_mutate",
+  "title": "Change Program audio",
+  "description": "One Program-audio change per call: set, pin_set, treatment_set, or revert. This controls source audio only; it never adds, mixes, lowers, or ducks background music — use music_cue_mutate for music. set chooses occurrence-relative Program audio without changing picture — mode accepts replace, silence, clear, or reset; Replace requires an Episode camera_group_key plus the exact footage-session revision you inspected, and BitterClip derives every recording/source slice from synchronized evidence (the caller never supplies source coordinates; read the Episode first and address stable occurrence IDs and source-time ranges, never transcript word times); reset atomically clears the Program pin and every explicit interval policy, omitting occurrence_id and occurrence_source_range. pin_set chooses one stable synchronized camera group as the preferred Program-audio source wherever it has usable coverage, without changing picture, chronology, or the listening reference; pass auto to clear. The settled fallback is explicit interval Replace or silence, then the pin where covered, then the Program occurrence's own recording, then true silence. treatment_set chooses Speech (a versioned, bounded gain/ramp plan tied to the exact raw audio-authority digest; when audio authority later changes the saved plan reads stale and playback falls back truthfully to Raw) or Raw for an explicit bypass. Speech requires measured short-term loudness from ordinary ingest of a supported new recording. If processing is pending, follow the returned recording-status continuation before retrying; terminal unavailable, silence, or insufficient-measurement results retain Raw and must not be retried to regenerate missing measurements. Existing recordings are not backfilled. Speech leveling is separate from final Export mastering. revert applies the server-owned inverse recorded by one Program-audio receipt as a new revision-checked forward edit, failing closed if the prior audio state can no longer be restored exactly.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string",
+        "description": "Editable Episode public ID that scopes this change."
+      },
+      "expected_revision": {
+        "type": "integer",
+        "description": "Current Episode revision returned by episode_read."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Caller-stable key for an exact retry."
+      },
+      "action": {
+        "type": "object",
+        "description": "One Program-audio action. Use the canonical field names in the matching action shape.",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "set"
+                ]
+              },
+              "occurrence_id": {
+                "type": "string",
+                "description": "Stable occ_... Program occurrence identity. Omit only for reset."
+              },
+              "occurrence_source_range": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "description": "Half-open source-time range inside the occurrence. Omit only for reset."
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "replace",
+                  "silence",
+                  "clear",
+                  "reset"
+                ],
+                "description": "Replace with synchronized camera-group audio, choose deliberate silence, clear policy in one occurrence range, or reset the whole Program audio graph."
+              },
+              "camera_group_key": {
+                "type": "string",
+                "description": "Required for Replace: stable camgrp_... identity from the Episode camera roster."
+              },
+              "expected_capture_session_revision": {
+                "type": "integer",
+                "description": "Required for Replace: exact footage-session evidence revision returned by episode_read."
+              }
+            },
+            "required": [
+              "type",
+              "mode"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "pin_set"
+                ]
+              },
+              "camera_group_key": {
+                "type": "string",
+                "description": "Stable camgrp_... identity from the Episode camera roster, or auto to clear the explicit pin."
+              },
+              "expected_capture_session_revision": {
+                "type": "integer",
+                "description": "Required when pinning: exact footage-session evidence revision returned by episode_read. Omit only when clearing with auto."
+              }
+            },
+            "required": [
+              "type",
+              "camera_group_key"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "treatment_set"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "speech",
+                  "raw"
+                ],
+                "description": "Speech applies the saved speech-leveling plan; Raw bypasses it."
+              }
+            },
+            "required": [
+              "type",
+              "mode"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "revert"
+                ]
+              },
+              "receipt_id": {
+                "type": "string",
+                "description": "Program-audio operation receipt returned by a prior audio_program_mutate action."
+              }
+            },
+            "required": [
+              "type",
+              "receipt_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "required": [
+      "episode_id",
+      "expected_revision",
+      "idempotency_key",
+      "action"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "composition_not_found",
+    "recording_not_found",
+    "stale_composition_revision",
+    "idempotency_conflict",
+    "invalid_time_range",
+    "invalid_audio_treatment",
+    "audio_evidence_unavailable",
+    "transcript_timing_unavailable",
+    "speech_evidence_unavailable",
+    "speech_source_unavailable",
+    "invalid_input",
+    "program_audio_conflict"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "episode_id": {
+        "type": "string"
+      },
+      "base_revision": {
+        "type": "integer"
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Revision committed by this audio operation."
+      },
+      "current_revision": {
+        "type": "integer",
+        "description": "Current durable Episode head, which may be newer on an exact retry."
+      },
+      "changed": {
+        "type": "boolean"
+      },
+      "already_applied": {
+        "type": "boolean"
+      },
+      "operation_receipt_id": {
+        "type": "string"
+      },
+      "audio_program_digest": {
+        "type": "string",
+        "description": "Resolved Program-audio digest committed by this operation."
+      },
+      "current_audio_program_digest": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "audio_program": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Canonical Program-audio intervals shared by immediate playback and render. Null only when changed footage evidence makes the current audio policy fail closed."
+      },
+      "audio_program_error": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Typed fail-closed projection when the current audio policy needs review."
+      },
+      "render_stale": {
+        "type": "boolean"
+      },
+      "inverse": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "audio_program_mutate"
+            ],
+            "description": "Revert by calling this op with action { type: revert, receipt_id }."
+          },
+          "receipt_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "receipt_id"
+        ],
+        "additionalProperties": false
+      },
+      "tool_outcome": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "bitterclip.tool_outcome.v1"
+            ]
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "audio_program_mutate"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "applied",
+              "unchanged",
+              "replayed"
+            ]
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "episode",
+                  "clip"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^comp_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "pin.set",
+              "range.set",
+              "program.reset",
+              "treatment.set",
+              "operation.revert"
+            ]
+          },
+          "revisions": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "committed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "current": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "base",
+              "committed",
+              "current"
+            ],
+            "additionalProperties": false
+          },
+          "receipt": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              },
+              "inverse": {
+                "type": "object",
+                "properties": {
+                  "op": {
+                    "type": "string",
+                    "enum": [
+                      "audio_program_mutate"
+                    ]
+                  },
+                  "receipt_id": {
+                    "type": "string",
+                    "pattern": "^rcpt_[a-z0-9]+$"
+                  }
+                },
+                "required": [
+                  "op",
+                  "receipt_id"
+                ],
+                "additionalProperties": false,
+                "description": "Present only when this write changed Program audio: call audio_program_mutate with action { type: revert, receipt_id }."
+              },
+              "reverts_receipt_id": {
+                "type": "string",
+                "pattern": "^rcpt_[a-z0-9]+$"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "digests": {
+            "type": "object",
+            "properties": {
+              "before": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "result": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "current": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "before",
+              "result",
+              "current"
+            ],
+            "additionalProperties": false,
+            "description": "Program digests before and after this write, and now. Read continuations pin the digest; boundary evidence does not depend on it."
+          },
+          "checks": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "string",
+                "enum": [
+                  "advanced",
+                  "unchanged"
+                ]
+              },
+              "program_digest": {
+                "type": "string",
+                "enum": [
+                  "changed",
+                  "unchanged"
+                ]
+              }
+            },
+            "required": [
+              "revision",
+              "program_digest"
+            ],
+            "additionalProperties": false,
+            "description": "The currentness checks this write moved: the Composition revision and the Program digest. Boundary evidence depends on neither; the next edit re-verifies each token at its point."
+          }
+        },
+        "required": [
+          "schema",
+          "tool",
+          "status",
+          "target",
+          "operation",
+          "revisions",
+          "receipt",
+          "digests",
+          "checks"
+        ],
+        "additionalProperties": false,
+        "description": "Receipt-derived consequence of this Program-audio write. The target names the edited Episode or Clip; unchanged means the write settled with nothing to change."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}

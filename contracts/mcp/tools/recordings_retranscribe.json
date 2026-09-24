@@ -1,0 +1,38 @@
+{
+  "name": "recordings_retranscribe",
+  "title": "Re-transcribe & re-diarize a recording",
+  "description": "Re-run transcription + speaker diarization (pyannote) on an EXISTING recording. Use to recover speaker labels when a recording shows everyone as one unnamed speaker (all one color) — e.g. it was transcribed before diarization was working. This REPLACES the transcript (re-runs speech-to-text + diarization + speaker identity + auto-title) and UNLINKS any existing clips, so only use it on a recording without clips worth keeping. Returns immediately with status \"transcribing\"; poll the recording (recordings_list) to see the labeled speakers when it finishes.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string",
+        "description": "The recording public ID to re-transcribe and re-diarize."
+      }
+    },
+    "required": [
+      "recording_id"
+    ],
+    "additionalProperties": false
+  },
+  "errors": [
+    "recording_not_found",
+    "billing_required",
+    "invalid_input"
+  ],
+  "examples": [],
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recording_id": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "description": "\"transcribing\" once the job is queued."
+      }
+    },
+    "required": [],
+    "additionalProperties": false
+  }
+}
