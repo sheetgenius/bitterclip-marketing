@@ -19,6 +19,7 @@ const textUnsafe = [
   /https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|[^/]+\.local)(?::\d+)?(?:\/|$)/i,
   /\bbc_oauth_[A-Za-z0-9_-]+\b/i,
   /\bBearer\s+(?:sk-[A-Za-z0-9_-]+|[A-Za-z0-9_-]{24,})\b/i,
+  /\b(?:authorization|x-api-key|api[_-]?key|client[_-]?secret|access[_-]?token|refresh[_-]?token|password)\s*[:=]\s*(?:["']?\s*)?(?:Bearer\s+)?[A-Za-z0-9_./+=-]{12,}/i,
 ]
 
 function fail(path, message) { throw new Error(`${path}: ${message}`) }
@@ -125,6 +126,13 @@ export async function readPublicAgentContract(root = process.cwd()) {
     if (!Array.isArray(tool.examples)) fail(`${path}.examples`, 'invalid examples')
     tools.set(tool.name, tool)
   }
+  for (const path of guides) {
+    const content = bytes.get(path).toString('utf8')
+    const match = content.match(/^---\ntitle: ([^\n]+)\ntools: \[([^\]\n]*)\]\n---\n([\s\S]+)$/)
+    if (!match || !match[1].trim() || !match[3].trim()) fail(path, 'invalid guide frontmatter or body')
+    const names = match[2].split(',').map((name) => name.trim()).filter(Boolean)
+    if (names.some((name) => !tools.has(name))) fail(path, 'guide links an unknown tool')
+  }
   let totalSkillBytes = 0
   for (const path of skillPaths) {
     const name = path.split('/')[3]
@@ -138,6 +146,13 @@ export async function readPublicAgentContract(root = process.cwd()) {
   for (const path of guides) safeText(bytes.get(path).toString('utf8'), path)
   for (const path of paths.filter((path) => path.endsWith('.json') && !toolPaths.includes(path))) {
     try { JSON.parse(bytes.get(path).toString('utf8')) } catch (error) { fail(path, `invalid JSON: ${error.message}`) }
+  }
+  const codex = JSON.parse(bytes.get('plugins/bitterclip/.codex-plugin/plugin.json').toString('utf8'))
+  const claude = JSON.parse(bytes.get('plugins/bitterclip/.claude-plugin/plugin.json').toString('utf8'))
+  const semver = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
+  if (typeof codex.version !== 'string' || !semver.test(codex.version) || codex.version !== claude.version ||
+      codex.repository !== 'https://github.com/sheetgenius/bitterclip-marketing') {
+    fail('plugins/bitterclip', 'host package version or source is invalid')
   }
   const digest = sha(paths.map((path) => `${path}\0${sha(bytes.get(path))}\n`).join(''))
   if (!SHA256.test(digest)) fail('contract', 'digest failed')
