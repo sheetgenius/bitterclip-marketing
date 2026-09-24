@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { spawn } from 'node:child_process'
-import { mkdir, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { readPublicAgentContract } from './public-agent-contract.mjs'
 
@@ -64,6 +64,19 @@ for (const profile of ['model', 'app', 'live_workspace']) {
   profiles[profile] = { descriptors: body.descriptors, guidance: body.guidance }
 }
 const digest = createHash('sha256').update(JSON.stringify(profiles)).digest('hex')
+const releaseRequestPath = resolve('contracts/mcp/release-request.json')
+const releaseRequestText = await readFile(releaseRequestPath, 'utf8').catch((error) => {
+  if (error.code === 'ENOENT') return null
+  throw error
+})
+if (releaseRequestText && !process.env.BITTERCLIP_CATALOG_URL) {
+  const request = JSON.parse(releaseRequestText)
+  if (request.schema_version !== 'bitterclip.public_contract_release_request.v1' ||
+      request.product_release !== release || request.public_contract_commit !== commit ||
+      request.public_contract_digest !== contractDigest) {
+    throw new Error(`Serving Rails release does not match ${releaseRequestPath}`)
+  }
+}
 const buildId = randomUUID()
 const snapshot = {
   schema_version: 'bitterclip.mcp_surface_snapshot.v1',
