@@ -26,7 +26,11 @@ for task-specific authority.
   contracts and captures model, app, and Live Workspace descriptors from serving
   Rails. The tool pages print their actual product release, public commit, and
   digest; compare those with live Rails before calling a static snapshot current.
-  See the [public content runbook](docs/runbooks/public-content.md).
+  The former `bitterclip-plugin` source repository is archived with an install
+  redirect; Claude Code and Codex use the manifests and four skills authored
+  here. Verified product releases trigger a tracked site rebuild request through
+  the product release command. See the
+  [public content runbook](docs/runbooks/public-content.md).
 - The homepage and Vue-owned legal/marketing routes keep authored Markdown
   alternates in `public/`; see the public-content runbook for the exact split.
 
