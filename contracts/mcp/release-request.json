@@ -1,7 +1,7 @@
 {
   "schema_version": "bitterclip.public_contract_release_request.v1",
-  "product_release": "bc45a2d9fcc1a5d82c447d54b92ee26034833e60",
+  "product_release": "8fb517eaea236a51ea46e1d5b40eef4a3e61c138",
   "public_contract_commit": "1ce47f7857ae3d9b6933fe83d5c33de3ae5efc64",
   "public_contract_digest": "241d47d25e4b4c1dae9d2263793874d06fc4ba7bc3c78d4cf2bc63fbb32ed7dc",
-  "requested_at": "2026-09-25T03:49:24Z"
+  "requested_at": "2026-09-25T06:49:58.666Z"
 }
