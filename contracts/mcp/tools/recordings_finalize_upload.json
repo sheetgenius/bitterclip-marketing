@@ -1,7 +1,7 @@
 {
   "name": "recordings_finalize_upload",
   "title": "Finalize a recording upload",
-  "description": "Use this after uploading bytes to a grant from recordings_request_upload. Finalizes the storage object into a BitterClip recording and starts transcription when the account allows it. Multipart uploads must pass every part_number/etag returned by storage.",
+  "description": "Use this after uploading bytes to a grant from recordings_request_upload. Finalizes the storage object into a BitterClip recording and starts transcription when the account allows it. Multipart uploads require every part_number/etag returned by storage.",
   "input_schema": {
     "type": "object",
     "properties": {

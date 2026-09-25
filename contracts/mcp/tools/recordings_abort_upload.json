@@ -1,7 +1,7 @@
 {
   "name": "recordings_abort_upload",
   "title": "Abort a recording upload",
-  "description": "Cancel an unfinished direct recording upload grant. Use this after a failed local-file upload attempt so stale multipart uploads are cleaned up.",
+  "description": "Cancels an unfinished direct recording upload grant after a failed local-file upload attempt, cleaning up stale multipart uploads.",
   "input_schema": {
     "type": "object",
     "properties": {

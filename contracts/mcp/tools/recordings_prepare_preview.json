@@ -1,21 +1,21 @@
 {
   "name": "recordings_prepare_preview",
   "title": "Prepare a recording preview",
-  "description": "Idempotently prepare or repair the browser-playable preview for an existing video recording. Repeating the call while repair is active reuses that work. This does not re-transcribe the recording or change speaker, Moment, Clip, edit, Render, or Publish state. Returns immediately while media inspection or preview preparation continues.",
+  "description": "Idempotently prepares or repairs the browser-playable preview for an existing video recording. Repeating the call while repair is active reuses that work. This does not re-transcribe the recording or change speaker, Moment, Clip, edit, Render, or Publish state. Returns immediately while media inspection or preview preparation continues.",
   "input_schema": {
     "type": "object",
     "properties": {
       "recording_id": {
         "type": "string",
-        "description": "Recording public ID whose playable preview should be prepared."
+        "description": "Recording public ID whose playable preview is prepared."
       },
       "retry_media_evidence_execution_id": {
         "type": "string",
-        "description": "Exact failed media-evidence execution returned by next_action. Supplying it is an explicit same-generation cell retry on the current admission pipeline; a retired predecessor pipeline or worker image (for example media-foundation-v1 while serving media-understanding-v1) is refused. Ordinary preview polling must omit it."
+        "description": "Exact failed media-evidence execution returned by next_action. Supplying it is an explicit same-generation cell retry on the current admission pipeline; a retired predecessor pipeline or worker image (for example media-foundation-v1 while serving media-understanding-v1) is refused. Ordinary preview polling does not send it."
       },
       "repair_media_cell_poster_execution_id": {
         "type": "string",
-        "description": "Exact current published media-evidence execution whose physically missing/corrupt poster should be restored from its immutable staged poster. This never reads source media or reruns provider work."
+        "description": "Exact current published media-evidence execution whose physically missing/corrupt poster is restored from its immutable staged poster. This never reads source media or reruns provider work."
       }
     },
     "required": [

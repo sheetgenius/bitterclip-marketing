@@ -1,7 +1,7 @@
 {
   "name": "open_recording",
   "title": "Open a recording for editing",
-  "description": "Use this when the user wants to open, edit, trim, or pick a clip from a specific recording. Opens the recording as an episode (a composition-of-one) in the composite TRANSCRIPT editor — the full transcript (speaker lanes + waveform), where the user selects/trims a range and renders. To recommend clips, first read the episode with episode_read to choose a candidate, then episode_zoom over that range to verify a clean boundary before placing the selection. Use start_line/end_line or start_word_id/end_word_id with transcript_fingerprint to identify the semantic moment; use explicit start_seconds/end_seconds for the actual media boundaries when audio valleys, silence, visual resting points, scene changes, visible payoff, or trailing breath make a better cut than the exact word edge. The server creates suggested Moments shown on the transcript for review, trimming, save/dismiss, and export.",
+  "description": "Use this when the user wants to open, edit, trim, or pick a clip from a specific recording. Opens the recording as an episode (a composition-of-one) in the composite TRANSCRIPT editor — the full transcript (speaker lanes + waveform), where the user selects/trims a range and renders. Recommended selections are candidates from episode_read whose boundaries episode_zoom has checked. start_line/end_line or start_word_id/end_word_id with transcript_fingerprint identify the semantic moment; explicit start_seconds/end_seconds set the actual media boundaries where audio valleys, silence, visual resting points, scene changes, visible payoff, or trailing breath make a better cut than the exact word edge. The server creates suggested Moments shown on the transcript for review, trimming, save/dismiss, and export.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,7 +15,7 @@
       },
       "selections": {
         "type": "array",
-        "description": "Optional candidate moments to pre-resolve for triage. Use transcript lines or word IDs as semantic anchors. Choose the actual review range from all available evidence; pass explicit start_seconds/end_seconds when pre-roll, trailing breath, visible payoff/resolution, silence, scene timing, or nearby marker evidence makes a better boundary than the exact word edge. The server creates a `suggested` Moment; unresolved selectors come back in selection_results.",
+        "description": "Optional candidate moments to pre-resolve for triage. Transcript lines or word IDs are the semantic anchors; explicit start_seconds/end_seconds set the review range where pre-roll, trailing breath, visible payoff/resolution, silence, scene timing, or nearby marker evidence makes a better boundary than the exact word edge. The server creates a `suggested` Moment; unresolved selectors come back in selection_results.",
         "items": {
           "type": "object",
           "properties": {
@@ -33,7 +33,7 @@
             },
             "end_seconds": {
               "type": "number",
-              "description": "Explicit review-range end in source seconds. Use to include trailing breath, silence, visual payoff, or a marker-backed quiet cut after the last word."
+              "description": "Explicit review-range end in source seconds. It can include trailing breath, silence, visual payoff, or a marker-backed quiet cut after the last word."
             },
             "transcript_fingerprint": {
               "type": "string",
@@ -166,7 +166,7 @@
           "array",
           "null"
         ],
-        "description": "Per-selection outcome when selections were supplied: ok:true with moment_id, or ok:false with a reason (stale_transcript, transcript_fingerprint_required, line not found, start/end word not found) so you can recover by re-reading the episode with episode_read.",
+        "description": "Per-selection outcome when selections were supplied: ok:true with moment_id, or ok:false with a reason (stale_transcript, transcript_fingerprint_required, line not found, start/end word not found) and recovery is a fresh episode_read.",
         "items": {
           "type": "object",
           "properties": {

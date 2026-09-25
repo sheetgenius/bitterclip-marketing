@@ -1,7 +1,7 @@
 {
   "name": "workspace_open",
   "title": "Open BitterClip workspace",
-  "description": "Read-only. Requires exact target_type + target_id. Never use it for discovery or open a Project en route to a named Episode/Clip; discover first, then call once and last. Prepare BitterClip's review, edit, or publish workspace for a recording, Episode, Clip, or publish package. This tool never creates or changes an Episode, review point, or other saved state. To prepare one named read-only moment, pass target_type episode or clip, mode review, the exact expected_revision from episode_read, and focus_range:[start,end] in playable Episode time; the range is transient and never saved. A matching returned workspace_navigation proves BitterClip prepared the target, not that the host visibly mounted, played, or navigated it. Omit focus_range to open the whole target. Use review_points_place only when the user explicitly asks to save or mark reviewable Moments. In Embedded mode the host can mount the returned workspace resource. Every lane's result carries `open_status`. \"already_open\" means a live editor session for this exact target is beside the user and updates itself: direct attention to the exact place instead of presenting a link or claiming navigation. In Live Workspace mode without presence the result is \"link_ready\" plus an exact `workspace_url`; that does not prove a browser opened, so present the exact Open workspace link unless visible navigation is independently verified. In Embedded mode without presence it is \"prepared\": the host may mount the returned workspace resource, but nothing was navigated, so never claim you opened it unless your host visibly shows it. A just-created montage gives the user a playable stitched preview of the draft. A project target returns a concise handoff with bounded recent editable Episodes/Clips for rediscovery rather than an embedded library; use projects_list, recordings_list, and episodes_list for source discovery. On informational asks (\"do I have X?\", \"did we discuss X?\"), answer with receipts and OFFER to open related findings — prepare the handoff only when the user asked to open/show/review something.",
+  "description": "Read-only. Requires exact target_type + target_id from prior discovery; it is not a discovery tool, and a Project is not a route to a named Episode/Clip. Prepares BitterClip's review, edit, or publish workspace for a recording, Episode, Clip, or publish package. This tool never creates or changes an Episode, review point, or other saved state. One named read-only moment takes target_type episode or clip, mode review, the exact expected_revision from episode_read, and focus_range:[start,end] in playable Episode time; the range is transient and never saved. A matching returned workspace_navigation proves BitterClip prepared the target, not that the host visibly mounted, played, or navigated it. Without focus_range it opens the whole target. Saving or marking reviewable Moments is review_points_place. In Embedded mode the host can mount the returned workspace resource. Every lane's result carries `open_status`. \"already_open\" means a live editor session for this exact target is beside the user and updates itself, with no link or navigation involved. In Live Workspace mode without presence the result is \"link_ready\" plus an exact `workspace_url`, the Open workspace link; that does not prove a browser opened. In Embedded mode without presence it is \"prepared\": the host may mount the returned workspace resource, but nothing was navigated. A just-created montage gives the user a playable stitched preview of the draft. A project target returns a concise handoff with bounded recent editable Episodes/Clips for rediscovery rather than an embedded library; source discovery is projects_list, recordings_list, and episodes_list. Use this when the user asks to open, show, or review something; informational asks (\"do I have X?\", \"did we discuss X?\") need no handoff.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -31,7 +31,7 @@
       },
       "project_id": {
         "type": "string",
-        "description": "Optional Project context for the exact target. To open a Project, pass target_type:\"project\" and its ID as target_id. For episode/clip targets OMIT this unless you hold the project id from a listing — it is never required, an episode id here is invalid_input, and a just-created clip's project may differ from what you assume."
+        "description": "Optional Project context for the exact target. A Project opens with target_type:\"project\" and its ID as target_id. For episode/clip targets it is never required: only a project id from a listing is valid here, an episode id is invalid_input, and a just-created clip's project can differ from an assumed one."
       },
       "focus_range": {
         "type": "array",
@@ -126,7 +126,7 @@
           "already_open",
           "prepared"
         ],
-        "description": "Handoff state. already_open (any lane): a live editor session for this exact target was seen within its presence window — the workspace beside the user updates itself, so direct attention to the exact place instead of presenting a link or claiming navigation. link_ready (Live Workspace, no presence): present workspace_url as the exact Open workspace link; visible navigation is not verified. prepared (Embedded, no presence): the workspace was prepared for the host to display; nothing was navigated, so do not claim you opened it unless your host visibly shows it."
+        "description": "Handoff state. already_open (any lane): a live editor session for this exact target was seen within its presence window, and the workspace beside the user updates itself. link_ready (Live Workspace, no presence): workspace_url is the exact Open workspace link; visible navigation is not verified. prepared (Embedded, no presence): the workspace was prepared for the host to display; nothing was navigated."
       },
       "workspace_url": {
         "type": "string",
@@ -247,7 +247,7 @@
       },
       "publish_state": {
         "type": "object",
-        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
         "properties": {
           "schema_version": {
             "type": "string"
@@ -587,7 +587,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -722,7 +722,7 @@
           },
           "stage": {
             "type": "object",
-            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
             "required": [
               "status",
               "label",
@@ -769,7 +769,7 @@
                   "object",
                   "null"
                 ],
-                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                 "properties": {
                   "kind": {
                     "type": "string"
@@ -906,7 +906,7 @@
               "object",
               "null"
             ],
-            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
             "properties": {
               "kind": {
                 "type": "string"
@@ -1062,7 +1062,7 @@
       },
       "handle_policy": {
         "type": "string",
-        "description": "Reminder that raw BitterClip handles are tool-call-only and should not be shown to users."
+        "description": "Handle policy: raw BitterClip handles are tool-call-only, not user-facing."
       }
     },
     "required": [],
@@ -1070,7 +1070,7 @@
   },
   "live_workspace": {
     "title": "Get BitterClip workspace link",
-    "description": "Read-only. Return the exact authorized BitterClip workspace link for a recording, Episode, Clip, Project, or publish package. This prepares a link; it does not open a browser. Present the link and say it is ready to open unless visible navigation is independently verified.",
+    "description": "Read-only. Returns the exact authorized BitterClip workspace link for a recording, Episode, Clip, Project, or publish package. This prepares a link; it does not open a browser or verify visible navigation.",
     "opened_description": "Always false in Live Workspace mode; this tool prepares a link and does not prove browser navigation.",
     "workspace_binding_schema": {
       "type": "object",

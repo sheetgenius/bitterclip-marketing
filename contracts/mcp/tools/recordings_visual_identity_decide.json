@@ -1,7 +1,7 @@
 {
   "name": "recordings_visual_identity_decide",
   "title": "Answer a visible-person identity check",
-  "description": "Record one source-current human answer about the exact visible person marked in one Recording frame. Yes confirms only the displayed face-to-person proposal; Someone else records the rejected proposed person and one separately selected displayed candidate atomically; Not sure is neutral; Not a person rejects only that exact detection. This never confirms or renames an audio speaker track, changes captions, chooses a Thumbnail, approves a Speaker photo, trusts a face reference, stores a reusable face template, or changes recognition consent. A non-neutral answer queues a bounded person-evidence generation so affected automatic Thumbnail evidence can be reconsidered without overwriting a manual Thumbnail.",
+  "description": "Records one source-current human answer about the exact visible person marked in one Recording frame. Yes confirms only the displayed face-to-person proposal; Someone else records the rejected proposed person and one separately selected displayed candidate atomically; Not sure is neutral; Not a person rejects only that exact detection. This never confirms or renames an audio speaker track, changes captions, chooses a Thumbnail, approves a Speaker photo, trusts a face reference, stores a reusable face template, or changes recognition consent. A non-neutral answer queues a bounded person-evidence generation so affected automatic Thumbnail evidence can be reconsidered without overwriting a manual Thumbnail.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -35,7 +35,7 @@
       },
       "question_context": {
         "type": "string",
-        "description": "Copy the opaque displayed question_context unchanged. It preserves exact-image and proposal meaning across background publication."
+        "description": "The opaque displayed question_context, unchanged; it preserves exact-image and proposal meaning across background publication."
       },
       "reason": {
         "type": "string",

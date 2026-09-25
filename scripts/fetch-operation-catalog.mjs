@@ -37,7 +37,7 @@ async function captureProfiles() {
     if (body?.schema_version !== 'bitterclip.mcp_descriptors.v1' || body.profile !== profile ||
         body.product_release !== servedRelease ||
         body.connector_family !== 'chatgpt' || !Array.isArray(body.descriptors) ||
-        !Array.isArray(body.guidance) || body.descriptors.length !== ({ model: 63, app: 113, live_workspace: 63 })[profile] ||
+        !Array.isArray(body.guidance) || body.descriptors.length !== ({ model: 63, app: 112, live_workspace: 63 })[profile] ||
         body.guidance.length !== body.descriptors.length ||
         !/^[a-f0-9]{40}$/.test(body.public_contract_commit) ||
         !/^[a-f0-9]{64}$/.test(body.public_contract_digest)) {
@@ -116,7 +116,7 @@ const snapshot = {
 }
 await mkdir(resolve('tmp'), { recursive: true })
 await writeFile(target, JSON.stringify(snapshot) + '\n')
-console.log(`MCP snapshot: 113 tools, product ${release.slice(0, 12)}, contract ${commit.slice(0, 12)} / ${contractDigest}`)
+console.log(`MCP snapshot: 112 tools, product ${release.slice(0, 12)}, contract ${commit.slice(0, 12)} / ${contractDigest}`)
 
 const command = process.argv[2]
 if (command) {

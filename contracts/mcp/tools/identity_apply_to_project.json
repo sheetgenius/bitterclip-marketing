@@ -1,7 +1,7 @@
 {
   "name": "identity_apply_to_project",
   "title": "Apply Brand Studio identity to project",
-  "description": "Model-visible Signature apply for saving authored or selected Brand Studio defaults. Saves project defaults as account-library refs for NEW highlight reels; future episode_create calls can then trust identity:\"project_default\" when the user asks for their branding. Use it after an Identity scene preview is intentionally good enough to save the authored scene as the project's default opener or outro. Accepts opener/outro preset strings or structured slot objects, materializes them into the account identity library, imports alternates into the library without storing project alternates, validates enabled packs through the frozen identity resolver, writes an apply receipt, prewarms opener/outro sources through the existing identity moment bake path, and broadcasts the update to open editors. On first apply, callers must pass enabled/enabled_for_reels:true to turn identity on; omitting both flags saves the pack disabled. Set uses_title only for title-enabled openers/outros; static assets should leave it false so opener_title produces the typed ignored warning. Pass cut_style_id:\"none\" (or a cut_style style_id of \"none\") for normal cuts with no branded seam layer.",
+  "description": "Model-visible Signature apply for saving authored or selected Brand Studio defaults. Saves project defaults as account-library refs for NEW highlight reels; future episode_create calls with identity:\"project_default\" then apply it as the user's branding. It also saves a previewed authored scene as the project's default opener or outro. Accepts opener/outro preset strings or structured slot objects, materializes them into the account identity library, imports alternates into the library without storing project alternates, validates enabled packs through the frozen identity resolver, writes an apply receipt, prewarms opener/outro sources through the existing identity moment bake path, and broadcasts the update to open editors. On first apply, enabled/enabled_for_reels:true turns identity on; omitting both flags saves the pack disabled. uses_title is true only for title-enabled openers/outros; static assets keep it false, so opener_title produces the typed ignored warning. cut_style_id:\"none\" (or a cut_style style_id of \"none\") selects normal cuts with no branded seam layer.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -44,14 +44,14 @@
           "string",
           "null"
         ],
-        "description": "Duration-neutral cut style id. Pass none/null for normal cuts with no branded seam layer."
+        "description": "Duration-neutral cut style id; none/null selects normal cuts with no branded seam layer."
       },
       "cut_style": {
         "type": [
           "object",
           "null"
         ],
-        "description": "Optional duration-neutral cut style payload. Used by Brand Studio controls for intensity/density without changing segment durations. Use style_id:none/null to clear the slot.",
+        "description": "Optional duration-neutral cut style payload. Used by Brand Studio controls for intensity/density without changing segment durations. style_id:none/null clears the slot.",
         "properties": {
           "style_id": {
             "type": [
@@ -95,7 +95,7 @@
       },
       "music_bed": {
         "type": "object",
-        "description": "Music-bed slot. Pass enabled:false for no bed, or library_entry_id for an account-owned bed. Fades and ducking are optional; omitted values keep the current setting or the server defaults (400ms in, 1200ms out, 0dB duck).",
+        "description": "Music-bed slot: enabled:false means no bed, and library_entry_id selects an account-owned bed. Fades and ducking are optional; omitted values keep the current setting or the server defaults (400ms in, 1200ms out, 0dB duck).",
         "properties": {
           "enabled": {
             "type": "boolean"

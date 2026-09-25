@@ -1,7 +1,7 @@
 {
   "name": "episode_clone",
   "title": "Clone an episode",
-  "description": "Create a clean draft branch from an existing top-level episode only when the user explicitly wants a separate version for comparison or a workshop reset. The clone copies that one episode's source-backed segments, timeline music, overlays, title/copy, aspect ratio, caption setting, and project, but it does not copy rendered media, publish state, origin recording ownership, or revision history. Do not use clone to assemble a new reel from Project sources; use one episode_create with ordered source ranges. Use episode_edit when the current visible draft should change in place.",
+  "description": "Creates a clean draft branch from an existing top-level episode: a separate version for comparison or a workshop reset that the user explicitly wants. The clone copies that one episode's source-backed segments, timeline music, overlays, title/copy, aspect ratio, caption setting, and project, but it does not copy rendered media, publish state, origin recording ownership, or revision history. A new reel from Project sources is one episode_create with ordered source ranges, and an in-place change to the current draft is an episode_edit; a clone is neither.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -105,7 +105,7 @@
             },
             "episode_seconds": {
               "type": "number",
-              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+              "description": "Exact flagged point on the created target's Episode clock, usable directly as an episode_zoom edge; occurrence_id identifies its source side."
             },
             "word": {
               "type": "string"
@@ -135,7 +135,7 @@
       },
       "next_action": {
         "type": "object",
-        "description": "Suggested next tool call: edit the clone with episode_edit using its current revision."
+        "description": "Suggested next tool call: episode_edit on the clone at its current revision."
       },
       "blockers": {
         "type": "array",

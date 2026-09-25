@@ -1,7 +1,7 @@
 {
   "name": "identity_account_defaults_update",
   "title": "Update account Signature defaults",
-  "description": "App-only account FX write. Sets or clears the account-wide Signature defaults that new projects inherit. Pass opener_library_entry_id/outro_library_entry_id to point at saved account library entries, pass opener_slot/outro_slot from account Signature Studio to save a new library entry and make it the default, and pass blank/none/disabled to clear a role. enabled controls whether new projects start with the Signature on.",
+  "description": "App-only account FX write. Sets or clears the account-wide Signature defaults that new projects inherit. opener_library_entry_id/outro_library_entry_id point at saved account library entries, opener_slot/outro_slot from account Signature Studio save a new library entry and make it the default, and blank/none/disabled clears a role. enabled controls whether new projects start with the Signature on.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -10,14 +10,14 @@
           "string",
           "null"
         ],
-        "description": "Saved opener entry id (ilib_...). Blank/none clears the opener default. Omit to preserve it."
+        "description": "Saved opener entry id (ilib_...). Blank/none clears the opener default; omitted preserves it."
       },
       "outro_library_entry_id": {
         "type": [
           "string",
           "null"
         ],
-        "description": "Saved outro entry id (ilib_...). Blank/none clears the outro default. Omit to preserve it."
+        "description": "Saved outro entry id (ilib_...). Blank/none clears the outro default; omitted preserves it."
       },
       "opener_slot": {
         "type": [
@@ -35,7 +35,7 @@
       },
       "enabled": {
         "type": "boolean",
-        "description": "Whether new projects start with the account Signature on. Omit to preserve the current value; first slot save defaults true."
+        "description": "Whether new projects start with the account Signature on. Omitted preserves the current value; first slot save defaults true."
       }
     },
     "required": [],

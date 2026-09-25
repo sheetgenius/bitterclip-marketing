@@ -15,7 +15,7 @@
       },
       "description": {
         "type": "string",
-        "description": "Optional recording description. Pass an empty string to clear it."
+        "description": "Optional recording description; an empty string clears it."
       },
       "chapters": {
         "type": "array",

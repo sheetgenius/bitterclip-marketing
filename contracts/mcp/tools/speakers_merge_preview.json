@@ -1,7 +1,7 @@
 {
   "name": "speakers_merge_preview",
   "title": "Preview speaker merge",
-  "description": "Preview a proposed duplicate-speaker merge before any profile is changed. Returns the recommended survivor, what would move, and the artifacts that will not be rewritten.",
+  "description": "Previews a proposed duplicate-speaker merge before any profile is changed. Returns the recommended survivor, what would move, and the artifacts that will not be rewritten.",
   "input_schema": {
     "type": "object",
     "properties": {

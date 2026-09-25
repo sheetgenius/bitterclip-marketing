@@ -1,7 +1,7 @@
 {
   "name": "episodes_list",
   "title": "List episodes",
-  "description": "List or find top-level EPISODES — the unit of work; the front door for browse, latest/open, project recaps or coaching prep. `query` matches episode, project, recording, or speaker names across fields (\"mike john\" finds the Mike & John Show; \"me\" usually means the studio owner). Rows carry `match_reason`, a dense indexed description, and `episode_shape`/`latest_open_hint` separating ready full-length episodes from short drafts — for \"latest episode\" asks prefer a ready full-length row and pass `order:\"latest\"`. Chronological project recaps: keep the default chronological order and read each episode before synthesizing. Returns row-carrying prose only, with each exact `episode_id` in brackets for the next tool call. For a relevant/latest Episode ask: episodes_list(query), shortlist 2–4; for Project content evidence, use transcript_search first, then returned-window episode_read. For a whole Episode, call workspace_open once and last. For a named read-only moment, first read the Episode, then call workspace_open once and last with focus_range and that exact expected_revision; this focuses transiently without saving. An explicit request to save or mark a range uses review_points_place instead. For an explicitly comprehensive recap, read the requested scope. Use episode_zoom only for a candidate edit/review boundary or measurable acoustic/scene seam, never physical-progress proof or post-open exploration. Raw recordings are a drawer (recordings_list); excludes render outputs and derived clips. Read-only.",
+  "description": "Lists or finds top-level EPISODES, the unit of work: the front door for browse, latest/open, project recaps or coaching prep. `query` matches episode, project, recording, or speaker names across fields (\"mike john\" finds the Mike & John Show; \"me\" usually means the studio owner). Rows carry `match_reason`, a dense indexed description, and `episode_shape`/`latest_open_hint` separating ready full-length episodes from short drafts; `order:\"latest\"` sorts newest first for \"latest episode\" asks, and project-scoped lists default to chronological order for recaps. Returns row-carrying prose only, with each exact `episode_id` in brackets for the next tool call. Project content evidence comes from transcript_search windows; opening is workspace_open (focus_range focuses transiently without saving), and saved ranges are review_points_place. Raw recordings are a drawer (recordings_list); excludes render outputs and derived clips. Read-only.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "query": {
         "type": "string",
-        "description": "Optional case-insensitive filter across episode title, project title, segment recording/source titles, and speaker names. Use this before reading a named episode."
+        "description": "Optional case-insensitive filter across episode title, project title, segment recording/source titles, and speaker names; it finds a named episode before a read."
       },
       "order": {
         "type": "string",
@@ -19,7 +19,7 @@
       },
       "limit": {
         "type": "integer",
-        "description": "Optional maximum number of recent episodes to return. For 'last few', pass 3 unless the user names another count."
+        "description": "Optional maximum number of recent episodes to return ('last few' is 3 unless the user names another count)."
       }
     },
     "required": [],

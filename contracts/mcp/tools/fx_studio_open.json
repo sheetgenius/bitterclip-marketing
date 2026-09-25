@@ -1,13 +1,13 @@
 {
   "name": "fx_studio_open",
   "title": "Open FX Studio",
-  "description": "Open the live FX Studio creative workbench, optionally on a saved scene. The same view updates as you edit its actual HTML/CSS/JavaScript source with scene_read, scene_write or scene_edit and inspect images with scene_preview. Supports DOM, SVG, Canvas and WebGL through one programmable scene contract. Opening is read-only and does not create an effect or change production defaults. Returns a first-party studio link for hosts without app rendering. Keep this view open through successive edits; only this tool opens the app.",
+  "description": "Opens the live FX Studio creative workbench, optionally on a saved scene. The same view updates as its actual HTML/CSS/JavaScript source changes through scene_read, scene_write or scene_edit and as scene_preview renders images. Supports DOM, SVG, Canvas and WebGL through one programmable scene contract. Opening is read-only and does not create an effect or change production defaults. Returns a first-party studio link for hosts without app rendering. The view stays current through successive edits; only this tool opens the app.",
   "input_schema": {
     "type": "object",
     "properties": {
       "scene_id": {
         "type": "string",
-        "description": "Optional account-owned scene identifier. Omit to browse the effect library."
+        "description": "Optional account-owned scene identifier; without it the effect library opens."
       }
     },
     "required": [],

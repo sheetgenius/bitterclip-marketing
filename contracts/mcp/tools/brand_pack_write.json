@@ -1,7 +1,7 @@
 {
   "name": "brand_pack_write",
   "title": "Write account Brand Studio pack",
-  "description": "Create or update an account-scoped brand pack for an accessible Project: wordmark, organization, palette, fonts, tagline and optional ingested logo. Account IDs are namespaced to avoid collisions with curated packs. Brand is reusable context for programmable scenes, not a fixed visual template. Author a source scene, inspect rendered frames, and iterate before explicitly applying it to a production.",
+  "description": "Creates or updates an account-scoped brand pack for an accessible Project: wordmark, organization, palette, fonts, tagline and optional ingested logo. Account IDs are namespaced to avoid collisions with curated packs. Brand is reusable context for programmable scenes, not a fixed visual template. Writing a pack changes no production; a scene that uses it is applied to a production by a separate explicit call.",
   "input_schema": {
     "type": "object",
     "properties": {

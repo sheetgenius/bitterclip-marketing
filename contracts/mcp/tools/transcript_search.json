@@ -1,7 +1,7 @@
 {
   "name": "transcript_search",
   "title": "Search library content",
-  "description": "Search what was SAID across the library using approximate time-anchored transcript units, saved moments, and Episode descriptions/chapters; visual annotations are searchable where analysis exists. Hits locate semantic neighborhoods; text/times never authorize a structural boundary. Keyword hits are exact unstemmed tokens; issue morphological variants; quoted phrases are exact and exhaustive. Semantic hits are labeled retrieval_mode:semantic — read before quoting. Every response carries coverage, interpretation, and freshness. Person grains: person_speaking vs person_present; combinable; facets_only:true gives the bare map. Narrow wide results via facets, not pagination. Escalate through episode_read on the returned window; source media only for an edit/review boundary, never as physical-progress proof. A FIND tool, not a judge. Use returned handles exactly (projects_list/episodes_list for title discovery). Read bitterclip://docs/tool-workflows. Read-only.",
+  "description": "Searches what was SAID across the library using approximate time-anchored transcript units, saved moments, and Episode descriptions/chapters; visual annotations are searchable where analysis exists. Hits locate semantic neighborhoods; text/times never authorize a structural boundary. Keyword hits are exact unstemmed tokens, so morphological variants are separate queries; quoted phrases are exact and exhaustive. Semantic hits are labeled retrieval_mode:semantic; their text is not a verbatim quote until the window is read. Every response carries coverage, interpretation, and freshness. Person grains: person_speaking vs person_present; combinable; facets_only:true gives the bare map. Facets narrow wide results; pagination does not. Each hit's returned window is readable through episode_read; source media inspection serves edit/review boundaries and is not evidence of physical progress. A FIND tool, not a judge. Returned handles are exact (title discovery is projects_list/episodes_list). Read-only.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "project_id": {
         "type": "string",
-        "description": "Optional project public ID returned by projects_list/episodes_list (show_... or UUID) — scope the search to one readable project. Do not pass a project title/name here; use projects_list(query:) or episodes_list(query:) first."
+        "description": "Optional project public ID returned by projects_list/episodes_list (show_... or UUID) — scope the search to one readable project. A project title/name is not accepted here; projects_list(query:) or episodes_list(query:) resolves one to its ID."
       },
       "person_speaking": {
         "type": "string",
@@ -23,7 +23,7 @@
       },
       "speaker": {
         "type": "string",
-        "description": "LEGACY raw diarization-label filter, kept for compatibility. Matches transcript_units.speaker_label verbatim and does NOT resolve people — prefer person_speaking."
+        "description": "LEGACY raw diarization-label filter, kept for compatibility. Matches transcript_units.speaker_label verbatim and does NOT resolve people; person_speaking does."
       },
       "date_from": {
         "type": "string",
@@ -51,7 +51,7 @@
       },
       "facets_only": {
         "type": "boolean",
-        "description": "Optional. Return the exhaustive episode/project/person/month facet map with no hits."
+        "description": "Optional. Returns the exhaustive episode/project/person/month facet map with no hits."
       },
       "limit": {
         "type": "integer",
@@ -59,7 +59,7 @@
       },
       "page": {
         "type": "integer",
-        "description": "1-indexed page of compact search hits. Default 1. Use next_page from the response to continue."
+        "description": "1-indexed page of compact search hits. Default 1. The response's next_page continues it."
       }
     },
     "required": [],

@@ -1,7 +1,7 @@
 {
   "name": "episode_sample_frames",
   "title": "Sample video frames from an episode",
-  "description": "Sample up to 4 explicit episode-time points, or up to 8 deterministic frames inside one <=30s EPISODE region (longer spans: multiple windows) — pixel evidence for visual inspection (form, framing, screens, gestures, reveals). To judge the picture the current edit will show, pass projection:\"program\", presentation:\"canvas\"; the default original/source sample shows only the base Recording before canvas framing and may differ from the committed camera. For a treatment self-check, omit times/region/count and pass projection:\"program\", presentation:\"canvas\", delivery:\"inline\". treatment_preview:{type:\"speaker_title\",speaker_title_id} chooses one fully settled title frame. treatment_preview:{type:\"caption_treatment\",occurrence_ids:[...]} chooses one calm cue frame or up to three successive timed active-word frames, using the same frozen caption cue model and caption engine policy as Export. Treatment pixels include the Program canvas, the named treatment, and the other committed text layer visible at the sampled instant, so speaker-title/subtitle collisions can be judged directly; other overlays, transition motion, and audio are explicitly omitted. For synchronized multi-camera review, pass camera_refs with 2–3 exact camera handles from episode_read (use original for the base picture): BitterClip samples every camera at every supplied time, up to 8 total cells, and with delivery omitted returns one contact sheet ordered as times in rows and camera_refs in columns. Use that survey first, then request high detail only for a finalist. Split widely separated evidence into separate calls of at most 4 explicit times so each request remains bounded and retryable. presentation:\"source\" (default) returns the selected source picture before Episode canvas framing. Without treatment_preview, Program canvas pixels are before captions and overlays. Canvas presentation cannot be combined with original, angle, or comparison sampling. Every result publishes public, unguessable frame artifact URLs plus a shareable gallery_url. With delivery omitted, ordinary frames arrive as adjacent JPEG image blocks when their extracted bytes fit the aggregate inline budget; otherwise BitterClip returns linked delivery from the same sampled artifacts. camera_refs returns one bounded comparison sheet. Explicit delivery:\"inline\" or delivery:\"links\" overrides automatic choice. Captions and source/Program camera provenance remain inline in either mode. Times are EPISODE time; optional angle_id and camera_refs entries must be handles received from episode_read/episode_zoom — never invent times or pass raw source ids. Only exact projection:\"original\", presentation:\"source\" samples may return signed boundary_evidence for a structural edit when audio evidence is unavailable. Program, angle, comparison, and treatment samples are preview evidence only and never authorize Episode structure. Not for transcript understanding (episode_read). BitterClip samples; you interpret. Strategy details: bitterclip://docs/visual-evidence.",
+  "description": "Samples up to 4 explicit episode-time points, or up to 8 deterministic frames inside one <=30s EPISODE region (longer spans: multiple windows) — pixel evidence for visual inspection (form, framing, screens, gestures, reveals). projection:\"program\", presentation:\"canvas\" samples the picture the current edit will show; the default original/source sample shows only the base Recording before canvas framing and may differ from the committed camera. A treatment self-check omits times/region/count and sets projection:\"program\", presentation:\"canvas\", delivery:\"inline\". treatment_preview:{type:\"speaker_title\",speaker_title_id} chooses one fully settled title frame. treatment_preview:{type:\"caption_treatment\",occurrence_ids:[...]} chooses one calm cue frame or up to three successive timed active-word frames, using the same frozen caption cue model and caption engine policy as Export. Treatment pixels include the Program canvas, the named treatment, and the other committed text layer visible at the sampled instant, so speaker-title/subtitle collisions can be judged directly; other overlays, transition motion, and audio are explicitly omitted. For synchronized multi-camera review, camera_refs takes 2–3 exact camera handles from episode_read (original for the base picture): BitterClip samples every camera at every supplied time, up to 8 total cells, and with delivery omitted returns one contact sheet ordered as times in rows and camera_refs in columns. High detail is available for a finalist. Each call takes at most 4 explicit times, so widely separated evidence spans several bounded, retryable calls. presentation:\"source\" (default) returns the selected source picture before Episode canvas framing. Without treatment_preview, Program canvas pixels are before captions and overlays. Canvas presentation cannot be combined with original, angle, or comparison sampling. Every result publishes public, unguessable frame artifact URLs plus a shareable gallery_url. With delivery omitted, ordinary frames arrive as adjacent JPEG image blocks when their extracted bytes fit the aggregate inline budget; otherwise BitterClip returns linked delivery from the same sampled artifacts. camera_refs returns one bounded comparison sheet. Explicit delivery:\"inline\" or delivery:\"links\" overrides automatic choice. Captions and source/Program camera provenance remain inline in either mode. Times are EPISODE time; optional angle_id and camera_refs entries are handles received from episode_read/episode_zoom, not raw source ids. Only exact projection:\"original\", presentation:\"source\" samples may return signed boundary_evidence for a structural edit when audio evidence is unavailable. Program, angle, comparison, and treatment samples are preview evidence only and never authorize Episode structure. Transcript understanding is episode_read. BitterClip samples pixels; it does not interpret them.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,7 +15,7 @@
       },
       "times": {
         "type": "array",
-        "description": "Explicit EPISODE-time seconds to sample. Use when you already know the moments to inspect. Exactly one of times or region is allowed. Maximum 4; split widely separated evidence into separate calls.",
+        "description": "Explicit EPISODE-time seconds to sample, for moments already known. Exactly one of times or region is allowed. Maximum 4 per call.",
         "items": {
           "type": "number",
           "minimum": 0
@@ -25,7 +25,7 @@
       },
       "region": {
         "type": "array",
-        "description": "EPISODE-time [start_seconds, end_seconds] region to sample at deterministic interior midpoints. Use for a short visible action. Exactly one of times or region is allowed. Hard cap 30 seconds.",
+        "description": "EPISODE-time [start_seconds, end_seconds] region sampled at deterministic interior midpoints, for a short visible action. Exactly one of times or region is allowed. Hard cap 30 seconds.",
         "items": {
           "type": "number",
           "minimum": 0
@@ -90,7 +90,7 @@
         "description": "How to present the sampled picture. source (default) returns source pixels before Episode canvas framing. canvas is exact Fit/Fill/focal-position proof on the Episode canvas before captions/overlays and requires projection:\"program\"."
       },
       "treatment_preview": {
-        "description": "Optional current-state treatment self-check. Omit times/region/count and set projection:\"program\", presentation:\"canvas\", delivery:\"inline\". Receipt provenance is reserved for the automatic post-mutation sample and cannot be supplied by callers.",
+        "description": "Optional current-state treatment self-check; it takes no times/region/count and requires projection:\"program\", presentation:\"canvas\", delivery:\"inline\". Receipt provenance is reserved for the automatic post-mutation sample and cannot be supplied by callers.",
         "oneOf": [
           {
             "type": "object",
@@ -399,7 +399,7 @@
       },
       "program_digest": {
         "type": "string",
-        "description": "Exact committed Episode picture/structure digest sampled. Re-sample after any later visual mutation, even if a caller still holds old frame URLs."
+        "description": "Exact committed Episode picture/structure digest sampled. A later visual mutation makes these samples stale, even while old frame URLs still resolve."
       },
       "render_plan_hash": {
         "type": [
@@ -407,7 +407,7 @@
           "null"
         ],
         "pattern": "^[0-9a-f]{64}$",
-        "description": "Exact full render-picture fingerprint for presentation:\"canvas\". Pass this value as expected_render_plan_hash to render_create to refuse rendering if camera, framing, canvas, or any other output dependency changed. Null for source presentation."
+        "description": "Exact full render-picture fingerprint for presentation:\"canvas\". As render_create's expected_render_plan_hash it makes rendering refuse if camera, framing, canvas, or any other output dependency changed. Null for source presentation."
       },
       "duration_seconds": {
         "type": "number",
@@ -672,7 +672,7 @@
       },
       "gallery_url": {
         "type": "string",
-        "description": "Public gallery page showing the sampled frames with timestamp labels. Use this when the chat host will not inline markdown images."
+        "description": "Public gallery page showing the sampled frames with timestamp labels, for chat hosts that do not inline markdown images."
       },
       "sample_expires_at": {
         "type": [

@@ -1,13 +1,13 @@
 {
   "name": "episode_create",
   "title": "Create an episode or derived reel",
-  "description": "Assemble a new EPISODE or derived reel from ordered recording/episode/template ranges into ONE combined video. For a reel cut from an Episode, pass derived_from_id for lineage and one segment row per chosen moment in the canonical shape {episode_id, range:[start_seconds,end_seconds]}; segments[].range is a half-open [start,end) interval in EPISODE time. derived_from_id does not select a range. Creation selects Program ranges; compose simultaneous participant boxes afterwards with camera_program_set, never extra segment fields. Use when the user asks to make/cut together/export a multi-segment highlight, reel, montage, or supercut — NOT for suggestions alone (offer source-backed candidates; save Moments with review_points_place only when asked) and NOT for a single-range Clip (use clip_create). Choose the opening and key visual beats from actual source-linked images before measuring all cut boundaries. Before keeping any materially long candidate in a reel intended for strangers, inspect representative source-linked pixels across the candidate's beginning, middle, and end for visual progression/payoff; shorten or omit a span when those samples add no new visual information. A static or screen-share span is not automatically no-payoff; keep an intentional, legible demonstration or reveal when its duration is needed to understand the payoff. Branding: pass identity:\"project_default\" when the project has saved Signature defaults and the user asks for their branding; browse identity_assets_list only when defaults are absent/unclear or a specific asset is named (full rules: bitterclip://docs/identity-signature). Episode-range slices keep what their parent plays there (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried, such as a pinned microphone in a montage without derived_from_id, refuses with program_audio_not_preservable and its exact span. Persists the edit only — does not render or charge. For ordinary multi-segment make/cut/create highlight, reel, or shareable-video intent, continue with render_create and render_status until ready using the exact returned target_type, target_id, and revision unless the user asks for draft-only, review-first, or no-render; publishing stays explicit. Always returns edge_warnings. A warning means a cut edge overlaps an approximate transcript word span, not that acoustic evidence proved a mid-word cut: keep the same created target and inspect each supplied episode_seconds directly with narrow episode_zoom regions and edges before rendering; occurrence_id and source_id identify the exact side. Read the target to map an edge only when these coordinates are absent. Preserve the point when speech evidence is supported inter_word_silence or supported aligned_word_edge; otherwise revise that same target with episode_edit using an exact supported point. Acoustic envelope/onset suggestions alone are not boundary authority. Do not call episode_create again or create/supersede another Clip merely to resolve edge_warnings (bitterclip://docs/errors). Accepts idempotency_key. A creation with derived_from_id produces a Clip (a derived Episode IS a Clip): pass target_type:\"clip\" to render_create/render_status/workspace_open for it. A canvas taller than the source picture (a portrait canvas over landscape footage) keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown), and episode_edit occurrence.reframe carries the framing decision.",
+  "description": "Assembles a new EPISODE or derived reel from ordered recording/episode/template ranges into ONE combined video. A reel cut from an Episode takes derived_from_id for lineage and one segment row per chosen moment in the canonical shape {episode_id, range:[start_seconds,end_seconds]}; segments[].range is a half-open [start,end) interval in EPISODE time. derived_from_id does not select a range. Creation selects Program ranges; simultaneous participant boxes are composed afterwards with camera_program_set, not with extra segment fields. Use this when the user asks to make, cut together, or export a multi-segment highlight, reel, montage, or supercut. Suggestions alone create nothing (saved Moments are review_points_place), and a single-range Clip is clip_create. Branding: identity:\"project_default\" applies the project's saved Signature defaults (the user's branding); identity_assets_list lists the saved assets an explicit choice names. Episode-range slices keep what their parent plays there (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried, such as a pinned microphone in a montage without derived_from_id, refuses with program_audio_not_preservable and its exact span. Persists the edit only — does not render or charge. The rendered video is a separate render_create with the exact returned target_type, target_id, and revision; render_status reports it. Publishing is separate. Always returns edge_warnings. A warning means a cut edge overlaps an approximate transcript word span, not that acoustic evidence proved a mid-word cut. Each warning's episode_seconds is the created target's point for a narrow episode_zoom region and edge, and occurrence_id and source_id identify the exact side; when those coordinates are absent, episode_read of the target maps the edge. A point whose speech evidence is supported inter_word_silence or supported aligned_word_edge stands; any other point is revised on the same target with episode_edit at an exact supported point. Acoustic envelope/onset suggestions alone are not boundary authority. A second episode_create or a superseding Clip does not resolve edge_warnings. Accepts idempotency_key. A creation with derived_from_id produces a Clip (a derived Episode IS a Clip), addressed as target_type:\"clip\" in render_create, render_status, and workspace_open. A canvas taller than the source picture (a portrait canvas over landscape footage) keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown), and episode_edit occurrence.reframe carries the framing decision.",
   "input_schema": {
     "type": "object",
     "properties": {
       "segments": {
         "type": "array",
-        "description": "Ordered episode/recording/template segments. The only model-visible boundary field is range: use {episode_id, range:[start,end]} in EPISODE time or {recording_id, range:[start,end]} in SOURCE time. Both are half-open [start,end) intervals. Do not send episode_range or start_seconds/end_seconds. Template rows use {template, params} and have no range.",
+        "description": "Ordered episode/recording/template segments. The only model-visible boundary field is range: {episode_id, range:[start,end]} in EPISODE time or {recording_id, range:[start,end]} in SOURCE time, both half-open [start,end) intervals; episode_range and start_seconds/end_seconds are not accepted. Template rows use {template, params} and have no range.",
         "minItems": 1,
         "items": {
           "type": "object",
@@ -144,7 +144,7 @@
       },
       "derived_from_id": {
         "type": "string",
-        "description": "Optional parent Episode public ID used only for lineage/filing. It does not select media or replace segments[].range. Set it when a multi-segment reel is cut from one existing Episode and should be filed under that parent rather than listed as a primary project Episode."
+        "description": "Optional parent Episode public ID used only for lineage/filing. It does not select media or replace segments[].range. It files a multi-segment reel cut from one existing Episode under that parent instead of listing it as a primary project Episode."
       },
       "aspect_ratio": {
         "type": "string",
@@ -153,7 +153,7 @@
           "16:9",
           "1:1"
         ],
-        "description": "OMIT THIS unless the user asked for a specific shape or named a vertical destination (Reels/Shorts/TikTok). Left alone it follows the footage — the source recording's native aspect, nearest of 9:16/16:9/1:1, and 16:9 when unprobed — which is almost always what you want. \"Reel\" describes the edit, NOT the shape: setting 9:16 on landscape footage crops the sides away and can cut a second person out of frame."
+        "description": "Output shape, set only for a shape the user asked for or a named vertical destination (Reels/Shorts/TikTok). When omitted it follows the footage: the source recording's native aspect, nearest of 9:16/16:9/1:1, and 16:9 when unprobed. \"Reel\" describes the edit, not the shape: 9:16 on landscape footage crops the sides away and can cut a second person out of frame."
       },
       "transition": {
         "type": "string",
@@ -178,29 +178,29 @@
             "properties": {
               "opener": {
                 "type": "string",
-                "description": "Explicit opener library_entry_id returned by identity_assets_list, or none. Use only when choosing a specific saved asset instead of project_default."
+                "description": "Explicit opener library_entry_id returned by identity_assets_list, or none; a specific saved asset instead of project_default."
               },
               "outro": {
                 "type": "string",
-                "description": "Explicit outro library_entry_id returned by identity_assets_list, or none. Use only when choosing a specific saved asset instead of project_default."
+                "description": "Explicit outro library_entry_id returned by identity_assets_list, or none; a specific saved asset instead of project_default."
               }
             },
             "additionalProperties": false
           }
         ],
-        "description": "Optional highlight-reel Signature. Use project_default when the project has saved Signature defaults and the user wants their branding; saved project music becomes a full-Episode music cue. Discover first with identity_assets_list only when defaults are absent or unclear, the user names a specific opener or outro, or you need uses_title. Use the object form to choose explicit saved opener and outro assets. Add or change a specific song with music_cue_mutate after creation. Omitted object keys mean none."
+        "description": "Optional highlight-reel Signature. project_default applies the project's saved Signature defaults (the user's branding); saved project music becomes a full-Episode music cue. identity_assets_list lists saved openers and outros with their uses_title. The object form chooses explicit saved opener and outro assets. A specific song is added or changed with music_cue_mutate after creation. Omitted object keys mean none."
       },
       "opener_title": {
         "type": "string",
-        "description": "Optional per-reel opener title. Pass only when the selected opener asset has uses_title:true; static or absent openers return identity_warnings:[\"opener_title_ignored_static_opener\"] and ignore this value."
+        "description": "Optional per-reel opener title, used only when the selected opener asset has uses_title:true; static or absent openers return identity_warnings:[\"opener_title_ignored_static_opener\"] and ignore this value."
       },
       "supersedes_episode_id": {
         "type": "string",
-        "description": "Optional explicit lineage when the user deliberately asks for a replacement draft. Never use this for edge_warnings: verify and revise the same created target with episode_edit."
+        "description": "Optional explicit lineage for a replacement draft the user deliberately asks for. It does not resolve edge_warnings, which are revised on the same created target with episode_edit."
       },
       "idempotency_key": {
         "type": "string",
-        "description": "Opaque key unique across the account for this logical creation. For a new create under a v3 editor ask, use the full requestId plus a distinct action suffix; otherwise choose a fresh opaque key once. Exact retry/recovery reuses the original complete key and arguments, including across later messages. Never derive keys from titles or media ranges or re-key an ambiguous write. A near-duplicate this same session already created comes back with near_duplicate:true instead of a second row."
+        "description": "Opaque key unique across the account for this logical creation. Under a v3 editor ask it is the full requestId plus a distinct action suffix; otherwise it is a fresh opaque key chosen once. Exact retry/recovery reuses the original complete key and arguments, including across later messages. A key derived from titles or media ranges changes with them, and a new key on an ambiguous write can create a duplicate. A near-duplicate this same session already created comes back with near_duplicate:true instead of a second row."
       }
     },
     "required": [
@@ -294,7 +294,7 @@
       },
       "near_duplicate": {
         "type": "boolean",
-        "description": "True when nothing was created because this session already made a near-identical derived clip — the returned handles are that existing clip's. Refine it with episode_edit; do not retry the create."
+        "description": "True when nothing was created because this session already made a near-identical derived clip; the returned handles are that existing clip's. That clip is refined with episode_edit; repeating the create returns it again."
       },
       "already_applied": {
         "type": "boolean",
@@ -439,7 +439,7 @@
             },
             "episode_seconds": {
               "type": "number",
-              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+              "description": "Exact flagged point on the created target's Episode clock, usable directly as an episode_zoom edge; occurrence_id identifies its source side."
             },
             "word": {
               "type": "string"

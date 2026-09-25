@@ -20,12 +20,12 @@
           "from": {
             "type": "number",
             "minimum": 0,
-            "description": "Window start in episode seconds. Omit for the Episode start."
+            "description": "Window start in episode seconds; absent means the Episode start."
           },
           "to": {
             "type": "number",
             "minimum": 0,
-            "description": "Window end in episode seconds. Omit for a default span from the start."
+            "description": "Window end in episode seconds; absent means a default span from the start."
           }
         }
       },
@@ -272,7 +272,7 @@
                 "profile_linked",
                 "unconfirmed"
               ],
-              "description": "Where this row's NAME came from, which is a different question from identity_bases. unconfirmed means the display name is provider-derived and nobody confirmed it, so treat it as a label rather than an identity."
+              "description": "Where this row's NAME came from, which is a different question from identity_bases. unconfirmed means the display name is provider-derived and nobody confirmed it: a label rather than an identity."
             },
             "speaker_profile_id": {
               "type": "string"

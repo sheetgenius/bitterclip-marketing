@@ -1,13 +1,13 @@
 {
   "name": "publishing_state_read",
   "title": "Read publish state",
-  "description": "One publish-state read per call — pass exactly one id argument. output_id (rxpt_… export or comp_… composition, optional kind hint) returns the output's canonical publish_state envelopes per destination package. approval_id returns one reviewable package's publish_state including media/copy/destination readiness and next action. publish_record_id polls a queued attempt across queued, publishing, provider-accepted, published, failed, uncertain, reconciled, removed, and cleanup-failed states, including exact external URLs and recovery actions. The result carries subject: output | package | publish_record.",
+  "description": "One publish-state read per call, by exactly one id argument. output_id (rxpt_… export or comp_… composition, optional kind hint) returns the output's canonical publish_state envelopes per destination package. approval_id returns one reviewable package's publish_state including media/copy/destination readiness and next action. publish_record_id polls a queued attempt across queued, publishing, provider-accepted, published, failed, uncertain, reconciled, removed, and cleanup-failed states, including exact external URLs and recovery actions. The result carries subject: output | package | publish_record.",
   "input_schema": {
     "type": "object",
     "properties": {
       "output_id": {
         "type": "string",
-        "description": "Output public ID (rxpt_… export or comp_… composition). Pass exactly one id argument."
+        "description": "Output public ID (rxpt_… export or comp_… composition). Exactly one id argument."
       },
       "kind": {
         "type": "string",
@@ -19,11 +19,11 @@
       },
       "approval_id": {
         "type": "string",
-        "description": "Approval item (package) public ID. Pass exactly one id argument."
+        "description": "Approval item (package) public ID. Exactly one id argument."
       },
       "publish_record_id": {
         "type": "string",
-        "description": "Publish record public ID. Pass exactly one id argument."
+        "description": "Publish record public ID. Exactly one id argument."
       }
     },
     "required": [],
@@ -120,7 +120,7 @@
         "type": "array",
         "items": {
           "type": "object",
-          "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+          "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
           "properties": {
             "schema_version": {
               "type": "string"
@@ -460,7 +460,7 @@
                       "object",
                       "null"
                     ],
-                    "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                    "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                     "properties": {
                       "kind": {
                         "type": "string"
@@ -595,7 +595,7 @@
             },
             "stage": {
               "type": "object",
-              "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+              "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
               "required": [
                 "status",
                 "label",
@@ -642,7 +642,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -779,7 +779,7 @@
                 "object",
                 "null"
               ],
-              "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+              "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
               "properties": {
                 "kind": {
                   "type": "string"
@@ -935,7 +935,7 @@
       },
       "publish_state": {
         "type": "object",
-        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
         "properties": {
           "schema_version": {
             "type": "string"
@@ -1275,7 +1275,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -1410,7 +1410,7 @@
           },
           "stage": {
             "type": "object",
-            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
             "required": [
               "status",
               "label",
@@ -1457,7 +1457,7 @@
                   "object",
                   "null"
                 ],
-                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                 "properties": {
                   "kind": {
                     "type": "string"
@@ -1594,7 +1594,7 @@
               "object",
               "null"
             ],
-            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
             "properties": {
               "kind": {
                 "type": "string"

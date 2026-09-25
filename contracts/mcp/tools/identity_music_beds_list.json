@@ -1,17 +1,17 @@
 {
   "name": "identity_music_beds_list",
   "title": "List identity music beds",
-  "description": "App-only Brand/Music Studio library read. Returns a terse index of account-owned music beds (plus global samples): title, generation prompt, provider, duration, kind, and readiness — enough to choose a bed by its described vibe without listening. Deep metadata/provenance stays on single-bed payloads. To browse beds alongside openers, outros, and project defaults use identity_assets_list. To make a song the default full-Episode cue on future reels use identity_apply_to_project; to score an existing Episode use music_cue_mutate. Omit project_id for the account-level library (Music Studio).",
+  "description": "App-only Brand/Music Studio library read. Returns a terse index of account-owned music beds (plus global samples): title, generation prompt, provider, duration, kind, and readiness — enough to choose a bed by its described vibe without listening. Deep metadata/provenance stays on single-bed payloads. identity_assets_list lists beds alongside openers, outros, and project defaults; identity_apply_to_project makes a song the default full-Episode cue on future reels; music_cue_mutate scores an existing Episode. Without project_id it reads the account-level library (Music Studio).",
   "input_schema": {
     "type": "object",
     "properties": {
       "project_id": {
         "type": "string",
-        "description": "Project public ID. Omit for the account library."
+        "description": "Project public ID; absent for the account library."
       },
       "include_archived": {
         "type": "boolean",
-        "description": "Include archived rows. Defaults false."
+        "description": "Includes archived rows. Defaults false."
       }
     },
     "required": [],

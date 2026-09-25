@@ -1,7 +1,7 @@
 {
   "name": "publish_update",
   "title": "Update a publish package",
-  "description": "Edit copy for a reviewable publish package or approval item before it is published. If the package was already approved, the edit supersedes that decision and returns the package to review. This does not publish externally.",
+  "description": "Edits copy for a reviewable publish package or approval item before it is published. If the package was already approved, the edit supersedes that decision and returns the package to review. This does not publish externally.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -76,7 +76,7 @@
       },
       "publish_state": {
         "type": "object",
-        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
         "properties": {
           "schema_version": {
             "type": "string"
@@ -416,7 +416,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -551,7 +551,7 @@
           },
           "stage": {
             "type": "object",
-            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
             "required": [
               "status",
               "label",
@@ -598,7 +598,7 @@
                   "object",
                   "null"
                 ],
-                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                 "properties": {
                   "kind": {
                     "type": "string"
@@ -735,7 +735,7 @@
               "object",
               "null"
             ],
-            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
             "properties": {
               "kind": {
                 "type": "string"
@@ -881,7 +881,7 @@
           "object",
           "null"
         ],
-        "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+        "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
         "properties": {
           "kind": {
             "type": "string"

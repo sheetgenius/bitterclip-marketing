@@ -1,17 +1,17 @@
 {
   "name": "publishing_package_create",
   "title": "Prepare a reviewable publish package",
-  "description": "One reviewable package per call, from either a ready clip export (export_id) or a rendered episode (composition_id) — pass exactly one. platform picks the destination family: youtube / youtube_shorts build a YouTube package (title, tags, privacy, category, made_for_kids; youtube_shorts is export-only), linkedin / x build a social package (post_body; an overlong LinkedIn video becomes a link_to_youtube package, X video over its ~140s API limit becomes manual_handoff and never auto-posts). Nothing publishes externally — a separate server-bound final confirmation consumes the displayed exact package, normally from the first-party workspace. App-only descriptor visibility is not an authenticated-MCP transport or human-review boundary. Required copy follows the package builder: YouTube packages require description (export YouTube also requires title); social packages compose defaults when copy is omitted.",
+  "description": "One reviewable package per call, from either a ready clip export (export_id) or a rendered episode (composition_id); exactly one. platform picks the destination family: youtube / youtube_shorts build a YouTube package (title, tags, privacy, category, made_for_kids; youtube_shorts is export-only), linkedin / x build a social package (post_body; an overlong LinkedIn video becomes a link_to_youtube package, X video over its ~140s API limit becomes manual_handoff and never auto-posts). Nothing publishes externally — a separate server-bound final confirmation consumes the displayed exact package, normally from the first-party workspace. App-only descriptor visibility is not an authenticated-MCP transport or human-review boundary. Required copy follows the package builder: YouTube packages require description (export YouTube also requires title); social packages compose defaults when copy is omitted.",
   "input_schema": {
     "type": "object",
     "properties": {
       "export_id": {
         "type": "string",
-        "description": "Immutable exact Export public ID (rxpt_…). Pass exactly one of export_id or composition_id."
+        "description": "Immutable exact Export public ID (rxpt_…). Exactly one of export_id or composition_id."
       },
       "composition_id": {
         "type": "string",
-        "description": "Rendered composition/episode public ID (comp_…). Pass exactly one of export_id or composition_id."
+        "description": "Rendered composition/episode public ID (comp_…). Exactly one of export_id or composition_id."
       },
       "platform": {
         "type": "string",
@@ -40,7 +40,7 @@
         "items": {
           "type": "string"
         },
-        "description": "Optional tags/hashtags without #. Omit to use defaults; pass [] to clear."
+        "description": "Optional tags/hashtags without #. Omitted uses defaults; [] clears."
       },
       "privacy_status": {
         "type": "string",
@@ -131,7 +131,7 @@
       },
       "publish_state": {
         "type": "object",
-        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
         "properties": {
           "schema_version": {
             "type": "string"
@@ -471,7 +471,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -606,7 +606,7 @@
           },
           "stage": {
             "type": "object",
-            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
             "required": [
               "status",
               "label",
@@ -653,7 +653,7 @@
                   "object",
                   "null"
                 ],
-                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                 "properties": {
                   "kind": {
                     "type": "string"
@@ -790,7 +790,7 @@
               "object",
               "null"
             ],
-            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
             "properties": {
               "kind": {
                 "type": "string"

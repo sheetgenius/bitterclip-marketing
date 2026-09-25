@@ -1,13 +1,13 @@
 {
   "name": "upload_link_create",
   "title": "Create an upload link",
-  "description": "Create a hosted BitterClip upload link for local audio or video files. Prefer this when the user wants a link or another camera operator will contribute later. Pass capture_session_id to add multiple files or a whole device folder to one footage-session chronology. A link cannot add files directly to an existing episode: create a footage session for that episode and pass its capture_session_id.",
+  "description": "Creates a hosted BitterClip upload link for local audio or video files. Use this when the user wants a link or another camera operator will contribute later. capture_session_id adds multiple files or a whole device folder to one footage-session chronology. A link cannot add files directly to an existing episode; files reach one through a footage session for that episode and its capture_session_id.",
   "input_schema": {
     "type": "object",
     "properties": {
       "project_id": {
         "type": "string",
-        "description": "Optional project public ID, slug, or name to attach uploads to. Omit for the default uploads project."
+        "description": "Optional project public ID, slug, or name to attach uploads to; absent means the default uploads project."
       },
       "project": {
         "type": "string",
@@ -34,7 +34,7 @@
       },
       "upload_url": {
         "type": "string",
-        "description": "The token-gated drop-zone page URL to give the user."
+        "description": "The token-gated drop-zone page URL for the user."
       },
       "project": {
         "type": "object",

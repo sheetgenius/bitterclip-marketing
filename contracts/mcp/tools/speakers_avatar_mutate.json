@@ -1,7 +1,7 @@
 {
   "name": "speakers_avatar_mutate",
   "title": "Change a profile photo",
-  "description": "One profile-photo change per call: set_from_reference is the profile-picture chooser — it copies one cropped reference-gallery candidate (from speakers_list_avatar_candidates) into durable history and makes it current, and because it copies, later rejecting or invalidating that reference never alters the photo, and being the photo never adds it to the matching set; set_from_upload does the same from an uploaded image; clear removes the current photo while preserving history; restore brings back a prior history item. No action accepts a whole sampled frame — the retired set_from_candidate lane served frames that could show the wrong person; a recording's own frame pick lives on speakers_track_mutate set_avatar_from_recording and never touches the saved photo. App-only human repair actions — none of them change identity, voice memory, transcript labels, captions, exports, or merge state. Pass a caller-stable idempotency key with every action; the profile-photo lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
+  "description": "One profile-photo change per call: set_from_reference is the profile-picture chooser — it copies one cropped reference-gallery candidate (from speakers_list_avatar_candidates) into durable history and makes it current, and because it copies, later rejecting or invalidating that reference never alters the photo, and being the photo never adds it to the matching set; set_from_upload does the same from an uploaded image; clear removes the current photo while preserving history; restore brings back a prior history item. No action accepts a whole sampled frame — the retired set_from_candidate lane served frames that could show the wrong person; a recording's own frame pick lives on speakers_track_mutate set_avatar_from_recording and never touches the saved photo. App-only human repair actions — none of them change identity, voice memory, transcript labels, captions, exports, or merge state. Every action takes a caller-stable idempotency key; the profile-photo lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "expected_revision": {
         "type": "integer",
-        "description": "Optional: carried toward the standard mutation contract. The profile-photo lane exposes no structural revision yet; omit until it does."
+        "description": "Optional: carried toward the standard mutation contract. The profile-photo lane exposes no structural revision yet, so it is unused for now."
       },
       "idempotency_key": {
         "type": "string",
@@ -19,7 +19,7 @@
       },
       "action": {
         "type": "object",
-        "description": "One profile-photo action. Use the canonical field names in the matching action shape.",
+        "description": "One profile-photo action, in the canonical field names of its matching action shape.",
         "oneOf": [
           {
             "type": "object",

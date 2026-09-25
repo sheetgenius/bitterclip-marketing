@@ -1,7 +1,7 @@
 {
   "name": "speaker_title_mutate",
   "title": "Change a stable speaker title",
-  "description": "Add, revise, hide, remove, or restore one sparse professional speaker label in an Episode. Read the Episode first and pass its current revision. A title lasts 0.8–12 seconds inside one source-backed occurrence and stays completely fixed in a semantic left/right + upper/lower slot; offsets are small canvas-relative nudges, never pixels, face boxes, or a tracking path. Frontier Clean uses crisp black type on a quiet white field with a restrained rail/lock reveal; give the entrance roughly 0.3–0.5 seconds when the title should feel authored rather than abrupt. Place titles only where identification earns the interruption—typically once during a cold open and once near a speaker's first sustained appearance in the body, not on every camera cut. Choose a slot that does not collide with the active caption lane or the speaker's face. For top-aligned 4:5 picture on a 9:16 canvas with a dedicated lower matte caption panel, lower places the title just inside the picture edge; the matte remains exclusively for centered subtitles. Use an upper slot only when the actual composition makes it the calmer negative-space choice. A title has one restrained entrance and fade-out, then remains fixed. Small feedback such as ‘move Jay left,’ ‘move it down,’ or ‘leave it up longer’ updates the same title without rerunning visual analysis. For an enabled title, the successful MCP response attempts to attach exactly one receipt-bound settled positioning JPEG using Export geometry, including any committed caption visible at that instant so title/subtitle collisions are observable. Inspect that image before deciding whether to nudge the same title. positioning_sample is always present: ready, not_applicable, unavailable, or superseded; unavailable never means the committed mutation failed. Re-read before another change. The idempotency key makes an exact retry safe.",
+  "description": "Adds, revises, hides, removes, or restores one sparse professional speaker label in an Episode. Requires the Episode's current revision from episode_read. A title lasts 0.8–12 seconds inside one source-backed occurrence and stays completely fixed in a semantic left/right + upper/lower slot; offsets are small canvas-relative nudges, never pixels, face boxes, or a tracking path. Frontier Clean uses crisp black type on a quiet white field with a restrained rail/lock reveal; an entrance of roughly 0.3–0.5 seconds reads as authored rather than abrupt. For top-aligned 4:5 picture on a 9:16 canvas with a dedicated lower matte caption panel, lower places the title just inside the picture edge; the matte remains exclusively for centered subtitles. A title has one restrained entrance and fade-out, then remains fixed. Small feedback such as ‘move Jay left,’ ‘move it down,’ or ‘leave it up longer’ updates the same title without rerunning visual analysis. For an enabled title, the successful MCP response attempts to attach exactly one receipt-bound settled positioning JPEG using Export geometry, including any committed caption visible at that instant so title/subtitle collisions are observable. positioning_sample is always present: ready, not_applicable, unavailable, or superseded; unavailable never means the committed mutation failed. Another change requires the new revision. The idempotency key makes an exact retry safe.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -19,7 +19,7 @@
       },
       "action": {
         "type": "object",
-        "description": "One speaker-title action. Use the canonical fields in the matching action shape.",
+        "description": "One speaker-title action, in the canonical fields of its matching action shape.",
         "oneOf": [
           {
             "type": "object",
@@ -82,7 +82,7 @@
                       "upper",
                       "lower"
                     ],
-                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles. Otherwise choose against occupied face space and the active caption lane."
+                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles."
                   },
                   "horizontal_offset": {
                     "type": "number",
@@ -149,7 +149,7 @@
                   "subtitle": {
                     "type": "string",
                     "maxLength": 120,
-                    "description": "Set to an empty string to remove the second line."
+                    "description": "An empty string removes the second line."
                   }
                 },
                 "required": [],
@@ -179,7 +179,7 @@
                       "upper",
                       "lower"
                     ],
-                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles. Otherwise choose against occupied face space and the active caption lane."
+                    "description": "Stable vertical lane for the whole title appearance. In a portrait canvas with top-aligned 4:5 picture and a lower matte caption panel, lower sits inside the picture just above its edge; the caption panel remains solely for subtitles."
                   },
                   "horizontal_offset": {
                     "type": "number",

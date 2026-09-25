@@ -28,6 +28,17 @@ Preferred categories:
 Use this section for changes that have been committed but not yet summarized
 under a dated entry.
 
+### Product Context
+
+- The public Agent contract now authors 112 MCP tool contracts. AI music
+  generation (`identity_music_beds_generate`) left the MCP surface and stays in
+  the web app's Music Studio, so the app-only catalog lists 49 operations and
+  connected assistants choose library and uploaded music beds.
+- Tool descriptions now state what each tool does, returns, records, or
+  requires; they no longer instruct the model, point to outside documents, or
+  script other tools. Standing guidance moved to the MCP server instructions
+  and the plugin skills (package 0.2.2).
+
 ### Website
 
 - Made the main MCP tool reference list the 63 tools exposed to the default

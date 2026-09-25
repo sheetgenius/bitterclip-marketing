@@ -1,7 +1,7 @@
 {
   "name": "episode_render",
   "title": "Render an episode to a downloadable file",
-  "description": "Render a persisted episode (composition) into a downloadable MP4 — the materialize step after episode_create / episode_edit. Music authored by the development preview is refused before queueing or charging until music export ships. Otherwise this charges one export credit, queues the render asynchronously, and returns the render status. IDEMPOTENT: re-rendering an episode that is already rendered for its current revision (or already queued/rendering) is a NO-OP — it does NOT charge a second credit or re-queue (so a retry is safe). An episode that was edited since its last render (stale_media) renders again. After this returns status \"queued\", poll episode_status with the same episode_id until \"ready\"; episode_status then returns separate playback and download capabilities (stay in the episode tools). Optionally pass title / aspect_ratio to set them on this render.",
+  "description": "Renders a persisted episode (composition) into a downloadable MP4 — the materialize step after episode_create / episode_edit. Music authored by the development preview is refused before queueing or charging until music export ships. Otherwise this charges one export credit, queues the render asynchronously, and returns the render status. IDEMPOTENT: re-rendering an episode that is already rendered for its current revision (or already queued/rendering) is a NO-OP — it does NOT charge a second credit or re-queue (so a retry is safe). An episode that was edited since its last render (stale_media) renders again. After a \"queued\" status, episode_status with the same episode_id reports progress until \"ready\" and then returns separate playback and download capabilities. Optional title / aspect_ratio set them on this render.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -195,7 +195,7 @@
           "null"
         ],
         "pattern": "^rrq_[a-z0-9]+$",
-        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+        "description": "Exact admitted customer render request when known; it identifies this result for recovery after navigation or a newer revision."
       },
       "render_attempt": {
         "type": [
@@ -211,7 +211,7 @@
       },
       "next_action": {
         "type": "object",
-        "description": "What to do next (poll_until_ready / download / failed)."
+        "description": "Next step kind (poll_until_ready / download / failed)."
       }
     },
     "required": [],

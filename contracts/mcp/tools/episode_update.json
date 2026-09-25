@@ -1,7 +1,7 @@
 {
   "name": "episode_update",
   "title": "Update episode metadata",
-  "description": "Update the saved episode's own title, description, Episode-time chapters, and/or Episode date. Read the exact Episode first and pass its draft_revision; a stale token fails without overwriting newer human copy. Episode date is the durable project chronology field; date-only input is interpreted as 12:00 UTC and sets the basis to manual. This is metadata-only; structural timeline edits use the separate episode_edit patch primitive. Do not use this for YouTube/LinkedIn/X package copy unless the user explicitly asks to rename, redescribe, or correct the date of the episode itself; use publish_prepare or publish_update for channel/package copy.",
+  "description": "Updates the saved episode's own title, description, Episode-time chapters, and/or Episode date. Requires the Episode's draft_revision from episode_read; a stale token fails without overwriting newer human copy. Episode date is the durable project chronology field; date-only input is interpreted as 12:00 UTC and sets the basis to manual. This is metadata-only; structural timeline edits use the separate episode_edit patch primitive. It changes the episode itself; YouTube/LinkedIn/X package copy belongs to publish_prepare and publish_update.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -20,7 +20,7 @@
       "chapters": {
         "type": "array",
         "maxItems": 250,
-        "description": "Optional user-authored Episode-time chapters. Omit to preserve the current field; pass [] to clear it.",
+        "description": "Optional user-authored Episode-time chapters. Omitted preserves the current field; [] clears it.",
         "items": {
           "type": "object",
           "properties": {

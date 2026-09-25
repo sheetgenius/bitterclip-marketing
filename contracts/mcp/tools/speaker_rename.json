@@ -1,7 +1,7 @@
 {
   "name": "speaker_rename",
   "title": "Rename a speaker on a recording",
-  "description": "Relabel one diarized speaker track inside a recording or that recording's episode-of-one, without confirming identity, creating a SpeakerProfile, or enrolling/saving a voiceprint. Use this when the user asks to fix captions such as \"Speaker 2 is Adrian\" and wants future captioned exports from this recording to use the corrected name. This is rename-only: biometric voice memory and identity confirmation require a human web action in speaker review.",
+  "description": "Relabels one diarized speaker track inside a recording or that recording's episode-of-one, without confirming identity, creating a SpeakerProfile, or enrolling/saving a voiceprint. Use this when the user asks to fix captions such as \"Speaker 2 is Adrian\" and wants future captioned exports from this recording to use the corrected name. This is rename-only: biometric voice memory and identity confirmation require a human web action in speaker review.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -1,7 +1,7 @@
 {
   "name": "identity_asset_ingest",
   "title": "Add an image or texture to FX Studio",
-  "description": "Ingest an image/logo/texture from HTTPS or base64 into your account's asset library. Omit project_id for account authoring or supply an accessible Project for its account. Add returned asset IDs to a scene's settings.asset_ids to admit those exact bytes to the isolated scene runtime. A scene has no ambient network or account credentials.",
+  "description": "Ingests an image/logo/texture from HTTPS or base64 into the account's asset library. Without project_id it serves account authoring; an accessible Project selects its account. Returned asset IDs listed in a scene's settings.asset_ids admit those exact bytes to the isolated scene runtime. A scene has no ambient network or account credentials.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,11 +11,11 @@
       },
       "url": {
         "type": "string",
-        "description": "HTTPS image URL to fetch. Pass either url or data_base64, not both."
+        "description": "HTTPS image URL to fetch; exactly one of url or data_base64."
       },
       "data_base64": {
         "type": "string",
-        "description": "Base64 image bytes, optionally as a data:image/...;base64 URL. Pass either data_base64 or url, not both."
+        "description": "Base64 image bytes, optionally as a data:image/...;base64 URL; exactly one of data_base64 or url."
       },
       "kind": {
         "type": "string",
@@ -23,7 +23,7 @@
           "logo",
           "image"
         ],
-        "description": "Use logo for a brand mark/wordmark asset; image for supporting imagery."
+        "description": "logo for a brand mark/wordmark asset; image for supporting imagery."
       },
       "name": {
         "type": "string",

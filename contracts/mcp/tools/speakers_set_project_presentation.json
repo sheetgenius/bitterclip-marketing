@@ -1,7 +1,7 @@
 {
   "name": "speakers_set_project_presentation",
   "title": "Set project speaker name",
-  "description": "Set how one remembered person appears inside a project: display name, export name, role, visibility, order, and short bio. This does not rename transcripts, old exports, or the account-wide person.",
+  "description": "Sets how one remembered person appears inside a project: display name, export name, role, visibility, order, and short bio. This does not rename transcripts, old exports, or the account-wide person.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -52,7 +52,7 @@
           "hidden",
           "archived"
         ],
-        "description": "Project row state. Use hidden to remove a duplicate row from future project exports without deleting history."
+        "description": "Project row state. hidden removes a duplicate row from future project exports without deleting history."
       },
       "sort_order": {
         "type": "integer"

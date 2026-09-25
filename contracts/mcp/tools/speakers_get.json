@@ -1,7 +1,7 @@
 {
   "name": "speakers_get",
   "title": "Get remembered person",
-  "description": "Read one remembered person, including names, saved voice examples, project names, merge history, and appearance counts. With project_id, it also reports that person's current recording-assignment exceptions; a confirmed person profile does not imply every track assignment is correct. This does not change identity.",
+  "description": "Reads one remembered person, including names, saved voice examples, project names, merge history, and appearance counts. With project_id, it also reports that person's current recording-assignment exceptions; a confirmed person profile does not imply every track assignment is correct. This does not change identity.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -1,7 +1,7 @@
 {
   "name": "review_points_place",
   "title": "Place review points",
-  "description": "Save 1–20 source-backed, reviewable Moments on one existing Episode, then open the same workspace. If exactly one placement succeeds, it is focused; multiple successful points are visible but not auto-focused. Use this once and last only when the user explicitly asks to save or mark reviewable Moments; never use it for a read-only open/show request, and never follow it with workspace_open. Each range is a half-open [start_seconds, end_seconds) interval on the playable Episode clock. Retries converge on an existing active Moment at the exact same source-time range. This changes review metadata only; it never changes source footage or the Program, creates a reel, or renders media.",
+  "description": "Saves 1–20 source-backed, reviewable Moments on one existing Episode, then opens the same workspace. If exactly one placement succeeds, it is focused; multiple successful points are visible but not auto-focused. Use this when the user explicitly asks to save or mark reviewable Moments, not for a read-only open/show request; it opens the workspace itself. Each range is a half-open [start_seconds, end_seconds) interval on the playable Episode clock. Retries converge on an existing active Moment at the exact same source-time range. This changes review metadata only; it never changes source footage or the Program, creates a reel, or renders media.",
   "input_schema": {
     "type": "object",
     "properties": {

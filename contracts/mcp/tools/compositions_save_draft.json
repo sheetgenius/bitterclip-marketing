@@ -1,17 +1,17 @@
 {
   "name": "compositions_save_draft",
   "title": "Save the composition edit document",
-  "description": "Durably persist an Episode or Clip's overlays, settings (aspect ratio, captions) and copy (title, description, chapters), each under the optional draft-revision guard. A segment graph is accepted only to promote a Recording draft into its first Episode: pass recording_id and segments while that Recording's working draft has no Program yet. An existing Episode or Clip changes arrangement only through occurrence operations (episode_edit, or episode_edit_full in the editor); a segment graph addressed to one, by composition_id or through its Recording, refuses with program_occurrence_operation_required and changes nothing.",
+  "description": "Durably persists an Episode or Clip's overlays, settings (aspect ratio, captions) and copy (title, description, chapters), each under the optional draft-revision guard. A segment graph is accepted only to promote a Recording draft into its first Episode: recording_id and segments, while that Recording's working draft has no Program yet. An existing Episode or Clip changes arrangement only through occurrence operations (episode_edit, or episode_edit_full in the editor); a segment graph addressed to one, by composition_id or through its Recording, refuses with program_occurrence_operation_required and changes nothing.",
   "input_schema": {
     "type": "object",
     "properties": {
       "recording_id": {
         "type": "string",
-        "description": "Recording the draft was opened from (its per-recording working draft). Omit if passing composition_id."
+        "description": "Recording the draft was opened from (its per-recording working draft); not used with composition_id."
       },
       "composition_id": {
         "type": "string",
-        "description": "Existing draft to update. Omit to find-or-create the working draft for recording_id."
+        "description": "Existing draft to update; when omitted, the working draft for recording_id is found or created."
       },
       "title": {
         "type": "string"
@@ -23,7 +23,7 @@
       "chapters": {
         "type": "array",
         "maxItems": 250,
-        "description": "Optional user-authored Episode-time chapters. Omit to preserve the current field; pass [] to clear it.",
+        "description": "Optional user-authored Episode-time chapters. Omitted preserves the current field; [] clears it.",
         "items": {
           "type": "object",
           "properties": {
@@ -60,7 +60,7 @@
       },
       "segments": {
         "type": "array",
-        "description": "Recording-draft promotion only: the ordered first Program (same shape as episode.create) for recording_id's working draft. Omit it, or pass [], for an overlay, settings or copy save; a non-empty graph for an existing Episode or Clip refuses.",
+        "description": "Recording-draft promotion only: the ordered first Program (same shape as episode.create) for recording_id's working draft. Absent or [] for an overlay, settings or copy save; a non-empty graph for an existing Episode or Clip refuses.",
         "items": {
           "type": "object",
           "properties": {
@@ -69,7 +69,7 @@
             },
             "occurrence_id": {
               "type": "string",
-              "description": "Omit for a first Program; every promoted row mints its own stable occurrence identity."
+              "description": "Absent for a first Program; every promoted row mints its own stable occurrence identity."
             },
             "part_id": {
               "type": "string",
@@ -105,7 +105,7 @@
             },
             "transition_policy": {
               "type": "string",
-              "description": "Existing occurrence transition policy. Preserve it unless intentionally changing it."
+              "description": "Existing occurrence transition policy; the saved value stays unless changed."
             },
             "transition_duration_seconds": {
               "type": "number",
@@ -125,7 +125,7 @@
       },
       "overlays": {
         "type": "array",
-        "description": "Overlay track (text/image/pip), replaced whole. Omit it to leave the track untouched; [] clears it. Persisted now; rendered in a later pass.",
+        "description": "Overlay track (text/image/pip), replaced whole. Omitted leaves the track untouched; [] clears it. Persisted now; rendered in a later pass.",
         "items": {
           "type": "object"
         }

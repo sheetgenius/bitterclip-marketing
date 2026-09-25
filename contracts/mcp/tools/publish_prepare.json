@@ -1,7 +1,7 @@
 {
   "name": "publish_prepare",
   "title": "Prepare a publish package",
-  "description": "Create reviewable publish packages for an episode or clip. This never publishes externally; a fresh server-bound final confirmation is required before any send and is ordinarily surfaced in the first-party workspace. App-only descriptor visibility does not itself restrict authenticated MCP transport or prove human review. Put improved YouTube/LinkedIn/X titles, descriptions, and copy here (or in publish_update) rather than mutating the saved episode with episode_update.",
+  "description": "Creates reviewable publish packages for an episode or clip. This never publishes externally; a fresh server-bound final confirmation is required before any send and is ordinarily surfaced in the first-party workspace. App-only descriptor visibility does not itself restrict authenticated MCP transport or prove human review. Improved YouTube/LinkedIn/X titles, descriptions, and copy belong in the package here (or in publish_update); the saved episode stays unchanged.",
   "input_schema": {
     "type": "object",
     "properties": {

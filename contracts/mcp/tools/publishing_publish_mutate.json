@@ -1,7 +1,7 @@
 {
   "name": "publishing_publish_mutate",
   "title": "Advance the publish workflow",
-  "description": "One workspace publish-workflow change per call. The subject id rides at the top level so authorization tier-checks the exact subject: export_id for prepare_set (also accepts a rendered composition/episode id), approval_id for request_confirmation, confirm, and update_copy, publish_record_id for reconcile, verify_post_acceptance_consequence, reconcile_x_quote_boost, and resolve_cleanup. prepare_set prepares the WHOLE episode's review-only publish set across channels in one call; legacy approval/auto preferences are normalized to approval, and X video over its ~140s API limit becomes manual_handoff. prepare_set never creates a PublishRecord or publishes. request_confirmation pins the displayed exact package and returns a short-lived capability in result metadata; confirm may create one PublishRecord only by consuming that capability. The capability is excluded from model-visible content, but app-only descriptor visibility is not a transport or human-attention boundary: an authenticated MCP widget, or a raw client that can inspect result metadata, can carry it. update_copy edits a package's composed copy before publish (an approved package returns to review). reconcile records a manually verified external URL for an accepted-after-timeout whole publish. verify_post_acceptance_consequence records a human's completed destination check for a known primary post whose exact YouTube thumbnail or LinkedIn first comment was not proved; it cannot resend, alter, or replace the canonical post. reconcile_x_quote_boost uses one read-only X lookup to verify a human-supplied quote candidate for the separately uncertain boost; it cannot send or re-quote, and it cannot replace the canonical reply URL or ID. resolve_cleanup records that a cleanup_failed issue was verified resolved. Pass a caller-stable idempotency key with every action; update_copy carries it toward the standard mutation contract (the copy lane does not enforce replay yet).",
+  "description": "One workspace publish-workflow change per call. The subject id rides at the top level so authorization tier-checks the exact subject: export_id for prepare_set (also accepts a rendered composition/episode id), approval_id for request_confirmation, confirm, and update_copy, publish_record_id for reconcile, verify_post_acceptance_consequence, reconcile_x_quote_boost, and resolve_cleanup. prepare_set prepares the WHOLE episode's review-only publish set across channels in one call; legacy approval/auto preferences are normalized to approval, and X video over its ~140s API limit becomes manual_handoff. prepare_set never creates a PublishRecord or publishes. request_confirmation pins the displayed exact package and returns a short-lived capability in result metadata; confirm may create one PublishRecord only by consuming that capability. The capability is excluded from model-visible content, but app-only descriptor visibility is not a transport or human-attention boundary: an authenticated MCP widget, or a raw client that can inspect result metadata, can carry it. update_copy edits a package's composed copy before publish (an approved package returns to review). reconcile records a manually verified external URL for an accepted-after-timeout whole publish. verify_post_acceptance_consequence records a human's completed destination check for a known primary post whose exact YouTube thumbnail or LinkedIn first comment was not proved; it cannot resend, alter, or replace the canonical post. reconcile_x_quote_boost uses one read-only X lookup to verify a human-supplied quote candidate for the separately uncertain boost; it cannot send or re-quote, and it cannot replace the canonical reply URL or ID. resolve_cleanup records that a cleanup_failed issue was verified resolved. Every action takes a caller-stable idempotency key; update_copy carries it toward the standard mutation contract (the copy lane does not enforce replay yet).",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -19,7 +19,7 @@
       },
       "expected_revision": {
         "type": "integer",
-        "description": "Optional: carried toward the standard mutation contract. The publish lane exposes no structural revision yet; omit until it does."
+        "description": "Optional: carried toward the standard mutation contract. The publish lane exposes no structural revision yet, so it is unused for now."
       },
       "idempotency_key": {
         "type": "string",
@@ -94,7 +94,7 @@
               },
               "confirmation_token": {
                 "type": "string",
-                "description": "One-use confirmation capability returned through result _meta and excluded from model-visible content. Never expose or persist it. App-only descriptor visibility does not itself prove a human viewed the displayed consequence."
+                "description": "One-use confirmation capability returned through result _meta and excluded from model-visible content; it is private and not persisted. App-only descriptor visibility does not itself prove a human viewed the displayed consequence."
               }
             },
             "required": [
@@ -348,7 +348,7 @@
       },
       "publish_state": {
         "type": "object",
-        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools. Use stage first for the current product state and next action.",
+        "description": "Canonical BitterClip publish-state envelope for web, mobile, MCP/App widgets, and AI cockpit tools; stage carries the current product state and next action.",
         "properties": {
           "schema_version": {
             "type": "string"
@@ -688,7 +688,7 @@
                     "object",
                     "null"
                   ],
-                  "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                  "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                   "properties": {
                     "kind": {
                       "type": "string"
@@ -823,7 +823,7 @@
           },
           "stage": {
             "type": "object",
-            "description": "Compact product-language state for above-the-fold UI and model narration. Read this first.",
+            "description": "Compact product-language state for above-the-fold UI and model narration; the primary summary field.",
             "required": [
               "status",
               "label",
@@ -870,7 +870,7 @@
                   "object",
                   "null"
                 ],
-                "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+                "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
                 "properties": {
                   "kind": {
                     "type": "string"
@@ -1007,7 +1007,7 @@
               "object",
               "null"
             ],
-            "description": "Safe next action or recovery action in product terms. Tool fields are partial instructions; callers must supply any required_fields that are not present in arguments.",
+            "description": "Safe next action or recovery action in product terms. Tool fields are partial arguments; required_fields lists any value the call still needs.",
             "properties": {
               "kind": {
                 "type": "string"

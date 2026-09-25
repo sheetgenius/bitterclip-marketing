@@ -1,7 +1,7 @@
 {
   "name": "episode_status",
   "title": "Check an episode's render status (and get the file)",
-  "description": "Poll the render status of an episode (composition) after episode_render — the episode-vocabulary materialize poll, so you never switch to the compositions_* tools. Returns the render lifecycle state (status: draft | queued | rendering | ready | failed), the media sub-status (ready | stale | missing), and progress. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: inspect every flagged timestamp before accepting the edit; no markers means only that deterministic checks were clear, never that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When media is ready, download_url is the exact private/current Download action; pair it with editor Open. playback_url is embedded-app media plumbing and is never user-facing delivery. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence. After episode_render returns \"queued\", call episode_status with the same episode_id until status is \"ready\".",
+  "description": "Reports the render status of an episode (composition) after episode_render: the episode-vocabulary materialize poll. Returns the render lifecycle state (status: draft | queued | rendering | ready | failed), the media sub-status (ready | stale | missing), and progress. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: flagged timestamps mark seams for review, and no markers means only that deterministic checks were clear, not that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When media is ready, download_url is the exact private/current Download action, alongside editor Open. playback_url is embedded-app media plumbing, not user-facing delivery. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -129,14 +129,14 @@
           "string",
           "null"
         ],
-        "description": "Embedded-app-only inline media for the current Render. Never expose it as user-facing review or delivery; use private/current download_url plus editor Open."
+        "description": "Embedded-app-only inline media for the current Render, not user-facing review or delivery (that is the private/current download_url plus editor Open)."
       },
       "poster_url": {
         "type": [
           "string",
           "null"
         ],
-        "description": "Embedded-app-only exact current Render poster. Never expose or retain it in model prose."
+        "description": "Embedded-app-only exact current Render poster, not part of model prose."
       },
       "render_generation": {
         "type": [
@@ -180,11 +180,11 @@
       },
       "poll": {
         "type": "object",
-        "description": "Polling instruction present while the Render is queued or rendering."
+        "description": "Polling cadence present while the Render is queued or rendering."
       },
       "next_action": {
         "type": "object",
-        "description": "What to do next (poll_until_ready / download / failed)."
+        "description": "Next step kind (poll_until_ready / download / failed)."
       },
       "blockers": {
         "type": "array",
@@ -235,7 +235,7 @@
           "null"
         ],
         "pattern": "^rrq_[a-z0-9]+$",
-        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+        "description": "Exact admitted customer render request when known; it identifies this result for recovery after navigation or a newer revision."
       },
       "render_attempt": {
         "type": [

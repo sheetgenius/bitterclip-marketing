@@ -1,7 +1,7 @@
 {
   "name": "scene_preview",
   "title": "Inspect rendered FX scene frames",
-  "description": "Render exact frames of a saved scene in a contained browser and return real MCP PNG images. Inspect the images before judging a change, then iterate with scene_read and scene_edit. The snapshot binds source revision, settings, assets and runtime; it uses the same programmable scene contract as FX Studio. Omit project_id/brand_id for account FX authoring. at_ms selects explicit scene times; burst selects an evenly spaced set. contact_sheet returns one tiled image. This renders preview evidence without changing the scene, production defaults or an Episode.",
+  "description": "Renders exact frames of a saved scene in a contained browser and returns real MCP PNG images. The snapshot binds source revision, settings, assets and runtime; it uses the same programmable scene contract as FX Studio. Without project_id/brand_id it previews for account FX authoring. at_ms selects explicit scene times; burst selects an evenly spaced set. contact_sheet returns one tiled image. This renders preview evidence without changing the scene, production defaults or an Episode.",
   "input_schema": {
     "type": "object",
     "properties": {

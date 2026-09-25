@@ -1,7 +1,7 @@
 {
   "name": "recordings_visual_identity_undo",
   "title": "Undo an image identification",
-  "description": "Append a guarded withdrawal of the current exact-image answer, or restore the answer it corrected. Preserves newer and unrelated answers. The durable Undo is separate from its native background picture update; read status until settled.",
+  "description": "Appends a guarded withdrawal of the current exact-image answer, or restore the answer it corrected. Preserves newer and unrelated answers. The durable Undo is separate from its native background picture update, whose status the read reports until it settles.",
   "input_schema": {
     "type": "object",
     "properties": {

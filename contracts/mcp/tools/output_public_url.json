@@ -1,17 +1,17 @@
 {
   "name": "output_public_url",
   "title": "Create public MP4 review and download links",
-  "description": "Create expiring public review and direct-download URLs for one exact finished BitterClip render. The review URL is the practical human handoff; download_url remains the primitive for external services that ingest a public video URL (captioning/styling connectors like Submagic, Zapier steps, publishing tools). Pass exactly ONE target: episode_id when you have an Episode/derived-clip handle, OR render_id when you only have the ready render artifact; never pass both. A derived clip's comp_... handle goes in episode_id. This tool never starts or retries rendering: if render_not_ready, call render_create and wait for render_status to report ready, then retry with one target. Repeating the call for the same ready render is safe and does not enqueue or mutate a render; it only returns fresh expiring bearer URLs. A later render invalidates these links rather than silently showing a different cut. When a UI supplied expected_render_generation, pass it back so a stale card fails instead of sharing a newer Render. Pair download_url with title and dictionary when the receiving service wants context.",
+  "description": "Creates expiring public review and direct-download URLs for one exact finished BitterClip render. The review URL is the practical human handoff; download_url remains the primitive for external services that ingest a public video URL (captioning/styling connectors like Submagic, Zapier steps, publishing tools). It takes exactly ONE target: episode_id for an Episode/derived-clip handle, OR render_id for a ready render artifact alone; never both. A derived clip's comp_... handle goes in episode_id. This tool never starts or retries rendering: render_not_ready means render_status has not yet reported the render_create lifecycle ready. Repeating the call for the same ready render is safe and does not enqueue or mutate a render; it only returns fresh expiring bearer URLs. A later render invalidates these links rather than silently showing a different cut. A UI-supplied expected_render_generation makes a stale card fail instead of sharing a newer Render. title and dictionary give a receiving service context for download_url.",
   "input_schema": {
     "type": "object",
     "properties": {
       "episode_id": {
         "type": "string",
-        "description": "Use this single target when you have an Episode or derived-clip composition ID such as comp_...; recording handles src_... resolve to their episode-of-one. Do not also pass render_id."
+        "description": "Single target for an Episode or derived-clip composition ID such as comp_...; recording handles src_... resolve to their episode-of-one. Not combined with render_id."
       },
       "render_id": {
         "type": "string",
-        "description": "Use this single target only when you have the ready rart_... render artifact from render_status. Do not also pass episode_id."
+        "description": "Single target for a ready rart_... render artifact from render_status. Not combined with episode_id."
       },
       "expires_in_days": {
         "type": "integer",

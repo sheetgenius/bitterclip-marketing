@@ -1,7 +1,7 @@
 {
   "name": "account_context_set",
   "title": "Confirm the studio working context",
-  "description": "Confirm the OWNER's optional studio-wide working context — one bounded paragraph of standing context that spans Projects. OWNER-ONLY: it fails closed as not-found for guests and non-owner members. It is WEAKER than Project direction: a confirmed Project working brief always wins, and the person's explicit request wins over both. Use it only when the owner explicitly states or corrects studio-level standing context — NEVER infer it from conversation history; it replaces the whole context, so carry forward anything still current. Read the current context first (account_context_get) and pass that exact revision as expected_revision (0 when none exists); a stale revision fails without overwriting. Retrying the exact same confirmation with the same idempotency_key replays as a no-op, even after a later confirmation; the same key with different text fails closed. Pass an empty context to clear it. Confirming never touches sibling account settings, never changes any Project's working brief or direction, and causes no Program edit, Clip, Render, media, publication, or public-link effect.",
+  "description": "Confirms the owner's optional studio-wide working context: one bounded paragraph of standing context that spans Projects. Owner-only: guests and non-owner members receive not-found. A confirmed Project working brief takes precedence over it, and the person's explicit request takes precedence over both. It records studio-level standing context as the owner states or corrects it. Each confirmation replaces the whole context. Requires the current revision from account_context_get as expected_revision (0 when none exists); a stale revision fails without overwriting. Retrying the exact same confirmation with the same idempotency_key replays as a no-op, even after a later confirmation; the same key with different text fails closed. An empty context clears it. Confirming never touches sibling account settings, never changes any Project's working brief or direction, and causes no Program edit, Clip, Render, media, publication, or public-link effect.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -13,7 +13,7 @@
       "expected_revision": {
         "type": "integer",
         "minimum": 0,
-        "description": "The current working-context revision from a fresh account_context_get. Pass 0 when no context has been confirmed yet."
+        "description": "The current working-context revision from account_context_get; 0 when no context has been confirmed yet."
       },
       "idempotency_key": {
         "type": "string",

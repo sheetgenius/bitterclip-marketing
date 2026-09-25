@@ -63,7 +63,7 @@ async function readCatalogSnapshot(): Promise<CatalogSnapshot> {
   const expectedSource = process.env.BITTERCLIP_CATALOG_URL ?? 'https://app.bitterclip.com/api/v1/mcp_descriptors.json'
   const ageMs = Date.now() - Date.parse(snapshot.retrieved_at)
   if (snapshot.schema_version !== 'bitterclip.mcp_surface_snapshot.v1' ||
-      snapshot.profiles?.app?.descriptors?.length !== 113 ||
+      snapshot.profiles?.app?.descriptors?.length !== 112 ||
       snapshot.profiles?.model?.descriptors?.length !== 63 ||
       snapshot.profiles?.live_workspace?.descriptors?.length !== 63 ||
       snapshot.digest !== digest || snapshot.source !== expectedSource ||
@@ -99,7 +99,7 @@ function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
     '# BitterClip MCP tool reference', '',
     `Canonical HTML page: ${SITE_ORIGIN}${TOOL_REFERENCE_PATH}`, '',
     ...toolProvenance(snapshot), '',
-    `These 63 tools are exposed to the default model. MCP hosts can also list [50 app-only tools](${SITE_ORIGIN}${APP_ONLY_TOOLS_PATH}) outside this profile. This static reference captures descriptors Rails was serving at build time. Live Workspace adapts the default profile, including workspace_get_link. Host security schemes and resource URIs can vary by connector.`, '',
+    `These 63 tools are exposed to the default model. MCP hosts can also list [49 app-only tools](${SITE_ORIGIN}${APP_ONLY_TOOLS_PATH}) outside this profile. This static reference captures descriptors Rails was serving at build time. Live Workspace adapts the default profile, including workspace_get_link. Host security schemes and resource URIs can vary by connector.`, '',
   ]
   for (const descriptor of snapshot.profiles.model.descriptors) {
     lines.push(`- [${descriptor.name}](${SITE_ORIGIN}/docs/assistants/tools/${descriptor.name}) — ${descriptor.title}`)
@@ -113,7 +113,7 @@ function buildAppOnlyToolsMarkdown(snapshot: CatalogSnapshot): string {
     '# App-only MCP tools', '',
     `Canonical HTML page: ${SITE_ORIGIN}${APP_ONLY_TOOLS_PATH}`, '',
     ...toolProvenance(snapshot), '',
-    `MCP hosts can list these 50 registered tools through the app profile. They are outside the [63-tool default model profile](${SITE_ORIGIN}${TOOL_REFERENCE_PATH}). Each page shows the exact app descriptor captured from serving Rails, with errors and examples.`, '',
+    `MCP hosts can list these 49 registered tools through the app profile. They are outside the [63-tool default model profile](${SITE_ORIGIN}${TOOL_REFERENCE_PATH}). Each page shows the exact app descriptor captured from serving Rails, with errors and examples.`, '',
   ]
   for (const descriptor of snapshot.profiles.app.descriptors) {
     if (!modelNames.has(descriptor.name)) {
@@ -858,7 +858,7 @@ export default defineNuxtModule({
           body: appOnlyMarkdown,
           frontmatter: {
             title: 'App-only MCP tools',
-            description: 'The 50 app-only tools available for MCP hosts to list.',
+            description: 'The 49 app-only tools available for MCP hosts to list.',
             section: 'assistants',
             updated: catalog.retrieved_at.slice(0, 10),
           },

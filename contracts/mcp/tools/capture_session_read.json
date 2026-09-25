@@ -1,7 +1,7 @@
 {
   "name": "capture_session_read",
   "title": "Read a footage session",
-  "description": "Read the evidence-backed Footage-session manifest. Returns source facts, typed observations, solve receipts, exact capture-time gaps and overlaps, source/capture/episode mappings, corrections, revision, uncertainty, and the next safe action. Capture time preserves real gaps; episode time collapses idle gaps after an explicit build.",
+  "description": "Reads the evidence-backed Footage-session manifest. Returns source facts, typed observations, solve receipts, exact capture-time gaps and overlaps, source/capture/episode mappings, corrections, revision, uncertainty, and the next safe action. Capture time preserves real gaps; episode time collapses idle gaps after an explicit build.",
   "input_schema": {
     "type": "object",
     "properties": {

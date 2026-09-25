@@ -1,7 +1,7 @@
 {
   "name": "angle_mutate",
   "title": "Change a camera angle",
-  "description": "One camera-angle change per call: hide, show, trim, nudge, or remove. A camera is positioned by its footage session's clock, so there is no action that moves one by hand; nudge is how a slightly-off placement is corrected. hide/show exclude or return an angle from automatic picture selection without touching saved explicit picture choices. trim persists source-clip trim handles; nudge persists a small user timing offset without rewriting measured sync times; remove deletes the clip while leaving media archived. Pass the Episode's current revision and a caller-stable idempotency key with every action.",
+  "description": "One camera-angle change per call: hide, show, trim, nudge, or remove. A camera is positioned by its footage session's clock, so there is no action that moves one by hand; nudge is how a slightly-off placement is corrected. hide/show exclude or return an angle from automatic picture selection without touching saved explicit picture choices. trim persists source-clip trim handles; nudge persists a small user timing offset without rewriting measured sync times; remove deletes the clip while leaving media archived. Every action requires the Episode's current revision and a caller-stable idempotency key.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -19,7 +19,7 @@
       },
       "action": {
         "type": "object",
-        "description": "One camera-angle action. Use the canonical field names in the matching action shape.",
+        "description": "One camera-angle action, in the canonical field names of its matching action shape.",
         "oneOf": [
           {
             "type": "object",

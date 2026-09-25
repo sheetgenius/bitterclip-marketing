@@ -1,7 +1,7 @@
 {
   "name": "render_status",
   "title": "Check render status",
-  "description": "Check render lifecycle and return the target's current structural revision, available render-plan hash, current-render custody, and its private/current Download when ready. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: inspect every flagged timestamp before accepting the edit; no markers means only that deterministic checks were clear, never that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When render_create is needed, copy next_action.arguments exactly: they bind the current revision and available render-plan hash, so do not search documentation or reconstruct the call. Prefer render_id when available; target lookup is allowed when the target identifies one current render. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. A never-rendered draft omits its hash on ordinary polls; include_render_plan_hash true resolves the current fingerprint for an interactive Export preflight without starting work. An in-flight hash names the queued attempt, not a newly computed current plan. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence. When next_action.kind is poll_until_ready, wait at least next_action.poll_after_seconds and call render_status again until ready. When ready, inspect exact Export pixels with export_sample_frames using the returned exact export_id, render_generation, and render_plan_hash. Report private Download/editor Open; never quote or retain download_url. playback_url is embedded-app media plumbing and must never be shown or labeled as human review.",
+  "description": "Reports render lifecycle and returns the target's current structural revision, available render-plan hash, current-render custody, and its private/current Download when ready. A ready render includes exact rendered dialogue-seam preflight evidence in both the result and model-facing summary: flagged timestamps mark seams for review, and no markers means only that deterministic checks were clear, not that listening or taste passed. When a simultaneous Picture Program was rendered, picture_program_render_receipt is authoritative evidence of the layouts and maximum simultaneous picture count in this exact MP4; it does not certify framing taste. When render_create is needed, next_action.arguments carries its exact call, binding the current revision and available render-plan hash. render_id is the direct lookup; target lookup works when the target identifies one current render. The bounded wait itself is read-only and incurs no render charge. Status may refresh verified render-dependency cache stamps, but creates no Compositions or exact Exports. A never-rendered draft omits its hash on ordinary polls; include_render_plan_hash true resolves the current fingerprint for an interactive Export preflight without starting work. An in-flight hash names the queued attempt, not a newly computed current plan. Imported playback can be ready while the Composition is draft, with no render-plan hash, exact Export, or render evidence. next_action.kind poll_until_ready carries next_action.poll_after_seconds, the minimum wait before the next status read. When ready, export_sample_frames inspects exact Export pixels with the returned exact export_id, render_generation, and render_plan_hash. download_url is the private Download capability, alongside editor Open; playback_url is embedded-app media plumbing, not human review.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -25,7 +25,7 @@
       },
       "include_download": {
         "type": "boolean",
-        "description": "Recorded scope only: reauthorize an exact retained Export for an explicit download. Capabilities are ephemeral; do not retain them in history or model prose."
+        "description": "Recorded scope only: reauthorize an exact retained Export for an explicit download. Capabilities are ephemeral and not for history or model prose."
       },
       "render_id": {
         "type": "string",
@@ -52,7 +52,7 @@
       },
       "include_render_plan_hash": {
         "type": "boolean",
-        "description": "Current scope only: resolve the exact current fingerprint for a never-rendered draft before interactive Export. Default false keeps ordinary polls plan-free. In-flight status still reports its queued attempt hash; imported playback has no computed render hash. Does not start a render."
+        "description": "Current scope only: resolves the exact current fingerprint for a never-rendered draft before interactive Export. Default false keeps ordinary polls plan-free. In-flight status still reports its queued attempt hash; imported playback has no computed render hash. Does not start a render."
       },
       "wait_for_seconds": {
         "type": "integer",
@@ -277,14 +277,14 @@
           "string",
           "null"
         ],
-        "description": "Embedded-app-only inline media. Never expose it as user-facing review or delivery; use private/current download_url plus editor Open."
+        "description": "Embedded-app-only inline media, not user-facing review or delivery (that is the private/current download_url plus editor Open)."
       },
       "poster_url": {
         "type": [
           "string",
           "null"
         ],
-        "description": "Embedded-app-only exact current Render poster. Never expose or retain it in model prose."
+        "description": "Embedded-app-only exact current Render poster, not part of model prose."
       },
       "download_url": {
         "type": [
@@ -300,7 +300,7 @@
       },
       "poll": {
         "type": "object",
-        "description": "Model-visible polling instruction; when present, wait at least poll.after_seconds before calling render_status again."
+        "description": "Model-visible polling cadence; when present, poll.after_seconds is the minimum wait before render_status is called again."
       },
       "next_action": {
         "type": "object"
@@ -352,7 +352,7 @@
           "null"
         ],
         "pattern": "^rrq_[a-z0-9]+$",
-        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+        "description": "Exact admitted customer render request when known; it identifies this result for recovery after navigation or a newer revision."
       },
       "render_attempt": {
         "type": [

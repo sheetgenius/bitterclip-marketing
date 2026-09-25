@@ -1,7 +1,7 @@
 {
   "name": "episode_change_set_read",
   "title": "Read a Program edit run",
-  "description": "Read authoritative progress, recovery state, and a bounded page of individual operation receipts for one durable Program change set. This does not move the Program, transport, selection, focus, viewport, zoom, or Peek state.",
+  "description": "Reads authoritative progress, recovery state, and a bounded page of individual operation receipts for one durable Program change set. This does not move the Program, transport, selection, focus, viewport, zoom, or Peek state.",
   "input_schema": {
     "type": "object",
     "properties": {

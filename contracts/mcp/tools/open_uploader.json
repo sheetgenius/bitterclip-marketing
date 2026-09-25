@@ -1,13 +1,13 @@
 {
   "name": "open_uploader",
   "title": "Get a recording upload link",
-  "description": "Use this when the user wants to add a local audio or video recording to BitterClip. Returns a shareable, token-gated upload link (a hosted drop-zone page) the user opens in a browser to drop their file — it uploads straight to storage and starts transcribing on its own. Pass `project` (a project name, slug, or public ID like \"Landing 100\") to scope the upload to that project, or omit it for the account's default uploads project. Give the returned `upload_url` to the user. Prefer this over asking the user for a public download URL.",
+  "description": "Use this when the user wants to add a local audio or video recording to BitterClip. Returns a shareable, token-gated upload link (a hosted drop-zone page) the user opens in a browser to drop their file — it uploads straight to storage and starts transcribing on its own. `project` (a project name, slug, or public ID) scopes the upload to that project; without it, uploads land in the account's default uploads project. The returned `upload_url` is the page the user opens, so no public download URL is needed.",
   "input_schema": {
     "type": "object",
     "properties": {
       "project": {
         "type": "string",
-        "description": "Optional project to attach uploads to — a project name, slug, or public ID. Omit for the default uploads project."
+        "description": "Optional project to attach uploads to: a project name, slug, or public ID; absent means the default uploads project."
       },
       "capture_session_id": {
         "type": "string",
@@ -30,7 +30,7 @@
       },
       "upload_url": {
         "type": "string",
-        "description": "The token-gated drop-zone page URL to give the user."
+        "description": "The token-gated drop-zone page URL for the user."
       },
       "project": {
         "type": "object",

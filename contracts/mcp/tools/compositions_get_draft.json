@@ -1,7 +1,7 @@
 {
   "name": "compositions_get_draft",
   "title": "Load the saved composition edit document",
-  "description": "Restore the saved working draft when opening the editor (so prior trims/cuts come back after a reload). Pass recording_id for the per-recording draft, or composition_id. Returns { draft: nil } when none exists. This is a REPAIRING read, not a pure one: when the caller has edit authority and the Episode's resting suggestion was authored under a superseded Project objective, this read may admit ONE bounded, deduplicated, paid recommendation refresh for exactly this Episode (a durable admission receipt on the synthesis manifest plus one background job). That is its only side effect — it never edits a Program, creates a Clip, starts a Render, publishes, or creates a public link, and read-only callers admit nothing.",
+  "description": "Restores the saved working draft when the editor opens (so prior trims/cuts come back after a reload), by recording_id for the per-recording draft or by composition_id. Returns { draft: nil } when none exists. This is a REPAIRING read, not a pure one: when the caller has edit authority and the Episode's resting suggestion was authored under a superseded Project objective, this read may admit ONE bounded, deduplicated, paid recommendation refresh for exactly this Episode (a durable admission receipt on the synthesis manifest plus one background job). That is its only side effect — it never edits a Program, creates a Clip, starts a Render, publishes, or creates a public link, and read-only callers admit nothing.",
   "input_schema": {
     "type": "object",
     "properties": {

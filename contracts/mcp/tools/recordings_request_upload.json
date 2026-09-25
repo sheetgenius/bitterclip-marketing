@@ -1,7 +1,7 @@
 {
   "name": "recordings_request_upload",
   "title": "Request a recording upload grant",
-  "description": "Use this when an agent has a local audio or video file and needs to upload it programmatically. Returns a short-lived direct-to-storage upload grant: either a single PUT URL or multipart part URLs. After the agent uploads the bytes, call recordings_finalize_upload with the upload_token and uploaded part ETags if multipart. To add a device file to a Footage session, pass capture_session_id and its optional relative_path. To add camera footage to an existing episode instead, pass target:{type:\"episode\", id:\"comp_...\"}, upload_role:\"episode_footage\", and batch_id/batch_expected_count/batch_index for the batch; the two targets are mutually exclusive.",
+  "description": "Use this when an agent has a local audio or video file and needs to upload it programmatically. Returns a short-lived direct-to-storage upload grant: either a single PUT URL or multipart part URLs. After the bytes are uploaded, recordings_finalize_upload takes the upload_token and uploaded part ETags if multipart. capture_session_id and its optional relative_path add a device file to a Footage session; target:{type:\"episode\", id:\"comp_...\"}, upload_role:\"episode_footage\", and batch_id/batch_expected_count/batch_index add camera footage to an existing episode; the two targets are mutually exclusive.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -55,7 +55,7 @@
       },
       "target": {
         "type": "object",
-        "description": "Optional upload target. For camera footage, pass {type:\"episode\", id:\"comp_...\"}; no source-addressed target is accepted.",
+        "description": "Optional upload target. For camera footage, {type:\"episode\", id:\"comp_...\"}; no source-addressed target is accepted.",
         "properties": {
           "type": {
             "type": "string",
@@ -78,7 +78,7 @@
         "enum": [
           "episode_footage"
         ],
-        "description": "Set to episode_footage when the uploaded file is camera footage for target episode."
+        "description": "episode_footage when the uploaded file is camera footage for target episode."
       },
       "batch_id": {
         "type": "string",

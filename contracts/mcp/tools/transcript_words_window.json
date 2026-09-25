@@ -1,7 +1,7 @@
 {
   "name": "transcript_words_window",
   "title": "Read approximate word annotations for transcript lines",
-  "description": "App/internal read-only semantic locator for a small set of transcript lines on a RAW recording (the drawer, not an episode). Word annotations are approximate and must never authorize a structural cut. For episode editing, use episode_read to locate candidate media, then inspect narrow audio/frame evidence with episode_zoom or episode_sample_frames before placing a precise boundary.",
+  "description": "App/internal read-only semantic locator for a small set of transcript lines on a RAW recording (the drawer, not an episode). Word annotations are approximate and never authorize a structural cut; episode editing locates candidate media with episode_read and places precise boundaries from episode_zoom or episode_sample_frames evidence.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -20,7 +20,7 @@ useHead({
     <p><a href="/docs/assistants/tool-reference">Default model tool reference</a></p>
     <h1>App-only MCP tools</h1>
     <p>
-      MCP hosts can list these 50 registered tools through the app profile. They are
+      MCP hosts can list these 49 registered tools through the app profile. They are
       outside the 63-tool default model profile. Each page shows the exact app
       descriptor captured from serving Rails, with errors and examples.
     </p>

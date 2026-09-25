@@ -1,7 +1,7 @@
 {
   "name": "recordings_create_from_url",
   "title": "Queue recording URL ingest",
-  "description": "Use this to programmatically add a media file to BitterClip without the web UI. The caller provides a fetchable URL; BitterClip validates that the URL is public, creates an ingest job, returns immediately, then fetches and stores the bytes in the background before starting transcription. Prefer open_uploader when the user has a local file.",
+  "description": "Use this to programmatically add a media file to BitterClip without the web UI. The caller provides a fetchable URL; BitterClip validates that the URL is public, creates an ingest job, returns immediately, then fetches and stores the bytes in the background before starting transcription. A local file goes through open_uploader instead.",
   "input_schema": {
     "type": "object",
     "properties": {

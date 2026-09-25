@@ -1,7 +1,7 @@
 {
   "name": "episode_change_set_mutate",
   "title": "Run, stop, resume, or revert a durable Program edit run",
-  "description": "One durable Program change-set action per call: start, resume, stop, or revert. start applies 1–250 ordered, receipt-backed Program occurrence operations under one durable change-set identity — the server settles each item through the ordinary episode_edit authority in bounded batches (at most 25 per internal batch), rechecks permission before every item, and admits each item on the Program it runs on: evidence binds to no revision, so split, Range and interior-destination items keep evidence zoomed once across earlier items and unrelated edits while each named occurrence and point survive; whole-occurrence items adopt an intervening edit only when every occurrence and Junction they touch is unchanged; revert items stay exact-head. A retired, shifted or overlapped target, or stale evidence, stops the run at that item with details.failed_check and its recovery. Use result_as plus change_set_ref to address identities minted earlier in the same run; the call directly commits authorized edits without proposals or per-edit approval, and supported self-contained typed occurrences participate through the same whole-occurrence Move/Duplicate/Remove operations. Partial removals planned together belong in one occurrence.remove item with selection.ranges (up to 64 disjoint Ranges) and short evidence_id handles: that one item settles atomically with one exact receipt. Keep several cuts inside one occurrence in that one item, because a split or partial Range retires the occurrence it cuts and a later item could not name it. resume continues the unsettled items after an interrupted request or expired worker lease; already receipted items replay idempotently and are never duplicated. stop requests a durable Stop barrier — the currently claimed atomic operation may finish, no later operation is claimed, and completed edits remain committed and individually recoverable. revert creates a new forward, revision-checked recovery change set applying the original receipts in reverse order, failing closed before the first inverse on any later overlapping work or missing receipt. The model-visible camera_program_set operation, audio-policy operations, and typed-specific object operations remain direct shared operations outside this grouped occurrence-edit schema; stop and whole-run revert do not cover them. Subject scope rides top-level: start takes episode_id; resume, stop, and revert take the durable change_set_id.",
+  "description": "One durable Program change-set action per call: start, resume, stop, or revert. start applies 1–250 ordered, receipt-backed Program occurrence operations under one durable change-set identity — the server settles each item through the ordinary episode_edit authority in bounded batches (at most 25 per internal batch), rechecks permission before every item, and admits each item on the Program it runs on: evidence binds to no revision, so split, Range and interior-destination items keep evidence zoomed once across earlier items and unrelated edits while each named occurrence and point survive; whole-occurrence items adopt an intervening edit only when every occurrence and Junction they touch is unchanged; revert items stay exact-head. A retired, shifted or overlapped target, or stale evidence, stops the run at that item with details.failed_check and its recovery. result_as plus change_set_ref address identities minted earlier in the same run; the call directly commits authorized edits without proposals or per-edit approval, and supported self-contained typed occurrences participate through the same whole-occurrence Move/Duplicate/Remove operations. One occurrence.remove item with selection.ranges (up to 64 disjoint Ranges) and short evidence_id handles settles all of its partial removals atomically with one exact receipt. A split or partial Range retires the occurrence it cuts, so a later item cannot name that occurrence. resume continues the unsettled items after an interrupted request or expired worker lease; already receipted items replay idempotently and are never duplicated. stop requests a durable Stop barrier — the currently claimed atomic operation may finish, no later operation is claimed, and completed edits remain committed and individually recoverable. revert creates a new forward, revision-checked recovery change set applying the original receipts in reverse order, failing closed before the first inverse on any later overlapping work or missing receipt. The model-visible camera_program_set operation, audio-policy operations, and typed-specific object operations remain direct shared operations outside this grouped occurrence-edit schema; stop and whole-run revert do not cover them. Subject scope rides top-level: start takes episode_id; resume, stop, and revert take the durable change_set_id.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -104,13 +104,13 @@
                           "type": "array",
                           "minItems": 1,
                           "maxItems": 128,
-                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. The short evidence_id returned by episode_zoom detail edit is the compact form; the full inspection_token is the alternative when that id is not held.",
                           "items": {
                             "type": "object",
                             "properties": {
                               "evidence_id": {
                                 "type": "string",
-                                "description": "Preferred short biev_... handle."
+                                "description": "Short biev_... handle."
                               },
                               "inspection_token": {
                                 "type": "string",
@@ -501,13 +501,13 @@
                           "type": "array",
                           "minItems": 1,
                           "maxItems": 128,
-                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. The short evidence_id returned by episode_zoom detail edit is the compact form; the full inspection_token is the alternative when that id is not held.",
                           "items": {
                             "type": "object",
                             "properties": {
                               "evidence_id": {
                                 "type": "string",
-                                "description": "Preferred short biev_... handle."
+                                "description": "Short biev_... handle."
                               },
                               "inspection_token": {
                                 "type": "string",
@@ -897,13 +897,13 @@
                           "type": "array",
                           "minItems": 1,
                           "maxItems": 128,
-                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. The short evidence_id returned by episode_zoom detail edit is the compact form; the full inspection_token is the alternative when that id is not held.",
                           "items": {
                             "type": "object",
                             "properties": {
                               "evidence_id": {
                                 "type": "string",
-                                "description": "Preferred short biev_... handle."
+                                "description": "Short biev_... handle."
                               },
                               "inspection_token": {
                                 "type": "string",
@@ -1314,7 +1314,7 @@
                                     ],
                                     "additionalProperties": false
                                   },
-                                  "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. Put every partial removal planned together in this one array; they settle atomically as one occurrence.remove item and one receipt, and a later item could not name an occurrence a partial cut retired."
+                                  "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. All Ranges in this array settle atomically as one occurrence.remove item and one receipt; a later item cannot name an occurrence a partial cut retired."
                                 }
                               },
                               "required": [
@@ -1328,13 +1328,13 @@
                           "type": "array",
                           "minItems": 1,
                           "maxItems": 128,
-                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. Prefer the short evidence_id returned by episode_zoom detail edit; the full inspection_token is for when that id is not held and is too brittle for dense model-authored runs.",
+                          "description": "Signed evidence for every new source edge (split point, interior Range edge, interior destination). It binds to no revision, so evidence zoomed once stays valid for later items while its occurrence and point survive. The short evidence_id returned by episode_zoom detail edit is the compact form; the full inspection_token is the alternative when that id is not held.",
                           "items": {
                             "type": "object",
                             "properties": {
                               "evidence_id": {
                                 "type": "string",
-                                "description": "Preferred short biev_... handle."
+                                "description": "Short biev_... handle."
                               },
                               "inspection_token": {
                                 "type": "string",
@@ -1463,7 +1463,7 @@
               },
               "expected_activity_revision": {
                 "type": "integer",
-                "description": "Optional exact activity revision from the latest episode_change_set_read. Pass it whenever available so a stale Stop request fails closed."
+                "description": "Optional exact activity revision from the latest episode_change_set_read; with it, a stale Stop request fails closed."
               }
             },
             "required": [

@@ -1,7 +1,7 @@
 {
   "name": "episode_framing_guidance",
   "title": "Read per-person framing evidence for episode occurrences",
-  "description": "Read bounded, source-time framing EVIDENCE for up to 12 named source-backed occurrences in an Episode or Clip. Per occurrence: crop_window arithmetic for this canvas (pure math, not a preference) and every person with reviewed face-core geometry in the interval — horizontal extent with an honest observation state, spoke as current-transcript evidence (never a subject choice; \"unknown\" when the transcript is not current), a position-free fits/too_wide width fact, and a descriptive title_safe_side. It never recommends: no anointed subject, no framing to apply, no ranking. Choosing whom to show — the speaker, a listener's reaction, whatever is visually right — is your editorial judgment; correlate spoke/word_share with extents yourself, compute your own focal point, and apply it through episode_edit occurrence.reframe at this result's revision. people:[] with no_person_evidence means no face-core evidence exists for those seconds, not that nobody is visible. Read-only.",
+  "description": "Reads bounded, source-time framing EVIDENCE for up to 12 named source-backed occurrences in an Episode or Clip. Per occurrence: crop_window arithmetic for this canvas (pure math, not a preference) and every person with reviewed face-core geometry in the interval — horizontal extent with an honest observation state, spoke as current-transcript evidence (never a subject choice; \"unknown\" when the transcript is not current), a position-free fits/too_wide width fact, and a descriptive title_safe_side. It never recommends: no anointed subject, no framing to apply, no ranking. Whom to show (the speaker, a listener's reaction) is not decided here; a framing decision is applied through episode_edit occurrence.reframe at this result's revision. people:[] with no_person_evidence means no face-core evidence exists for those seconds, not that nobody is visible. Read-only.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,7 +15,7 @@
       },
       "occurrence_ids": {
         "type": "array",
-        "description": "Exact source-backed occurrence IDs from a fresh episode_read. Required; 1–12 IDs keeps this a bounded evidence read. Read the resulting revision again before each occurrence.reframe mutation.",
+        "description": "Exact source-backed occurrence IDs from a fresh episode_read. Required; 1–12 IDs keeps this a bounded evidence read. Each occurrence.reframe mutation requires the then-current revision.",
         "items": {
           "type": "string",
           "pattern": "^occ_"
@@ -75,7 +75,7 @@
       },
       "revision": {
         "type": "integer",
-        "description": "Program revision whose occurrence/source mapping was read. Pass this as expected_revision to the next episode_edit."
+        "description": "Program revision whose occurrence/source mapping was read; the next episode_edit takes it as expected_revision."
       },
       "program_digest": {
         "type": "string",

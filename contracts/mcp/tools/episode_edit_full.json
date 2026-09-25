@@ -158,7 +158,7 @@
             },
             "episode_seconds": {
               "type": "number",
-              "description": "Exact flagged point on the created target's Episode clock. Use directly as an episode_zoom edge; occurrence_id identifies its source side."
+              "description": "Exact flagged point on the created target's Episode clock, usable directly as an episode_zoom edge; occurrence_id identifies its source side."
             },
             "word": {
               "type": "string"
@@ -525,7 +525,7 @@
               "episode_range"
             ],
             "additionalProperties": false,
-            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; its Open or Undo is current only when revisions.current equals revisions.committed and digests.current equals digests.result."
           },
           "program_occurrence_target": {
             "type": "object",
@@ -549,7 +549,7 @@
               "episode_range"
             ],
             "additionalProperties": false,
-            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; its Open or Undo is current only when revisions.current equals revisions.committed and digests.current equals digests.result."
           },
           "digests": {
             "type": "object",

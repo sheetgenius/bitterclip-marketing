@@ -1,7 +1,7 @@
 {
   "name": "moments_mutate",
   "title": "Change a saved moment",
-  "description": "One moment change per call: create, update_label, adjust_range, or set_state. create saves a moment on the recording from an explicit time range or transcript unit IDs (transcript editor save). update_label renames a saved moment and optionally updates its description. adjust_range changes a moment's start/end seconds (selected-moment trim). set_state saves or dismisses a suggested moment, optionally applying reviewed title and description atomically; discarded moments remain recoverable. recording_id scopes the moment lane (a bare id resolves as a recording); pass a caller-stable idempotency key with every action. The moments lane has no structural revision today — expected_revision is carried optionally so the lane converges on the standard mutation contract when revisions land.",
+  "description": "One moment change per call: create, update_label, adjust_range, or set_state. create saves a moment on the recording from an explicit time range or transcript unit IDs (transcript editor save). update_label renames a saved moment and optionally updates its description. adjust_range changes a moment's start/end seconds (selected-moment trim). set_state saves or dismisses a suggested moment, optionally applying reviewed title and description atomically; discarded moments remain recoverable. recording_id scopes the moment lane (a bare id resolves as a recording); every action requires a caller-stable idempotency key. The moments lane has no structural revision today — expected_revision is carried optionally so the lane converges on the standard mutation contract when revisions land.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "expected_revision": {
         "type": "integer",
-        "description": "Optional: carried toward the standard mutation contract. The moments lane exposes no structural revision yet; omit until it does."
+        "description": "Optional: carried toward the standard mutation contract. The moments lane exposes no structural revision yet, so it is unused for now."
       },
       "idempotency_key": {
         "type": "string",
@@ -19,7 +19,7 @@
       },
       "action": {
         "type": "object",
-        "description": "One moment action. Use the canonical field names in the matching action shape.",
+        "description": "One moment action, in the canonical field names of its matching action shape.",
         "oneOf": [
           {
             "type": "object",

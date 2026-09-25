@@ -1,7 +1,7 @@
 {
   "name": "capture_session_create",
   "title": "Create a footage session",
-  "description": "Create a project-scoped Footage session for a bucket of recordings captured across one real-world period. The session starts without a master recording, reserves one stable editable episode handle, and can receive more files or device folders later. Follow with upload_link_create(capture_session_id: ...) for local or contributor uploads, then capture_session_read while chronology analysis settles.",
+  "description": "Creates a project-scoped Footage session for a bucket of recordings captured across one real-world period. The session starts without a master recording, reserves one stable editable episode handle, and can receive more files or device folders later. Local or contributor uploads join it through upload_link_create(capture_session_id: ...), and capture_session_read reports chronology analysis as it settles.",
   "input_schema": {
     "type": "object",
     "properties": {

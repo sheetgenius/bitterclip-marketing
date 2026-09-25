@@ -1,7 +1,7 @@
 {
   "name": "publish_send",
   "title": "Open publish review",
-  "description": "Return a no-effect workspace review handoff for supplied ApprovalItem/package ID(s). This model-visible handoff never creates a PublishRecord, queues work, resolves authorization, or sends anything externally. The ordinary product flow resolves and displays the exact package, destination, copy, and thumbnail in the workspace before a fresh server-bound final confirmation can publish; its app-only descriptor visibility is not an authenticated-MCP transport or human-review boundary.",
+  "description": "Returns a no-effect workspace review handoff for supplied ApprovalItem/package ID(s). This model-visible handoff never creates a PublishRecord, queues work, resolves authorization, or sends anything externally. The ordinary product flow resolves and displays the exact package, destination, copy, and thumbnail in the workspace before a fresh server-bound final confirmation can publish; its app-only descriptor visibility is not an authenticated-MCP transport or human-review boundary.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,7 +15,7 @@
           "type": "string"
         },
         "minItems": 1,
-        "description": "Approval item IDs to review. To review multiple prepared channels, pass every approval_id from publish_prepare.approval_ids."
+        "description": "Approval item IDs to review; multiple prepared channels are reviewed together by listing every approval_id from publish_prepare.approval_ids."
       }
     },
     "required": [],

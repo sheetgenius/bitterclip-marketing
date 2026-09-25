@@ -1,7 +1,7 @@
 {
   "name": "scene_edit",
   "title": "Edit FX scene source",
-  "description": "Apply a literal string replacement to the current scene source. Read first and supply expected_revision plus expected_sha256. old_string must match exactly once unless replace_all:true; include enough context to identify the intended code. Replacement bytes are literal, including JavaScript backslashes and dollar signs. Conflicts preserve source and return the current revision for rereading. Successful edits update the same open FX Studio view; inspect scene_preview images and revise again. JavaScript source changes do not mutate production defaults or an admitted Export.",
+  "description": "Applies a literal string replacement to the current scene source. Requires expected_revision plus expected_sha256 from scene_read. old_string must match exactly once unless replace_all:true. Replacement bytes are literal, including JavaScript backslashes and dollar signs. Conflicts preserve source and return the current revision for rereading. Successful edits update the same open FX Studio view; scene_preview renders the result. JavaScript source changes do not mutate production defaults or an admitted Export.",
   "input_schema": {
     "type": "object",
     "properties": {

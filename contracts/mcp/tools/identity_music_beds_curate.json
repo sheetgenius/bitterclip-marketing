@@ -1,7 +1,7 @@
 {
   "name": "identity_music_beds_curate",
   "title": "Curate music library track",
-  "description": "App-only account Music Library curation. Rename, favorite, tag, archive, reject, or restore a reusable track without deleting its audio or changing existing Episode music.",
+  "description": "App-only account Music Library curation. Renames, favorites, tags, archives, rejects, or restores a reusable track without deleting its audio or changing existing Episode music.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -23,7 +23,7 @@ useHead({
       Connected hosts can vary security schemes and resource URIs.
     </p>
     <p>
-      MCP hosts can also list 50 <a href="/docs/assistants/app-only-tools">app-only tools</a>
+      MCP hosts can also list 49 <a href="/docs/assistants/app-only-tools">app-only tools</a>
       that are outside the default model profile.
     </p>
     <p class="tool-reference__provenance">

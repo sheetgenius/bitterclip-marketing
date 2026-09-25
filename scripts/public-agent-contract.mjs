@@ -83,8 +83,8 @@ async function filesUnder(root, dir) {
 export async function readPublicAgentContract(root = process.cwd()) {
   root = resolve(root)
   const toolPaths = await filesUnder(root, 'contracts/mcp/tools')
-  if (toolPaths.length !== 113 || toolPaths.some((path) => !/^contracts\/mcp\/tools\/[a-z][a-z0-9_]*\.json$/.test(path))) {
-    fail('contracts/mcp/tools', `expected exactly 113 tool JSON files, found ${toolPaths.length}`)
+  if (toolPaths.length !== 112 || toolPaths.some((path) => !/^contracts\/mcp\/tools\/[a-z][a-z0-9_]*\.json$/.test(path))) {
+    fail('contracts/mcp/tools', `expected exactly 112 tool JSON files, found ${toolPaths.length}`)
   }
   const guides = await filesUnder(root, 'contracts/mcp/guides')
   if (guides.some((path) => !path.endsWith('.md'))) fail('contracts/mcp/guides', 'guides must be Markdown')

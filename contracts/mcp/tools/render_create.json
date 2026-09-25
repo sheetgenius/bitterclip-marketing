@@ -1,7 +1,7 @@
 {
   "name": "render_create",
   "title": "Render an episode or clip",
-  "description": "Render an Episode or Clip to downloadable media. Multi-segment highlight/reel/shareable-video creation uses episode_create; a single-range Clip uses clip_create. Render only the exact creator result, never a list/search result: pass its target_type, target_id, and revision as required expected_revision. Ordinary make/cut/create language is explicit private-render intent unless the user asks for draft-only, review first, or do not render. Exact-result feedback inherits one private render only when a prior ready-Output receipt or pre-edit render_status proves that exact target has a current ready Output: after committed render-affecting edits, render the final revision once under the same exceptions. Never infer this from list/search recency or mere Output existence. Publishing remains separately explicit; inherited private render intent never grants publication. First-use intro/outro blocks with new text may take a few minutes to prepare; the render waits and starts automatically once ready. It has no idempotency_key; the server reuses a current in-flight or ready render for the same exact revision/settings.",
+  "description": "Renders an Episode or Clip to downloadable media. Multi-segment highlight/reel/shareable-video creation uses episode_create; a single-range Clip uses clip_create. It renders the exact creator result, not a list/search result: that result's target_type, target_id, and revision as required expected_revision. Use this for ordinary make/cut/create requests, which carry explicit private-render intent, unless the user asks for draft-only, review first, or no render. Exact-result feedback inherits one private render only when a prior ready-Output receipt or pre-edit render_status proves that exact target has a current ready Output; the final revision after committed render-affecting edits then renders once, under the same exceptions. List/search recency or mere Output existence does not establish that intent. Publishing remains separately explicit; inherited private render intent never grants publication. First-use intro/outro blocks with new text may take a few minutes to prepare; the render waits and starts automatically once ready. It has no idempotency_key; the server reuses a current in-flight or ready render for the same exact revision/settings.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -175,7 +175,7 @@
       },
       "poll": {
         "type": "object",
-        "description": "Model-visible polling instruction; when present, wait at least poll.after_seconds before calling the named tool again."
+        "description": "Model-visible polling cadence; when present, poll.after_seconds is the minimum wait before the named tool is called again."
       },
       "next_action": {
         "type": "object"
@@ -227,7 +227,7 @@
           "null"
         ],
         "pattern": "^rrq_[a-z0-9]+$",
-        "description": "Exact admitted customer render request when known. Retain it with the result for recovery after navigation or a newer revision."
+        "description": "Exact admitted customer render request when known; it identifies this result for recovery after navigation or a newer revision."
       },
       "render_attempt": {
         "type": [

@@ -1,13 +1,13 @@
 {
   "name": "clip_create_portrait_sibling",
   "title": "Create a portrait sibling clip",
-  "description": "Create a separate 9:16 portrait sibling from one current rendered 16:9 landscape Clip. Read the landscape Clip first and pass its exact revision, draft_revision, and program_digest. BitterClip copies only its source-backed editorial timing, captions, audio policy, transitions, and safely mappable music; the child starts as a draft with independently editable centered framing and no Render, Export, package, credit, or publication. It does not invent speaker geometry or silently carry landscape crop decisions: apply source-time geometry through episode_edit occurrence.reframe before render_create. A 9:16 canvas over 16:9 footage keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown). Local camera choices, overlays, identity/baked material, malformed music anchors, stale source state, or a non-landscape/unrendered source fail before a child exists. Retrying the identical idempotency key returns the same sibling.",
+  "description": "Creates a separate 9:16 portrait sibling from one current rendered 16:9 landscape Clip. Requires the landscape Clip's exact revision, draft_revision, and program_digest from episode_read. BitterClip copies only its source-backed editorial timing, captions, audio policy, transitions, and safely mappable music; the child starts as a draft with independently editable centered framing and no Render, Export, package, credit, or publication. It does not invent speaker geometry or silently carry landscape crop decisions; source-time geometry is set through episode_edit occurrence.reframe, before render_create. A 9:16 canvas over 16:9 footage keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown). Local camera choices, overlays, identity/baked material, malformed music anchors, stale source state, or a non-landscape/unrendered source fail before a child exists. Retrying the identical idempotency key returns the same sibling.",
   "input_schema": {
     "type": "object",
     "properties": {
       "source_clip_id": {
         "type": "string",
-        "description": "Current derived landscape Clip public ID (comp_...). Read it first; a top-level Episode or legacy Clip row is refused."
+        "description": "Current derived landscape Clip public ID (comp_...); a top-level Episode or legacy Clip row is refused."
       },
       "expected_source_revision": {
         "type": "integer",
@@ -23,7 +23,7 @@
       },
       "title": {
         "type": "string",
-        "description": "Optional title for the portrait sibling. Omit to derive one from the landscape Clip."
+        "description": "Optional title for the portrait sibling; derived from the landscape Clip when omitted."
       },
       "idempotency_key": {
         "type": "string",

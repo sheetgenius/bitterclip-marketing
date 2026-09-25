@@ -1,7 +1,7 @@
 {
   "name": "publish_status",
   "title": "Get publish status",
-  "description": "Check package, approval, or external publish lifecycle. Returns concrete external URLs only when BitterClip has verified them.",
+  "description": "Reports package, approval, or external publish lifecycle. Returns concrete external URLs only when BitterClip has verified them.",
   "input_schema": {
     "type": "object",
     "properties": {

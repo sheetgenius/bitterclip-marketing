@@ -1,7 +1,7 @@
 {
   "name": "recording_sample_frames",
   "title": "Sample video frames from a recording",
-  "description": "Inspect raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. Sample up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. Use it to choose exact recording_id ranges before one multi-source episode_create; never create a throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Omit delivery to inline extracted JPEGs that fit the aggregate model-content budget and use linked delivery from the same artifacts otherwise. BitterClip samples; you interpret.",
+  "description": "Inspects raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. It samples up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. It serves choosing exact recording_id ranges for one multi-source episode_create, with no throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Without delivery, extracted JPEGs that fit the aggregate model-content budget arrive inline, and otherwise as linked delivery from the same artifacts. BitterClip samples pixels; it does not interpret them.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -326,7 +326,7 @@
       },
       "handle_policy": {
         "type": "string",
-        "description": "Reminder that raw Recording handles are tool-call-only and should not be shown to users."
+        "description": "Handle policy: raw Recording handles are tool-call-only, not user-facing."
       },
       "frames": {
         "type": "array",

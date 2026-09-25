@@ -1,7 +1,7 @@
 {
   "name": "episode_edit",
   "title": "Arrange an existing episode Program",
-  "description": "Edit the current Program in place through one stable occurrence operation. For several partial shortenings inspected on one revision, use one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence; do not send those removals as separate trims or change-set items. Read the episode first, then address exact occurrence IDs and a revision-bound semantic Junction; never use pixels, mutable positions, transcript words, filenames, or source chronology as arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops whole supported occurrences, one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, but you must reread before addressing the resulting occurrence. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists when framing evidence reports a subject too_wide for the full-canvas crop window, and one that is yours to make or decline. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views, after which you inspect the composed canvas. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Use Signal for restrained long-form interview typography. All caption presets use the same HTML paint as the editor preview. Signal keeps restrained interview typography; Active Word adds the timed accent word. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants; inspect them for punch-state quality and text-layer collisions before another nudge. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omit them to preserve, pass [] to clear, and re-read instead of retrying if transcript drift makes one stale. junction.transition owns one adjacent source-backed edit point: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Use Produced selectively between cold-open excerpts, not mechanically on body edits or multicamera switches; duration, intensity, and sound gain are cheap corrections on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only. For a plan-backed typed opener or outro, use identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; use Replace only when Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, and junction.transition need no new boundary evidence; Split, partial Range, an interior destination Point, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input: do not repeat it with a new idempotency key or in parallel. Change the operation according to its typed reason, or report the blocker while preserving the Episode. Re-read before addressing the next structural revision.",
+  "description": "Edits the current Program in place through one stable occurrence operation. Several partial shortenings inspected on one revision fit one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so the same removals sent as separate trims or change-set items refuse after the first. Operations address exact occurrence IDs and a revision-bound semantic Junction from episode_read; pixels, mutable positions, transcript words, filenames, and source chronology are not arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops whole supported occurrences, one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, and the resulting occurrence is addressed after a fresh episode_read. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists, not advice, when framing evidence reports a subject too_wide for the full-canvas crop window. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. All caption presets use the same HTML paint as the editor preview. Signal keeps restrained interview typography; Active Word adds the timed accent word. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants, showing punch-state quality and any text-layer collisions. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omitting them preserves the set, [] clears it, and a correction made stale by transcript drift refuses until the word is re-read. junction.transition owns one adjacent source-backed edit point: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Produced is designed for cold-open excerpts rather than body edits or multicamera switches; duration, intensity, and sound gain are adjustable on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only. A plan-backed typed opener or outro changes through identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; Replace applies only where Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, and junction.transition need no new boundary evidence; Split, partial Range, an interior destination Point, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input, including under a new idempotency key or in parallel; its typed reason names what must change. The next structural revision is addressed after a fresh episode_read.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,11 +11,11 @@
       },
       "expected_revision": {
         "type": "integer",
-        "description": "Required integer revision from a fresh episode_read. A stale value is rejected; re-read before retrying."
+        "description": "Required integer revision from a fresh episode_read. A stale value is rejected."
       },
       "ops": {
         "type": "array",
-        "description": "Exactly one stable occurrence operation. The operation itself may transform one contiguous multi-occurrence Range or up to 64 disjoint removal Ranges atomically. To trim an inspected prefix, use occurrence.remove with selection:{range:{start:{occurrence_id,source_seconds:<existing start>},end:{occurrence_id,source_seconds:<inspected boundary>}}}. Prefer short evidence_id handles from episode_zoom detail edit for every interior edge. For dense dialogue work, put every partial removal you inspected—across one or many occurrences—in one selection.ranges array. Each Range holds only start and end points; its evidence goes beside selection in the operation's boundary_evidence array, one entry per interior edge. In occurrence.remove an endpoint may instead be its zoom receipt alone, which cuts at the exact point that receipt certifies and counts as that edge's evidence: ranges:[{start:{evidence_id:\"biev_1…\"},end:{evidence_id:\"biev_2…\"}}]. A removal retires the occurrence it cuts, so that occurrence's other unused evidence becomes stale; evidence on untouched occurrences stays valid. BitterClip applies the current attachment-safety policy server-side.",
+        "description": "Exactly one stable occurrence operation. The operation itself may transform one contiguous multi-occurrence Range or up to 64 disjoint removal Ranges atomically. An inspected prefix is trimmed by occurrence.remove with selection:{range:{start:{occurrence_id,source_seconds:<existing start>},end:{occurrence_id,source_seconds:<inspected boundary>}}}. Short evidence_id handles from episode_zoom detail edit are the compact evidence form for every interior edge. One selection.ranges array can carry every inspected partial removal, across one or many occurrences. Each Range holds only start and end points; its evidence goes beside selection in the operation's boundary_evidence array, one entry per interior edge. In occurrence.remove an endpoint may instead be its zoom receipt alone, which cuts at the exact point that receipt certifies and counts as that edge's evidence: ranges:[{start:{evidence_id:\"biev_1…\"},end:{evidence_id:\"biev_2…\"}}]. A removal retires the occurrence it cuts, so that occurrence's other unused evidence becomes stale; evidence on untouched occurrences stays valid. BitterClip applies the current attachment-safety policy server-side.",
         "minItems": 1,
         "maxItems": 1,
         "items": {
@@ -56,17 +56,17 @@
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 128,
-                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. Each entry is the short `evidence_id` (biev_...) exactly as returned, like an occurrence id; inspection_token is the fallback when the short id is not held (~900 opaque characters, and any single altered character rejects the whole edit). At a Program Audio authority boundary the edit requires the receipt for each side it plays. Program-projection and angle samples never authorize structural edits.",
                   "items": {
                     "type": "object",
                     "properties": {
                       "evidence_id": {
                         "type": "string",
-                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                        "description": "The biev_... id returned alongside this evidence, exactly as returned."
                       },
                       "inspection_token": {
                         "type": "string",
-                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters, accepted only byte-identical."
                       },
                       "semantic_boundary": {
                         "type": "object",
@@ -111,7 +111,7 @@
                   "enum": [
                     "occurrence.duplicate"
                   ],
-                  "description": "For an ordinary request such as 'duplicate this beat', send only op and selection. BitterClip places the new copy immediately after the selected occurrence. Do not send attachment_policy."
+                  "description": "An ordinary request such as 'duplicate this beat' needs only op and selection: BitterClip places the new copy immediately after the selected occurrence and owns attachment_policy."
                 },
                 "selection": {
                   "oneOf": [
@@ -188,7 +188,7 @@
                       "additionalProperties": false
                     }
                   ],
-                  "description": "The exact current occurrence or geometric Program Range to duplicate. Use the selected Program occurrence ID when the editor ask supplies one."
+                  "description": "The exact current occurrence or geometric Program Range to duplicate, such as the selected Program occurrence ID an editor ask supplies."
                 },
                 "destination": {
                   "oneOf": [
@@ -250,23 +250,23 @@
                       "additionalProperties": false
                     }
                   ],
-                  "description": "Optional. Supply only when the user explicitly names a different placement; otherwise omit it and use the adjacent-copy default."
+                  "description": "Optional explicit placement; when omitted the copy lands immediately after the selection."
                 },
                 "boundary_evidence": {
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 128,
-                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. Each entry is the short `evidence_id` (biev_...) exactly as returned, like an occurrence id; inspection_token is the fallback when the short id is not held (~900 opaque characters, and any single altered character rejects the whole edit). At a Program Audio authority boundary the edit requires the receipt for each side it plays. Program-projection and angle samples never authorize structural edits.",
                   "items": {
                     "type": "object",
                     "properties": {
                       "evidence_id": {
                         "type": "string",
-                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                        "description": "The biev_... id returned alongside this evidence, exactly as returned."
                       },
                       "inspection_token": {
                         "type": "string",
-                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters, accepted only byte-identical."
                       },
                       "semantic_boundary": {
                         "type": "object",
@@ -452,17 +452,17 @@
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 128,
-                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. Each entry is the short `evidence_id` (biev_...) exactly as returned, like an occurrence id; inspection_token is the fallback when the short id is not held (~900 opaque characters, and any single altered character rejects the whole edit). At a Program Audio authority boundary the edit requires the receipt for each side it plays. Program-projection and angle samples never authorize structural edits.",
                   "items": {
                     "type": "object",
                     "properties": {
                       "evidence_id": {
                         "type": "string",
-                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                        "description": "The biev_... id returned alongside this evidence, exactly as returned."
                       },
                       "inspection_token": {
                         "type": "string",
-                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters, accepted only byte-identical."
                       },
                       "semantic_boundary": {
                         "type": "object",
@@ -496,7 +496,7 @@
                   "enum": [
                     "content_v1"
                   ],
-                  "description": "Compatibility-only; omit this field. BitterClip applies the current attachment-safety policy server-side."
+                  "description": "Compatibility-only; BitterClip applies the current attachment-safety policy server-side whether or not it is sent."
                 }
               },
               "required": [
@@ -710,7 +710,7 @@
                             ],
                             "additionalProperties": false
                           },
-                          "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. Put every partial removal you inspected in this same array: a removal retires the occurrence it cuts, which stales that occurrence's other unused evidence. All cuts settle atomically as one receipt."
+                          "description": "Disjoint source-linked Ranges across one or many current occurrences, listed in current Program order. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so every inspected partial removal belongs in this same array. All cuts settle atomically as one receipt."
                         }
                       },
                       "required": [
@@ -724,17 +724,17 @@
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 128,
-                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. Each entry is the short `evidence_id` (biev_...) exactly as returned, like an occurrence id; inspection_token is the fallback when the short id is not held (~900 opaque characters, and any single altered character rejects the whole edit). At a Program Audio authority boundary the edit requires the receipt for each side it plays. Program-projection and angle samples never authorize structural edits.",
                   "items": {
                     "type": "object",
                     "properties": {
                       "evidence_id": {
                         "type": "string",
-                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                        "description": "The biev_... id returned alongside this evidence, exactly as returned."
                       },
                       "inspection_token": {
                         "type": "string",
-                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters, accepted only byte-identical."
                       },
                       "semantic_boundary": {
                         "type": "object",
@@ -832,17 +832,17 @@
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 128,
-                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. PASS THE SHORT evidence_id, not the long inspection_token: copy `evidence_id` (biev_...) exactly as returned, the same way you copy an occurrence id. Pass inspection_token only when a result carried it because the short id is not held; it is ~900 opaque characters and any single altered character rejects the whole edit. At a Program Audio authority boundary pass the receipt for each side the edit plays. Program-projection and angle samples never authorize structural edits.",
+                  "description": "Media-inspection evidence for every new interior source boundary, from episode_zoom or from an exact episode_sample_frames projection:\"original\" call when audio is unavailable. Each entry is the short `evidence_id` (biev_...) exactly as returned, like an occurrence id; inspection_token is the fallback when the short id is not held (~900 opaque characters, and any single altered character rejects the whole edit). At a Program Audio authority boundary the edit requires the receipt for each side it plays. Program-projection and angle samples never authorize structural edits.",
                   "items": {
                     "type": "object",
                     "properties": {
                       "evidence_id": {
                         "type": "string",
-                        "description": "Preferred. The biev_... id returned alongside this evidence. Copy it exactly."
+                        "description": "The biev_... id returned alongside this evidence, exactly as returned."
                       },
                       "inspection_token": {
                         "type": "string",
-                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters; must be byte-identical."
+                        "description": "The full signed receipt, for when its evidence_id is not held. ~900 characters, accepted only byte-identical."
                       },
                       "semantic_boundary": {
                         "type": "object",
@@ -910,7 +910,7 @@
                         "4:5",
                         "1:1"
                       ],
-                      "description": "Optional intermediate crop ratio for Fill framing. Absent, the Fill crop covers the whole canvas. \"4:5\" or \"1:1\" crops at that ratio around the same focal point and letterboxes the picture onto the canvas with black mattes — an alternative that exists when episode_framing_guidance reports a person extent too_wide for the full-canvas crop window. Whether full bleed or a letterboxed ratio serves the story is your editorial judgment. Invalid with Fit, which already shows the whole picture."
+                      "description": "Optional intermediate crop ratio for Fill framing. Absent, the Fill crop covers the whole canvas. \"4:5\" or \"1:1\" crops at that ratio around the same focal point and letterboxes the picture onto the canvas with black mattes — an alternative that exists, not advice, when episode_framing_guidance reports a person extent too_wide for the full-canvas crop window. Invalid with Fit, which already shows the whole picture."
                     },
                     "canvas_alignment": {
                       "type": "string",
@@ -1025,7 +1025,7 @@
                             "lower",
                             "custom"
                           ],
-                          "description": "Auto keeps matte-aware/default placement. Upper or Lower locks one stable shot-level lane. Custom uses one static normalized box for Active Word and is the contract a future direct-manipulation editor can move; no lane follows a face box. Omit lane when correcting an already-authored placement."
+                          "description": "Auto keeps matte-aware/default placement. Upper or Lower locks one stable shot-level lane. Custom uses one static normalized box for Active Word and is the contract a future direct-manipulation editor can move; no lane follows a face box. Without lane, a correction keeps the already-authored placement's lane."
                         },
                         "vertical_offset": {
                           "type": "number",
@@ -1092,7 +1092,7 @@
                     "word_corrections": {
                       "type": "array",
                       "maxItems": 32,
-                      "description": "Optional complete set of display-only token corrections for exactly one selected occurrence. Use only for a visibly misspelled word or proper noun. Request episode_zoom with include:[\"word_provenance\"] over the word's small window; copy word_id and exact text from that channel's word evidence into word_id and from. Compact transcript tuples omit IDs, and speech-alignment point IDs are not caption word IDs. Increase max_bytes or narrow the window if word_provenance was omitted by the response budget. to is rendered copy only; canonical transcript text and timing remain unchanged. Omit this field to preserve the current set; pass [] to clear all occurrence-local corrections.",
+                      "description": "Optional complete set of display-only token corrections for exactly one selected occurrence. It is for a visibly misspelled word or proper noun. word_id and from are the exact word_id and text from episode_zoom include:[\"word_provenance\"] word evidence over the word's small window; compact transcript tuples omit IDs, and speech-alignment point IDs are not caption word IDs. The response budget can omit word_provenance on a wide window or small max_bytes. to is rendered copy only; canonical transcript text and timing remain unchanged. Omitting this field preserves the current set; [] clears all occurrence-local corrections.",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -1100,7 +1100,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 255,
-                            "description": "Exact transcript word_id from episode_zoom include:[\"word_provenance\"] for this occurrence; do not use speech-alignment point IDs."
+                            "description": "Exact transcript word_id from episode_zoom include:[\"word_provenance\"] for this occurrence; speech-alignment point IDs are not accepted."
                           },
                           "from": {
                             "type": "string",
@@ -1112,7 +1112,7 @@
                             "type": "string",
                             "minLength": 1,
                             "maxLength": 160,
-                            "description": "Corrected burned-caption display token. Do not use this to paraphrase speech."
+                            "description": "Corrected burned-caption display token; not a paraphrase of speech."
                           }
                         },
                         "required": [
@@ -1160,7 +1160,7 @@
                     },
                     "params": {
                       "type": "object",
-                      "description": "Scene-specific typed parameters deep-merged into the existing identity moment. Omitted keys, scene choice, and sound remain unchanged; read the occurrence's current identity_customization first."
+                      "description": "Scene-specific typed parameters deep-merged into the existing identity moment, whose current values episode_read reports as identity_customization. Omitted keys, scene choice, and sound remain unchanged."
                     },
                     "gain_db": {
                       "type": "number",
@@ -1177,7 +1177,7 @@
                         "16:9",
                         "1:1"
                       ],
-                      "description": "Rebake the same typed identity moment for this destination shape. Use the Episode canvas aspect for a copied landscape-to-portrait opener or outro."
+                      "description": "Rebakes the same typed identity moment for this destination shape; a copied landscape-to-portrait opener or outro takes the Episode canvas aspect."
                     }
                   },
                   "required": [],
@@ -1211,7 +1211,7 @@
                       "enum": [
                         "project_default"
                       ],
-                      "description": "Use the Project's saved default for this opener/outro role."
+                      "description": "The Project's saved default for this opener/outro role."
                     },
                     {
                       "type": "object",
@@ -1250,7 +1250,7 @@
                         "brand_id": {
                           "type": "string",
                           "minLength": 1,
-                          "description": "Optional account-owned brand pack ID; omit to use the Project's brand."
+                          "description": "Optional account-owned brand pack ID; the Project's brand when omitted."
                         }
                       },
                       "required": [
@@ -1316,13 +1316,13 @@
                       "type": "number",
                       "minimum": 0,
                       "maximum": 10.0,
-                      "description": "Crossfade duration up to 10 seconds; Produced duration 0.12–1.0 seconds controls the full visual-and-audio seam envelope; use 0 for Cut."
+                      "description": "Crossfade duration up to 10 seconds; Produced duration 0.12–1.0 seconds controls the full visual-and-audio seam envelope; Cut is 0."
                     },
                     "sound_gain_db": {
                       "type": "integer",
                       "minimum": -40,
                       "maximum": -6,
-                      "description": "Optional Produced-only sound gain. Omit to preserve the current or Project value; restrained interview seams are typically around -26 dB."
+                      "description": "Optional Produced-only sound gain; when omitted the current or Project value stays. Restrained interview seams are typically around -26 dB."
                     },
                     "intensity": {
                       "type": "string",
@@ -1331,7 +1331,7 @@
                         "medium",
                         "high"
                       ],
-                      "description": "Optional Produced-only visual intensity. Prefer low for a professional interview cold open."
+                      "description": "Optional Produced-only visual intensity; low is the restrained setting for a professional interview cold open."
                     }
                   },
                   "required": [
@@ -2068,7 +2068,7 @@
               "episode_range"
             ],
             "additionalProperties": false,
-            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+            "description": "Optional receipt-derived Move effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_move_target.v1. It is descriptive on historical replay; its Open or Undo is current only when revisions.current equals revisions.committed and digests.current equals digests.result."
           },
           "program_occurrence_target": {
             "type": "object",
@@ -2092,7 +2092,7 @@
               "episode_range"
             ],
             "additionalProperties": false,
-            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; offer Open or Undo only when revisions.current equals revisions.committed and digests.current equals digests.result."
+            "description": "Optional receipt-derived exact Duplicate or Trim effect, emitted only when this tools/call opts into bitterclip/toolOutcomeCapabilities program_occurrence_target.v1 and one whole Program occurrence is addressable. Range or multi-occurrence results omit it and remain generic. It is descriptive on historical replay; its Open or Undo is current only when revisions.current equals revisions.committed and digests.current equals digests.result."
           },
           "digests": {
             "type": "object",

@@ -1,7 +1,7 @@
 {
   "name": "audio_program_mutate",
   "title": "Change Program audio",
-  "description": "One Program-audio change per call: set, pin_set, treatment_set, or revert. This controls source audio only; it never adds, mixes, lowers, or ducks background music — use music_cue_mutate for music. set chooses occurrence-relative Program audio without changing picture — mode accepts replace, silence, clear, or reset; Replace requires an Episode camera_group_key plus the exact footage-session revision you inspected, and BitterClip derives every recording/source slice from synchronized evidence (the caller never supplies source coordinates; read the Episode first and address stable occurrence IDs and source-time ranges, never transcript word times); reset atomically clears the Program pin and every explicit interval policy, omitting occurrence_id and occurrence_source_range. pin_set chooses one stable synchronized camera group as the preferred Program-audio source wherever it has usable coverage, without changing picture, chronology, or the listening reference; pass auto to clear. The settled fallback is explicit interval Replace or silence, then the pin where covered, then the Program occurrence's own recording, then true silence. treatment_set chooses Speech (a versioned, bounded gain/ramp plan tied to the exact raw audio-authority digest; when audio authority later changes the saved plan reads stale and playback falls back truthfully to Raw) or Raw for an explicit bypass. Speech requires measured short-term loudness from ordinary ingest of a supported new recording. If processing is pending, follow the returned recording-status continuation before retrying; terminal unavailable, silence, or insufficient-measurement results retain Raw and must not be retried to regenerate missing measurements. Existing recordings are not backfilled. Speech leveling is separate from final Export mastering. revert applies the server-owned inverse recorded by one Program-audio receipt as a new revision-checked forward edit, failing closed if the prior audio state can no longer be restored exactly.",
+  "description": "One Program-audio change per call: set, pin_set, treatment_set, or revert. This controls source audio only; it does not add, mix, lower, or duck background music, which music_cue_mutate controls. set chooses occurrence-relative Program audio without changing picture — mode accepts replace, silence, clear, or reset; Replace requires an Episode camera_group_key plus the exact footage-session revision from episode_read, and BitterClip derives every recording/source slice from synchronized evidence (the call carries no source coordinates; it addresses stable occurrence IDs and source-time ranges from episode_read, not transcript word times); reset atomically clears the Program pin and every explicit interval policy, omitting occurrence_id and occurrence_source_range. pin_set chooses one stable synchronized camera group as the preferred Program-audio source wherever it has usable coverage, without changing picture, chronology, or the listening reference; auto clears it. The settled fallback is explicit interval Replace or silence, then the pin where covered, then the Program occurrence's own recording, then true silence. treatment_set chooses Speech (a versioned, bounded gain/ramp plan tied to the exact raw audio-authority digest; when audio authority later changes the saved plan reads stale and playback falls back truthfully to Raw) or Raw for an explicit bypass. Speech requires measured short-term loudness from ordinary ingest of a supported new recording. If processing is pending, the result returns a recording-status continuation; terminal unavailable, silence, or insufficient-measurement results retain Raw, and a retry does not regenerate missing measurements. Existing recordings are not backfilled. Speech leveling is separate from final Export mastering. revert applies the server-owned inverse recorded by one Program-audio receipt as a new revision-checked forward edit, failing closed if the prior audio state can no longer be restored exactly.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -19,7 +19,7 @@
       },
       "action": {
         "type": "object",
-        "description": "One Program-audio action. Use the canonical field names in the matching action shape.",
+        "description": "One Program-audio action, in the canonical field names of its matching action shape.",
         "oneOf": [
           {
             "type": "object",
@@ -32,7 +32,7 @@
               },
               "occurrence_id": {
                 "type": "string",
-                "description": "Stable occ_... Program occurrence identity. Omit only for reset."
+                "description": "Stable occ_... Program occurrence identity. Absent only for reset."
               },
               "occurrence_source_range": {
                 "type": "array",
@@ -41,7 +41,7 @@
                 },
                 "minItems": 2,
                 "maxItems": 2,
-                "description": "Half-open source-time range inside the occurrence. Omit only for reset."
+                "description": "Half-open source-time range inside the occurrence. Absent only for reset."
               },
               "mode": {
                 "type": "string",
@@ -51,7 +51,7 @@
                   "clear",
                   "reset"
                 ],
-                "description": "Replace with synchronized camera-group audio, choose deliberate silence, clear policy in one occurrence range, or reset the whole Program audio graph."
+                "description": "replace uses synchronized camera-group audio, silence is deliberate silence, clear removes policy in one occurrence range, and reset clears the whole Program audio graph."
               },
               "camera_group_key": {
                 "type": "string",
@@ -83,7 +83,7 @@
               },
               "expected_capture_session_revision": {
                 "type": "integer",
-                "description": "Required when pinning: exact footage-session evidence revision returned by episode_read. Omit only when clearing with auto."
+                "description": "Required when pinning: exact footage-session evidence revision returned by episode_read. Absent only when clearing with auto."
               }
             },
             "required": [
@@ -223,7 +223,7 @@
             "enum": [
               "audio_program_mutate"
             ],
-            "description": "Revert by calling this op with action { type: revert, receipt_id }."
+            "description": "The revert call is this op with action { type: revert, receipt_id }."
           },
           "receipt_id": {
             "type": "string"
@@ -338,7 +338,7 @@
                   "receipt_id"
                 ],
                 "additionalProperties": false,
-                "description": "Present only when this write changed Program audio: call audio_program_mutate with action { type: revert, receipt_id }."
+                "description": "Present only when this write changed Program audio: the revert is audio_program_mutate with action { type: revert, receipt_id }."
               },
               "reverts_receipt_id": {
                 "type": "string",

@@ -1,13 +1,13 @@
 {
   "name": "recordings_list",
   "title": "List recordings",
-  "description": "List standalone recordings (raw source media) — the drawer, not the editorial unit. Use for source/ingest/readiness asks (\"latest searchable session\", \"what uploads are ready?\") or to inspect and select recordings inside a project (project_id). For one Project reel whose useful footage spans separate recordings rather than one parent Episode, inspect selected recording pixels directly with recording_sample_frames when needed, then pass recording_id ranges directly to one episode_create without derived_from_id. Never create a throwaway Episode merely to inspect a Recording. `query` matches title, project, or who is in it (\"the latest with Andrew\" matches Andrew as a speaker). PAGINATED, newest first: one call returns up to 20 rows and says when more exist; continue with the returned next_cursor (same query/project_id) as `cursor`. One listing walk reaches at most the newest 50 recordings — anything older is reachable only by narrowing with query or project_id, and the result states which case you are in. Model rows carry both the exact tool-only recording_id and the episode-of-one episode_id, plus captured_at, searchability status/notes, and a compact indexed description. Prefer the newest `searchability_status:\"searchable\"` row for latest-session asks; episode_pending means the Recording may not have an Episode-of-one, not that direct source-time frame inspection must wait. Not for ordinary composition browsing (episodes_list) and not for searching what was SAID (transcript_search). Read-only.",
+  "description": "Lists standalone recordings (raw source media): the drawer, not the editorial unit. Use this for source/ingest/readiness asks (\"latest searchable session\", \"what uploads are ready?\") or to inspect and select recordings inside a project (project_id). A Project reel whose footage spans separate recordings rather than one parent Episode is one episode_create with recording_id ranges and no derived_from_id; recording_sample_frames inspects recording pixels without an Episode. `query` matches title, project, or who is in it (\"the latest with Andrew\" matches Andrew as a speaker). PAGINATED, newest first: one call returns up to 20 rows and says when more exist; the returned next_cursor (with the same query/project_id) continues it as `cursor`. One listing walk reaches at most the newest 50 recordings — anything older is reachable only by narrowing with query or project_id, and the result states which case applies. Model rows carry both the exact tool-only recording_id and the episode-of-one episode_id, plus captured_at, searchability status/notes, and a compact indexed description. For latest-session asks, the newest `searchability_status:\"searchable\"` row is the latest searchable session; episode_pending means the Recording may not have an Episode-of-one, not that direct source-time frame inspection must wait. Ordinary composition browsing is episodes_list, and searching what was SAID is transcript_search. Read-only.",
   "input_schema": {
     "type": "object",
     "properties": {
       "query": {
         "type": "string",
-        "description": "Optional case-insensitive filter — returns only recordings whose TITLE, a composited SOURCE TITLE, or a diarized SPEAKER NAME contains this text (substring). The filter scans the FULL catalog before the newest-50 listing window applies, so it also reaches recordings a bare walk cannot. Each kept recording carries a `match_reason` (\"title\" / \"source: …\" / \"speaker: …\") explaining why. Composes with project_id, limit, and cursor. Use it to find a recording by who is in it or what it's called, e.g. query: \"Andrew\"."
+        "description": "Optional case-insensitive filter — returns only recordings whose TITLE, a composited SOURCE TITLE, or a diarized SPEAKER NAME contains this text (substring). The filter scans the FULL catalog before the newest-50 listing window applies, so it also reaches recordings a bare walk cannot. Each kept recording carries a `match_reason` (\"title\" / \"source: …\" / \"speaker: …\") explaining why. Composes with project_id, limit, and cursor. It finds a recording by who is in it or what it's called, e.g. query: \"Andrew\"."
       },
       "project_id": {
         "type": "string",
@@ -19,7 +19,7 @@
       },
       "cursor": {
         "type": "string",
-        "description": "Opaque continuation returned as next_cursor by the previous page of this listing. Keep query and project_id identical when continuing; omit cursor to restart from the newest recordings. Never invent or edit a cursor."
+        "description": "Opaque continuation returned as next_cursor by the previous page of this listing. Continuing requires the same query and project_id; without cursor the listing restarts from the newest recordings. Only a returned cursor is valid."
       },
       "result_profile": {
         "type": "string",
@@ -27,7 +27,7 @@
           "app",
           "model"
         ],
-        "description": "Caller profile. \"app\" (widgets/apps) keeps full structured rows for hydration; \"model\" returns the complete row story as prose only. Omit to use the server default."
+        "description": "Caller profile. \"app\" (widgets/apps) keeps full structured rows for hydration; \"model\" returns the complete row story as prose only. Absent means the server default."
       }
     },
     "required": [],

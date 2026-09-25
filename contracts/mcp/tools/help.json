@@ -1,13 +1,13 @@
 {
   "name": "help",
   "title": "BitterClip help",
-  "description": "Discover BitterClip help with no input, ask a natural-language question for short sourced passages, or pass an exact bitterclip://docs URI to read a page. Covers live public creator docs and private agent operating guidance. Read-only; no customer media.",
+  "description": "Returns BitterClip help: discovery with no input, short sourced passages for a natural-language question, or the page at an exact bitterclip://docs URI. Covers live public creator docs and private agent operating guidance. Read-only; no customer media.",
   "input_schema": {
     "type": "object",
     "properties": {
       "query": {
         "type": "string",
-        "description": "Question or exact bitterclip://docs URI. Omit to discover help."
+        "description": "Question or exact bitterclip://docs URI; absent returns discovery."
       },
       "limit": {
         "type": "integer",

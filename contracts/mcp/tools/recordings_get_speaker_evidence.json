@@ -1,7 +1,7 @@
 {
   "name": "recordings_get_speaker_evidence",
   "title": "Get recording speaker evidence",
-  "description": "Read the first-class speaker evidence for a recording. Returns one row per diarized speaker track, profile bindings, confirmation state, voiceprint/transcript/visual evidence, roles, bounded source-time subject geometry when a current evidence generation exists, summary counts, and a compact model context. Geometry is evidence, never an already-chosen crop or title placement.",
+  "description": "Reads the first-class speaker evidence for a recording. Returns one row per diarized speaker track, profile bindings, confirmation state, voiceprint/transcript/visual evidence, roles, bounded source-time subject geometry when a current evidence generation exists, summary counts, and a compact model context. Geometry is evidence, never an already-chosen crop or title placement.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,7 +15,7 @@
       },
       "speaker_map_id": {
         "type": "string",
-        "description": "Alternatively inspect the answer on this exact voice, including an older human confirmation."
+        "description": "Alternatively, the answer on this exact voice, including an older human confirmation."
       }
     },
     "required": [

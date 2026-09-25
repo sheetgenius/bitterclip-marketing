@@ -1,7 +1,7 @@
 {
   "name": "align_span",
   "title": "Align or reject a span",
-  "description": "Promote a provisional transcript-backed span to a cited span, or explicitly reject it. Accepts exactly one target: a Program occurrence (episode_id plus the exact occ_... occurrence_id from episode_read's Program map) or a moment_id. Alignment only records transcript-unit anchors and boundary offsets; it preserves the existing media seconds and never invents anchors. Aligning or rejecting an occurrence changes the Program digest without advancing the revision; re-read the Episode before the next page or edit. Boundary evidence does not depend on the digest and stays valid. If the recording lacks a word-timed transcript or no units overlap the evidence window, the operation returns ok:false with a typed error instead of writing fake anchors.",
+  "description": "Promote a provisional transcript-backed span to a cited span, or explicitly reject it. Accepts exactly one target: a Program occurrence (episode_id plus the exact occ_... occurrence_id from episode_read's Program map) or a moment_id. Alignment only records transcript-unit anchors and boundary offsets; it preserves the existing media seconds and never invents anchors. Aligning or rejecting an occurrence changes the Program digest without advancing the revision; episode_read continuation pages pinned to the earlier digest then refuse and restart at page 1. Boundary evidence does not depend on the digest and stays valid. If the recording lacks a word-timed transcript or no units overlap the evidence window, the operation returns ok:false with a typed error instead of writing fake anchors.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -32,7 +32,7 @@
       },
       "transcript_window": {
         "type": "object",
-        "description": "Optional source-time evidence window for transcript-unit overlap search. Omit to use the target's current media seconds.",
+        "description": "Optional source-time evidence window for transcript-unit overlap search. Absent means the target's current media seconds.",
         "properties": {
           "start_seconds": {
             "type": "number"

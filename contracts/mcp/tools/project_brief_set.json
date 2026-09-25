@@ -1,7 +1,7 @@
 {
   "name": "project_brief_set",
   "title": "Confirm the Project working brief",
-  "description": "Confirm the Project's working brief — the durable steering text every host and ingest synthesis reads for this Project (what to make, tone, audience, what to avoid). It is STANDING direction: follow it for Project work, and when the person's explicit current request conflicts with it, their request wins. Use it when the person states or corrects standing direction for the Project as a whole; it replaces the whole brief, so carry forward anything still current. Read the current brief first — episode_read on an Episode in the Project renders the exact current PROJECT WORKING BRIEF block with its revision — and pass that exact revision as expected_revision (0 when no brief exists yet); a stale revision fails without overwriting a newer confirmation. Retrying the exact same confirmation with the same idempotency_key replays as a no-op, even after a later confirmation; the same key with different text fails closed. Pass an empty brief to clear steering. Confirming never touches sibling direction settings such as canonical vocabulary or copy preferences, and causes no Program edit, Clip, Render, publication, or public-link effect. Not for Episode metadata (episode_update) or channel/package copy (publish_prepare / publish_update).",
+  "description": "Confirms the Project's working brief: the durable steering text every host and ingest synthesis reads for this Project (what to make, tone, audience, what to avoid). It is standing direction for Project work; the person's explicit current request takes precedence over it. It records standing direction for the Project as a whole as the person states or corrects it, and each confirmation replaces the whole brief. Requires the current brief revision as expected_revision (0 when no brief exists yet); episode_read on an Episode in the Project renders the exact current PROJECT WORKING BRIEF block with its revision; a stale revision fails without overwriting a newer confirmation. Retrying the exact same confirmation with the same idempotency_key replays as a no-op, even after a later confirmation; the same key with different text fails closed. An empty brief clears steering. Confirming never touches sibling direction settings such as canonical vocabulary or copy preferences, and causes no Program edit, Clip, Render, publication, or public-link effect. Episode metadata is episode_update, and channel/package copy is publish_prepare / publish_update.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -17,7 +17,7 @@
       "expected_revision": {
         "type": "integer",
         "minimum": 0,
-        "description": "The current working-brief revision from a fresh episode_read (its PROJECT WORKING BRIEF block states the revision). Pass 0 for a Project with no confirmed brief yet."
+        "description": "The current working-brief revision from a fresh episode_read (its PROJECT WORKING BRIEF block states the revision). 0 for a Project with no confirmed brief yet."
       },
       "idempotency_key": {
         "type": "string",

@@ -1,7 +1,7 @@
 {
   "name": "open_workspace",
   "title": "Open BitterClip workspace",
-  "description": "App-only read. Open a Project handoff or an existing Episode/Clip in the shared BitterClip workspace without creating or changing saved state. Use the model-visible workspace_open tool for ordinary agent handoff and review_points_place for the sole revision-bound review-point write.",
+  "description": "App-only read. Opens a Project handoff or an existing Episode/Clip in the shared BitterClip workspace without creating or changing saved state. Ordinary agent handoff is the model-visible workspace_open, and the sole revision-bound review-point write is review_points_place.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -114,7 +114,7 @@
       },
       "handle_policy": {
         "type": "string",
-        "description": "Reminder that raw BitterClip handles are tool-call-only and should not be shown to users."
+        "description": "Handle policy: raw BitterClip handles are tool-call-only, not user-facing."
       }
     },
     "required": [],

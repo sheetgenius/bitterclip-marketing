@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2 — standing guidance from tool descriptions
+
+- Tool descriptions now state only what each tool does, returns, records, or
+  requires. The editorial and workflow guidance they used to carry moved here:
+  picture, camera, speaker-title, transition, and trim-measurement craft in
+  `make-a-clip`, and owner-private account context, brief precedence and
+  confirmation, delegated face review, and offer-to-open in `get-started`.
+- Same four skills, package shape, and hosted OAuth service.
+
 ## 0.2.1 — FX recovery guidance
 
 - Tightens the fourth skill's scene runtime, view targeting, guarded recovery,

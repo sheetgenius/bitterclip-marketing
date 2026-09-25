@@ -1,7 +1,7 @@
 {
   "name": "capture_session_mutate",
   "title": "Change a footage session",
-  "description": "One footage-session change per call: add_recordings, camera_group_set, listening_reference_set, remove_recording, set_recording_start, or retry_analysis. add_recordings attaches existing project recordings (top-level recording_ids) and schedules incremental chronology analysis — use upload_link_create with capture_session_id instead when bytes are still local or another camera operator uploads later; membership is retry-safe and never creates unrelated top-level episodes. camera_group_set assigns the top-level recording_ids to one stable camera group without changing chronology, source identity, or coverage: it never advances the chronology revision, never returns the session to analysis, and never queues another solve (omit camera_group_key to mint a new group; camera_label renames without becoming identity; camera identity carries its own generation, and expected_camera_generation is REQUIRED so a concurrent camera edit cannot be silently overwritten; the receipt retains prior keys and labels so grouping reverses through the same action). listening_reference_set chooses the default speech-rich listening reference camera via top-level recording_id, or omits it to restore automatic selection; it never selects Program camera or audio, discards transcripts, or overrides speaker identity. remove_recording is a revision-guarded, audited exclusion of one recording (top-level recording_id) that preserves the original recording, membership history, observations, and solve receipts. set_recording_start is an audited placement correction setting one unresolved recording's start on the stable capture clock; read the manifest first, cite the evidence or human instruction in reason, and never guess a gap. retry_analysis retries the same evidence revision after bounded automatic chronology attempts have failed — call it only when next_action.kind is retry_analysis, keeping one idempotency key per exact terminal failure generation. Subject references ride top-level: capture_session_id always; recording_id / recording_ids per action.",
+  "description": "One footage-session change per call: add_recordings, camera_group_set, listening_reference_set, remove_recording, set_recording_start, or retry_analysis. add_recordings attaches existing project recordings (top-level recording_ids) and schedules incremental chronology analysis (bytes still on a device, or a later upload from another camera operator, arrive through upload_link_create with capture_session_id); membership is retry-safe and never creates unrelated top-level episodes. camera_group_set assigns the top-level recording_ids to one stable camera group without changing chronology, source identity, or coverage: it never advances the chronology revision, never returns the session to analysis, and never queues another solve (without camera_group_key it mints a new group; camera_label renames without becoming identity; camera identity carries its own generation, and expected_camera_generation is required so a concurrent camera edit cannot be silently overwritten; the receipt retains prior keys and labels so grouping reverses through the same action). listening_reference_set chooses the default speech-rich listening reference camera via top-level recording_id, or omits it to restore automatic selection; it never selects Program camera or audio, discards transcripts, or overrides speaker identity. remove_recording is a revision-guarded, audited exclusion of one recording (top-level recording_id) that preserves the original recording, membership history, observations, and solve receipts. set_recording_start is an audited placement correction setting one unresolved recording's start on the stable capture clock; its reason records the capture evidence or human instruction behind the placement. retry_analysis retries the same evidence revision after bounded automatic chronology attempts have failed; it applies when next_action.kind is retry_analysis, with one idempotency key per exact terminal failure generation. Subject references ride top-level: capture_session_id always; recording_id / recording_ids per action.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "recording_id": {
         "type": "string",
-        "description": "Recording public ID for listening_reference_set (optional; omit for automatic), remove_recording, and set_recording_start."
+        "description": "Recording public ID for listening_reference_set (optional; absent means automatic), remove_recording, and set_recording_start."
       },
       "recording_ids": {
         "type": "array",
@@ -27,7 +27,7 @@
       },
       "expected_camera_generation": {
         "type": "integer",
-        "description": "REQUIRED for camera_group_set: the camera-identity generation this decision was made against, from manifest.camera_grouping.camera_generation. Camera identity has its own generation because grouping never advances the footage-session revision, so expected_revision cannot detect a concurrent camera decision. Omitting it is rejected; a stale one is rejected."
+        "description": "Required for camera_group_set: the camera-identity generation this decision was made against, from manifest.camera_grouping.camera_generation. Camera identity has its own generation because grouping never advances the footage-session revision, so expected_revision cannot detect a concurrent camera decision. Omitting it is rejected; a stale one is rejected."
       },
       "idempotency_key": {
         "type": "string",
@@ -67,7 +67,7 @@
               },
               "camera_group_key": {
                 "type": "string",
-                "description": "Optional existing group key from this session. Omit to create a new group."
+                "description": "Optional existing group key from this session; a new group is created when omitted."
               },
               "camera_label": {
                 "type": "string",
@@ -137,7 +137,7 @@
               },
               "reason": {
                 "type": "string",
-                "description": "Required concise rationale citing the capture evidence or explicit human instruction that establishes this placement. Never guess a gap."
+                "description": "Required concise rationale citing the capture evidence or explicit human instruction that establishes this placement."
               }
             },
             "required": [
@@ -244,7 +244,7 @@
       },
       "camera_generation": {
         "type": "integer",
-        "description": "camera_group_set only: the footage session's camera-identity generation after this call. Send it back as expected_camera_generation on the next camera edit."
+        "description": "camera_group_set only: the footage session's camera-identity generation after this call, which the next camera edit takes as expected_camera_generation."
       },
       "prior_memberships": {
         "type": "array",

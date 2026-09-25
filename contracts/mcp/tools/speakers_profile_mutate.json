@@ -1,13 +1,13 @@
 {
   "name": "speakers_profile_mutate",
   "title": "Change a remembered person",
-  "description": "One account-level person governance change per call. merge applies an explicitly reviewed duplicate merge (moves bindings, aliases, and saved voice examples to the survivor, tombstones the duplicate, writes a review receipt; never rewrites transcript words, rendered captions, approval copy, published posts, or old export labels). keep_separate records that two similar people were reviewed and stay separate. set_memory_scope chooses how far a saved voice reaches (global_host or one project); admitted voice evidence re-verifies for the new scope. clear_unusable_voice quarantines unusable saved voice examples and clears invalid legacy voice memory. Profile ids ride inside the action; resolution is account-scoped. Pass a caller-stable idempotency key with every action; the person lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
+  "description": "One account-level person governance change per call. merge applies an explicitly reviewed duplicate merge (moves bindings, aliases, and saved voice examples to the survivor, tombstones the duplicate, writes a review receipt; never rewrites transcript words, rendered captions, approval copy, published posts, or old export labels). keep_separate records that two similar people were reviewed and stay separate. set_memory_scope chooses how far a saved voice reaches (global_host or one project); admitted voice evidence re-verifies for the new scope. clear_unusable_voice quarantines unusable saved voice examples and clears invalid legacy voice memory. Profile ids ride inside the action; resolution is account-scoped. Every action takes a caller-stable idempotency key; the person lane has no structural revision, so expected_revision is carried optionally toward the standard mutation contract.",
   "input_schema": {
     "type": "object",
     "properties": {
       "expected_revision": {
         "type": "integer",
-        "description": "Optional: carried toward the standard mutation contract. The person lane exposes no structural revision yet; omit until it does."
+        "description": "Optional: carried toward the standard mutation contract. The person lane exposes no structural revision yet, so it is unused for now."
       },
       "idempotency_key": {
         "type": "string",

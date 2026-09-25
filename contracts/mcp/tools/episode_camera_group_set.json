@@ -1,7 +1,7 @@
 {
   "name": "episode_camera_group_set",
   "title": "Group episode cameras",
-  "description": "Explicitly assign synchronized camera angles in one editable Episode to a stable camera group. Omit camera_group_key to create a new opaque group, pass an existing Episode group, or backfill the exact key already carried by every selected angle's active Footage-session membership. This changes only camera identity/label projection: synchronization, angle IDs, Program ranges, preview, and render resolution remain unchanged. The revision-guarded receipt retains every prior key and label for reversal.",
+  "description": "Explicitly assigns synchronized camera angles in one editable Episode to a stable camera group: a new opaque group when camera_group_key is omitted, an existing Episode group, or a backfill of the exact key already carried by every selected angle's active Footage-session membership. This changes only camera identity/label projection: synchronization, angle IDs, Program ranges, preview, and render resolution remain unchanged. The revision-guarded receipt retains every prior key and label for reversal.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -15,11 +15,11 @@
           "type": "string"
         },
         "maxItems": 200,
-        "description": "Angles that should share the group."
+        "description": "Angles that share the group."
       },
       "camera_group_key": {
         "type": "string",
-        "description": "Optional existing group key from this Episode. Omit to create one."
+        "description": "Optional existing group key from this Episode; a new one is created when omitted."
       },
       "camera_label": {
         "type": "string",

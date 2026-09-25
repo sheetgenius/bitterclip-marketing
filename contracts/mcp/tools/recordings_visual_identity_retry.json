@@ -1,7 +1,7 @@
 {
   "name": "recordings_visual_identity_retry",
   "title": "Retry a saved image answer’s picture update",
-  "description": "Retry only native application of the current saved image answer. Preserves the answer and starts no recognition, transcription or render provider work. Existing pending work is reused; use the returned status and recovery action.",
+  "description": "Retries only native application of the current saved image answer. Preserves the answer and starts no recognition, transcription or render provider work. Existing pending work is reused, and the result returns status and a recovery action.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -1,7 +1,7 @@
 {
   "name": "speakers_search",
   "title": "Search remembered people",
-  "description": "Search people by name, alias, slug, or project presentation name. Use before asking the user to choose between similar names.",
+  "description": "Searches people by name, alias, slug, or project presentation name, resolving similar names before the user is asked to choose.",
   "input_schema": {
     "type": "object",
     "properties": {

@@ -1,7 +1,7 @@
 {
   "name": "identity_assets_list",
   "title": "List project identity assets",
-  "description": "Discover the saved Signature assets available in a project context: account-library opener entries, outro entries, cut-style entries, a compact curated identity-sound palette, and music beds, with quiet default marks for this project. Signature applies saved opener, outro, and cut style choices to new reels; saved project music creates a full-Episode music cue. Do not call this just to use known project defaults; for the Andrew trainer worked example in the server instructions, the right call is episode_create with identity:\"project_default\". Call this when defaults are absent or unclear, when the user names a specific look, sound, song, or asset, or when you need uses_title before passing opener_title. Use opener and outro library_entry_id refs in an explicit identity object. To change the sonic mark on an existing typed opener or outro, pass an identity_sounds id to episode_edit identity_part.customize set.sound_id. Use a music-bed id with music_cue_mutate. Music family, mood, and tags support compact genre matching; prompts describe the finer vibe. A saved default whose library entry is missing does not hide the other assets: default_issues names that role, and project_default refuses for it until identity_apply_to_project replaces or clears it.",
+  "description": "Lists the saved Signature assets available in a project context: account-library opener entries, outro entries, cut-style entries, a compact curated identity-sound palette, and music beds, with quiet default marks for this project. Signature applies saved opener, outro, and cut style choices to new reels; saved project music creates a full-Episode music cue. episode_create with identity:\"project_default\" applies known project defaults without this list; the list covers absent or unclear defaults, a specific named look, sound, song, or asset, and uses_title before opener_title. Opener and outro library_entry_id refs go in an explicit identity object. An identity_sounds id changes the sonic mark on an existing typed opener or outro through episode_edit identity_part.customize set.sound_id. music_cue_mutate takes music-bed ids. Music family, mood, and tags support compact genre matching; prompts describe the finer vibe. A saved default whose library entry is missing does not hide the other assets: default_issues names that role, and project_default refuses for it until identity_apply_to_project replaces or clears it.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -11,7 +11,7 @@
       },
       "include_archived": {
         "type": "boolean",
-        "description": "Include archived music beds. Openers, outros, and cut styles come from the account identity library. Defaults false."
+        "description": "Includes archived music beds. Openers, outros, and cut styles come from the account identity library. Defaults false."
       }
     },
     "required": [
@@ -87,7 +87,7 @@
             },
             "recovery": {
               "type": "object",
-              "description": "Repair the default with this tool and argument: a library_entry_id from replacement_source, or clear_value.",
+              "description": "The tool and argument that repair the default: a library_entry_id from replacement_source, or clear_value.",
               "properties": {
                 "tool": {
                   "type": "string",
@@ -164,7 +164,7 @@
                     "string",
                     "null"
                   ],
-                  "description": "The preset's default sonic mark; customize the concrete identity part to override it."
+                  "description": "The preset's default sonic mark; customizing the concrete identity part overrides it."
                 },
                 "default": {
                   "type": "boolean"
@@ -219,7 +219,7 @@
                     "string",
                     "null"
                   ],
-                  "description": "The preset's default sonic mark; customize the concrete identity part to override it."
+                  "description": "The preset's default sonic mark; customizing the concrete identity part overrides it."
                 },
                 "default": {
                   "type": "boolean"
@@ -262,7 +262,7 @@
           },
           "identity_sounds": {
             "type": "array",
-            "description": "One representative curated take per identity-sound concept. Use an id with episode_edit identity_part.customize set.sound_id.",
+            "description": "One representative curated take per identity-sound concept; an id goes to episode_edit identity_part.customize set.sound_id.",
             "items": {
               "type": "object",
               "properties": {
@@ -295,7 +295,7 @@
           },
           "account_scenes": {
             "type": "array",
-            "description": "Saved account-authored scenes. Use scene_id only through assets.signature_lab.account_scene_id_source for initial replacement or explicit later rebinding of an eligible typed opener/outro.",
+            "description": "Saved account-authored scenes. A scene_id applies only through assets.signature_lab.account_scene_id_source, for initial replacement or explicit later rebinding of an eligible typed opener/outro.",
             "items": {
               "type": "object",
               "properties": {

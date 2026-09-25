@@ -61,7 +61,7 @@ generation in `modules/generated-surfaces.ts` emits docs Markdown twins,
 `llms.txt`, `llms-full.txt`, sitemap entries, and feeds. Do not hand-edit those
 generated outputs.
 
-The 113 MCP tool contracts in `contracts/mcp/tools/`, extended public guides
+The 112 MCP tool contracts in `contracts/mcp/tools/`, extended public guides
 in `contracts/mcp/guides/`, and four plugin skills in `plugins/bitterclip/skills/`
 are authored here. Rails imports one pinned commit and owns handlers,
 authorization, visibility, effects, and private operating guidance. The static

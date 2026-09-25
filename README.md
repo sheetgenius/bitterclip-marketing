@@ -69,7 +69,7 @@ This repository owns:
 - AI-readable discovery files at `/llms.txt` and `/llms-full.txt`
 - public blog RSS at `/blog/rss.xml`
 - public AI-assistant and MCP guidance under `/docs/assistants`
-- all 113 authored MCP tool contracts under `contracts/mcp/tools/`, three public
+- all 112 authored MCP tool contracts under `contracts/mcp/tools/`, three public
   extended guides, and the four canonical Claude Code/Codex plugin skills
 - static per-tool references, a 63-tool default model index, and a separate
   50-tool app-only index built from the descriptors Rails actually serves,

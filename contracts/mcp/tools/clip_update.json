@@ -1,7 +1,7 @@
 {
   "name": "clip_update",
   "title": "Update clip metadata",
-  "description": "Update one exact Clip's title and/or description. Read that Clip first and pass its draft_revision; a stale token fails without overwriting newer human copy. This does not structurally edit the parent episode; choose render aspect ratio with render_create.",
+  "description": "Updates one exact Clip's title and/or description. Requires the Clip's draft_revision from episode_read; a stale token fails without overwriting newer human copy. This does not structurally edit the parent episode; render aspect ratio belongs to render_create.",
   "input_schema": {
     "type": "object",
     "properties": {

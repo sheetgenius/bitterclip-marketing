@@ -1,7 +1,7 @@
 {
   "name": "speakers_review_read",
   "title": "List speaker review queue",
-  "description": "One speaker review read per call. kind:requests lists open account-owner speaker review requests — a read-only queue of possible duplicate people that a human should decide using merge preview and speakers_profile_mutate. kind:repair_findings lists read-only speaker identity review items (photos that may not match, missing saved photos, saved voices needing review, possible duplicates, label disagreements). Neither kind changes identity, voice memory, photos, captions, clips, exports, or published posts.",
+  "description": "One speaker review read per call. kind:requests lists open account-owner speaker review requests — a read-only queue of possible duplicate people for a human decision through merge preview and speakers_profile_mutate. kind:repair_findings lists read-only speaker identity review items (photos that may not match, missing saved photos, saved voices needing review, possible duplicates, label disagreements). Neither kind changes identity, voice memory, photos, captions, clips, exports, or published posts.",
   "input_schema": {
     "type": "object",
     "properties": {

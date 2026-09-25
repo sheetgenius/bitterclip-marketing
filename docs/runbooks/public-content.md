@@ -54,7 +54,7 @@ response. Generated Markdown twins retain authored MDC directives; the help
 corpus reads the prerendered HTML article and includes each snippet's actual
 visible words. Review rendered pages for claims inside snippets.
 
-The 113 MCP tool names, titles, descriptions, schemas, errors, and examples are
+The 112 MCP tool names, titles, descriptions, schemas, errors, and examples are
 authored in `contracts/mcp/tools/*.json`. The four plugin skills and three
 extended public guides are authored here too. Rails pins one commit and owns
 handlers, authorization, visibility, effects, and private help pages. Validate
@@ -77,9 +77,9 @@ production rebuild it requires the requested public commit and digest. When
 the serving product release differs from the request, it logs both and captures
 the release actually serving. A release switch during the three-profile fetch
 retries the whole capture up to three times. The ignored `tmp/`
-snapshot is a build input, never an authored copy. The build emits 113 HTML
+snapshot is a build input, never an authored copy. The build emits 112 HTML
 tool pages with exact served descriptors, Markdown and JSON twins, a main
-index of the 63 default model tools, a separate index of the 50 app-only tools,
+index of the 63 default model tools, a separate index of the 49 app-only tools,
 and discovery entries. It prints the serving product release, public
 contract commit, contract digest, and capture time. Host security schemes and
 resource URIs can vary by connector. If a site deploy trails Rails, the older

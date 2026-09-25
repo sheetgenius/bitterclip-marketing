@@ -1,7 +1,7 @@
 {
   "name": "scene_read",
   "title": "Read FX scene source",
-  "description": "Read a saved scene's source verbatim, its revision/hash, settings and version history before editing. Omit project_id for your account. Optional revision reads a retained version; restoring means writing that source as a new revision using the current guards. Optional line bounds limit a large read. Edit matching is literal, including whitespace; no regular-expression replacement expansion occurs.",
+  "description": "Reads a saved scene's source verbatim, its revision/hash, settings and version history. Without project_id it reads the caller's own account. Optional revision reads a retained version; restoring means writing that source as a new revision using the current guards. Optional line bounds limit a large read. Edit matching is literal, including whitespace; no regular-expression replacement expansion occurs.",
   "input_schema": {
     "type": "object",
     "properties": {

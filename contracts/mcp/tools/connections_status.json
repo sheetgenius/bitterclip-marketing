@@ -1,7 +1,7 @@
 {
   "name": "connections_status",
   "title": "Get publish connection status",
-  "description": "Use this before preparing or publishing packages for a platform. Returns whether this BitterClip account has a connected destination with the required permissions for the requested platform (YouTube: a channel with upload permission, plus whether the requested privacy will be honored or forced private; LinkedIn: a member account with w_member_social; X: an account with tweet.write and media.write), and the in-app path to start connection if not.",
+  "description": "Checks publish readiness for a platform before packages are prepared or published. Returns whether this BitterClip account has a connected destination with the required permissions for the requested platform (YouTube: a channel with upload permission, plus whether the requested privacy will be honored or forced private; LinkedIn: a member account with w_member_social; X: an account with tweet.write and media.write), and the in-app path to start connection if not.",
   "input_schema": {
     "type": "object",
     "properties": {

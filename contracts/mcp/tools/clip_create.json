@@ -1,7 +1,7 @@
 {
   "name": "clip_create",
   "title": "Create a clip",
-  "description": "Create a short derived Clip from one current Program range. Use typed input:{type:clip|episode,id:comp_...} plus a stable variant_id for an explicitly requested fresh alternative. Range uses that input production's local Program time; Rails maps its current source occurrences. Ordinary shortening edits the existing Clip with episode_edit. This is for a single-range Clip; several moments combined into one video should use episode_create, not N clips. If this Clip must show a simultaneous Picture layout, first prove complete distinct-camera coverage for the entire range; never create a Clip as a coverage probe, and explain any necessary range shift before writing. The Clip keeps what the parent plays over that range (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried refuses with program_audio_not_preservable and the exact span to avoid. This persists the Clip only; it does not open or render. For ordinary make/cut/create Clip intent, continue with render_create using target_type:\"clip\", the exact returned clip_id as target_id, and the returned revision, then render_status until ready unless the user asks for draft-only, review-first, or no-render. Report private Download/editor Open; never quote or retain its capability URL. Publishing stays explicit. Optional aspect_ratio sets the draft/render default, not a finished Export.",
+  "description": "Creates a short derived Clip from one current Program range. Typed input:{type:clip|episode,id:comp_...} plus a stable variant_id creates an explicitly requested fresh alternative. Range uses that input production's local Program time; Rails maps its current source occurrences. Ordinary shortening edits the existing Clip with episode_edit. It creates one single-range Clip; several moments combined into one video are one episode_create rather than several Clips. A simultaneous Picture layout on the Clip is a later camera_program_set scene, which requires distinct-camera coverage of its whole range. The Clip keeps what the parent plays over that range (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried refuses with program_audio_not_preservable and the exact span to avoid. This persists the Clip only; it does not open or render. The rendered MP4 is a separate render_create with target_type:\"clip\", the returned clip_id as target_id, and the returned revision; render_status reports it. Publishing is separate. Optional aspect_ratio sets the draft/render default, not a finished Export.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -33,7 +33,7 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 200,
-        "description": "Required with typed input. Stable identity of the explicitly requested alternative; retain on retries. A separate requested alternative uses a new variant_id and idempotency_key."
+        "description": "Required with typed input. Stable identity of the explicitly requested alternative, unchanged across retries. A separate requested alternative has a new variant_id and idempotency_key."
       },
       "range": {
         "type": "array",
@@ -52,7 +52,7 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 200,
-        "description": "Clip title. When supplied, use 1-200 characters with no surrounding whitespace."
+        "description": "Clip title: 1-200 characters with no surrounding whitespace."
       },
       "description": {
         "type": "string",
@@ -65,11 +65,11 @@
           "16:9",
           "1:1"
         ],
-        "description": "OMIT THIS unless the user asked for a specific shape or named a vertical destination. Left alone a typed variant preserves its input shape; legacy Episode input follows the footage. Setting 9:16 on landscape footage crops the sides away. render_create still materializes media."
+        "description": "Output shape, set only for a shape the user asked for or a named vertical destination. When omitted, a typed variant preserves its input shape and legacy Episode input follows the footage. Setting 9:16 on landscape footage crops the sides away. render_create still materializes media."
       },
       "idempotency_key": {
         "type": "string",
-        "description": "Caller-stable key for safe retry. Scope it to the ask (conversation + attempt), never derive it from the media range — a range-derived key changes when you refine the cut, so idempotency never fires. A near-duplicate this same session already created comes back with near_duplicate:true instead of a second clip."
+        "description": "Caller-stable key for safe retry, scoped to the ask (conversation + attempt). A key derived from the media range changes when the cut is refined, so it never replays. A near-duplicate this same session already created comes back with near_duplicate:true instead of a second clip."
       }
     },
     "required": [
@@ -175,7 +175,7 @@
       },
       "near_duplicate": {
         "type": "boolean",
-        "description": "True when nothing was created: this session already made a near-identical clip of this episode and the returned handles are that clip's. Refine it with episode_edit; do not retry the create."
+        "description": "True when nothing was created: this session already made a near-identical clip of this episode and the returned handles are that clip's. That Clip is refined with episode_edit; repeating the create returns it again."
       },
       "already_applied": {
         "type": "boolean",
@@ -230,7 +230,7 @@
       },
       "user_presence": {
         "type": "object",
-        "description": "Present when a live editor session on the parent episode is active: this is presence only, not visible navigation acknowledgement. Always preserve the exact Open Clip action. Absent means visibility is unknown; do not claim it."
+        "description": "Present when a live editor session on the parent episode is active: this is presence only, not visible navigation acknowledgement, and the exact Open Clip action still applies. Absent means visibility is unknown."
       },
       "opened": {
         "type": "boolean"

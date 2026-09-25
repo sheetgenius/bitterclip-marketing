@@ -1,13 +1,13 @@
 {
   "name": "scene_write",
   "title": "Write FX scene source",
-  "description": "Create or replace a complete programmable effect, not a fixed-template parameter preset. Supply an ES module exporting scene with id, mount(ctx), reset(ctx), frame(ctx), and optional dispose(ctx). mount appends under ctx.layer and returns refs including root. HTML/CSS, SVG, Canvas and WebGL are supported; ctx.elapsedMs is the authored clock. No ambient application, network or provider authority is available. New scenes use expected_revision:0. Before replacing an existing scene, read it and supply both its revision and sha256; a stale edit refuses without overwriting. Saved source versions are retained. Use scene_preview to inspect actual pixels and iterate; saving source does not apply an opener/outro or change any Episode. Omit project_id for your account library, or supply an accessible Project for its account scope. See bitterclip://docs/identity-scene-authoring for the runtime contract.",
+  "description": "Creates or replaces a complete programmable effect, not a fixed-template parameter preset. It takes an ES module exporting scene with id, mount(ctx), reset(ctx), frame(ctx), and optional dispose(ctx). mount appends under ctx.layer and returns refs including root. HTML/CSS, SVG, Canvas and WebGL are supported; ctx.elapsedMs is the authored clock. No ambient application, network or provider authority is available. New scenes use expected_revision:0. Replacing an existing scene requires both its revision and sha256 from scene_read; a stale edit refuses without overwriting. Saved source versions are retained. scene_preview renders actual pixels; saving source does not apply an opener/outro or change any Episode. Without project_id it writes to the caller's account library; an accessible Project selects its account scope.",
   "input_schema": {
     "type": "object",
     "properties": {
       "project_id": {
         "type": "string",
-        "description": "Optional Project scope; omitted means your own account."
+        "description": "Optional Project scope; omitted means the caller's own account."
       },
       "scene_id": {
         "type": "string",
