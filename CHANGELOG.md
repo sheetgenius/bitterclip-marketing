@@ -41,6 +41,11 @@ under a dated entry.
 
 ### Website
 
+- Stated the Creator offer in one line wherever it appears ("$1 for 7 days,
+  then $24/month · Cancel anytime") and removed the repeated fine print about
+  the introductory payment and the cancel-before time; the full terms now live
+  at checkout and in the trial emails. The homepage pricing fine-print
+  paragraph is gone and the cancellation FAQ is three sentences.
 - Made the main MCP tool reference list the 63 tools exposed to the default
   model. A separate app-only catalog links the other 50 registered operations;
   all 113 individual contracts remain public.

@@ -51,15 +51,15 @@ test.describe('pricing section', () => {
     expect(pricingText).toContain('7 days')
     expect(pricingText).toContain('$24/month')
     expect(pricingText).toContain('$99')
-    expect(pricingText).toContain('Card required; $1 due today')
-    // The $1 introductory payment is separate from the monthly price, is never
-    // described as free, and cancellation language states what it does not undo.
+    // The price claim carries its renewal beside it, is never described as
+    // free, and says in one line what cancelling before day 7 prevents. The
+    // full terms belong to checkout and the trial emails, not this section.
+    expect(pricingText).toContain('Meet your editor. $1 for the first 7 days.')
     expect(pricingText).not.toContain('$0')
     expect(pricingText.toLowerCase()).not.toContain('free trial')
-    expect(pricingText).toContain('Cancel before the seven days end and the $24 monthly charge never starts.')
-    expect(pricingText).toContain('The $1 is a separate introductory payment, not a credit toward the monthly price.')
-    expect(pricingText).toContain('Cancelling stops the monthly charge; it does not refund the $1.')
-    expect(pricingText).toContain('Clean exports unlock after the first $24 monthly payment.')
+    expect(pricingText).toContain('Cancel before day 7 and you won’t pay the $24.')
+    expect(pricingText).not.toContain('cancel-before')
+    expect(pricingText).not.toContain('not a credit toward the monthly price')
     expect(pricingText).toContain('One recording up to 2 hours')
     expect(pricingText).toContain('$5 of agent work for analysis, First Cut, and direction')
     expect(pricingText).toContain('Keep asking and revising while balance remains')
@@ -71,11 +71,8 @@ test.describe('pricing section', () => {
     expect(pricingText).toContain('$40 included agent work')
     expect(pricingText).toContain('Clean exports · files up to 20 GB')
     expect(pricingText).toContain('Priority rendering · exact $20/$50/$100 top-ups')
-    expect(pricingText).toContain('Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time')
     // The buyer never meets the internal payments layer: the redirect is Stripe-hosted.
     expect(pricingText).not.toContain('Bitter Checkout')
-    expect(pricingText).toContain('Top-ups are available during an active trial or paid plan and never auto-activate paid Creator')
-    expect(pricingText).toContain('early activation requires a separate explicit $24 authorization')
     expect(pricingText).not.toContain('one revised cut')
     expect(pricingText).not.toContain('proof export')
     expect(pricingText).not.toContain('agent balance')

@@ -18,8 +18,7 @@ const signupUrl = computed(() => buildSignupUrl({
 
 <template>
   <p class="docs-snippet docs-cta">
-    The Creator trial lasts seven days and requires a card: $1 today, then $24/month
-    unless you cancel before the seven days end. It includes $5 of agent work for one
+    The Creator trial lasts seven days and requires a card: $1 today, then $24/month. Cancel anytime. It includes $5 of agent work for one
     recording up to two hours.
     <a :href="signupUrl">Start Creator trial</a>.
     We'll email you a verification link after signup; confirm it to start uploading and

@@ -17,11 +17,8 @@ Short answers to the things people ask before they get started. If your question
 
 ## What does BitterClip cost?
 
-The Creator trial lasts seven days and requires a card: $1 today for your first seven days,
-then $24/month starting when those seven days end unless you cancel before then. The $1 is
-a separate introductory payment, not a credit toward the monthly price. Once the payment
-method is accepted and the trial starts, Billing shows your exact cancel-before time.
-Cancelling stops the monthly charge; it does not refund the $1. Bring one recording up to
+Creator is $1 for your first 7 days (card required), then $24/month. Cancel anytime; the $1
+isn't refunded. Bring one recording up to
 two hours. The trial includes $5 of agent work while balance remains, and its Exports are
 watermarked. You can add exactly $20, $50, or $100 of agent work during an active trial or
 paid plan. Top-ups never auto-activate paid Creator; early activation requires a separate

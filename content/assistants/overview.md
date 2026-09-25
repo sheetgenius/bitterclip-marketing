@@ -29,7 +29,7 @@ policy, region, model, and rollout. BitterClip's browser workspace works for eve
 ::
 
 You'll need a BitterClip account first. The Creator trial lasts seven days and requires a
-card: $1 today, then $24/month unless canceled before the seven days end. It includes $5 of
+card: $1 today, then $24/month; cancel anytime. It includes $5 of
 agent work for one recording up to two hours. Producer is $99/month. Already have an account and just
 want the connect steps?
 [Jump to Connect your assistant](#connect-your-assistant).

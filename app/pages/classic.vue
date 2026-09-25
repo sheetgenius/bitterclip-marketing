@@ -91,7 +91,7 @@ const readHeroThemeFromLocation = (): HeroTheme => {
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. $1 is due today for your first seven days, then Creator becomes $24/month unless canceled before those seven days end. The $1 is a separate introductory payment, not a credit toward the monthly price. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Then bring one recording. The trial includes $5 of agent work for whole-recording analysis, a crafted First Cut, and continued direction while balance remains. Top up exactly $20, $50, or $100 during an active trial or paid plan without auto-activating paid Creator.',
+    a: 'Choose Creator and add a card: $1 for your first 7 days, then $24/month. Cancel anytime. Then bring one recording. The trial includes $5 of agent work for whole-recording analysis, a crafted First Cut, and continued direction while balance remains. Top up exactly $20, $50, or $100 during an active trial or paid plan without auto-activating paid Creator.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -119,7 +119,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Cancel before the seven days end and the $24 monthly charge never starts. Cancelling stops the monthly charge; it does not refund the $1. After a paid period begins, cancellation stops renewal at the end of that period. Your existing sources, edits, revision history, purchased agent work, and completed Exports stay available; new processing may require an active plan.',
+    a: 'Cancel anytime in Billing. Cancel before day 7 and you won’t be charged $24 (the $1 isn’t refunded). After that, cancelling stops the next renewal. Your recordings, edits, and finished work stay in your account.',
   },
 ]
 
@@ -164,7 +164,7 @@ const structuredData = [
       offerCount: 2,
       url: 'https://bitterclip.com/#pricing',
       availability: 'https://schema.org/InStock',
-      description: 'Creator is $24/month after a seven-day card-backed trial that costs $1 today and includes one recording up to two hours and $5 of agent work. The $1 is a separate introductory payment, not a credit toward the monthly price. Producer is $99/month.',
+      description: 'Creator is $1 for a 7-day trial, then $24/month. The trial includes one recording up to two hours and $5 of agent work. Producer is $99/month.',
     },
   },
   {
@@ -426,7 +426,7 @@ onBeforeUnmount(() => {
             </a>
           </div>
 
-          <p class="text-xs text-zinc-400 font-mono mt-5">Card required · $1 today for seven days · then $24/month unless you cancel before the seven days end.</p>
+          <p class="text-xs text-zinc-400 font-mono mt-5">$1 for 7 days, then $24/month · Cancel anytime</p>
         </div>
 
         <!-- Right: the real product, shown inside a phone (ChatGPT on mobile).
@@ -649,7 +649,7 @@ onBeforeUnmount(() => {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
               </a>
-              <span class="text-[11px] text-zinc-500">7-day Creator trial · card required · $1 today · then $24/month unless you cancel</span>
+              <span class="text-[11px] text-zinc-500">$1 for 7 days, then $24/month · Cancel anytime</span>
             </div>
 
             <!-- ChatGPT/Claude, demoted out of the hero to here. Per the
@@ -888,7 +888,7 @@ onBeforeUnmount(() => {
             Bring one recording. Leave with the episode.
           </h2>
           <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            Creator starts with a seven-day card-backed trial: $1 today for the first seven days, then $24/month unless you cancel before they end. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Producer is $99/month for higher-volume work.
+            Creator: $1 for 7 days, then $24/month. Cancel anytime. Producer is $99/month for higher-volume work.
           </p>
         </div>
 

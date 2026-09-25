@@ -21,8 +21,7 @@ you keep directing it.
 
 Start my 7-day trial: https://app.bitterclip.com/sign_up?plan=clip
 
-Card required. $1 today for your first seven days, then Creator is $24/month
-unless you cancel before those seven days end. The trial includes $5 of agent
+$1 for 7 days (card required), then $24/month. Cancel anytime. The trial includes $5 of agent
 work for whole-recording analysis, the First Cut, and the directions you give
 from there.
 
@@ -69,12 +68,8 @@ production.
 
 Try one real recording:
 
-- seven days;
-- card required;
-- $1 charged today for the first seven days, a separate introductory payment
-  rather than a credit toward the monthly price;
-- then $24/month starting when those seven days end, unless canceled before
-  then;
+- $1 for seven days, card required;
+- then $24/month; cancel anytime;
 - one recording up to two hours;
 - $5 of agent work for whole-recording analysis, the First Cut, and direction;
 - keep asking, revising, trying alternatives, and reverting while balance
@@ -102,18 +97,14 @@ More agent work can be added at any time while a trial or paid plan is active.
 Purchased agent work persists if the plan later lapses. Existing recordings,
 edits, and completed work remain in the Studio after cancellation.
 
-Once the payment method is accepted and the trial starts, Billing shows your
-exact cancel-before time and when the $24 monthly charge is scheduled to start.
+
 
 ## Common questions
 
 ### What happens after I sign up?
 
-Choose Creator and add a card. Checkout shows $1 due today for your first seven
-days and the $24 monthly price that starts when those seven days end. The $1 is
-a separate introductory payment, not a credit toward the monthly price. Once
-the payment method is accepted and the trial starts, Billing shows your exact
-cancel-before time. Bring one recording; the trial includes $5 of agent work for
+Choose Creator and add a card: $1 for your first 7 days, then $24/month. Cancel
+anytime. Bring one recording; the trial includes $5 of agent work for
 the whole-recording analysis, First Cut, and the directions and alternatives you
 try during those seven days.
 
@@ -141,12 +132,9 @@ fresh final confirmation; connecting a channel never makes it automatic.
 
 ### What happens if I cancel?
 
-Once the payment method is accepted and the trial starts, Billing shows your
-exact cancel-before time. Cancel before the seven days end and the $24 monthly
-charge never starts. Cancelling stops the monthly charge; it does not refund the
-$1. After a paid period begins, cancellation stops the next renewal. Sources,
-edits, finished work, and purchased agent work stay in the Studio; new agent work
-waits until a trial or paid plan is active again.
+Cancel anytime in Billing. Cancel before day 7 and you won't be charged $24 (the
+$1 isn't refunded). After that, cancelling stops the next renewal. Your
+recordings, edits, and finished work stay in your account.
 
 ## Who publishes BitterClip
 
