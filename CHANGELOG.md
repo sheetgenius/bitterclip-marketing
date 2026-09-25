@@ -33,6 +33,10 @@ under a dated entry.
 - Regenerated the legacy `bitterclip-og.png` social card, which
   `/founder-onboarding` uses, from its SVG source so it reads "7-day trial ·
   $1 today · card required".
+- Replaced `icon.png` (the PNG favicon, Apple touch icon and blog fallback
+  image) with a full-bleed square. Its rounded corners had been baked onto
+  white, and hosts that round icons themselves, such as Claude's connector
+  directory, showed the white.
 - Consolidated the 113 authored MCP contracts, three public guides, and four
   plugin skills in this repository. The static tool reference now includes
   default, app-only, and Live Workspace descriptors captured from the serving
