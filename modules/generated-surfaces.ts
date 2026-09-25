@@ -27,6 +27,7 @@ import { parse as parseHtml } from 'parse5'
 
 const SITE_ORIGIN = 'https://bitterclip.com'
 const TOOL_REFERENCE_PATH = '/docs/assistants/tool-reference'
+const APP_ONLY_TOOLS_PATH = '/docs/assistants/app-only-tools'
 
 interface McpDescriptor {
   name: string
@@ -98,11 +99,26 @@ function buildToolReferenceMarkdown(snapshot: CatalogSnapshot): string {
     '# BitterClip MCP tool reference', '',
     `Canonical HTML page: ${SITE_ORIGIN}${TOOL_REFERENCE_PATH}`, '',
     ...toolProvenance(snapshot), '',
-    'This static reference captures the descriptors Rails was serving at build time. The default model profile has 63 tools; the app profile lists all 113 registered tools. Live Workspace adapts the default profile, including workspace_get_link. Host security schemes and resource URIs can vary by connector.', '',
+    `These 63 tools are exposed to the default model. MCP hosts can also list [50 app-only tools](${SITE_ORIGIN}${APP_ONLY_TOOLS_PATH}) outside this profile. This static reference captures descriptors Rails was serving at build time. Live Workspace adapts the default profile, including workspace_get_link. Host security schemes and resource URIs can vary by connector.`, '',
+  ]
+  for (const descriptor of snapshot.profiles.model.descriptors) {
+    lines.push(`- [${descriptor.name}](${SITE_ORIGIN}/docs/assistants/tools/${descriptor.name}) — ${descriptor.title}`)
+  }
+  return lines.join('\n').trimEnd() + '\n'
+}
+
+function buildAppOnlyToolsMarkdown(snapshot: CatalogSnapshot): string {
+  const modelNames = new Set(snapshot.profiles.model.descriptors.map((item) => item.name))
+  const lines = [
+    '# App-only MCP tools', '',
+    `Canonical HTML page: ${SITE_ORIGIN}${APP_ONLY_TOOLS_PATH}`, '',
+    ...toolProvenance(snapshot), '',
+    `MCP hosts can list these 50 registered tools through the app profile. They are outside the [63-tool default model profile](${SITE_ORIGIN}${TOOL_REFERENCE_PATH}). Each page shows the exact app descriptor captured from serving Rails, with errors and examples.`, '',
   ]
   for (const descriptor of snapshot.profiles.app.descriptors) {
-    const model = toolDescriptor(snapshot, 'model', descriptor.name)
-    lines.push(`- [${descriptor.name}](${SITE_ORIGIN}/docs/assistants/tools/${descriptor.name}) — ${model ? 'default model' : 'app-only'}: ${descriptor.title}`)
+    if (!modelNames.has(descriptor.name)) {
+      lines.push(`- [${descriptor.name}](${SITE_ORIGIN}/docs/assistants/tools/${descriptor.name}) — ${descriptor.title}`)
+    }
   }
   return lines.join('\n').trimEnd() + '\n'
 }
@@ -811,6 +827,7 @@ export default defineNuxtModule({
         const authoredPages = await readDocs(contentDir)
         const catalog = await readCatalogSnapshot()
         const toolMarkdown = buildToolReferenceMarkdown(catalog)
+        const appOnlyMarkdown = buildAppOnlyToolsMarkdown(catalog)
         const toolPages: DocPage[] = catalog.profiles.app.descriptors.map((descriptor) => {
           const markdown = buildToolPageMarkdown(catalog, descriptor.name)
           const urlPath = `/docs/assistants/tools/${descriptor.name}`
@@ -829,7 +846,19 @@ export default defineNuxtModule({
           body: toolMarkdown,
           frontmatter: {
             title: 'BitterClip tool reference',
-            description: 'All 113 MCP tools captured from the serving product.',
+            description: 'The 63 default model tools captured from the serving product.',
+            section: 'assistants',
+            updated: catalog.retrieved_at.slice(0, 10),
+          },
+        }, {
+          sourceRel: 'assistants/app-only-tools.md',
+          urlPath: APP_ONLY_TOOLS_PATH,
+          mdPath: `${APP_ONLY_TOOLS_PATH}.md`,
+          raw: appOnlyMarkdown,
+          body: appOnlyMarkdown,
+          frontmatter: {
+            title: 'App-only MCP tools',
+            description: 'The 50 app-only tools available for MCP hosts to list.',
             section: 'assistants',
             updated: catalog.retrieved_at.slice(0, 10),
           },

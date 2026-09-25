@@ -24,7 +24,7 @@ const format = (value: unknown) => JSON.stringify(value, null, 2)
 
 <template>
   <article class="tool-page">
-    <p><a href="/docs/assistants/tool-reference">All MCP tools</a></p>
+    <p><a :href="model ? '/docs/assistants/tool-reference' : '/docs/assistants/app-only-tools'">{{ model ? 'Default model tools' : 'App-only tools' }}</a></p>
     <h1><code>{{ name }}</code></h1>
     <h2>{{ app.title }}</h2>
     <p class="tool-page__description">{{ app.description }}</p>

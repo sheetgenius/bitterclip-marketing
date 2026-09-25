@@ -78,8 +78,9 @@ the serving product release differs from the request, it logs both and captures
 the release actually serving. A release switch during the three-profile fetch
 retries the whole capture up to three times. The ignored `tmp/`
 snapshot is a build input, never an authored copy. The build emits 113 HTML
-tool pages with exact served descriptors, Markdown and JSON twins, a full
-index, and discovery entries. It prints the serving product release, public
+tool pages with exact served descriptors, Markdown and JSON twins, a main
+index of the 63 default model tools, a separate index of the 50 app-only tools,
+and discovery entries. It prints the serving product release, public
 contract commit, contract digest, and capture time. Host security schemes and
 resource URIs can vary by connector. If a site deploy trails Rails, the older
 printed provenance remains visible; do not describe it as current.

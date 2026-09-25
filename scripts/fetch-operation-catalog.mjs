@@ -68,6 +68,9 @@ async function captureProfiles() {
     contractDigest = body.public_contract_digest
     profiles[profile] = { descriptors: body.descriptors, guidance: body.guidance }
   }
+  const appNames = new Set(profiles.app.descriptors.map((item) => item.name))
+  const missing = profiles.model.descriptors.find((item) => !appNames.has(item.name))
+  if (missing) throw new Error(`Default model tool ${missing.name} is missing from the app profile`)
   return { profiles, release, commit, contractDigest }
 }
 let capture

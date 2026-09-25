@@ -71,8 +71,9 @@ This repository owns:
 - public AI-assistant and MCP guidance under `/docs/assistants`
 - all 113 authored MCP tool contracts under `contracts/mcp/tools/`, three public
   extended guides, and the four canonical Claude Code/Codex plugin skills
-- static per-tool references and a full index built from the descriptors Rails
-  actually serves, labelled with product release, contract commit, and digest
+- static per-tool references, a 63-tool default model index, and a separate
+  50-tool app-only index built from the descriptors Rails actually serves,
+  labelled with product release, contract commit, and digest
 - the generated crawlable sitemap at `/sitemap.xml`
 - the static build and deployment wrapper for `bitterclip.com`
 

@@ -30,6 +30,9 @@ under a dated entry.
 
 ### Website
 
+- Made the main MCP tool reference list the 63 tools exposed to the default
+  model. A separate app-only catalog links the other 50 registered operations;
+  all 113 individual contracts remain public.
 - Regenerated the legacy `bitterclip-og.png` social card, which
   `/founder-onboarding` uses, from its SVG source so it reads "7-day trial ·
   $1 today · card required".

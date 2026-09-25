@@ -829,7 +829,20 @@ test('publishes all serving MCP profiles and individual tool pages', async ({ pa
   await page.goto('/docs/assistants/tool-reference')
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip MCP tool reference' })).toBeVisible()
   await expect(page.locator('.docs-sidebar a[href="/docs/assistants/tool-reference"]')).toBeVisible()
-  expect(await page.locator('.tool-reference__index a').count()).toBe(113)
+  const modelNames = snapshot.profiles.model.descriptors.map((item: { name: string }) => item.name)
+  expect(await page.locator('.tool-reference__index a code').allTextContents()).toEqual(modelNames)
+  await expect(page.getByRole('link', { name: 'app-only tools' })).toHaveAttribute('href', '/docs/assistants/app-only-tools')
+  const modelMarkdown = await (await request.get('/docs/assistants/tool-reference.md')).text()
+  expect(modelMarkdown).toContain('/docs/assistants/tools/help')
+  expect(modelMarkdown).not.toContain('/docs/assistants/tools/episode_edit_full')
+
+  await page.goto('/docs/assistants/app-only-tools')
+  await expect(page.getByRole('heading', { level: 1, name: 'App-only MCP tools' })).toBeVisible()
+  const appOnlyNames = names.filter((name: string) => !modelNames.includes(name))
+  expect(await page.locator('.app-only-tools__index a code').allTextContents()).toEqual(appOnlyNames)
+  const appOnlyMarkdown = await (await request.get('/docs/assistants/app-only-tools.md')).text()
+  expect(appOnlyMarkdown).toContain('/docs/assistants/tools/episode_edit_full')
+  expect(appOnlyMarkdown).not.toContain('/docs/assistants/tools/help')
 
   for (const name of ['help', 'episode_edit_full', 'workspace_open']) {
     const descriptor = snapshot.profiles.app.descriptors.find((item: { name: string }) => item.name === name)
@@ -842,5 +855,7 @@ test('publishes all serving MCP profiles and individual tool pages', async ({ pa
     expect(markdown).toContain(JSON.stringify(descriptor, null, 2))
   }
   expect(await (await request.get('/llms.txt')).text()).toContain('https://bitterclip.com/docs/assistants/tools/help')
+  expect(await (await request.get('/llms.txt')).text()).toContain('https://bitterclip.com/docs/assistants/app-only-tools')
   expect(await (await request.get('/sitemap.xml')).text()).toContain('https://bitterclip.com/docs/assistants/tools/episode_edit_full')
+  expect(await (await request.get('/sitemap.xml')).text()).toContain('https://bitterclip.com/docs/assistants/app-only-tools')
 })
