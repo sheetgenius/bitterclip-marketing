@@ -63,6 +63,11 @@ under a dated entry.
   wording and API; Munch's annual refund; Descript's moved help pages. The
   BitterClip recorder is now described without plan-specific details, and
   review links carry their two-week limit everywhere.
+- Comparison pages and the compare hub now describe live Studio on paid plans:
+  a guest joins from a link with no account, each person is recorded on their
+  own track, each browser keeps a backup copy, and the conversation arrives as
+  a transcribed episode. Async takes are described as recorded on the
+  respondent's device and verified whole after upload.
 - Added a "How we compared" section to every comparison page and its Markdown
   twin: who wrote it, how rows are called, the page's own score, where the facts
   come from, the check date, and a corrections address. The build now fails if

@@ -37,7 +37,7 @@ Turning recorded conversations into finished cuts and clips. Record straight int
 
 On Producer, you can also collect recordings from other people without a call. Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut. You share the link yourself; BitterClip doesn't send invitations or reminders.
 
-What BitterClip does not do is record a live remote conversation: there are no live guest calls and no separate per-participant tracks, so for recording someone over the internet in real time, a dedicated remote-recording tool is better.
+For a live conversation, paid plans include Studio: your guest joins from a link with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and the finished conversation arrives as an episode, transcribed and ready to cut.
 
 You edit by selecting words in the transcript and deleting them, and the cut lands on the word rather than near it. Anything you can click, you can ask for instead — in ChatGPT, Claude, any MCP client, or the editor — and what comes back is a normal edit you can keep changing by hand or undo. Up to five cameras. Captions, music, brand openers and outros. One tap makes the vertical version.
 

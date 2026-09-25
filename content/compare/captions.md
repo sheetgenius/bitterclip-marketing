@@ -11,12 +11,12 @@ verdictCompetitor: "Captions, now made by Mirage, is a phone-first video app. It
 rows:
   - axis: Getting the footage in the first place
     bitterclip:
-      lead: Record in the browser.
-      detail: Camera and mic from a phone or laptop, or upload footage you shot elsewhere.
+      lead: Solo, or with a guest.
+      detail: Camera and mic in the browser, or a guest on a Studio link with each of you on your own track.
     competitor:
       lead: Records on your phone.
       detail: The iOS app records in-app with a teleprompter and edits without leaving the app.
-    edge: competitor
+    edge: even
   - axis: When the conversation ran ninety minutes
     bitterclip:
       lead: That's the normal case.
@@ -135,7 +135,7 @@ faq:
   - q: Can I edit Captions' AI output?
     a: Partly. Their docs let you revert individual AI Edit cuts, edit timeline elements, or re-run with a different style — but a spelling correction on desktop regenerates the entire video and costs about a credit. In BitterClip, a fix is just an edit, and undo works all the way back.
   - q: Does BitterClip record video like Captions does?
-    a: "Yes, but not the same way. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. There's no teleprompter and no native iOS app, so if a phone teleprompter is the part you need, that is a real Captions advantage. Bringing footage you shot elsewhere is still completely normal."
+    a: "Yes, but not the same way. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. There's no teleprompter and no native iOS app, so if a phone teleprompter is the part you need, that is a real Captions advantage. Bringing footage you shot elsewhere is still completely normal."
   - q: Can BitterClip handle long videos?
     a: "Long recordings are the whole point. A session of roughly 20 minutes to 2 hours becomes one project you cut a full edit and vertical clips from. Captions' Clips feature takes a video up to 3 hours and returns ranked shorts, on Max and above; its manual editor caps projects at 10 minutes and AI Edit wants a few minutes of one speaker, so the full cut isn't something it makes."
   - q: Does BitterClip do async recording?
@@ -179,7 +179,7 @@ You finished a 70-minute conversation. It was good. Now it's sitting on a drive,
 
 Captions can take that file, but only to mine it. Its Clips feature accepts up to three hours and hands back a ranked batch of shorts. Editing is another story: the manual editor caps projects at ten minutes, and AI Edit wants a few minutes of single-speaker, unedited footage. Those limits aren't bugs. They describe what the product is for: making one short talking video look styled, fast. It is genuinely good at that, and if that's your work, stop reading.
 
-BitterClip starts where that stops. The whole recording goes in — phone, Zoom, Riverside, a camera, or recorded straight into the project from your browser — and you cut from all of it. That last one is worth a sentence: prop your phone up, hit record in the project, and the take arrives already transcribed. It's one person from one browser, not a remote interview studio — though on Producer you can send a link and have guests record themselves on their own time, each answer arriving as its own episode. You read the transcript, select the sentence where the tangent starts, delete it, and the video loses that stretch. Cuts land on the word, not near it, because they resolve against the actual audio: no clipped syllables, no half-swallowed first word. When you have the landscape cut, one tap makes the vertical version, captions and timing carried across. Every clip remembers where it came from, so one click jumps back to that spot in the full recording.
+BitterClip starts where that stops. The whole recording goes in — phone, Zoom, Riverside, a camera, or recorded straight into the project from your browser — and you cut from all of it. That last one is worth a sentence: prop your phone up, hit record in the project, and the take arrives already transcribed. Talking to someone? Open Studio, send your guest a link, and each of you is recorded on your own track. On Producer you can even skip the call: send a link and have guests record themselves on their own time, each answer arriving as its own episode. You read the transcript, select the sentence where the tangent starts, delete it, and the video loses that stretch. Cuts land on the word, not near it, because they resolve against the actual audio: no clipped syllables, no half-swallowed first word. When you have the landscape cut, one tap makes the vertical version, captions and timing carried across. Every clip remembers where it came from, so one click jumps back to that spot in the full recording.
 
 ## What changing your mind costs
 

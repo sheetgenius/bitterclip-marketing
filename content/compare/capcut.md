@@ -67,12 +67,12 @@ rows:
     edge: even
   - axis: Getting the session recorded
     bitterclip:
-      lead: Record in the browser.
-      detail: Camera and mic from a laptop or phone browser, up to 1080p, transcribed the moment you stop.
+      lead: You and a guest, live.
+      detail: A guest joins from a link, no account; each of you is recorded on your own track, and the episode arrives transcribed.
     competitor:
       lead: Records on the phone.
       detail: The mobile app shoots straight into an edit, with the phone's own camera and effects.
-    edge: even
+    edge: bitterclip
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
@@ -109,7 +109,7 @@ chooseUs:
   - You record long conversations — podcasts, coaching sessions, webinars — and every one of them has to come out as a finished episode plus clips, week after week.
   - You'd rather delete a sentence in the transcript than hunt for it on a timeline, and you want the cut to land on the word instead of clipping the first syllable.
   - You want to ask for the edit — in ChatGPT, in Claude, or in the editor — and get back an ordinary edit you can keep changing by hand or undo exactly.
-  - You want to prop your phone up and record straight into the project — one person, from the browser, with the take already transcribed when you stop — as well as bring in sessions you shot elsewhere.
+  - You record conversations: a guest joins your Studio from a link, each of you lands on your own track, and the episode is transcribed and ready to cut when you finish.
   - You shoot two to five cameras and want side-by-side, picture-in-picture, or grid layouts you can ask for, with switching that never touches the audio.
   - You collect answers from guests or customers and want them to record on their own time from one link, each answer arriving as its own episode.
   - "You want trial terms on the page: $1 for seven days (card required), then $24/month; cancel anytime."
@@ -142,7 +142,7 @@ faq:
   - q: What is the best CapCut alternative for podcasts and talking-head video?
     a: BitterClip, if your work starts with a recording. Record it in the browser or bring the session in from your phone, Zoom, Riverside, or a camera, cut it by deleting words in the transcript, and every clip remembers exactly where in the recording it came from. CapCut stays the better pick for effects-heavy short-form made on a phone.
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "It records. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing footage you shot elsewhere is still completely normal."
+    a: "It records. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. Bringing footage you shot elsewhere is still completely normal."
   - q: Does BitterClip do async recording?
     a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. CapCut has no equivalent: its recorders capture you, and its team spaces and review links let people watch and comment, not record into your account."
   - q: Does CapCut own your videos?
@@ -198,7 +198,7 @@ BitterClip starts from the words. However the session got there, it arrives as p
 
 The session does not have to arrive from somewhere else. Every project has a browser recorder: "Record in browser" on the Sources tab, or "Record here" in the editor's insert sheet, where the finished take drops into the edit at the playhead. Prop your phone up, or sit at a laptop, and it captures camera and mic, up to 1080p, and the take arrives in the project already transcribed.
 
-Know what it is not. One person, one device, signed in: no live remote guests, no separate track per participant, no 4K. It is not a remote interview studio. If your guest is somewhere else, record them in a tool built for that and bring the files in — that path is still completely normal, and for most people it is still the common one. Or, on Producer, skip the call: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Nothing in CapCut lets someone else record into your account. Recording also needs billing on the account when transcription is switched on.
+Recording a conversation works the same way. Open Studio, send your guest a link — no account, nothing to install — and each of you is recorded on your own track, so afterward you cut between you like a two-camera shoot, while each browser keeps its own backup copy. Or, on Producer, skip the call: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Nothing in CapCut records a remote guest or lets someone else record into your account. Recording also needs billing on the account when transcription is switched on.
 
 ## Say what you want changed
 

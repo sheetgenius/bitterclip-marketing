@@ -1,18 +1,18 @@
 ---
-title: "BitterClip vs Riverside: Record There, Finish Here"
-description: "Riverside records the session. BitterClip finishes it. Which one to pick, where each honestly wins, and how to edit a Riverside recording."
+title: "BitterClip vs Riverside: Recording Is Half the Job"
+description: "Both record remote guests. BitterClip is built to finish the episode, too. Which one to pick, where each honestly wins, and how to edit a Riverside recording."
 competitor: Riverside
 competitorUrl: https://riverside.fm
 reviewed: 2026-09-25
-competitorStrength: "The best way there is to record a remote guest."
-heroLede: "If getting a remote guest recorded cleanly is the hard part, use Riverside. BitterClip does record — one person from a browser, and on Producer, anyone you send a link to, on their own time — but the reason to pick it is what happens after, when the recording lands and three hours of editing are waiting for you. Plenty of people use both — record the session there, bring the file here, finish it."
-verdictBitterclip: "Pick BitterClip when the session is already shot and finishing it is the part you dread. It does record — prop your phone up, hit record in the browser, and the take lands in the project already transcribed — but that's one person on one device, not a live remote studio. On Producer you can also send one link and have up to 25 people record themselves on their own time, each answer landing as its own episode; Riverside sells async recording only on its custom-priced Business plan. Usually you bring the file in and cut it by selecting words in the transcript, or by asking BitterClip's built-in agent, ChatGPT, Claude, or the editor for the change, and every cut lands on the word. Paid plans include source-footage hours and agent work for that finishing work."
+competitorStrength: "The best recorder there is for big remote sessions in 4K."
+heroLede: "If you need a big remote panel recorded in 4K, use Riverside. BitterClip records too — you and a guest, each on your own track, and on Producer, anyone you send a link to, on their own time — and then does the part Riverside treats as an annex: turning the session into a finished episode and clips. Plenty of people use both — record the session there, bring the file here, finish it."
+verdictBitterclip: "Pick BitterClip when finishing is the part you dread. It records too: open Studio, your guest joins from a link, and each of you lands on your own track, ready to cut between; or prop your phone up and record solo. On Producer you can also send one link and have up to 25 people record themselves on their own time, each answer landing as its own episode; Riverside sells async recording only on its custom-priced Business plan. Usually you bring the file in and cut it by selecting words in the transcript, or by asking BitterClip's built-in agent, ChatGPT, Claude, or the editor for the change, and every cut lands on the word. Paid plans include source-footage hours and agent work for that finishing work."
 verdictCompetitor: "Pick Riverside when the recording is the hard part. Each guest is recorded locally, up to 4K, on their own track, which is why one person's bad wifi doesn't wreck the take — nothing here matches that. Just know what's metered: separate-track downloads, footage you upload from elsewhere, and AI credits that expire."
 rows:
   - axis: Getting the recording in the first place
     bitterclip:
-      lead: "Records one person live."
-      detail: "Camera and mic from a browser, up to 1080p — no live guests, no separate tracks."
+      lead: "Records you and a guest."
+      detail: "A guest joins from a link, no account; each of you on your own track, with a backup copy in each browser."
     competitor:
       lead: "Records better than anyone."
       detail: "Each guest is recorded locally on their own track, up to 4K, so bad wifi can't ruin the take."
@@ -105,7 +105,7 @@ chooseUs:
   - You want guests, clients, or customers to record on their own time from one link, at a published price, with each answer arriving as its own editable episode.
   - You'd rather nothing scored your moments for you and told you which ones were good.
 chooseThem:
-  - You need the recording itself. Local per-participant capture up to 4K is the reason to pay for Riverside; BitterClip's browser recorder is one person, up to 1080p, with no live guests and no separate tracks.
+  - You need big rooms or 4K. Local per-participant capture up to 4K, with many guests at once, is the reason to pay for Riverside; BitterClip's Studio records you and one guest.
   - You livestream or run webinars. Grow adds 1080p livestreaming and Webinar handles up to 100 registrants; BitterClip does neither.
   - You want the podcast feed in the same place you edit — hosting from Pro up, publishing to Spotify, Transistor, and Castos.
   - You're on Business, finish in Premiere Pro or Final Cut, and want a synchronized timeline handed straight to your editor.
@@ -132,11 +132,11 @@ faq:
   - q: Is Riverside worth it?
     a: "For recording, yes. Recording each guest locally, up to 4K, on their own track is the reason to pay for it. The friction is what's metered: hours of separate-track downloads, hours of outside footage, and AI credits that expire unused. Finishing somewhere else is a path Riverside's own docs support — on Business, edited timelines come out as synchronized packages for Premiere Pro and Final Cut."
   - q: What is the best Riverside alternative?
-    a: "BitterClip, if editing is the half you're replacing. It's no answer for recording a remote guest live — its recorder handles one person from a browser. On Producer it does collect recordings asynchronously: send one link and people record themselves on their own time. What it does is take the file you already have and get it to a finished episode and clips — cutting by selecting words in the transcript, or by asking for the change in ChatGPT, Claude, or the editor."
+    a: "BitterClip, if editing is the half you're replacing. It records remote guests too — you and a guest, each on your own track — and on Producer it collects recordings asynchronously: send one link and people record themselves on their own time. What it does is take the file you already have and get it to a finished episode and clips — cutting by selecting words in the transcript, or by asking for the change in ChatGPT, Claude, or the editor."
   - q: Can I edit Riverside recordings in BitterClip?
-    a: Yes. Export the recording from Riverside, bring it into BitterClip, and work on it like anything else. Record there, finish here is the whole idea.
+    a: Yes. Export the recording from Riverside, bring it into BitterClip, and work on it like anything else. Record there and finish here, or record here too.
   - q: Does BitterClip record podcasts or meetings?
-    a: "Yes, within a narrow lane. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, keep Riverside in front of it. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode."
+    a: "Yes. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. For bigger rooms or 4K, Riverside records more."
   - q: Is BitterClip cheaper than Riverside?
     a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads — and its async recording links sit on the custom-priced Business plan. BitterClip's $24 Creator buys 10 source-footage hours and $10 of included agent work after a card-required $1 seven-day trial; $99 Producer buys 40 hours, $40 of included agent work, and priority rendering. Compare what each dollar actually produces."
   - q: Does BitterClip do async recording like Riverside?
@@ -186,11 +186,11 @@ sources:
 
 Ninety minutes of good conversation is sitting on a drive, and you already know how the next three hours go: scrub, guess, trim, watch it back, guess again. Nobody sells you a tool for that part, because recording is the part that's easy to sell.
 
-Riverside — it dropped the .fm and moved to riverside.com in May 2026 — is very good at recording. It pulls clean, locally recorded, separate tracks out of people scattered across the internet, and one guest's bad wifi doesn't wreck the take. That is a hard problem, and BitterClip's one-person browser recorder doesn't try to solve it.
+Riverside — it dropped the .fm and moved to riverside.com in May 2026 — is very good at recording. It pulls clean, locally recorded, separate tracks out of people scattered across the internet, and one guest's bad wifi doesn't wreck the take. That is a hard problem. BitterClip's Studio records you and a guest, each on your own track, but it doesn't try to beat Riverside at big 4K panels.
 
 What happens after the session ends is a different story. The recording lands in an editor built around transcript deletes, timeline trims, and quick auto clips, and the pricing tells you where the attention went: footage you shot somewhere else draws on its own small allowance you can't even check, downloading each guest's track is a monthly quota, and the API sits behind a custom-priced plan. Recording is the building. Editing is the annex.
 
-BitterClip is the annex, built out. There is a recorder in it: prop your phone up, hit "Record in browser" from the project's Sources tab, or "Record here" in the editor to drop a take straight into the edit at the playhead. It takes camera and mic from a laptop or phone browser, up to 1080p. It is one person, one device, signed in — no live guests, no separate tracks, no 4K. On Producer there's a second door: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own transcribed episode. Riverside has async links too, but only on Business, priced by its sales team. So mostly you bring the file — a Riverside session, a Zoom call, a phone video, a camera card — and from there it's an episode you can actually work on, and find again months later by what was said, who said it, or what was on screen. It runs in a browser with nothing to install, and it'll get you through a fix from your phone.
+BitterClip is the annex, built out. There is a recorder in it: prop your phone up, hit "Record in browser" from the project's Sources tab, or "Record here" in the editor to drop a take straight into the edit at the playhead. It takes camera and mic from a laptop or phone browser, up to 1080p. For a conversation, open Studio: your guest joins from a link, no account, and each of you is recorded on your own track, with each browser keeping its own backup copy. On Producer there's a third door: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own transcribed episode. Riverside has async links too, but only on Business, priced by its sales team. Or bring the file — a Riverside session, a Zoom call, a phone video, a camera card — and from there it's an episode you can actually work on, and find again months later by what was said, who said it, or what was on screen. It runs in a browser with nothing to install, and it'll get you through a fix from your phone.
 
 ## Ask for the change from wherever you already are
 

@@ -12,7 +12,7 @@ rows:
   - axis: What you're starting with
     bitterclip:
       lead: "Record here or bring it."
-      detail: "Record camera and mic in the browser, or upload from phone, Zoom, Riverside, or a camera."
+      detail: "Record in the browser, solo or with a guest on a Studio link, or upload from phone, Zoom, Riverside, or a camera."
     competitor:
       lead: "A prompt, a template, some stock."
       detail: "Generating short social video from text, templates, and stock assets is the core of the product."
@@ -135,7 +135,7 @@ faq:
   - q: Is BitterClip better than Kapwing?
     a: For finishing recordings, yes. For turning a prompt into a social video, no. BitterClip cuts on the word, keeps every clip tied to the moment it came from, undoes exactly, and takes instructions from ChatGPT, Claude, or the editor. Kapwing is better at making short videos out of prompts, templates, and stock.
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "It records. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing footage you shot elsewhere is still completely normal."
+    a: "It records. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. Bringing footage you shot elsewhere is still completely normal."
   - q: Can I edit Kapwing's AI-generated clips?
     a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you can re-prompt Repurpose or ask Kai for a follow-up change, and the rest you finish yourself on a timeline."
   - q: Does BitterClip do async recording?

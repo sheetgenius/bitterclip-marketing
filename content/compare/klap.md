@@ -68,7 +68,7 @@ rows:
   - axis: Where the recording comes from
     bitterclip:
       lead: Record in the browser.
-      detail: Camera and mic from one laptop or phone, or bring footage you shot anywhere else.
+      detail: Solo, or with a guest on a Studio link, each on your own track, or bring footage you shot anywhere else.
     competitor:
       lead: A link or a file.
       detail: The API adds S3, GCS, and public URLs, with Google Drive and Twitch listed as coming.

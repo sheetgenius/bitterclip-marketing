@@ -6,7 +6,7 @@ competitorUrl: https://www.veed.io
 reviewed: "2026-09-25"
 competitorStrength: "Almost any small video job, done fast in one browser tab."
 heroLede: "Stay with VEED if your month is a pile of different video jobs — subtitles, a dub, a captioned ad, a screen walkthrough. Pick BitterClip if it is the same job every week: a podcast, an interview, a client session that has to come out as a finished episode plus a few vertical clips. VEED is a toolbox. BitterClip is a workshop set up for one bench."
-verdictBitterclip: "BitterClip records one person straight from the browser — camera and mic on a laptop or a phone, up to 1080p — collects recordings people make on their own time from one link on Producer, and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Up to five cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
+verdictBitterclip: "BitterClip records straight from the browser — solo, or you and a guest in Studio, each on your own track — collects recordings people make on their own time from one link on Producer, and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Up to five cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
 verdictCompetitor: "VEED is the browser tool that covers the widest spread of small video jobs: auto-subtitles in a long language list, translation, dubbing, avatars, a screen recorder, templates, brand kits, and real team workspaces. Right call when the work changes shape every week. Watch the bill — paid plans multiply by the number of editors in the workspace, including invitations nobody has accepted, and AI credits and translation minutes never roll over."
 rows:
   - axis: The twenty other video jobs on your list
@@ -19,12 +19,12 @@ rows:
     edge: competitor
   - axis: Getting the session recorded
     bitterclip:
-      lead: "One person, one device."
-      detail: "Camera and mic from a laptop or phone browser, up to 1080p."
+      lead: "You and a guest, live."
+      detail: "A guest joins from a link, no account, and each of you is recorded on your own track."
     competitor:
       lead: "Screen and webcam, capped."
       detail: "Its browser recorder handles screen and webcam but stops at sixty minutes."
-    edge: even
+    edge: bitterclip
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
@@ -147,7 +147,7 @@ faq:
   - q: Can VEED edit a two-hour podcast?
     a: "It can hold one, but it is not built around one. VEED advises keeping a project under five gigabytes and around four to five hours, the browser recorder stops at sixty minutes on every plan, and Clips needs a source with between one minute and three hours of speech. BitterClip is built for 20-minute-to-2-hour sessions and treats the whole assembly — cut, cameras, captions, opener, vertical — as one job."
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "It records, within a narrow lane. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. It doesn't record 4K. Bringing footage you already shot — phone, Zoom, Riverside, a camera — is still completely normal."
+    a: "It records. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. It doesn't record 4K. Bringing footage you already shot — phone, Zoom, Riverside, a camera — is still completely normal."
   - q: Does BitterClip do async recording?
     a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. VEED has no equivalent: someone can record into your workspace only as an invited collaborator with a VEED account, billed as a seat."
   - q: Does VEED have an API?
@@ -197,7 +197,7 @@ The trouble starts when your month is not three different jobs but the same job,
 
 ## What one bench looks like
 
-BitterClip records, in one narrow lane: every project has a browser recorder — "Record in browser" on the Sources tab, or "Record here" in the editor, which drops the take into the edit at the playhead. Camera and mic from a laptop or phone, up to 1080p. One person, one device, signed in — no live remote guests, no separate tracks, no 4K; for someone across the internet in real time, a dedicated remote-recording tool is genuinely better. On Producer there's a second way in: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Most weeks you bring the file anyway: phone, Zoom, Riverside, a camera.
+BitterClip records: every project has a browser recorder — "Record in browser" on the Sources tab, or "Record here" in the editor, which drops the take into the edit at the playhead. Camera and mic from a laptop or phone, up to 1080p. For a conversation, open Studio: your guest joins from a link and each of you is recorded on your own track, so you cut between you afterward. On Producer there's a third way in: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Most weeks you bring the file anyway: phone, Zoom, Riverside, a camera.
 
 Either way you get a transcript you edit like a document: delete the rambling sentence and a real cut happens in the video, landing on the word rather than near it because it resolves against the actual audio — no clipped syllables, no half-swallowed first word.
 
