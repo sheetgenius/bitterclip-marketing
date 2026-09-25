@@ -76,7 +76,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Records only you.
       detail: Its recorders capture your own camera or screen; team spaces and review links let people watch and comment, not record for you.
@@ -144,7 +144,7 @@ faq:
   - q: Does BitterClip record, or do I have to bring footage?
     a: "It records. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing footage you shot elsewhere is still completely normal."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. CapCut has no equivalent: its recorders capture you, and its team spaces and review links let people watch and comment, not record into your account."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. CapCut has no equivalent: its recorders capture you, and its team spaces and review links let people watch and comment, not record into your account."
   - q: Does CapCut own your videos?
     a: No. CapCut has stated it "has never claimed ownership of users' work," and the license's stated purpose is operating, developing, and providing the Services. In CapCut's global terms that license is still transferable, sub-licensable, perpetual, and worldwide (US users have separate terms), and a separate clause licenses your username, image, and likeness, including for use in sponsored content. Read both clauses before you upload a client's footage.
   - q: Does CapCut have an API or agent support?

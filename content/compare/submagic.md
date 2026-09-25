@@ -84,7 +84,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Doesn't record.
       detail: Submagic takes uploads and YouTube links; there's no recorder and no way to collect a take from someone else.
@@ -141,7 +141,7 @@ faq:
   - q: Does BitterClip record?
     a: "Yes. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Submagic doesn't record at all."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Submagic has no recorder, so there's nothing to compare it with there."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Submagic has no recorder, so there's nothing to compare it with there."
   - q: Is BitterClip better than Submagic?
     a: For finishing whole recordings, yes. For putting a trend-perfect caption look on a clip that's already short, no — Submagic is faster there and it looks better. Submagic is a finishing pass; BitterClip is where the cut gets made in the first place. Plenty of people could reasonably use both.
 sources:

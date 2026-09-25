@@ -20,7 +20,7 @@ rows:
   - axis: Collecting recordings on people's own time
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Not offered.
       detail: Despite the Async name, its help center says guests can't begin a recording; the host starts every session.
@@ -137,7 +137,7 @@ faq:
   - q: Does BitterClip record podcasts?
     a: "Yes, within limits. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for getting a guest on tape live over the internet, Async's studio is the better tool. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing over footage you shot on a phone, in Zoom, or on a camera is still completely normal."
   - q: Can guests record on their own time, without a live session?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Despite the name, Async (formerly Podcastle) doesn't: its help center says guests can't begin a recording, so every session needs the host to start it."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Despite the name, Async (formerly Podcastle) doesn't: its help center says guests can't begin a recording, so every session needs the host to start it."
   - q: Which costs less, BitterClip or Podcastle?
     a: "BitterClip Creator is $24/month after its card-required $1 seven-day trial, against Async's Essentials at $19.99/month ($11.99/month billed annually), which records at up to 720p; 4K recording is on Pro at $39.99/month ($23.99 billed annually). They count different things, though — paid Creator includes 10 source-footage hours and $10 of included agent work; Podcastle counts recording hours, transcription hours, and AI credits that reset monthly. Price what a real month of yours uses, not the sticker."
   - q: Is Podcastle still Podcastle, or is it Async now?

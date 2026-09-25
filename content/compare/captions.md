@@ -84,7 +84,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Records only you.
       detail: The phone app's camera and teleprompter record the account holder; there's no link for someone else to record into your account.
@@ -139,7 +139,7 @@ faq:
   - q: Can BitterClip handle long videos?
     a: "Long recordings are the whole point. A session of roughly 20 minutes to 2 hours becomes one project you cut a full edit and vertical clips from. Captions' Clips feature takes a video up to 3 hours and returns ranked shorts, on Max and above; its manual editor caps projects at 10 minutes and AI Edit wants a few minutes of one speaker, so the full cut isn't something it makes."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Captions records only the person holding the phone, with its in-app camera and teleprompter; it has no link for someone else to record into your account."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Captions records only the person holding the phone, with its in-app camera and teleprompter; it has no link for someone else to record into your account."
   - q: Which is more affordable, BitterClip or Captions?
     a: They charge for different things, so price it against what you actually make. BitterClip Creator is $1 today for a card-required seven-day trial, then $24/month, cancel anytime. Paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Captions' Max plan is $24.99 for 500 credits that burn per feature use; its free plan has no watermark but limits you to basic tools, and unused credits are forfeited when you cancel.
 sources:

@@ -28,7 +28,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: "Only by adding a seat."
       detail: "Someone can record into your workspace only as an invited collaborator, with a VEED account and a billed seat."
@@ -149,7 +149,7 @@ faq:
   - q: Does BitterClip record, or do I have to bring footage?
     a: "It records, within a narrow lane. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. It doesn't record 4K. Bringing footage you already shot — phone, Zoom, Riverside, a camera — is still completely normal."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. VEED has no equivalent: someone can record into your workspace only as an invited collaborator with a VEED account, billed as a seat."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. VEED has no equivalent: someone can record into your workspace only as an invited collaborator with a VEED account, billed as a seat."
   - q: Does VEED have an API?
     a: "Hosted AI models and an MCP server, not an editor API. VEED's models — Fabric 1.0, Lip Sync, Subtitles, Green Screen, and Background Removal — run on fal.ai, a third-party marketplace, with a FAL key; its MCP server generates Fabric avatar videos from Claude and other MCP clients; and VEED says it doesn't offer an API for the full editor. In BitterClip, anything you can click you can also ask for — from ChatGPT, Claude, any MCP client, or the command line — and the result is an ordinary edit you can keep changing by hand."
 sources:

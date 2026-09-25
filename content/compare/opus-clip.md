@@ -84,7 +84,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Uploads and links only.
       detail: OpusClip takes files and links from YouTube, Zoom, Riverside, and others; it has no camera recorder and no way to collect a take.
@@ -139,7 +139,7 @@ faq:
   - q: Does BitterClip record?
     a: "Yes. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing a file you recorded elsewhere is still completely normal here. OpusClip has no camera recorder."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. OpusClip doesn't record camera footage or collect it from anyone; it works from files and links you bring."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. OpusClip doesn't record camera footage or collect it from anyone; it works from files and links you bring."
   - q: Can BitterClip post directly to TikTok and Instagram?
     a: "No. BitterClip can send a finished export to a connected YouTube destination after a fresh confirmation, then hands off everything else through review links and 1080p MP4 downloads. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?

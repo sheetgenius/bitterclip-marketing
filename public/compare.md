@@ -35,7 +35,7 @@ Each matchup has its own page. Add `.md` to any URL for the Markdown version.
 
 Turning recorded conversations into finished cuts and clips. Record straight into a project from your browser — camera and mic on a laptop or phone — or bring footage you already shot from a phone, Zoom, Riverside, or a camera. It is built for sessions of roughly 20 minutes to 2 hours: podcasts, interviews, coaching calls, workshops.
 
-On Producer, you can also collect recordings from other people without a call. Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut. You share the link yourself; BitterClip doesn't send invitations or reminders.
+On Producer, you can also collect recordings from other people without a call. Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut. You share the link yourself; BitterClip doesn't send invitations or reminders.
 
 What BitterClip does not do is record a live remote conversation: there are no live guest calls and no separate per-participant tracks, so for recording someone over the internet in real time, a dedicated remote-recording tool is better.
 

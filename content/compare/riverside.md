@@ -20,7 +20,7 @@ rows:
   - axis: Collecting recordings on people's own time
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: "On Business, via sales."
       detail: "Async invite links with up to 10 prompts and an intro video, but only on the custom-priced Business plan."
@@ -140,7 +140,7 @@ faq:
   - q: Is BitterClip cheaper than Riverside?
     a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads — and its async recording links sit on the custom-priced Business plan. BitterClip's $24 Creator buys 10 source-footage hours and $10 of included agent work after a card-required $1 seven-day trial; $99 Producer buys 40 hours, $40 of included agent work, and priority rendering. Compare what each dollar actually produces."
   - q: Does BitterClip do async recording like Riverside?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Riverside has async recording too, with scripted prompts, an optional intro video, and no length limit, but only on its custom-priced Business plan, and its answers arrive as tracks in one project rather than as separate episodes."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Riverside has async recording too, with scripted prompts, an optional intro video, and no length limit, but only on its custom-priced Business plan, and its answers arrive as tracks in one project rather than as separate episodes."
   - q: Does BitterClip have something like Magic Clips?
     a: No, and that's on purpose. Nothing scores your moments and tells you which ones are good — you choose them, or you ask for them. Once a landscape cut exists, the vertical version is one tap with captions and timing carried across. If you want highlights picked for you, Magic Clips does that on Riverside's Free plan without spending AI credits.
 sources:

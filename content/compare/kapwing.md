@@ -84,7 +84,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: "Only by adding a seat."
       detail: "Someone can record into your workspace only as a member, with a Kapwing account and, on paid plans, a billed seat."
@@ -139,7 +139,7 @@ faq:
   - q: Can I edit Kapwing's AI-generated clips?
     a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you can re-prompt Repurpose or ask Kai for a follow-up change, and the rest you finish yourself on a timeline."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Kapwing has no equivalent: someone can record into your workspace only as a member with a Kapwing account, billed as a seat on paid plans."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Kapwing has no equivalent: someone can record into your workspace only as a member with a Kapwing account, billed as a seat on paid plans."
   - q: Does Kapwing watermark free exports?
     a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial that costs $1, with watermarked exports; paid Creator begins at $24/month with clean exports.
   - q: Does Kapwing have an API?

@@ -76,7 +76,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Link or file only.
       detail: Klap has no recorder and no way to collect a take from someone else.
@@ -139,7 +139,7 @@ faq:
   - q: Can BitterClip make vertical shorts like Klap?
     a: It can. The 9:16 version of any landscape cut is one tap, with captions and timing carried across and fill-or-fit framing around a focal point. The difference is that the short stays tied to the full cut, and to the exact moment in the recording it came from.
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Klap doesn't record; it works from links and files you give it."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Klap doesn't record; it works from links and files you give it."
   - q: Which is cheaper, BitterClip or Klap?
     a: "Neither, cleanly — they charge for different things. BitterClip Creator begins with a card-required seven-day trial at $1 today, then costs $24/month, cancel anytime. Paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Klap's plans are $14, $39, and $94 a month billed yearly ($29, $79, and $189 monthly), described as 100, 300, or 1,000 clips a month or, for some visitors, 300, 900, or 2,700 upload minutes, with no watermark, resolution, or rollover terms published to compare against."
 sources:

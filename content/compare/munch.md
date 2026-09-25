@@ -84,7 +84,7 @@ rows:
   - axis: Getting recordings from other people
     bitterclip:
       lead: Send one link.
-      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
     competitor:
       lead: Uploads only.
       detail: Munch takes files, including Zoom recordings, but has no recorder and no way for someone else to record into your account.
@@ -139,7 +139,7 @@ faq:
   - q: Is BitterClip better than Munch?
     a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip prepares connected destinations for your final confirmation and hands off the finished file.
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Munch has no recorder at all; it works from files you upload."
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Munch has no recorder at all; it works from files you upload."
   - q: How much does Munch Studio cost compared to BitterClip?
     a: "Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial: card required, $1 today, then $24/month; cancel anytime. The trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings."
 sources:
