@@ -114,7 +114,7 @@
       },
       "validation": {
         "type": "object",
-        "description": "Source validation state: syntax is checked when the scene is written; runtime is not checked.",
+        "description": "Validation state of the scene code: syntax is checked when the scene is written; runtime is not checked.",
         "properties": {
           "syntax": {
             "type": "string"
