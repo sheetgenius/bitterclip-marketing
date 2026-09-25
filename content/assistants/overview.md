@@ -5,7 +5,7 @@ navigation:
   label: Use it from your assistant
   order: 1
 section: assistants
-updated: '2026-09-23'
+updated: '2026-09-24'
 tags:
   - assistants
   - mcp
@@ -29,8 +29,8 @@ policy, region, model, and rollout. BitterClip's browser workspace works for eve
 ::
 
 You'll need a BitterClip account first. The Creator trial lasts seven days and requires a
-card: $0 today, then $24/month unless canceled before it ends. It includes $5 of agent work
-for one recording up to two hours. Producer is $99/month. Already have an account and just
+card: $1 today, then $24/month unless canceled before the seven days end. It includes $5 of
+agent work for one recording up to two hours. Producer is $99/month. Already have an account and just
 want the connect steps?
 [Jump to Connect your assistant](#connect-your-assistant).
 

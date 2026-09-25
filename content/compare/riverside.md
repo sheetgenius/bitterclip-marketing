@@ -84,7 +84,7 @@ rows:
   - axis: What the monthly bill buys
     bitterclip:
       lead: "Pays for production and agent work."
-      detail: "Creator is $24/month with 10 source-footage hours and $10 of included agent work after its trial; Producer is $99 with 40 hours and $40."
+      detail: "Creator is $24/month with 10 source-footage hours and $10 of included agent work after its $1 seven-day trial; Producer is $99 with 40 hours and $40."
     competitor:
       lead: "Pays for the recorder."
       detail: "$29 Pro covers 4K capture and 15 hours of separate-track downloads; $39 Grow adds livestreaming and hosting."
@@ -128,7 +128,7 @@ faq:
   - q: Does BitterClip record podcasts or meetings?
     a: "Yes, within a narrow lane. Every project has a recorder — 'Record in browser' on the Sources tab, or 'Record here' in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record, so transcription starts the moment you press stop. What it is not: one person, one device, signed in — no remote guests, no guest recording links, no separate track per participant, no 4K. For recording a guest over the internet, keep Riverside in front of it."
   - q: Is BitterClip cheaper than Riverside?
-    a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads. BitterClip's $24 Creator buys 10 source-footage hours and $10 of included agent work after a card-required seven-day trial; $99 Producer buys 40 hours, $40 of included agent work, and priority rendering. Compare what each dollar actually produces."
+    a: "They're paying for different jobs, so the stickers mislead. Riverside's $29 Pro buys the recorder — 4K capture and 15 hours a month of separate-track downloads. BitterClip's $24 Creator buys 10 source-footage hours and $10 of included agent work after a card-required $1 seven-day trial; $99 Producer buys 40 hours, $40 of included agent work, and priority rendering. Compare what each dollar actually produces."
   - q: Does BitterClip have something like Magic Clips?
     a: No, and that's on purpose. Nothing scores your moments and tells you which ones are good — you choose them, or you ask for them. Once a landscape cut exists, the vertical version is one tap with captions and timing carried across. If you want highlights picked for you, Magic Clips does that on Riverside's Free plan without spending AI credits.
 sources:

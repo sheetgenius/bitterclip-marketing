@@ -84,7 +84,7 @@ rows:
   - axis: What a month costs
     bitterclip:
       lead: "Seven days to prove the fit."
-      detail: "Creator is $0 today, then $24/month unless canceled before the trial ends; Producer is $99/month."
+      detail: "Creator is $1 today for seven days, then $24/month unless canceled before they end; Producer is $99/month."
     competitor:
       lead: "Twenty-four a month, each seat."
       detail: "$24/month ($16 billed annually) with 1,000 AI credits that reset on the 1st and never roll over."
@@ -130,7 +130,7 @@ faq:
   - q: Can I edit Kapwing's AI-generated clips?
     a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you finish each clip yourself on a timeline."
   - q: Does Kapwing watermark free exports?
-    a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial with watermarked exports; paid Creator begins at $24/month with clean exports.
+    a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial that costs $1, with watermarked exports; paid Creator begins at $24/month with clean exports.
   - q: Does Kapwing have an API?
     a: No — Kapwing advertises no public developer API, no Zapier app, and no agent integration; extensibility means in-editor plugins pulling stock from providers like Unsplash and Giphy. In BitterClip, anything you can click you can also ask for from ChatGPT, Claude, or the editor's own panel, and the result is an ordinary edit.
 sources:

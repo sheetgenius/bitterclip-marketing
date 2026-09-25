@@ -30,6 +30,9 @@ under a dated entry.
 
 ### Website
 
+- Regenerated the legacy `bitterclip-og.png` social card, which
+  `/founder-onboarding` uses, from its SVG source so it reads "7-day trial ·
+  $1 today · card required".
 - Consolidated the 113 authored MCP contracts, three public guides, and four
   plugin skills in this repository. The static tool reference now includes
   default, app-only, and Live Workspace descriptors captured from the serving
@@ -75,6 +78,20 @@ under a dated entry.
 
 ### Product Context
 
+- Changed the public Creator entry offer to a paid first week: $1 today for the
+  first seven days, then $24/month starting when those seven days end unless
+  canceled before then. A card is required. The $1 is a separate introductory
+  payment, not a credit toward the monthly price, and canceling stops the
+  monthly charge without refunding it. The first seven days still include one
+  recording up to two hours, $5 of agent work for analysis, the First Cut, and
+  direction, and watermarked exports; clean exports unlock after the first $24
+  monthly payment. Producer remains $99/month with no trial, and there is still
+  no permanent free plan. The homepage copy, FAQ, and structured-data offer
+  description, its Markdown twin, `/classic`, founder onboarding, the compare
+  index and pages, blog and docs calls to action, the help FAQ, and the docs
+  changelog now state the $1 terms. The Munch comparison's first-month row and
+  trial fine-print title no longer imply that BitterClip's trial charges
+  nothing up front. Earlier entries that describe "$0 today" remain as history.
 - Added a founder-led onboarding offer for up to 100 customers. Michael
   Ruescher joins each customer for a 30-minute recorded founder conversation,
   helps find the story worth sharing, and shapes the first cut in BitterClip.

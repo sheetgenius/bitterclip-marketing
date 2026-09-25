@@ -5,7 +5,7 @@ navigation:
   label: What is BitterClip?
   order: 0
 section: getting-started
-updated: '2026-09-03'
+updated: '2026-09-24'
 tags:
   - overview
   - concepts
@@ -21,10 +21,10 @@ If you make long videos or podcasts and want short clips out of them, this page 
 ::
 
 You don't need to connect an assistant or configure anything before starting. The Creator
-trial lasts seven days and requires a card: $0 today, then $24/month unless you cancel
-before it ends. Once the payment method is accepted and the trial starts, Billing shows
-your exact cancel-before time. Bring one recording up to two
-hours and use the included $5 of agent work while balance remains. You can add exactly $20,
+trial lasts seven days and requires a card: $1 today for your first seven days, then
+$24/month unless you cancel before those seven days end. Once the payment method is
+accepted and the trial starts, Billing shows your exact cancel-before time. Bring one
+recording up to two hours and use the included $5 of agent work while balance remains. You can add exactly $20,
 $50, or $100 of agent work during an active trial or paid plan. Top-ups never auto-activate
 paid Creator; early activation requires a separate explicit $24 authorization. Creator
 supports files up to 4 GB after payment. Producer is $99/month. There is no recurring Free

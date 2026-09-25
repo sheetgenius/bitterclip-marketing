@@ -36,15 +36,19 @@ for task-specific authority.
 
 ## Commercial offer and learning boundary
 
-- The Creator entry offer is a seven-day card-backed trial: $0 today, then
-  $24/month unless it is canceled before the trial ends. After Bitter Checkout
-  accepts the payment method and starts the trial, Billing shows the
-  provider-owned exact cancel-before time and scheduled first charge.
+- The Creator entry offer is a seven-day card-backed trial: $1 today for the
+  first seven days, then $24/month starting when those seven days end unless it
+  is canceled before then. The $1 is a separate introductory payment, not a
+  credit toward the monthly price; canceling stops the monthly charge and does
+  not refund the $1. After Bitter Checkout accepts the payment and starts the
+  trial, Billing shows the provider-owned exact cancel-before time and the
+  scheduled start of the $24 monthly charge. Producer is $99/month with no
+  trial, and there is no permanent free plan.
 - The trial accepts one recording up to two hours and includes $5 of agent work
   for whole-recording analysis, the First Cut, and continued direction.
 - Agent work is the trial's processing boundary. There is no customer-facing
   revision counter or trial export counter. Trial exports are watermarked;
-  clean exports begin after paid conversion.
+  clean exports begin after the first $24 monthly payment.
 - Customers can top up exactly $20, $50, or $100 of agent work during an active
   trial or paid plan. A top-up never starts paid Creator early; early activation
   requires a separate explicit $24 authorization. Purchased agent work survives

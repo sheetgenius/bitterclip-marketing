@@ -51,7 +51,15 @@ test.describe('pricing section', () => {
     expect(pricingText).toContain('7 days')
     expect(pricingText).toContain('$24/month')
     expect(pricingText).toContain('$99')
-    expect(pricingText).toContain('Card required; $0 due today')
+    expect(pricingText).toContain('Card required; $1 due today')
+    // The $1 introductory payment is separate from the monthly price, is never
+    // described as free, and cancellation language states what it does not undo.
+    expect(pricingText).not.toContain('$0')
+    expect(pricingText.toLowerCase()).not.toContain('free trial')
+    expect(pricingText).toContain('Cancel before the seven days end and the $24 monthly charge never starts.')
+    expect(pricingText).toContain('The $1 is a separate introductory payment, not a credit toward the monthly price.')
+    expect(pricingText).toContain('Cancelling stops the monthly charge; it does not refund the $1.')
+    expect(pricingText).toContain('Clean exports unlock after the first $24 monthly payment.')
     expect(pricingText).toContain('One recording up to 2 hours')
     expect(pricingText).toContain('$5 of agent work for analysis, First Cut, and direction')
     expect(pricingText).toContain('Keep asking and revising while balance remains')

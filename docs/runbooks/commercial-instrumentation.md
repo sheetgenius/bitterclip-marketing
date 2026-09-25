@@ -11,13 +11,10 @@ at:
 
 `../../../bitterclip/docs/telemetry/README.md`
 
-The product's commercial contract lives at:
+The product's commercial contract, including the current offer and the rule
+that public copy must agree with it, lives at:
 
-`../../../bitterclip/docs/product/pricing-and-market-plan.md`
-
-Private homepage sequencing, copy rationale, and learning questions live at:
-
-`../../../bitterclip/docs/product/homepage-commercial-story.md`
+`../../../bitterclip/docs/product/commercial.md`
 
 Those paths are local cross-repository pointers, not public-product links. When
 the private checkout is unavailable, verify only what the public site currently
@@ -83,5 +80,5 @@ surfaces, changelog, and smoke assertions as one coherent public semantic change
 Do not retain copy-research journals or truth-audit reasoning in this public
 repository. Preserve durable public conclusions in page copy, this neutral
 runbook, and `CHANGELOG.md`; preserve commercial interpretation in the private
-homepage authority linked above. Git history remains provenance for removed
+product repository linked above. Git history remains provenance for removed
 public-era journals, not a current instruction surface.

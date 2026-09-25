@@ -30,7 +30,7 @@ const questions = [
   },
   {
     question: 'What does the Creator trial cost?',
-    answer: 'The seven-day trial requires a card and charges $0 today. It becomes $24/month unless you cancel before the trial ends. It accepts one recording up to two hours and includes $5 of agent work for analysis, the First Cut, and direction.',
+    answer: 'The seven-day trial requires a card and costs $1 today for your first seven days. It becomes $24/month when those seven days end unless you cancel before then. The $1 is a separate introductory payment, not a credit toward the monthly price; cancelling stops the monthly charge but does not refund the $1. It accepts one recording up to two hours and includes $5 of agent work for analysis, the First Cut, and direction.',
   },
 ]
 
@@ -78,7 +78,7 @@ useHead({
             class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] shadow-[0_8px_40px_-6px_rgba(242,143,132,0.42)] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >Make my first founder video <span aria-hidden="true">→</span></a>
           <p class="font-mono text-[0.68rem] leading-relaxed text-zinc-500">
-            Card required · $0 today<br>$24/month after seven days
+            Card required · $1 today for seven days<br>then $24/month unless you cancel
           </p>
         </div>
       </div>
@@ -171,7 +171,7 @@ useHead({
           data-bc-plan="creator"
           class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#f28f84] px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#20100c] transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >Make my first founder video <span aria-hidden="true">→</span></a>
-        <p class="mt-4 font-mono text-[0.68rem] text-zinc-500">Up to 100 sessions while onboarding capacity remains · Card required · $0 today · $24/month after seven days</p>
+        <p class="mt-4 font-mono text-[0.68rem] text-zinc-500">Up to 100 sessions while onboarding capacity remains · Card required · $1 today for seven days · then $24/month unless you cancel</p>
       </div>
     </section>
   </main>
