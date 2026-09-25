@@ -11,7 +11,7 @@ withDefaults(defineProps<{ publishing?: boolean }>(), { publishing: false })
     <ul>
       <li>
         A BitterClip account. The Creator trial lasts seven days and requires a card:
-        $1 today, then $24/month unless canceled before the seven days end. It
+        $1 today, then $24/month; cancel anytime. It
         includes $5 of agent work for one recording up to two hours. Producer is
         $99/month.
       </li>

@@ -39,7 +39,7 @@ const signupUrlProPricing = computed(() => signupUrlFor('pro', 'pricing'))
 const faqItems = [
   {
     q: 'What happens after I sign up?',
-    a: 'Choose Creator and add a card. Checkout shows $1 due today for your first seven days and the $24 monthly price that starts when those seven days end. The $1 is a separate introductory payment, not a credit toward the monthly price. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
+    a: 'Choose Creator and add a card: $1 for your first 7 days, then $24/month. Cancel anytime. Then bring one recording. Your trial includes $5 of agent work for the whole-recording analysis, First Cut, and the directions and alternatives you try during those seven days.',
   },
   {
     q: 'I have tried AI clippers. Why would this be different?',
@@ -63,7 +63,7 @@ const faqItems = [
   },
   {
     q: 'What happens if I cancel?',
-    a: 'Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Cancel before the seven days end and the $24 monthly charge never starts. Cancelling stops the monthly charge; it does not refund the $1. After a paid period begins, cancellation stops the next renewal. Your sources, edits, finished work, and any agent work you purchased stay in your Studio; new agent work waits until a trial or paid plan is active again.',
+    a: 'Cancel anytime in Billing. Cancel before day 7 and you won’t be charged $24 (the $1 isn’t refunded). After that, cancelling stops the next renewal. Your recordings, edits, and finished work stay in your account.',
   },
 ]
 
@@ -108,7 +108,7 @@ const structuredData = [
       offerCount: 2,
       url: `${SIGNUP_BASE_URL}?plan=clip`,
       availability: 'https://schema.org/InStock',
-      description: 'Creator is $24/month after a seven-day card-backed trial that costs $1 today and includes one recording up to two hours and $5 of agent work. The $1 is a separate introductory payment, not a credit toward the monthly price. Producer is $99/month.',
+      description: 'Creator is $1 for a 7-day trial, then $24/month. The trial includes one recording up to two hours and $5 of agent work. Producer is $99/month.',
     },
   },
   {
@@ -175,7 +175,7 @@ useHead({
           >Start my 7-day trial <span aria-hidden="true">→</span></a>
         </div>
         <!-- One quiet line states the charge boundary at the moment of choice. -->
-        <p class="hero-fineprint font-mono text-[0.68rem] font-medium text-zinc-500">Card required · $1 today for seven days · then $24/month unless you cancel · $5 of included agent work for analysis, First Cut, and direction.</p>
+        <p class="hero-fineprint font-mono text-[0.68rem] font-medium text-zinc-500">Try it for $1 · 7 days, then $24/month · Cancel anytime</p>
       </div>
     </div>
 
@@ -216,7 +216,7 @@ useHead({
           <div class="agent-card flex flex-col gap-5 rounded-2xl border p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>
               <p class="font-display text-2xl font-bold text-white sm:text-3xl">Try it on one real recording.</p>
-              <p class="mt-2 text-sm leading-relaxed text-zinc-400">$1 today for seven days · then $24/month unless you cancel · one recording up to two hours · $5 of included agent work for analysis, First Cut, and direction.</p>
+              <p class="mt-2 text-sm leading-relaxed text-zinc-400">$1 for 7 days, then $24/month · Cancel anytime · one recording up to two hours · $5 of agent work.</p>
             </div>
             <a
               :href="signupUrlClipProof"
@@ -356,7 +356,7 @@ useHead({
           <p class="absolute right-6 top-6 rounded-full border border-[#f28f84]/40 px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-[#f28f84]">Recommended</p>
           <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-[#f28f84]">Creator</p>
           <p class="font-display text-3xl font-bold text-white">7 days<span class="text-lg font-semibold text-zinc-400">, then $24/month</span></p>
-          <p class="mb-4 mt-1.5 text-xs text-zinc-400">Meet your editor. Card required; $1 due today.</p>
+          <p class="mb-4 mt-1.5 text-xs text-zinc-400">Meet your editor. $1 for the first 7 days.</p>
           <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">During the trial</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>One recording up to 2 hours</li>
@@ -382,7 +382,7 @@ useHead({
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
             </svg>
           </a>
-          <p class="mt-2.5 text-center text-[11px] text-zinc-500">Cancel before the seven days end and the $24 monthly charge never starts.</p>
+          <p class="mt-2.5 text-center text-[11px] text-zinc-500">Cancel before day 7 and you won’t pay the $24.</p>
         </div>
 
         <div class="plan-card relative flex flex-col rounded-2xl border p-6">
@@ -412,9 +412,6 @@ useHead({
 
       </div>
 
-      <p class="mt-7 text-center text-xs text-zinc-400">
-        Card required for the Creator trial: $1 today for your first seven days, then $24/month starting when those seven days end unless you cancel before then. The $1 is a separate introductory payment, not a credit toward the monthly price. Once your payment method is accepted and the trial starts, Billing shows your exact cancel-before time. Cancelling stops the monthly charge; it does not refund the $1. Clean exports unlock after the first $24 monthly payment. Top-ups are available during an active trial or paid plan and never auto-activate paid Creator; early activation requires a separate explicit $24 authorization.
-      </p>
     </section>
 
     <!-- ======================== BELOW THE FOLD · 5: FAQ =======================

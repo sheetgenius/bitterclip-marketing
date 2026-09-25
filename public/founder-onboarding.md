@@ -15,8 +15,7 @@ BitterClip, and leave with a cut you can keep directing.
 
 Start Creator: https://app.bitterclip.com/sign_up?plan=clip
 
-Card required. $1 today for your first seven days, then Creator is $24/month
-unless you cancel before those seven days end.
+$1 for 7 days (card required), then $24/month. Cancel anytime.
 
 ## One call. One real result.
 
@@ -59,11 +58,8 @@ keep directing and revising it afterward.
 
 ### What does the Creator trial cost?
 
-The seven-day trial requires a card and costs $1 today for your first seven
-days. It becomes $24/month when those seven days end unless you cancel before
-then. The $1 is a separate introductory payment, not a credit toward the monthly
-price; cancelling stops the monthly charge but does not refund the $1. It
-accepts one recording up to two hours and includes $5 of agent work for
+$1 for your first 7 days (card required), then $24/month. Cancel anytime; the
+$1 isn't refunded. The trial takes one recording up to two hours and includes $5 of agent work for
 analysis, the First Cut, and direction.
 
 BitterClip is a product of SheetGenius, Inc.

@@ -119,7 +119,7 @@ test('renders the footage-in episodes-out hero and the bottom funnel', async ({ 
   await expect(h1).toContainText('Footage in')
   await expect(h1).toContainText('Episode out')
   await expect(page.getByText('BitterClip watches the whole recording, makes one cut worth sending, and lets you keep directing it.')).toBeVisible()
-  await expect(page.getByText('Card required · $1 today for seven days · then $24/month unless you cancel · $5 of included agent work for analysis, First Cut, and direction.')).toBeVisible()
+  await expect(page.getByText('Try it for $1 · 7 days, then $24/month · Cancel anytime')).toBeVisible()
   const heroTrialCta = page.locator('a[href^="https://app.bitterclip.com/sign_up"]').filter({ hasText: 'Start my 7-day trial' }).first()
   await expect(heroTrialCta).toBeVisible()
   await expect(heroTrialCta).toHaveAttribute('href', /[?&]plan=clip(?:&|$)/)
@@ -700,10 +700,10 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
     expect(await response.text()).toContain(markdownPage.text)
   }
 
-  // The Creator entry offer is $1 today; offer-bearing twins never state $0.
+  // The Creator entry offer is $1 for 7 days; offer-bearing twins never state $0.
   for (const offerPage of ['/index.md', '/founder-onboarding.md', '/compare.md']) {
     const offerText = await (await request.get(offerPage)).text()
-    expect(offerText).toContain('$1 today')
+    expect(offerText).toContain('$1 for 7 days')
     expect(offerText).not.toContain('$0')
   }
 
@@ -770,10 +770,9 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   expect(llmsFullText).toContain('$5 of agent work')
   expect(llmsFullText).toContain('10 source-footage hours')
   expect(llmsFullText).toContain('$20, $50, or $100')
-  expect(llmsFullText).toContain('your exact cancel-before time')
+  expect(llmsFullText).toContain('then $24/month')
   expect(llmsFullText).toContain('never auto-activate paid Creator')
   expect(llmsFullText).toContain('separate explicit $24 authorization')
-  expect(llmsFullText).toContain('not a credit toward the monthly price')
   expect(llmsFullText).not.toContain('$0 today')
   expect(llmsFullText).toContain('files up to 4 GB')
   expect(llmsFullText).not.toContain('your exact charge date')

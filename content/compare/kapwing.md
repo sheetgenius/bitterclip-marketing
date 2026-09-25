@@ -84,7 +84,7 @@ rows:
   - axis: What a month costs
     bitterclip:
       lead: "Seven days to prove the fit."
-      detail: "Creator is $1 today for seven days, then $24/month unless canceled before they end; Producer is $99/month."
+      detail: "Creator is $1 today for seven days, then $24/month, cancel anytime. Producer is $99/month."
     competitor:
       lead: "Twenty-four a month, each seat."
       detail: "$24/month ($16 billed annually) with 1,000 AI credits that reset on the 1st and never roll over."
