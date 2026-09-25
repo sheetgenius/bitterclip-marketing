@@ -65,8 +65,8 @@ for Grid and serving Rails proof before committing
 `contracts/mcp/release-request.json` here and pushing marketing `main`. The
 tracked request invalidates Docker's generated-site cache and binds the build
 to the verified public commit and digest. It records the product release that
-triggered the rebuild; a later Rails release with the same public contract may
-be serving when the build runs. Both Claude Code
+triggered the rebuild; another Rails release with the same public contract may
+be serving when the build runs, including after a rollback. Both Claude Code
 and Codex install directly from this repository; the former plugin source is
 archived.
 
@@ -75,7 +75,8 @@ from `https://app.bitterclip.com/api/v1/mcp_descriptors.json`. It refuses any
 serving digest different from the local authored contract, and in a requested
 production rebuild it requires the requested public commit and digest. When
 the serving product release differs from the request, it logs both and captures
-the release actually serving. The ignored `tmp/`
+the release actually serving. A release switch during the three-profile fetch
+retries the whole capture up to three times. The ignored `tmp/`
 snapshot is a build input, never an authored copy. The build emits 113 HTML
 tool pages with exact served descriptors, Markdown and JSON twins, a full
 index, and discovery entries. It prints the serving product release, public

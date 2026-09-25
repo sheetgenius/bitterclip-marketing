@@ -14,55 +14,73 @@ if (process.env.BITTERCLIP_CATALOG_URL && !(url.protocol === 'http:' && ['localh
 const target = resolve('tmp/mcp-catalog-snapshot.json')
 const localContract = await readPublicAgentContract()
 await rm(target, { force: true })
-const profiles = {}
-let release
-let commit
-let contractDigest
-for (const profile of ['model', 'app', 'live_workspace']) {
-  const endpoint = new URL(url)
-  endpoint.searchParams.set('profile', profile)
-  endpoint.searchParams.set('connector_family', 'chatgpt')
-  const response = await fetch(endpoint, { signal: AbortSignal.timeout(20_000), headers: { accept: 'application/json' } })
-  if (!response.ok) throw new Error(`MCP descriptor fetch failed: ${response.status} ${endpoint}`)
-  const servedRelease = response.headers.get('x-bitterclip-release')
-  if (!servedRelease || !/^[0-9a-f]{7,40}$/.test(servedRelease) ||
-      (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(servedRelease))) {
-    throw new Error(`${profile} descriptor response has no valid X-BitterClip-Release header`)
-  }
-  const body = await response.json()
-  if (body.public_contract_digest !== localContract.digest) {
-    throw new Error(`${profile} serving Rails contract digest ${body.public_contract_digest} differs from this site's ${localContract.digest}`)
-  }
-  if (body?.schema_version !== 'bitterclip.mcp_descriptors.v1' || body.profile !== profile ||
-      body.connector_family !== 'chatgpt' || !Array.isArray(body.descriptors) ||
-      !Array.isArray(body.guidance) || body.descriptors.length !== ({ model: 63, app: 113, live_workspace: 63 })[profile] ||
-      body.guidance.length !== body.descriptors.length ||
-      !/^[a-f0-9]{40}$/.test(body.public_contract_commit) ||
-      !/^[a-f0-9]{64}$/.test(body.public_contract_digest)) {
-    throw new Error(`Invalid ${profile} MCP descriptor profile`)
-  }
-  const names = new Set()
-  for (const item of body.descriptors) {
-    if (typeof item.name !== 'string' || names.has(item.name) ||
-        typeof item.title !== 'string' || typeof item.description !== 'string' ||
-        !item.inputSchema || typeof item.inputSchema !== 'object') {
-      throw new Error(`Invalid or duplicate ${profile} descriptor: ${item?.name}`)
+async function captureProfiles() {
+  const profiles = {}
+  let release
+  let commit
+  let contractDigest
+  for (const profile of ['model', 'app', 'live_workspace']) {
+    const endpoint = new URL(url)
+    endpoint.searchParams.set('profile', profile)
+    endpoint.searchParams.set('connector_family', 'chatgpt')
+    const response = await fetch(endpoint, { signal: AbortSignal.timeout(20_000), headers: { accept: 'application/json' } })
+    if (!response.ok) throw new Error(`MCP descriptor fetch failed: ${response.status} ${endpoint}`)
+    const servedRelease = response.headers.get('x-bitterclip-release')
+    if (!servedRelease || !/^[0-9a-f]{7,40}$/.test(servedRelease) ||
+        (!process.env.BITTERCLIP_CATALOG_URL && /^0+$/.test(servedRelease))) {
+      throw new Error(`${profile} descriptor response has no valid X-BitterClip-Release header`)
     }
-    names.add(item.name)
+    const body = await response.json()
+    if (body.public_contract_digest !== localContract.digest) {
+      throw new Error(`${profile} serving Rails contract digest ${body.public_contract_digest} differs from this site's ${localContract.digest}`)
+    }
+    if (body?.schema_version !== 'bitterclip.mcp_descriptors.v1' || body.profile !== profile ||
+        body.product_release !== servedRelease ||
+        body.connector_family !== 'chatgpt' || !Array.isArray(body.descriptors) ||
+        !Array.isArray(body.guidance) || body.descriptors.length !== ({ model: 63, app: 113, live_workspace: 63 })[profile] ||
+        body.guidance.length !== body.descriptors.length ||
+        !/^[a-f0-9]{40}$/.test(body.public_contract_commit) ||
+        !/^[a-f0-9]{64}$/.test(body.public_contract_digest)) {
+      throw new Error(`Invalid ${profile} MCP descriptor profile`)
+    }
+    const names = new Set()
+    for (const item of body.descriptors) {
+      if (typeof item.name !== 'string' || names.has(item.name) ||
+          typeof item.title !== 'string' || typeof item.description !== 'string' ||
+          !item.inputSchema || typeof item.inputSchema !== 'object') {
+        throw new Error(`Invalid or duplicate ${profile} descriptor: ${item?.name}`)
+      }
+      names.add(item.name)
+    }
+    if (!names.has(profile === 'live_workspace' ? 'workspace_get_link' : 'help') ||
+        ['list_docs', 'search_docs', 'read_doc'].some((name) => names.has(name))) {
+      throw new Error(`${profile} descriptor profile has missing or retired help tools`)
+    }
+    if (commit && commit !== body.public_contract_commit ||
+        contractDigest && contractDigest !== body.public_contract_digest) {
+      throw new Error('MCP descriptor profiles came from different public contract commits or digests')
+    }
+    if (release && release !== servedRelease) {
+      throw Object.assign(new Error('Rails release changed during MCP descriptor capture'), { code: 'RELEASE_CHANGED' })
+    }
+    release = servedRelease
+    commit = body.public_contract_commit
+    contractDigest = body.public_contract_digest
+    profiles[profile] = { descriptors: body.descriptors, guidance: body.guidance }
   }
-  if (!names.has(profile === 'live_workspace' ? 'workspace_get_link' : 'help') ||
-      ['list_docs', 'search_docs', 'read_doc'].some((name) => names.has(name))) {
-    throw new Error(`${profile} descriptor profile has missing or retired help tools`)
-  }
-  if (release && release !== servedRelease || commit && commit !== body.public_contract_commit ||
-      contractDigest && contractDigest !== body.public_contract_digest) {
-    throw new Error(`MCP descriptor profiles came from different product or contract releases`)
-  }
-  release = servedRelease
-  commit = body.public_contract_commit
-  contractDigest = body.public_contract_digest
-  profiles[profile] = { descriptors: body.descriptors, guidance: body.guidance }
+  return { profiles, release, commit, contractDigest }
 }
+let capture
+for (let attempt = 1; attempt <= 3; attempt++) {
+  try {
+    capture = await captureProfiles()
+    break
+  } catch (error) {
+    if (error.code !== 'RELEASE_CHANGED' || attempt === 3) throw error
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }
+}
+const { profiles, release, commit, contractDigest } = capture
 const digest = createHash('sha256').update(JSON.stringify(profiles)).digest('hex')
 const releaseRequestPath = resolve('contracts/mcp/release-request.json')
 const releaseRequestText = await readFile(releaseRequestPath, 'utf8').catch((error) => {
