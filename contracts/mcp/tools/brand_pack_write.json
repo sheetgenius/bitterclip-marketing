@@ -86,6 +86,21 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Receipt schema identifier, bitterclip.brand_pack_write_receipt.v0."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID the brand pack was written through."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

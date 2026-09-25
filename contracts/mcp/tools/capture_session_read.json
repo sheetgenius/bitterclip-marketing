@@ -83,6 +83,14 @@
       },
       "next_action": {
         "type": "object"
+      },
+      "camera_grouping": {
+        "type": "object",
+        "description": "Current camera-grouping projection for the footage session: groups, status, review state and camera generation."
+      },
+      "understanding": {
+        "type": "object",
+        "description": "Whole-session understanding readiness and processing state for the footage session."
       }
     },
     "required": [],

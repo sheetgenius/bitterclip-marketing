@@ -206,6 +206,36 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Project identity state schema identifier, bitterclip.brand_identity_project_state.v0."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID."
+      },
+      "project_title": {
+        "type": "string",
+        "description": "Project title."
+      },
+      "options": {
+        "type": "object",
+        "description": "Brands, opener and outro presets, cut styles and FX templates available to this Project."
+      },
+      "music_beds": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Music beds available to this Project."
+      },
+      "account_scenes": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Account FX scenes available to this Project."
       }
     },
     "required": [],

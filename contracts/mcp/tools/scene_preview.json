@@ -100,6 +100,52 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Result schema identifier, bitterclip.scene_preview.v0."
+      },
+      "project_id": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Project public ID the preview was rendered for; null for an account-level preview."
+      },
+      "account_id": {
+        "type": "string",
+        "description": "Account public ID that owns the scene."
+      },
+      "scene_id": {
+        "type": "string",
+        "description": "Previewed scene ID."
+      },
+      "brand_id": {
+        "type": "string",
+        "description": "Brand the preview rendered with."
+      },
+      "aspect": {
+        "type": "string",
+        "description": "Canvas aspect ratio of the preview, such as 16:9 or 1:1."
+      },
+      "revision": {
+        "type": "integer",
+        "description": "Scene revision that was previewed."
+      },
+      "source_sha256": {
+        "type": "string",
+        "description": "SHA-256 of the previewed scene source."
+      },
+      "snapshot_sha256": {
+        "type": "string",
+        "description": "SHA-256 of the full preview snapshot: source, brand and settings."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

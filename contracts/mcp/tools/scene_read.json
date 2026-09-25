@@ -67,6 +67,41 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Result schema identifier, bitterclip.scene_read.v1."
+      },
+      "start_line": {
+        "type": "integer",
+        "description": "First source line returned (1-based)."
+      },
+      "end_line": {
+        "type": "integer",
+        "description": "Last source line returned."
+      },
+      "total_lines": {
+        "type": "integer",
+        "description": "Number of lines in the full source."
+      },
+      "truncated": {
+        "type": "boolean",
+        "description": "True when the returned source is a line range rather than the whole source."
+      },
+      "history_truncated": {
+        "type": "boolean",
+        "description": "True when the scene has more retained versions than the returned history."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID the scene was read through; absent for an account-level read."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

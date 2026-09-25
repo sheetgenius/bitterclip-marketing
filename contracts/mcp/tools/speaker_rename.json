@@ -65,6 +65,33 @@
       },
       "speaker_model_context": {
         "type": "object"
+      },
+      "recording_public_id": {
+        "type": "string",
+        "description": "Recording public ID; the same value as recording_id."
+      },
+      "speaker_map_public_id": {
+        "type": "string",
+        "description": "Renamed speaker track ID; the same value as speaker_map_id."
+      },
+      "speaker": {
+        "type": "object",
+        "description": "Summary of the renamed speaker track; the same object as speaker_map_summary."
+      },
+      "speaker_maps": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Summaries of the speaker tracks this call renamed."
+      },
+      "previous_speaker_profile_id": {
+        "type": "string",
+        "description": "Saved person the track pointed to before the rename, when it had one."
+      },
+      "previous_speaker_profile_public_id": {
+        "type": "string",
+        "description": "Saved person the track pointed to before the rename; the same value as previous_speaker_profile_id."
       }
     },
     "required": [],

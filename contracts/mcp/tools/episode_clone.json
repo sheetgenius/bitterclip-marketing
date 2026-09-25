@@ -142,6 +142,67 @@
         "items": {
           "type": "object"
         }
+      },
+      "duration": {
+        "type": "number",
+        "description": "Clone play length in seconds; the same value as duration_seconds."
+      },
+      "derived": {
+        "type": "boolean",
+        "description": "True when the clone is a derived Clip filed under a parent Episode; false for a clone of a top-level Episode."
+      },
+      "block_segments": {
+        "type": "array",
+        "description": "Template-backed segments carried by the clone.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "integer"
+            },
+            "template": {
+              "type": "string"
+            },
+            "source_id": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "preparing",
+                "failed"
+              ],
+              "description": "Whether the template-backed Recording is already renderable or still baking."
+            }
+          }
+        }
+      },
+      "identity_plan": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "description": "Frozen identity plan carried from the source Episode; null when only identity warnings or row mappings were carried."
+      },
+      "identity_layers": {
+        "type": "array",
+        "description": "Resolved Signature layers of the carried identity plan, such as opener, cut style and outro."
+      },
+      "identity_segments": {
+        "type": "array",
+        "description": "Identity segment rows with role, final_position and segment_id."
+      },
+      "identity_warnings": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Identity warnings carried from the source Episode."
+      },
+      "request_row_map": {
+        "type": "array",
+        "description": "Mapping from the source Episode's requested rows to composition positions, including segment_id."
       }
     },
     "required": [],

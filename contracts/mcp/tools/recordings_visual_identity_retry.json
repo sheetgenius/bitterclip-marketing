@@ -37,6 +37,18 @@
       },
       "speaker_evidence": {
         "type": "object"
+      },
+      "schema": {
+        "type": "string",
+        "description": "Result schema identifier, bitterclip.visual_identity_decision_operation.v1."
+      },
+      "already_applied": {
+        "type": "boolean",
+        "description": "True when the call returned the existing decision rather than recording a new one."
+      },
+      "speaker_model_context": {
+        "type": "object",
+        "description": "Compact speaker identity context shared with the model; the full speaker evidence stays in result metadata."
       }
     },
     "required": [],

@@ -103,6 +103,37 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Receipt schema identifier, bitterclip.scene_write_receipt.v1."
+      },
+      "changed": {
+        "type": "boolean",
+        "description": "False when the submitted source, name and settings matched the saved scene, so no revision was written."
+      },
+      "validation": {
+        "type": "object",
+        "description": "Source validation state: syntax is checked when the scene is written; runtime is not checked.",
+        "properties": {
+          "syntax": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string"
+          }
+        }
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID the scene was written through; absent for an account-level write."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

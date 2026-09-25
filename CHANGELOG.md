@@ -38,6 +38,11 @@ under a dated entry.
   requires; they no longer instruct the model, point to outside documents, or
   script other tools. Standing guidance moved to the MCP server instructions
   and the plugin skills (package 0.2.2).
+- Twenty-one tool contracts now declare output fields their successful results
+  already returned, such as Program digests on `episode_edit`, scene receipt
+  fields, identity state and speaker-track voice-memory fields, and four
+  fields now admit null. MCP clients that check structured output against the
+  declared schema, such as Claude Code, had rejected those successful calls.
 
 ### Website
 

@@ -46,6 +46,17 @@
       },
       "studio_url": {
         "type": "string"
+      },
+      "has_more": {
+        "type": "boolean",
+        "description": "True when the account has more scenes than the listed ones."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

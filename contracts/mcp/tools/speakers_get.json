@@ -58,7 +58,18 @@
         "type": "object"
       },
       "assignment_review": {
-        "type": "object"
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID when the read was scoped to a Project."
+      },
+      "project_title": {
+        "type": "string",
+        "description": "Project title when the read was scoped to a Project."
       }
     },
     "required": [],

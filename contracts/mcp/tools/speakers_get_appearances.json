@@ -55,7 +55,10 @@
         "type": "object"
       },
       "assignment_review": {
-        "type": "object"
+        "type": [
+          "object",
+          "null"
+        ]
       },
       "moments": {
         "type": "array",
@@ -91,7 +94,10 @@
         "type": "boolean"
       },
       "next_cursor": {
-        "type": "string"
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "clips": {
         "type": "array",

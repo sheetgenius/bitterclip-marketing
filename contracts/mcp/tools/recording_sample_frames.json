@@ -438,6 +438,29 @@
             "message"
           ]
         }
+      },
+      "camera_refs": {
+        "type": [
+          "array",
+          "null"
+        ],
+        "description": "Comparison contact-sheet column order; null for an ordinary single-camera sample.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "model_image_delivery": {
+        "type": "string",
+        "enum": [
+          "frames",
+          "contact_sheet",
+          "none"
+        ],
+        "description": "Shape of model-visible image content for this result."
+      },
+      "model_image_count": {
+        "type": "integer",
+        "description": "Number of adjacent MCP image blocks: one for a comparison contact sheet, individual frame count for ordinary inline delivery, or zero for links."
       }
     },
     "required": [

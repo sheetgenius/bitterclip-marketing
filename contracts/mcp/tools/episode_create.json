@@ -456,7 +456,10 @@
         }
       },
       "identity_plan": {
-        "type": "object",
+        "type": [
+          "object",
+          "null"
+        ],
         "description": "Frozen resolved identity plan when identity: project_default resolved to an applied project identity."
       },
       "identity_layers": {

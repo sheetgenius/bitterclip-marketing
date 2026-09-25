@@ -63,6 +63,25 @@
         "items": {
           "type": "object"
         }
+      },
+      "schema": {
+        "type": "string",
+        "description": "Receipt schema identifier, bitterclip.identity_asset_ingest_receipt.v0."
+      },
+      "account_id": {
+        "type": "string",
+        "description": "Account public ID that owns the asset."
+      },
+      "project_id": {
+        "type": "string",
+        "description": "Project public ID the asset was ingested through; absent for an account-level ingest."
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Typed blockers; empty when the call succeeded."
       }
     },
     "required": [],

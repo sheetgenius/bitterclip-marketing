@@ -2134,6 +2134,65 @@
       "caption_positioning_sample": {
         "type": "object",
         "description": "For occurrence.caption, automatic post-commit visual proof. ready carries one calm cue still or up to three timed active-word stills plus durable gallery/frame references. Each still also includes any committed speaker title visible at that instant so text-layer collisions are observable; superseded, unavailable, and not_applicable never undo the committed receipt."
+      },
+      "camera_program_digest": {
+        "type": "string",
+        "description": "Camera Program digest recorded by this operation's receipt."
+      },
+      "current_camera_program_digest": {
+        "type": "string",
+        "description": "Digest of the Episode's current camera Program."
+      },
+      "audio_program_digest": {
+        "type": "string",
+        "description": "Program audio digest recorded by this operation's receipt."
+      },
+      "current_audio_program_digest": {
+        "type": "string",
+        "description": "Digest of the Episode's current Program audio."
+      },
+      "picture_program_digest": {
+        "type": "string",
+        "description": "Picture Program digest recorded by this operation's receipt; present only when the Episode has a Picture Program."
+      },
+      "current_picture_program_digest": {
+        "type": "string",
+        "description": "Digest of the Episode's current Picture Program; present only when the Episode has one."
+      },
+      "changed_segments": {
+        "type": "array",
+        "items": {
+          "type": "integer"
+        },
+        "description": "Positions of segments this operation changed."
+      },
+      "inserted_occurrence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Occurrences this operation inserted."
+      },
+      "pending_block_source_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Template-backed Recordings this operation inserted that are still baking."
+      },
+      "pending_identity_source_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Identity-part Recordings this operation inserted that are still baking."
+      },
+      "edge_warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        },
+        "description": "Edge warnings for occurrences whose edges an identity-part operation touched."
       }
     },
     "required": [],

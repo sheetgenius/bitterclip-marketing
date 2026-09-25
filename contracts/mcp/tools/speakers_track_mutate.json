@@ -662,6 +662,70 @@
       },
       "speaker_model_context": {
         "type": "object"
+      },
+      "role_answer_id": {
+        "type": "string",
+        "description": "Recorded answer that set the track's role, when one exists."
+      },
+      "reference_speaker_map_id": {
+        "type": "string",
+        "description": "Reference speaker track a not-same-as answer compared against."
+      },
+      "reference_speaker_map_public_id": {
+        "type": "string",
+        "description": "Reference speaker track; the same value as reference_speaker_map_id."
+      },
+      "same_as_speaker_map_public_id": {
+        "type": "string",
+        "description": "Confirmed speaker track this track was confirmed as the same person as; the same value as same_as_speaker_map_id."
+      },
+      "legacy_tool": {
+        "type": "boolean",
+        "description": "True when a rename_label action was applied through the legacy label rename."
+      },
+      "voice_propagation": {
+        "type": "object",
+        "description": "Result of applying this confirmation to the person's other tracks: state, named and released answers, and any limitation."
+      },
+      "voice_memory": {
+        "type": "object",
+        "description": "Voice-memory disposition for this track: state, reason, recovery action, intent, enrollment and request identifiers."
+      },
+      "voice_memory_state": {
+        "type": "string",
+        "description": "Voice-memory state for this track."
+      },
+      "voice_memory_reason": {
+        "type": "string",
+        "description": "Reason for the voice-memory state."
+      },
+      "voice_memory_recovery_action": {
+        "type": "string",
+        "description": "Recovery action available for the voice-memory state."
+      },
+      "voice_memory_automatic_recognition_allowed": {
+        "type": "boolean",
+        "description": "Whether this track's voice may be used for automatic recognition."
+      },
+      "voice_memory_evidence_speaker_map_id": {
+        "type": "string",
+        "description": "Speaker track whose audio is the voice-memory evidence."
+      },
+      "voice_memory_request_run_id": {
+        "type": "string",
+        "description": "Inference run requested for voice memory."
+      },
+      "voice_memory_request_receipt_id": {
+        "type": "string",
+        "description": "Receipt of the voice-memory request."
+      },
+      "voice_memory_receipt_id": {
+        "type": "string",
+        "description": "Receipt of the voice-memory disposition."
+      },
+      "voice_memory_state_sentence": {
+        "type": "string",
+        "description": "Plain-language statement of the voice-memory state."
       }
     },
     "required": [],

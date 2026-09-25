@@ -87,6 +87,10 @@
       "speaker_evidence": {
         "type": "object",
         "description": "Refreshed bounded speaker evidence and remaining visual identity questions."
+      },
+      "speaker_model_context": {
+        "type": "object",
+        "description": "Compact speaker identity context shared with the model; the full speaker evidence stays in result metadata."
       }
     },
     "required": [],
