@@ -15,6 +15,7 @@ const COMPARISON_SLUGS = [
   'podcastle',
   'klap',
   'munch',
+  'zoom',
 ]
 
 test.describe('comparison hub', () => {

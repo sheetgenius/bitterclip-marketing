@@ -10,8 +10,9 @@ const { data: allMatchups } = await useAsyncData('compare:matchups', () =>
 
 // Search demand, not the alphabet. Descript and Riverside are what people
 // actually type; alphabetical order buried them behind CapCut and Captions.
+// Zoom is where most interviews are recorded today.
 const PRIORITY = [
-  'descript', 'riverside', 'opus-clip', 'capcut', 'submagic', 'captions',
+  'descript', 'riverside', 'zoom', 'opus-clip', 'capcut', 'submagic', 'captions',
   'veed', 'podcastle', 'kapwing', 'vizard', 'klap', 'munch',
 ]
 const rank = (path: string) => {

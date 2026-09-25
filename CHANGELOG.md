@@ -63,6 +63,11 @@ under a dated entry.
   wording and API; Munch's annual refund; Descript's moved help pages. The
   BitterClip recorder is now described without plan-specific details, and
   review links carry their two-week limit everywhere.
+- Added `/compare/zoom`: Zoom records views of a call (active speaker, gallery,
+  shared screen) with optional per-person audio; BitterClip's Studio records
+  each person on their own track and delivers a transcribed episode. Sourced
+  from Zoom's support articles, pricing page, and two staff replies on Zoom's
+  community forum.
 - Comparison pages and the compare hub now describe live Studio on paid plans:
   a guest joins from a link with no account, each person is recorded on their
   own track, each browser keeps a backup copy, and the conversation arrives as

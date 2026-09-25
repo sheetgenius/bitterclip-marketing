@@ -100,7 +100,7 @@ const TESTIMONIALS = {
   },
 } as const
 
-const SESSION_FOOTAGE_MATCHUPS = new Set(['descript', 'riverside', 'podcastle', 'captions', 'veed', 'kapwing'])
+const SESSION_FOOTAGE_MATCHUPS = new Set(['descript', 'riverside', 'zoom', 'podcastle', 'captions', 'veed', 'kapwing'])
 const testimonial = computed(() =>
   SESSION_FOOTAGE_MATCHUPS.has(slug) ? TESTIMONIALS.andrew : TESTIMONIALS.rohan,
 )

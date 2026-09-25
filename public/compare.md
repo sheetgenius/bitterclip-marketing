@@ -22,6 +22,7 @@ Each matchup has its own page. Add `.md` to any URL for the Markdown version.
 - [BitterClip vs Submagic](https://bitterclip.com/compare/submagic)
 - [BitterClip vs VEED](https://bitterclip.com/compare/veed)
 - [BitterClip vs Vizard](https://bitterclip.com/compare/vizard)
+- [BitterClip vs Zoom](https://bitterclip.com/compare/zoom)
 
 ## How these are written
 
