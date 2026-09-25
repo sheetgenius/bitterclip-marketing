@@ -72,9 +72,13 @@ const releaseRequestText = await readFile(releaseRequestPath, 'utf8').catch((err
 if (releaseRequestText !== null && !process.env.BITTERCLIP_CATALOG_URL) {
   const request = JSON.parse(releaseRequestText)
   if (request.schema_version !== 'bitterclip.public_contract_release_request.v1' ||
-      request.product_release !== release || request.public_contract_commit !== commit ||
+      !/^[a-f0-9]{40}$/.test(request.product_release) ||
+      request.public_contract_commit !== commit ||
       request.public_contract_digest !== contractDigest) {
-    throw new Error(`Serving Rails release does not match ${releaseRequestPath}`)
+    throw new Error(`Serving Rails contract does not match ${releaseRequestPath}`)
+  }
+  if (request.product_release !== release) {
+    console.warn(`Requested Rails release ${request.product_release} differs from serving ${release}; capturing the serving release with the same public contract`)
   }
 }
 const buildId = randomUUID()
