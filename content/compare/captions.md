@@ -3,11 +3,11 @@ title: "BitterClip vs Captions: Finish What You Actually Recorded"
 description: Captions styles short vertical video shot on a phone. BitterClip turns a whole recorded session into a finished cut and clips. Which one you need.
 competitor: Captions
 competitorUrl: https://www.captions.ai
-reviewed: 2026-08-17
+reviewed: 2026-09-25
 competitorStrength: The fastest way to style a short vertical video on your phone.
-heroLede: "Stay with Captions if you shoot short vertical video on your phone — it styles a clip faster than you could by hand. Come to BitterClip if you record real conversations: podcasts, coaching calls, workshops, anything from 20 minutes to 2 hours. Captions runs out of room there — the manual editor stops at 10 minutes and AI Edit takes one to two minutes of footage — while BitterClip takes the whole session and hands back a finished cut plus vertical clips."
+heroLede: "Stay with Captions if you shoot short vertical video on your phone — it styles a clip faster than you could by hand. Come to BitterClip if you record real conversations: podcasts, coaching calls, workshops, anything from 20 minutes to 2 hours. Captions' Clips feature can mine a long session for ranked shorts, but its editing stops short of it — the manual editor caps at 10 minutes and AI Edit wants a few minutes of one speaker — while BitterClip takes the whole session and hands back a finished cut plus the vertical clips you choose."
 verdictBitterclip: "BitterClip is where your recordings become finished episodes and clips. Record straight into a project from your browser, or bring footage from anywhere — phone, Zoom, Riverside, a camera — and a long session turns into a full cut and vertical clips you can keep changing. Cuts land on the word, undo works all the way back, and anything you can click you can also just ask for in ChatGPT or Claude."
-verdictCompetitor: "Captions, now made by Mirage, is a phone-first video app. It records, captions, and styles short vertical clips with almost no manual work, and it has bet hard on AI avatars and generated video. The iPhone app is the real product: the manual editor caps projects at 10 minutes, and AI Edit accepts at most 2 minutes of single-speaker vertical footage."
+verdictCompetitor: "Captions, now made by Mirage, is a phone-first video app. It records, captions, and styles short vertical clips with almost no manual work, and it has bet hard on AI avatars and generated video. The iPhone app is the real product: the manual editor caps projects at 10 minutes and AI Edit wants a few minutes of single-speaker footage, though its Clips feature will pull ranked shorts from a video up to 3 hours long."
 rows:
   - axis: Getting the footage in the first place
     bitterclip:
@@ -22,8 +22,8 @@ rows:
       lead: That's the normal case.
       detail: A 20-minute-to-2-hour session comes in whole, and you cut from all of it.
     competitor:
-      lead: You hit the ceiling fast.
-      detail: The manual editor caps at 10 minutes; AI Edit takes 2 minutes on iOS, 1 on web.
+      lead: Clips it, can't edit it.
+      detail: Clips takes up to 3 hours and returns ranked shorts, but the manual editor caps at 10 minutes.
     edge: bitterclip
   - axis: Cutting out a rambling answer
     bitterclip:
@@ -39,15 +39,15 @@ rows:
       detail: Say what's off and the same cut changes; undo works all the way back.
     competitor:
       lead: Undo it or roll again.
-      detail: Revert AI Edit cuts one at a time, or re-run the style at 10 to 40 credits a pass.
+      detail: Revert AI Edit cuts one at a time, or run a new AI Edit at 10 to 40 credits a pass.
     edge: bitterclip
   - axis: Asking for an edit instead of clicking for it
     bitterclip:
       lead: Ask instead of click.
       detail: In ChatGPT, Claude, any MCP client, or the editor — same edits, same result either way.
     competitor:
-      lead: Chat editing on the top plan.
-      detail: Captions has a chat editor on Max and a public API for captioning and generation.
+      lead: Chat editing from Max up.
+      detail: Its chat editor is on Max and above, at 2 credits a message, plus a public API for captioning and generation.
     edge: bitterclip
   - axis: Two or three cameras on one conversation
     bitterclip:
@@ -81,6 +81,14 @@ rows:
       lead: That is the whole bet.
       detail: Avatars, digital twins, and prompt-to-video sit at the center of the Mirage product.
     edge: competitor
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+    competitor:
+      lead: Records only you.
+      detail: The phone app's camera and teleprompter record the account holder; there's no link for someone else to record into your account.
+    edge: bitterclip
   - axis: What the monthly bill looks like
     bitterclip:
       lead: Trial, then source-footage hours.
@@ -94,11 +102,12 @@ chooseUs:
   - You want to say "cut the tangent at 14:20 and tighten the intro" in ChatGPT or Claude, then open the result in the editor and keep going by hand.
   - You film with more than one camera and want to cut between angles without the audio taking a hit.
   - You want to find a moment by what was said, who said it, or what was on screen — and click straight back to that spot in the full recording.
+  - You interview guests or collect customer stories, and you'd rather send one link than schedule a call; each answer arrives as its own editable episode.
   - You'd rather fix the cut you have than roll the dice on a new one.
 chooseThem:
   - You shoot on an iPhone and want to record, style, and post from one app. That app is the best version of Captions, teleprompter and all.
   - You want an avatar or a digital twin presenting for you. Generated video is the company's core bet; BitterClip only works with footage you actually recorded.
-  - Your videos are vertical, one person, and under two minutes, and you want them styled with almost no manual work.
+  - Your videos are one person and a few minutes long, and you want them styled with almost no manual work.
   - You need captions and translation across 100+ languages for fast social output.
   - You post every day, and finished-in-minutes matters more to you than being able to go back and change it later.
 gotchas:
@@ -120,15 +129,17 @@ gotchas:
     sourceUrl: https://mirage.app/legal/privacy-policy
 faq:
   - q: Is Captions worth it?
-    a: "Yes, if you shoot short vertical video on your phone — the iOS app records, captions, and styles a clip faster than you would by hand. No, if your recordings are long: AI Edit accepts at most two minutes of footage and the manual editor caps projects at ten minutes. A 45-minute call hits that wall immediately."
+    a: "Yes, if you shoot short vertical video on your phone — the iOS app records, captions, and styles a clip faster than you would by hand. If your recordings are long, it's half a tool: Clips can pull ranked shorts from a video up to three hours, but AI Edit wants a few minutes of one speaker and the manual editor caps projects at ten minutes, so a 45-minute call can be mined for clips but not edited into an episode."
   - q: What is the best Captions alternative?
     a: "BitterClip, if you're leaving because a 10-minute editor and a credit meter don't fit real recordings. A whole session goes in; a finished cut and vertical clips come out, and you can keep changing them. If what you want is a different avatar or short-form generator, there are several."
   - q: Can I edit Captions' AI output?
     a: Partly. Their docs let you revert individual AI Edit cuts, edit timeline elements, or re-run with a different style — but a spelling correction on desktop regenerates the entire video and costs about a credit. In BitterClip, a fix is just an edit, and undo works all the way back.
   - q: Does BitterClip record video like Captions does?
-    a: "Yes, but not the same way. Every project has a recorder — 'Record in browser' on the Sources tab, or 'Record here' in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, uploading in chunks as you go so transcription starts the moment you press stop. The boundary: one person, one device, signed in. No remote guests, no guest recording links, no separate per-participant tracks, no teleprompter, no native iOS app. For recording a guest over the internet, a dedicated remote-recording tool is better, and if a phone teleprompter is the part you need, that is a real Captions advantage. Bringing footage you shot elsewhere is still completely normal."
+    a: "Yes, but not the same way. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. There's no teleprompter and no native iOS app, so if a phone teleprompter is the part you need, that is a real Captions advantage. Bringing footage you shot elsewhere is still completely normal."
   - q: Can BitterClip handle long videos?
-    a: "Long recordings are the whole point. A session of roughly 20 minutes to 2 hours becomes one project you cut a full edit and vertical clips from. Captions' AI Shorts can chop a long video into short clips, but its manual editor caps projects at 10 minutes and AI Edit accepts one to two minutes of footage."
+    a: "Long recordings are the whole point. A session of roughly 20 minutes to 2 hours becomes one project you cut a full edit and vertical clips from. Captions' Clips feature takes a video up to 3 hours and returns ranked shorts, on Max and above; its manual editor caps projects at 10 minutes and AI Edit wants a few minutes of one speaker, so the full cut isn't something it makes."
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Captions records only the person holding the phone, with its in-app camera and teleprompter; it has no link for someone else to record into your account."
   - q: Which is more affordable, BitterClip or Captions?
     a: They charge for different things, so price it against what you actually make. BitterClip Creator is $1 today for a card-required seven-day trial, then $24/month, cancel anytime. Paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Captions' Max plan is $24.99 for 500 credits that burn per feature use; its free plan has no watermark but limits you to basic tools, and unused credits are forfeited when you cancel.
 sources:
@@ -148,8 +159,12 @@ sources:
     url: https://captions.ai/help/docs/api/overview
   - label: Captions feature page — add captions to videos
     url: https://captions.ai/features/add-captions-to-videos
-  - label: Captions feature page — AI Shorts
-    url: https://www.captions.ai/features/ai-shorts
+  - label: Captions help — Clips
+    url: https://captions.ai/help/docs/project/clips
+  - label: Captions feature page — create clips
+    url: https://captions.ai/features/create-clips
+  - label: Captions help — Camera and Teleprompter
+    url: https://captions.ai/help/docs/project/camera
   - label: Captions Terms of Service (mirage.app)
     url: https://mirage.app/legal/captions-terms
   - label: Mirage privacy policy
@@ -162,20 +177,20 @@ sources:
 
 You finished a 70-minute conversation. It was good. Now it's sitting on a drive, and somewhere in it are the twelve minutes worth keeping and four clips worth posting — and you have no idea which twelve minutes.
 
-Captions can't take that file the way you'd hope. Its manual editor caps projects at ten minutes. AI Edit wants at most two minutes on iOS, one on web, single speaker, vertical, unedited. AI Shorts will chop a long video into bite-sized pieces, though not on desktop. Those limits aren't bugs. They describe what the product is for: making one short talking video look styled, fast. It is genuinely good at that, and if that's your work, stop reading.
+Captions can take that file, but only to mine it. Its Clips feature accepts up to three hours and hands back a ranked batch of shorts. Editing is another story: the manual editor caps projects at ten minutes, and AI Edit wants a few minutes of single-speaker, unedited footage. Those limits aren't bugs. They describe what the product is for: making one short talking video look styled, fast. It is genuinely good at that, and if that's your work, stop reading.
 
-BitterClip starts where that stops. The whole recording goes in — phone, Zoom, Riverside, a camera, or recorded straight into the project from your browser — and you cut from all of it. That last one is worth a sentence: prop your phone up, hit record in the project, and the take uploads while you talk and arrives already transcribed. It's one person from one browser, not a remote interview studio. You read the transcript, select the sentence where the tangent starts, delete it, and the video loses that stretch. Cuts land on the word, not near it, because they resolve against the actual audio: no clipped syllables, no half-swallowed first word. When you have the landscape cut, one tap makes the vertical version, captions and timing carried across. Every clip remembers where it came from, so one click jumps back to that spot in the full recording.
+BitterClip starts where that stops. The whole recording goes in — phone, Zoom, Riverside, a camera, or recorded straight into the project from your browser — and you cut from all of it. That last one is worth a sentence: prop your phone up, hit record in the project, and the take arrives already transcribed. It's one person from one browser, not a remote interview studio — though on Producer you can send a link and have guests record themselves on their own time, each answer arriving as its own episode. You read the transcript, select the sentence where the tangent starts, delete it, and the video loses that stretch. Cuts land on the word, not near it, because they resolve against the actual audio: no clipped syllables, no half-swallowed first word. When you have the landscape cut, one tap makes the vertical version, captions and timing carried across. Every clip remembers where it came from, so one click jumps back to that spot in the full recording.
 
 ## What changing your mind costs
 
 This is the part you feel on a Tuesday afternoon, on the fourth pass.
 
-In Captions, refinement has a price list. You can revert AI Edit cuts one at a time or re-run with a different style, which costs 10 to 40 credits a pass. On desktop, correcting a misspelled word regenerates the whole video for about a credit. The loop is: don't like it, generate again, pay again, hope.
+In Captions, refinement has a price list. You can revert AI Edit cuts one at a time or run a new AI Edit, which costs 10 to 40 credits a pass. On desktop, correcting a misspelled word regenerates the whole video for about a credit. The loop is: don't like it, generate again, pay again, hope.
 
-In BitterClip you fix the cut you have. Say what's wrong and that same cut changes. Undo works all the way back. A review link you sent always plays the exact version the other person watched, so nobody argues about which version they saw. And no mystery score decides which moments are good — you pick, or you tell your assistant what to pick.
+In BitterClip you fix the cut you have. Say what's wrong and that same cut changes. Undo works all the way back. A review link plays the exact version you sent, never a later one, for up to two weeks, so nobody argues about which version they saw. And no mystery score decides which moments are good — you pick, or you tell your assistant what to pick.
 
 ## Two companies, two bets
 
-In September 2025, Captions rebranded as Mirage, an AI video research lab, and folded Mirage Studio into the creator product. The bet is generated video: avatars, digital twins, prompt-to-video. If you want a presenter made for you, that's the right shop, and BitterClip isn't in that business at all.
+In September 2025, the company behind Captions renamed itself Mirage, an AI video research lab; the app is still called Captions. The bet is generated video: avatars, digital twins, prompt-to-video. If you want a presenter made for you, that's the right shop, and BitterClip isn't in that business at all.
 
 BitterClip bets the other way. The sessions you already recorded are the asset, and the work is finishing them. So the editing happens wherever you already are — in ChatGPT, in Claude, or right in the editor. Anything you can click, you can ask for. "Cut the tangent at 14:20 and tighten the intro" comes back as a normal edit: open it, keep going by hand, or undo it.

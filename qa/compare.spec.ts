@@ -66,6 +66,9 @@ test.describe('head-to-head comparison pages', () => {
       await expect(page.getByText(/BitterClip better on \d/)).toBeVisible()
       await expect(page.getByRole('heading', { name: 'Choose BitterClip when…' })).toBeVisible()
       await expect(page.getByRole('heading', { name: 'Questions people actually ask.' })).toBeVisible()
+      // The method states this page's own score and check date.
+      await expect(page.getByRole('heading', { name: 'How we compared.' })).toBeVisible()
+      await expect(page.getByText(/This one: BitterClip \d+, .+ \d+, tie \d+\./)).toBeVisible()
       await expect(page.getByRole('link', { name: 'Try BitterClip', exact: true })).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
       await expect(page.locator('script[type="application/ld+json"]').first()).toHaveCount(1)
       await expect(page.getByRole('link', { name: '← All comparisons' })).toHaveAttribute('href', '/compare')

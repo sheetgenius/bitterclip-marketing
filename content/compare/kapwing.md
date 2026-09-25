@@ -3,10 +3,10 @@ title: "BitterClip vs Kapwing: Long Recordings or Social Video?"
 description: "Kapwing is a browser studio for short social video. BitterClip finishes long recordings into full cuts and vertical clips. Which one fits your week."
 competitor: Kapwing
 competitorUrl: https://www.kapwing.com
-reviewed: "2026-08-17"
+reviewed: "2026-09-25"
 competitorStrength: "The best browser studio for a team making social video together."
 heroLede: "Pick Kapwing if your videos start as a prompt or a template, and often with two or three people in the same tab. Pick BitterClip if they start as a recording — a podcast, a talk, a client session — and the hard part is turning 90 minutes into a finished episode plus a few vertical clips, every week. The two barely overlap."
-verdictBitterclip: "Record camera and mic straight into the project from your browser, or bring in a file from your phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript. Cuts land on the word, not near it, and undo works all the way back. Anything you can click, you can ask for — in ChatGPT, in Claude, or right in the editor."
+verdictBitterclip: "Record camera and mic straight into the project from your browser, collect recordings people make on their own time from one link on Producer, or bring in a file from your phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript. Cuts land on the word, not near it, and undo works all the way back. Anything you can click, you can ask for — in ChatGPT, in Claude, or right in the editor."
 verdictCompetitor: "Kapwing is where a team makes short social video together in the browser: 100+ caption templates, text-to-video, text-to-speech, dubbing, and posting straight to TikTok, Facebook, and YouTube. Right call when the video starts as a prompt rather than a recording. Watch the billing — monthly AI credits don't roll over, and each member of a Pro workspace is billed separately."
 rows:
   - axis: What you're starting with
@@ -22,17 +22,17 @@ rows:
       lead: "Just ask for the edit."
       detail: "The same edits work from ChatGPT, Claude, any MCP client, or the editor itself."
     competitor:
-      lead: "You do it in the tab."
-      detail: "No public developer API or agent integration is advertised; plugins pull stock from Unsplash, Pexels, Pixabay, and Giphy."
+      lead: "Kai in the tab; MCP in beta."
+      detail: "Its Kai agent edits by chat inside the editor; a Claude and ChatGPT connector is in closed beta for upload, subtitles, dubbing, and export."
     edge: bitterclip
   - axis: When the first cut is wrong
     bitterclip:
       lead: "Fix the cut you have."
       detail: "Say what's off instead of rolling the dice again, and undo goes all the way back."
     competitor:
-      lead: "Finish it by hand."
-      detail: "Kapwing calls its AI clips '100% customizable directly in the studio' — music, brand assets, B-roll, clip by clip."
-    edge: bitterclip
+      lead: "Re-prompt, then finish by hand."
+      detail: "Keep prompting for longer, shorter, or different clips, or ask Kai for a follow-up change; the rest is '100% customizable directly in the studio.'"
+    edge: even
   - axis: Who decides which moments are good
     bitterclip:
       lead: "You do."
@@ -55,7 +55,7 @@ rows:
       detail: "Recordings from roughly 20 minutes to 2 hours are what the product is built around."
     competitor:
       lead: "Stops at two hours."
-      detail: "Exports and link uploads cap at 120 minutes even on paid plans; the clipper takes 2-hour sources."
+      detail: "Exports and link uploads cap at 120 minutes even on paid plans; the clipper takes sources of two to three hours."
     edge: bitterclip
   - axis: Making the captions look right
     bitterclip:
@@ -81,6 +81,14 @@ rows:
       lead: "Posts to more places."
       detail: "Facebook, TikTok, YouTube and Shorts direct — though Instagram still means exporting the MP4 and posting by hand."
     edge: competitor
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+    competitor:
+      lead: "Only by adding a seat."
+      detail: "Someone can record into your workspace only as a member, with a Kapwing account and, on paid plans, a billed seat."
+    edge: bitterclip
   - axis: What a month costs
     bitterclip:
       lead: "Seven days to prove the fit."
@@ -94,6 +102,7 @@ chooseUs:
   - "You'd rather say 'cut the tangent at 14:20 and tighten the intro' than go hunting for it on a timeline. That works from ChatGPT, Claude, or the editor, and what you get back is a normal edit you can keep changing by hand."
   - You've been burned by cuts that clip the first word. These land on the word, because they're matched against the actual audio.
   - Every clip remembers where it came from, so one click puts you back at that spot in the full recording when someone asks.
+  - You want guests or customers to record on their own time from one link, without an account or a seat each, and every answer to arrive as its own episode.
   - You shoot two or three angles and want to cut between them without wrecking the audio.
 chooseThem:
   - Your video starts as a prompt or a template rather than a recording — text-to-video, script generation, text-to-speech, dubbing, and stock are the point of Kapwing, not a side feature.
@@ -126,13 +135,15 @@ faq:
   - q: Is BitterClip better than Kapwing?
     a: For finishing recordings, yes. For turning a prompt into a social video, no. BitterClip cuts on the word, keeps every clip tied to the moment it came from, undoes exactly, and takes instructions from ChatGPT, Claude, or the editor. Kapwing is better at making short videos out of prompts, templates, and stock.
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "It records. Every project has a browser recorder — 'Record in browser' on the Sources tab, or 'Record here' in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record so transcription starts the moment you press stop. Now the boundary: one person, one device, signed in. There are no guest recording links and no separate per-participant tracks — one session is one merged file. To record a guest over the internet, use a dedicated remote-recording tool; that is a real studio job and BitterClip is not one. Bringing footage you shot elsewhere is still completely normal."
+    a: "It records. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. It captures camera and mic from a laptop or phone browser, up to 1080p. That recorder is one person on one device; there are no live remote guests and no separate per-participant tracks, so for recording a guest live over the internet, a dedicated remote-recording tool is still the better choice. What BitterClip adds on Producer is async recording: send a link and other people record themselves on their own time, and each answer arrives as its own episode. Bringing footage you shot elsewhere is still completely normal."
   - q: Can I edit Kapwing's AI-generated clips?
-    a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you finish each clip yourself on a timeline."
+    a: "You can — Kapwing says Repurpose Studio clips are '100% customizable directly in the studio,' so you're never stuck with what the generator handed you. The difference is what fixing means. In BitterClip you say what's wrong and the same cut changes, and you can undo it; in Kapwing you can re-prompt Repurpose or ask Kai for a follow-up change, and the rest you finish yourself on a timeline."
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Kapwing has no equivalent: someone can record into your workspace only as a member with a Kapwing account, billed as a seat on paid plans."
   - q: Does Kapwing watermark free exports?
     a: Every free-plan export carries a Kapwing watermark, resolution stops at 720p, and free projects can be deleted after three days. BitterClip instead offers a card-required seven-day Creator trial that costs $1, with watermarked exports; paid Creator begins at $24/month with clean exports.
   - q: Does Kapwing have an API?
-    a: No — Kapwing advertises no public developer API, no Zapier app, and no agent integration; extensibility means in-editor plugins pulling stock from providers like Unsplash and Giphy. In BitterClip, anything you can click you can also ask for from ChatGPT, Claude, or the editor's own panel, and the result is an ordinary edit.
+    a: Not a public developer API or a Zapier app. What it has is the Kapwing MCP, in closed beta with a small set of testers, which lets Claude and ChatGPT upload, subtitle, translate, dub, and download exports in your workspace; Kapwing plans to open it to Pro, Business, and Enterprise. In BitterClip, anything you can click you can also ask for from ChatGPT, Claude, or the editor's own panel, and the result is an ordinary edit.
 sources:
   - label: Kapwing homepage
     url: https://www.kapwing.com/
@@ -148,8 +159,12 @@ sources:
     url: https://www.kapwing.com/tools/subtitles
   - label: Kapwing text-based video editor
     url: https://www.kapwing.com/ai/text-based-video-editor
-  - label: Kapwing Plugins
-    url: https://www.kapwing.com/plugins
+  - label: "Kapwing help: about the Kapwing MCP"
+    url: https://www.kapwing.com/help/about-the-kapwing-mcp/
+  - label: "Kapwing help: how to use Repurpose"
+    url: https://www.kapwing.com/help/how-to-use-kapwings-repurpose-tool/
+  - label: Kapwing release notes, June 2026
+    url: https://www.kapwing.com/help/release-notes-june-2026/
   - label: Kapwing Share to Socials
     url: https://www.kapwing.com/help/share-to-socials-from-kapwing/
   - label: Kapwing Terms of Service
@@ -160,13 +175,13 @@ sources:
 
 You upload the talk, run Repurpose Studio, get a batch of clips the AI picked, restyle the captions, export. A decent afternoon. Then you do it again the next week, and the week after, and the shape of the job shows itself: the machine proposes the sections, and you finish every one of them yourself — music, brand assets, B-roll — before any of it can go out. Kapwing says its AI clips are "100% customizable directly in the studio." That's true. It's also a description of the labor. Customizable means you do it, clip by clip.
 
-BitterClip starts from the recording instead of from a prompt. Prop your phone up and record straight into the project from the browser — the take uploads in chunks while you shoot, and transcription starts when you press stop — or drop in a file you already have from Zoom, Riverside, or a camera. Either way you get a transcript you can edit like a document. Select the sentence where you rambled, delete it, and a real cut happens in the video. It lands on the word rather than near it, because it's matched against the actual audio: no clipped syllables, no half-swallowed first word. The vertical 9:16 version is one tap, captions and timing carried across. Openers and outros, speaker titles, music you can listen to before you commit to it. Same kit every week, so the second episode isn't a rebuild of the first.
+BitterClip starts from the recording instead of from a prompt. Prop your phone up and record straight into the project from the browser, send one link on Producer and let up to 25 people record themselves on their own time, or drop in a file you already have from Zoom, Riverside, or a camera. Either way you get a transcript you can edit like a document. Select the sentence where you rambled, delete it, and a real cut happens in the video. It lands on the word rather than near it, because it's matched against the actual audio: no clipped syllables, no half-swallowed first word. The vertical 9:16 version is one tap, captions and timing carried across. Openers and outros, speaker titles, music you can listen to before you commit to it. Same kit every week, so the second episode isn't a rebuild of the first.
 
 ## Ask for the edit instead of going to find it
 
-When a Kapwing clip is 80% right, you open the studio and close the last 20% by hand. When a BitterClip cut is 80% right, you say what's wrong — in ChatGPT, in Claude, or in the panel beside the editor — and it changes. What comes back is a normal edit: keep nudging it yourself, or undo it, all the way back. Anything you can click, you can ask for.
+When a Kapwing clip is 80% right, you open the studio and close the last 20% by hand, or one Kai request at a time. When a BitterClip cut is 80% right, you say what's wrong — in ChatGPT, in Claude, or in the panel beside the editor — and it changes. What comes back is a normal edit: keep nudging it yourself, or undo it, all the way back. Anything you can click, you can ask for.
 
-Two things fall out of that, and you feel both weekly. Every clip remembers where it came from, so one click puts you back at that spot in the full recording — worth a lot the day someone asks when exactly he said that. And the review link you sent doesn't drift out from under you; it plays the version they watched, even after you've moved on.
+Two things fall out of that, and you feel both weekly. Every clip remembers where it came from, so one click puts you back at that spot in the full recording — worth a lot the day someone asks when exactly he said that. And a review link plays the exact version you sent, never a later one, for up to two weeks, even after you've moved on.
 
 There's no score deciding which moments are good, either. That's on purpose. If you want a machine to choose your highlights, Kapwing will do it and BitterClip won't.
 

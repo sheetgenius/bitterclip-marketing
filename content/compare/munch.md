@@ -3,7 +3,7 @@ title: "BitterClip vs Munch: Clipping Tool or Social Suite?"
 description: "Munch became a social-posting suite. BitterClip just makes clips. Pricing, how much you can actually edit, and which one fits the job you have."
 competitor: Munch
 competitorUrl: https://www.getmunch.com
-reviewed: 2026-08-17
+reviewed: 2026-09-25
 competitorStrength: "The whole social calendar, written and posted for you."
 heroLede: "If you came for the clips, pick BitterClip — turning recordings into finished clips is the entire product, and you fix a cut instead of rolling for a new one. If you want AI to write your social posts and put them out across five platforms on a schedule, pick Munch. On December 31, 2025 it relaunched as Munch Studio, and clipping is now one metered quota inside a marketing suite."
 verdictBitterclip: "Where your recordings become finished episodes and clips. Record straight into the project from your browser, or upload a session you shot anywhere — phone, Zoom, Riverside, a camera — then edit it by selecting words in the transcript, by asking in ChatGPT or Claude, or by hand. Cuts land on the word, every clip remembers where it came from, and undo works all the way back."
@@ -81,6 +81,14 @@ rows:
       lead: "Posts it for you."
       detail: One-click scheduling to five platforms, plus a dashboard for how each post did.
     edge: competitor
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+    competitor:
+      lead: Uploads only.
+      detail: Munch takes files, including Zoom recordings, but has no recorder and no way for someone else to record into your account.
+    edge: bitterclip
   - axis: Your first month
     bitterclip:
       lead: "Seven days for $1."
@@ -94,7 +102,8 @@ chooseUs:
   - "You'd rather edit by reading: find the tangent in the transcript, select it, delete it, and it's gone from the video."
   - You want to make the clip while you're already in ChatGPT or Claude, then open it in the editor and keep going by hand.
   - You shoot with two or three cameras and need to cut between angles without the audio wobbling.
-  - You send review links and need them to hold — the link you sent still plays the exact version they watched, and undo works all the way back.
+  - You send review links and need them to hold — a review link plays the exact version you sent, never a later one, for up to two weeks, and undo works all the way back.
+  - You collect answers from guests or customers and want them to record on their own time from one link, each answer arriving as an episode you can cut.
 chooseThem:
   - Your social calendar should draft itself — posts written from your website and brand materials, your job reduced to approving them.
   - You need scheduling and auto-publishing across Instagram, Facebook, LinkedIn, YouTube, and TikTok with performance tracking in one place. BitterClip prepares connected destinations for confirmation and hands off the finished file.
@@ -106,8 +115,8 @@ gotchas:
     body: There is no free plan. The 7-day trial turns into a paid subscription on its own at the end — Munch's help center says that if you do nothing, "your payment method will be charged." Cancel before the trial ends to avoid the charge.
     sourceLabel: "Munch Studio help: trial and billing"
     sourceUrl: https://help.munchstudio.com/en/articles/13114429-free-trial-demo-billing-during-trial
-  - title: Refunds require that you never used it
-    body: Monthly plans refund only if you cancel within 7 days of payment and did not use the platform during those days. Annual plans refund within the first 14 days (including the trial) only if unused after the trial ended. Outside those windows there is no refund; access runs to the end of the billing period.
+  - title: Monthly refunds require that you never used it
+    body: Monthly plans refund only if you cancel within 7 days of payment and did not use the platform during those days; after that there is no refund, and access runs to the end of the billing period. Annual plans refund in full within the first 14 days (including the trial) if unused after the trial. After that, the July 2026 terms give annual subscribers a pro-rated refund, minus any setup fee and minus the service already used at the full monthly price. Munch's help center still says it does not refund, so the terms and the help center disagree.
     sourceLabel: Munch Studio Terms of Use, §9.6
     sourceUrl: https://www.munchstudio.com/terms-of-use
   - title: Cancel, and your posts go view-only
@@ -129,6 +138,8 @@ faq:
     a: "Yes, within fixed bounds: extend a clip by up to 30 seconds at either end, split and reframe segments with Manual Crop, and auto-remove silences. Past that the documented path is Re-Munch, which generates a new batch and requires changing at least one setting. Nothing in the docs lets you edit through the transcript."
   - q: Is BitterClip better than Munch?
     a: Yes, for turning recorded sessions into finished cuts and clips you control — that is the entire product, from transcript editing to multiple cameras to undo that actually works. For hands-off post writing and auto-publishing across five platforms, Munch Studio is the better fit; BitterClip prepares connected destinations for your final confirmation and hands off the finished file.
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Munch has no recorder at all; it works from files you upload."
   - q: How much does Munch Studio cost compared to BitterClip?
     a: "Munch Studio starts at $48/month (Essential, billed monthly; $38/month billed annually) with a 7-day trial and no free plan; multi-brand plans run $148 and $398/month. BitterClip Creator also begins with a seven-day trial: card required, $1 today, then $24/month; cancel anytime. The trial includes one recording plus $5 of agent work for analysis, the First Cut, and continued direction. Producer is $99/month. What you're really choosing between is a posting quota and a place to finish your recordings."
 sources:
@@ -146,6 +157,8 @@ sources:
     url: https://help.munchstudio.com/en/articles/13114429-free-trial-demo-billing-during-trial
   - label: "Munch Studio help: plans, limits, and cancelations"
     url: https://help.munchstudio.com/en/articles/15032725-plans-limits-billing-cancelations-multi-brand
+  - label: "Munch Studio help: cancelations and refunds"
+    url: https://help.munchstudio.com/en/articles/13114532-cancelations-and-refunds
   - label: "Munch Studio help: what happens to posts if you cancel"
     url: https://help.munchstudio.com/en/articles/13225020-will-i-lose-my-saved-posts-or-calendar-if-i-cancel
   - label: "Munch Studio help: social platform integrations"
@@ -168,7 +181,7 @@ That is a legitimate product. It is also a different product. If you signed up t
 
 You finish a 90-minute conversation. Munch hands back a batch. One clip is close. So you Extend Clip — 30 seconds at either end, that is the ceiling — and reframe with Manual Crop, and when it is still not right, the documented path is Re-Munch: a new batch, and you have to change at least one setting to get it. You never fix the clip in front of you. You re-roll and re-watch, and the version that almost existed in batch one never comes back.
 
-BitterClip starts somewhere else. Your recording is the reference, so cuts land on the word, not near it — no clipped syllables, no half-swallowed first word. When a cut is 90% right, you say what is wrong, something like "the intro drags, lose the sponsor tangent," and that same cut gets tightened. Undo works all the way back. Every clip remembers where it came from, so one click jumps you to that spot in the full recording, and the review link you sent your co-host on Tuesday still plays the exact version they watched on Thursday.
+BitterClip starts somewhere else. Your recording is the reference, so cuts land on the word, not near it — no clipped syllables, no half-swallowed first word. When a cut is 90% right, you say what is wrong, something like "the intro drags, lose the sponsor tangent," and that same cut gets tightened. Undo works all the way back. Every clip remembers where it came from, so one click jumps you to that spot in the full recording, and the review link you sent your co-host on Tuesday still plays that exact version on Thursday, never a later one, for up to two weeks.
 
 You can also just read your way through it. The transcript is the edit: find the tangent in the words, select it, delete it, and it is gone from the video. Then one tap makes the vertical version, captions and timing carried across, and if a word came through wrong you fix that word.
 

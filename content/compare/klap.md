@@ -3,7 +3,7 @@ title: "BitterClip vs Klap: Control After the First Cut"
 description: Klap turns a link into shorts, fast. BitterClip finishes the whole recording — full episode plus vertical clips — and lets you fix a bad cut by hand.
 competitor: Klap
 competitorUrl: https://klap.app
-reviewed: 2026-08-17
+reviewed: 2026-09-25
 competitorStrength: Paste a link, get shorts. There is no learning curve at all.
 heroLede: "Pick Klap when you want a lot of shorts and don't want to think about it — paste a YouTube link, take the clips it hands back, schedule them, move on. Pick BitterClip when the recording itself has to be finished, and when a cut that lands wrong needs fixing rather than re-rolling. Klap gives you a pile to choose from; BitterClip gives you an edit you can keep working on."
 verdictBitterclip: Where your recordings become finished episodes and clips. Pull words out of the transcript and the video actually changes, or ask for the edit in ChatGPT, Claude, or the editor itself — cuts land on the word, not near it, so nothing gets clipped mid-syllable. Change your mind and undo works, all the way back.
@@ -39,15 +39,15 @@ rows:
       detail: Every clip remembers its spot, so one click drops you there in the full recording.
     competitor:
       lead: No trip back.
-      detail: Word-level transcripts exist in the API, but nothing in the product links a clip home.
+      detail: Nothing in the product links a clip back to its spot in the source video.
     edge: bitterclip
   - axis: Editing without opening the editor
     bitterclip:
       lead: Ask for the edit.
       detail: Do it in ChatGPT, Claude, any MCP client, or the editor — same edits either way.
     competitor:
-      lead: No chat lane.
-      detail: There's a REST API you poll, with toggles for captions, reframing, emojis, and intro titles.
+      lead: A ChatGPT app, no editing.
+      detail: Its ChatGPT app creates projects, lists clips, exports, and schedules posts; the REST API adds caption and reframe toggles.
     edge: bitterclip
   - axis: Sessions shot on more than one camera
     bitterclip:
@@ -73,6 +73,14 @@ rows:
       lead: A link or a file.
       detail: The API adds S3, GCS, and public URLs, with Google Drive and Twitch listed as coming.
     edge: bitterclip
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record themselves in the browser on their own time, no account needed, and each answer lands as its own episode.
+    competitor:
+      lead: Link or file only.
+      detail: Klap has no recorder and no way to collect a take from someone else.
+    edge: bitterclip
   - axis: Getting it in front of people
     bitterclip:
       lead: You hand it off.
@@ -94,6 +102,7 @@ chooseUs:
   - You'd rather fix the cut you have than generate again and hope the next stack is better.
   - You want to ask for edits while you're already in ChatGPT or Claude, and have them come back as real edits you can keep changing by hand.
   - You shot two or three cameras and want to cut between them without the audio going sideways.
+  - You collect answers from guests or customers and want them to record on their own time from one link, each answer arriving as its own episode.
   - You want to choose which moments matter yourself, with the full recording one click away.
 chooseThem:
   - You want the most shorts for the least effort. Paste a YouTube link, take what comes back, schedule it, move on.
@@ -106,16 +115,16 @@ gotchas:
     body: If you're unhappy, you can get a refund in the first month. After that, a refund requires consecutive fully elapsed months of zero usage, up to three. On a yearly plan, month one gets a full refund; later refunds are prorated at 1/12 of the annual amount per qualifying zero-usage month.
     sourceLabel: Klap Terms of Service
     sourceUrl: https://klap.app/terms-of-services
-  - title: Clip counts are the only published difference between plans
-    body: The pricing page lists 100, 300, or 1,000 clips per month, says all plans include AI clipping, unlimited social accounts, and analytics, and promises "Only pay for clips you generate" — but publishes no watermark, resolution, rollover, overage, or seat terms, and no pricing FAQ. The homepage FAQ still quotes Pro at $29/month; the pricing page says $39/mo billed yearly.
+  - title: What a plan buys depends on the pricing page you're shown
+    body: Klap's pricing page doesn't show every visitor the same unit. We saw the same three plans described as 100, 300, or 1,000 clips a month ("Only pay for clips you generate") and as 300, 900, or 2,700 upload minutes a month. Prices hold at $14, $39, and $94 a month billed yearly, or $29, $79, and $189 monthly, and no watermark, resolution, rollover, overage, or seat terms are published. The homepage FAQ still quotes Pro at $29/month.
     sourceLabel: Klap pricing page
     sourceUrl: https://klap.app/pricing
   - title: They can close your account any time, and nothing says what happens to your work
-    body: 'The consumer Terms reserve the right to "terminate or suspend your access to our Service at any time, for any reason, without notice or liability," and say nothing about your projects after you cancel. The only promise about keeping anything is in the DPA: uploads are kept until you delete them or the account terminates, plus 30 days for backup recovery.'
+    body: 'The consumer Terms reserve the right to "terminate or suspend your access to our Service at any time, for any reason, without notice or liability," and say nothing about your projects after you cancel. The retention promises live elsewhere: the DPA and, since September 2026, the privacy policy say content is kept until you delete it or your account, plus up to 30 days in backups.'
     sourceLabel: Klap Terms of Service
     sourceUrl: https://klap.app/terms-of-services
   - title: Their own privacy policy says consent isn't being collected yet
-    body: Klap says transcription runs on self-hosted open-source models with no data retention, while clip curation sends transcripts to OpenAI's GPT-3.5 via API. The same policy — last updated July 2024 — says explicit consent for sharing data with third-party AI models is not currently obtained and a consent mechanism is being implemented.
+    body: Klap's privacy policy, rewritten September 25, 2026, says RunPod hosts the open-source models that transcribe your videos, that OpenRouter, the model providers it routes to, and OpenAI receive your transcripts, and that Google's Gemini receives video with no speech. The same policy says explicit consent for sharing data with third-party AI models is not currently obtained and a consent mechanism is being implemented.
     sourceLabel: Klap privacy policy
     sourceUrl: https://klap.app/privacy-policy
 faq:
@@ -129,8 +138,10 @@ faq:
     a: No, on purpose. Nothing scores your moments for you; you or your assistant choose them, and every clip is one click from the spot it came from in the full recording. Klap's score is the right idea for hands-off volume and the wrong one when you're the person answering for the cut.
   - q: Can BitterClip make vertical shorts like Klap?
     a: It can. The 9:16 version of any landscape cut is one tap, with captions and timing carried across and fill-or-fit framing around a focal point. The difference is that the short stays tied to the full cut, and to the exact moment in the recording it came from.
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each person can retake privately and sends one take, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Klap doesn't record; it works from links and files you give it."
   - q: Which is cheaper, BitterClip or Klap?
-    a: "Neither, cleanly — they charge for different things. BitterClip Creator begins with a card-required seven-day trial at $1 today, then costs $24/month, cancel anytime. Paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Klap's advertised rates are billed yearly — $14/month for 100 clips, $39 for 300, $94 for 1,000 — with no watermark, resolution, or rollover terms published to compare against."
+    a: "Neither, cleanly — they charge for different things. BitterClip Creator begins with a card-required seven-day trial at $1 today, then costs $24/month, cancel anytime. Paid Creator includes 10 source-footage hours and $10 of included agent work. Producer is $99/month with 40 source-footage hours, $40 of included agent work, and priority rendering. Klap's plans are $14, $39, and $94 a month billed yearly ($29, $79, and $189 monthly), described as 100, 300, or 1,000 clips a month or, for some visitors, 300, 900, or 2,700 upload minutes, with no watermark, resolution, or rollover terms published to compare against."
 sources:
   - label: Klap homepage
     url: https://klap.app/
@@ -140,6 +151,8 @@ sources:
     url: https://klap.app/terms-of-services
   - label: Klap privacy policy
     url: https://klap.app/privacy-policy
+  - label: Klap support (ChatGPT app)
+    url: https://klap.app/support
   - label: Klap API documentation
     url: https://docs.klap.app/
   - label: Klap API pricing
