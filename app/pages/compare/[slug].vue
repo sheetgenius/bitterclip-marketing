@@ -52,10 +52,9 @@ const formatDate = (value?: string) => {
   }).format(new Date(`${value}T00:00:00Z`))
 }
 
-// Per-row verdict. Two redundant cues carry it: a chip naming the winner, and
-// accent styling on the winning CELL. Styling by outcome (not by brand) is the
-// point — the old version made our column brighter on every row, which silently
-// claimed a win we hadn't earned.
+// Per-row verdict, said in words under the job; the winning cell also gets a
+// check in its margin. Green means "better here" whichever product it lands
+// on, which leaves coral to mean BitterClip's brand and nothing else.
 const edgeLabel = (edge: string, competitor: string) => {
   if (edge === 'bitterclip') return 'BitterClip'
   if (edge === 'competitor') return competitor
@@ -63,12 +62,7 @@ const edgeLabel = (edge: string, competitor: string) => {
 }
 
 const wins = (row: { edge?: string }, side: 'bitterclip' | 'competitor') => row.edge === side
-const tied = (row: { edge?: string }) => row.edge === 'even'
-
-const cellClass = (row: { edge?: string }, side: 'bitterclip' | 'competitor') => {
-  if (tied(row)) return 'compare-cell--tie'
-  return wins(row, side) ? `compare-cell--win compare-cell--win-${side}` : 'compare-cell--lose'
-}
+const verdictTone = (edge?: string) => edge === 'bitterclip' ? 'ours' : edge === 'competitor' ? 'theirs' : 'tie'
 
 // Running score, so the shape of the answer is readable before any row is.
 const tally = computed(() => compareTally(page.value?.rows ?? []))
@@ -122,6 +116,20 @@ onMounted(() => {
   ctaObserver.observe(heroCta.value)
 })
 onBeforeUnmount(() => ctaObserver?.disconnect())
+
+// The table's header row only gets a background once it is stuck under the
+// site header; at rest it is type on the page like everything else.
+const tableTop = ref<HTMLElement | null>(null)
+const headStuck = ref(false)
+let headObserver: IntersectionObserver | undefined
+onMounted(() => {
+  if (!tableTop.value || typeof IntersectionObserver === 'undefined') return
+  headObserver = new IntersectionObserver(([entry]) => {
+    headStuck.value = !entry.isIntersecting && entry.boundingClientRect.top < 100
+  }, { rootMargin: '-72px 0px 0px 0px' })
+  headObserver.observe(tableTop.value)
+})
+onBeforeUnmount(() => headObserver?.disconnect())
 
 const { data: site } = await useAsyncData('site', () =>
   queryCollection('site').first(),
@@ -466,47 +474,43 @@ useHead(() => {
         </div>
       </div>
 
-      <!-- One semantic table; CSS reflows it into cards below md so a phone
-           never side-scrolls the thing the page exists to compare. -->
-      <div :class="{ 'show-details': showDetails }" class="compare-table-wrap rounded-2xl md:overflow-clip md:border md:border-white/[0.09] md:bg-white/[0.022] md:shadow-2xl md:shadow-black/50">
+      <!-- Set like a table in a book: hairlines between rows, section headings
+           in type, no boxes and no column rules. The verdict is said once, in
+           words, under each job; a check hangs in the margin of the winning
+           cell; both columns stay equally readable. Below md the rows reflow so
+           a phone never side-scrolls. -->
+      <div ref="tableTop" aria-hidden="true" class="h-px" />
+      <div :class="{ 'show-details': showDetails, 'head-stuck': headStuck }" class="compare-table-wrap">
         <table class="compare-table w-full border-collapse text-left">
           <caption class="sr-only">Comparison of BitterClip and {{ page.competitor }}, job by job</caption>
+          <colgroup>
+            <col class="w-[24%]">
+            <col class="w-[38%]">
+            <col class="w-[38%]">
+          </colgroup>
           <thead>
             <tr>
-              <th scope="col" class="w-[26%] px-5 py-3.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-zinc-400">The job</th>
-              <th scope="col" class="compare-col-ours w-[37%] px-5 py-3.5 text-[13px] font-semibold tracking-wide text-[#f28f84] border-l border-white/[0.09]">BitterClip</th>
-              <th scope="col" class="w-[37%] px-5 py-3.5 text-[13px] font-semibold tracking-wide text-zinc-200 border-l border-white/[0.09]">{{ page.competitor }}</th>
+              <th scope="col" class="compare-head text-zinc-500">The job</th>
+              <th scope="col" class="compare-head compare-head--product text-[#f28f84]">BitterClip</th>
+              <th scope="col" class="compare-head compare-head--product text-white">{{ page.competitor }}</th>
             </tr>
           </thead>
           <tbody v-for="group in tableGroups" :key="group.key">
             <tr v-if="group.label" class="compare-group">
-              <th colspan="3" scope="rowgroup" class="px-5 pb-2 pt-6 text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-400">{{ group.label }}</th>
+              <th colspan="3" scope="rowgroup" class="font-display">{{ group.label }}</th>
             </tr>
-            <tr v-for="row in group.rows" :key="row.axis" class="compare-row border-t border-white/[0.05] align-top">
-              <th scope="row" class="px-5 py-4">
-                <span class="block font-semibold text-[15px] text-zinc-100 leading-snug">{{ row.axis }}</span>
-                <span
-                  class="compare-badge mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold"
-                  :class="row.edge === 'bitterclip' ? 'compare-badge--ours' : row.edge === 'competitor' ? 'compare-badge--theirs' : 'compare-badge--tie'"
-                >{{ row.edge === 'even' ? 'Tie' : `${winnerName(row.edge)} better` }}</span>
+            <tr v-for="row in group.rows" :key="row.axis" class="compare-row">
+              <th scope="row">
+                <span class="compare-job">{{ row.axis }}</span>
+                <span class="compare-verdict" :class="`compare-verdict--${verdictTone(row.edge)}`">{{ row.edge === 'even' ? 'Tie' : `${winnerName(row.edge)} better` }}</span>
               </th>
-              <td :data-label="'BitterClip'" class="compare-cell compare-col-ours px-5 py-4 border-l border-white/[0.09]" :class="cellClass(row, 'bitterclip')">
-                <span class="compare-lead font-semibold text-[15px] leading-snug">
-                  <span aria-hidden="true" class="compare-check-slot">
-                    <span v-if="wins(row, 'bitterclip')" class="compare-check">✓</span>
-                  </span>
-                  <span>{{ row.bitterclip.lead }}</span>
-                </span>
-                <span class="compare-detail text-sm">{{ row.bitterclip.detail }}</span>
+              <td data-label="BitterClip" class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'bitterclip') }">
+                <span class="compare-lead">{{ row.bitterclip.lead }}</span>
+                <span class="compare-detail">{{ row.bitterclip.detail }}</span>
               </td>
-              <td :data-label="page.competitor" class="compare-cell px-5 py-4 border-l border-white/[0.09]" :class="cellClass(row, 'competitor')">
-                <span class="compare-lead font-semibold text-[15px] leading-snug">
-                  <span aria-hidden="true" class="compare-check-slot">
-                    <span v-if="wins(row, 'competitor')" class="compare-check">✓</span>
-                  </span>
-                  <span>{{ row.competitor.lead }}</span>
-                </span>
-                <span class="compare-detail text-sm">{{ row.competitor.detail }}</span>
+              <td :data-label="page.competitor" class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'competitor') }">
+                <span class="compare-lead">{{ row.competitor.lead }}</span>
+                <span class="compare-detail">{{ row.competitor.detail }}</span>
               </td>
             </tr>
           </tbody>
@@ -837,111 +841,118 @@ useHead(() => {
   max-width: 44rem;
 }
 
-/* Outcome styling. No cell backgrounds: a green check plus brightness carries
-   the verdict. Green means "better here" whichever product it lands on, which
-   frees coral to mean BitterClip's brand and nothing else. */
-.compare-check {
+/* The job-by-job table, set in type. Base rules are the desktop table; the
+   phone layout below overrides them. */
+.compare-head {
+  padding: 0 0 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+.compare-head--product {
+  padding-left: 1.75rem;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.compare-group th {
+  padding: 2.4rem 0 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+.compare-table tbody:first-of-type .compare-group th {
+  padding-top: 1.6rem;
+}
+
+.compare-row > th,
+.compare-row > td {
+  padding: 1.2rem 0 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: top;
+}
+.compare-row > td {
+  padding-left: 1.75rem;
+}
+
+.compare-job {
+  display: block;
+  padding-right: 1.25rem;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgb(244 244 245);
+}
+.compare-verdict {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 13px;
+  font-weight: 500;
+}
+.compare-verdict--ours {
+  color: #f28f84;
+}
+.compare-verdict--theirs {
+  color: rgb(228 228 231);
+}
+.compare-verdict--tie {
+  color: rgb(125 125 135);
+}
+
+.compare-lead {
+  position: relative;
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgb(212 212 216);
+}
+.compare-detail {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgb(161 161 170);
+}
+.compare-cell--win .compare-lead {
+  color: #fff;
+}
+.compare-cell--win .compare-detail {
+  color: rgb(196 196 204);
+}
+/* Hung in the gutter, so every lead in a column starts on the same edge. */
+.compare-cell--win .compare-lead::before {
+  content: '✓';
+  position: absolute;
+  left: -1.3rem;
   color: #5fd39b;
   font-weight: 700;
 }
 
-/* The check gutter is reserved in EVERY cell, winner or not, so lead text and
-   detail text share one left edge down the whole table. Without it the winning
-   rows sit indented and the columns read ragged. */
-.compare-lead {
-  display: grid;
-  grid-template-columns: 1.35rem 1fr;
-  margin-bottom: 0.3rem;
-}
-.compare-check-slot {
-  display: block;
-}
-.compare-detail {
-  display: block;
-  padding-left: 1.35rem;
-  line-height: 1.55;
-}
-
-/* The product whose site this is keeps a quiet, neutral column identity —
-   never a colour that would read as winning. */
-.compare-col-ours {
-  background-color: rgba(255, 255, 255, 0.018);
-}
-
-.compare-cell--win .compare-lead {
-  color: #ffffff;
-}
-.compare-cell--win .compare-detail {
-  color: rgb(203 203 210);
-}
-
-/* Recessive, still comfortably readable — dimmer than this reads as disabled. */
-.compare-cell--lose .compare-lead {
-  color: rgb(180 180 190);
-}
-.compare-cell--lose .compare-detail {
-  color: rgb(142 142 152);
-}
-
-.compare-cell--tie .compare-lead {
-  color: rgb(228 228 231);
-}
-.compare-cell--tie .compare-detail {
-  color: rgb(160 160 170);
-}
-
-/* Desktop: keep the column headers in view while reading a ten-row table.
-   The header sits a step ABOVE the rows in value, not below — it is the anchor
-   for the two product names, so it must not read as a black void. */
+/* Desktop: the product names stay in view down a ten-row table. */
 @media (min-width: 768px) {
   .compare-table thead th {
     position: sticky;
     /* Clear the floating site header. */
     top: 4.5rem;
     z-index: 10;
-    backdrop-filter: blur(14px);
-    background: rgba(30, 30, 34, 0.96);
+    padding-top: 0.85rem;
+    transition: background-color 0.15s ease;
   }
-
-  /* Banding gives the eye a rail to track along when scanning left to right
-     across a tall row. Kept far below the header's value. */
-  .compare-row:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.012);
-  }
-
-  .compare-row {
-    transition: background-color 0.2s ease;
-  }
-
-  .compare-row:hover {
-    background-color: rgba(255, 255, 255, 0.028);
+  .head-stuck .compare-table thead th {
+    background: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(12px);
   }
 }
 
 .compare-toggle:focus-visible {
   outline: 2px solid #f28f84;
   outline-offset: 2px;
-}
-
-/* Who won the row, said in words in the job column, so the verdict never
-   depends on spotting a check mark. */
-.compare-badge--ours {
-  color: #f28f84;
-  background: rgba(242, 143, 132, 0.1);
-  border: 1px solid rgba(242, 143, 132, 0.3);
-}
-.compare-badge--theirs {
-  color: rgb(228 228 231);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-.compare-badge--tie {
-  color: rgb(161 161 170);
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-}
-
-.compare-group th {
-  background: rgba(255, 255, 255, 0.015);
 }
 
 .compare-faq summary::-webkit-details-marker,
@@ -1033,6 +1044,9 @@ useHead(() => {
     color: rgba(242, 143, 132, 0.85);
   }
 
+
+  /* The job table: each row is the job across the top with its verdict, then
+     the two products side by side. Details open on request. */
   .compare-table,
   .compare-table tbody,
   .compare-table tr,
@@ -1041,79 +1055,67 @@ useHead(() => {
     display: block;
     width: 100%;
   }
-
-  .compare-table thead {
+  .compare-table thead,
+  .compare-table colgroup {
     display: none;
   }
-
-  .compare-table tr.compare-group {
-    margin: 1.4rem 0 0.6rem;
-    border: 0;
-    background: transparent;
+  .compare-group th {
+    padding: 1.9rem 0 0.55rem;
+    font-size: 1.15rem;
   }
-  .compare-table tr.compare-group th {
-    padding: 0;
-    background: transparent;
-  }
-
-  .compare-table tr {
-    margin-bottom: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.28);
-    overflow: hidden;
-  }
-
-  .compare-table tr > th[scope='row'] {
-    padding: 1.1rem 1.15rem 0.9rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(255, 255, 255, 0.025);
-  }
-
-  /* Each row: the job across the top, the two verdicts side by side. */
   .compare-table tr.compare-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    padding: 0.95rem 0 1.1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .compare-table tr.compare-row > th[scope='row'] {
+  .compare-row > th,
+  .compare-row > td {
+    padding: 0;
+    border: 0;
+  }
+  .compare-row > th {
     grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
   }
-
-  .compare-cell {
-    position: relative;
-    padding: 0.9rem 1rem;
-    border-left: 0 !important;
+  .compare-job {
+    padding-right: 0;
+    font-size: 15px;
   }
-
-  .compare-cell + .compare-cell {
-    border-left: 1px solid rgba(255, 255, 255, 0.06) !important;
+  .compare-verdict {
+    flex-shrink: 0;
+    margin-top: 0;
+    font-size: 12px;
   }
-
+  .compare-lead {
+    font-size: 15px;
+  }
+  .compare-cell--win .compare-lead::before {
+    position: static;
+    margin-right: 0.3rem;
+  }
+  .compare-detail {
+    font-size: 14px;
+  }
   .compare-table-wrap:not(.show-details) .compare-detail {
     display: none;
   }
-  .compare-detail {
-    padding-left: 0;
-    margin-top: 0.35rem;
-  }
-  .compare-lead {
-    grid-template-columns: 1.1rem 1fr;
-    margin-bottom: 0;
-  }
-
-  /* The product name each block belongs to — without it, stacked cells are
-     ambiguous once the column headers are gone. */
+  /* Which product each block is, now that the column headers are gone. */
   .compare-cell::before {
     content: attr(data-label);
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.55);
   }
-
   .compare-cell[data-label='BitterClip']::before {
     color: rgba(242, 143, 132, 0.85);
   }

@@ -46,6 +46,7 @@ under a dated entry.
 
 ### Website
 
+- Reset the `/compare` job-by-job table in type: hairlines between rows, section headings instead of banded rows, and no card, column rules or zebra stripes. The verdict is said once in words under each job ("BitterClip better", "Zoom better", "Tie"), and a check hangs in the margin of the winning cell. The losing side is no longer dimmed, so both columns read equally well. The header row sticks under the site header and only gets a background while stuck.
 - Made every `/compare` page lead with facts, set in type, for the search crawlers and agents that read most of it:
   - The hero is now the answer and an "at a glance" table: who should choose each product, and both prices, including the competitor's free plan where the page documents one. The Zoom and clip-generator diagrams and the editor still are gone.
   - The one-minute cut moved down beside the customer quote. The facts, the differences, the job-by-job table and the prices now come before any picture.
