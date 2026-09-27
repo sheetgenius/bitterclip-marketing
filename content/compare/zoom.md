@@ -1,20 +1,20 @@
 ---
 title: "BitterClip vs Zoom: Record the Conversation, Not the Call"
-description: "Zoom records a view of your call. BitterClip records each person on their own track and hands you the episode. Where each wins, and how to bring Zoom recordings over."
+description: "Zoom records a view of your call. BitterClip records a separate video of each person and hands you the episode. Where each wins, and how to bring Zoom recordings over."
 competitor: Zoom
 competitorUrl: https://www.zoom.com
 reviewed: 2026-09-25
 competitorStrength: "Everyone already has it, and the free plan holds a hundred people."
 heroLede: "If the meeting is the point — a team call, a client check-in, a webinar — use Zoom; your guests already have it. If the conversation is going to become an episode, a Zoom recording is the wrong raw material: a view of the call, where active-speaker view cuts wherever Zoom decided someone was speaking, at 360p unless the host turned HD on. On paid plans, BitterClip's Studio records you and your guest on separate tracks from a browser link, and the conversation arrives as an episode ready to edit."
-shortAnswer: "Zoom records the meeting. BitterClip records each person on their own track and hands you the episode, ready to edit."
+shortAnswer: "Zoom records the meeting. BitterClip records a separate video of each person and hands you the episode, ready to edit."
 chooseUsShort: "the call is going to become an episode, clips, or something you send a client."
 chooseThemShort: "the meeting itself is the point, or more than two people are on it."
 heroVisual: tracks
-proofNote: "BitterClip's founder, Michael Ruescher, recorded this conversation over Zoom. The one-minute vertical cut came out of that recording, made in BitterClip. Record in Studio and each person also gets their own track."
+proofNote: "BitterClip's founder, Michael Ruescher, recorded this conversation over Zoom. The one-minute vertical cut came out of that recording, made in BitterClip. Record in Studio and each person also gets their own video."
 category: recording
 keyDifferences:
   - favors: bitterclip
-    title: A track for each person
+    title: A separate video of each person
     body: Zoom saves a view of the call; in active-speaker view, it already chose who's on screen. On paid plans, Studio records you and your guest separately, so you choose.
   - favors: bitterclip
     title: The call arrives as an episode
@@ -35,17 +35,17 @@ pricing:
 switching:
   - Keep Zoom for meetings. Download the recordings you want to finish, or set up Zoom import so new cloud recordings arrive on their own.
   - Drop the files into a BitterClip project. Each becomes a transcribed episode you can search by what was said.
-  - Record your next interview in Studio. Your guest joins from a link, and each of you lands on your own track.
+  - Record your next interview in Studio. Your guest joins from a link, and each of you is recorded as a separate video.
 switchingLink:
   label: How Zoom import works
   url: /docs/getting-started/import-zoom-cloud-recording
-verdictBitterclip: "Pick BitterClip when the recording is going to become something — an episode, clips, a client deliverable. In Studio, on any paid plan, your guest joins from a link with no account and nothing to install, each of you is recorded on your own track, and each browser keeps its own backup copy; when you finish, the conversation is already a transcribed episode. Delete words in the transcript to cut, switch between the two of you wherever you want, make the vertical version in one tap, or ask for any of it in ChatGPT or Claude. On Producer, people can also record answers on their own time from one link."
+verdictBitterclip: "Pick BitterClip when the recording is going to become something — an episode, clips, a client deliverable. In Studio, on any paid plan, your guest joins from a link with no account and nothing to install, each of you is recorded as a separate video, and each browser keeps its own backup copy; when you finish, the conversation is already a transcribed episode. Delete words in the transcript to cut, switch between the two of you wherever you want, make the vertical version in one tap, or ask for any of it in ChatGPT or Claude. On Producer, people can also record answers on their own time from one link."
 verdictCompetitor: "Pick Zoom when the meeting itself is the product. A hundred people on the free plan, three hundred on Business, webinars, AI Companion summaries, and nobody needs instructions to join. Its recordings are a record of the call: a video per layout — active speaker, gallery, or shared screen — plus separate per-person audio files if you switch them on. Editing stops at trimming, AI highlights, and Clips."
 rows:
   - axis: How a two-person conversation gets recorded
     bitterclip:
       lead: Each of you, separately.
-      detail: On paid plans, Studio records you and your guest on your own tracks, so the picture can follow whoever is talking.
+      detail: On paid plans, Studio records a separate video of you and of your guest, so the picture can follow whoever is talking.
     competitor:
       lead: A view of the call.
       detail: Cloud recording saves active-speaker, gallery, or shared-screen views; no setting makes a video file per person.
@@ -63,7 +63,7 @@ rows:
   - axis: Separate audio for each person
     bitterclip:
       lead: Every track, every time.
-      detail: Each person's camera and microphone are recorded on their own track without a setting to remember.
+      detail: Each person's camera and microphone are recorded separately, without a setting to remember.
     competitor:
       lead: An option, if you set it.
       detail: Paid cloud plans and desktop local recording can save one M4A per person; phone callers share a file.
@@ -176,7 +176,7 @@ faq:
   - q: Does Zoom record each participant separately?
     a: "Audio, yes, if you switch it on: paid cloud recording can save one M4A per person, and desktop local recording can too, even on the free plan; phone callers share an audio file. Video, no. Zoom Meetings records views of the call, not people. The one Zoom-owned exception is ZoomISO, an open-beta macOS app sold with the Enhanced Media add-on, which records the streams Zoom delivers to that computer."
   - q: What's the best Zoom alternative for recording interviews?
-    a: "BitterClip, if the interview is going to become an episode and clips. Your guest joins Studio from a link, each of you is recorded on your own track, and the conversation arrives as a transcribed episode you cut by deleting words. If you need a big remote panel in 4K, Riverside records more people at once. If the call is a meeting, stay with Zoom."
+    a: "BitterClip, if the interview is going to become an episode and clips. Your guest joins Studio from a link, each of you is recorded as a separate video, and the conversation arrives as a transcribed episode you cut by deleting words. If you need a big remote panel in 4K, Riverside records more people at once. If the call is a meeting, stay with Zoom."
   - q: Can I bring my Zoom recordings into BitterClip?
     a: "Yes. Download them from Zoom and upload the files, and each becomes an episode you can search and cut. Where Zoom import is set up for your account, finished cloud recordings arrive on their own, with the available views gathered into one editable episode. Old calls you'd never re-edit become findable by what was said and who said it."
   - q: Does BitterClip do async recording?
@@ -228,7 +228,7 @@ What comes out is a view of the call. Zoom's cloud recording saves active speake
 
 ## Record the conversation instead
 
-BitterClip's Studio, included on every paid plan, is built for the two-person conversation that's going to become an episode. You send your guest a link. They open it in a browser, check their camera and mic, and join — no account, nothing to install. From the moment you press record, each of you is recorded on your own track, and each browser keeps its own copy of its camera as a backup.
+BitterClip's Studio, included on every paid plan, is built for the two-person conversation that's going to become an episode. You send your guest a link. They open it in a browser, check their camera and mic, and join — no account, nothing to install. From the moment you press record, each of you is recorded as a separate video, and each browser keeps its own copy of its camera as a backup.
 
 When you finish, there's no export-download-upload loop. The conversation arrives in your project as an episode, already transcribed. Delete a sentence in the transcript and the cut lands on the word. Cut to your guest for the answer and back to you for the follow-up, or put you side by side, and the audio never moves. One tap makes the vertical version with captions and timing carried across. Anything you can click, you can also ask for in ChatGPT or Claude.
 
