@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BITTERCLIP_BUSINESS } from '~/utils/compare-plans'
 /**
  * The homepage — promoted from /lab/iso4 (owner ruling, 2026-08-20; the
  * cut-over plan is docs/homepage-promotion-audit.md). The fold is the ISO4
@@ -60,6 +61,10 @@ const faqItems = [
   {
     q: 'What can I upload?',
     a: 'Podcasts, interviews, calls, coaching sessions, and workshops — audio or video. The Creator trial accepts one recording up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Several synchronized angles of the same session stay together as one production.',
+  },
+  {
+    q: 'How does BitterClip make money?',
+    a: BITTERCLIP_BUSINESS,
   },
   {
     q: 'What happens if I cancel?',
@@ -411,6 +416,11 @@ useHead({
           <p class="mt-2.5 text-center text-[11px] text-zinc-500">Month to month · cancel anytime</p>
         </div>
 
+      </div>
+
+      <div class="mt-10 max-w-2xl">
+        <h3 class="text-base font-semibold text-white">How we make money</h3>
+        <p class="mt-2 text-base leading-relaxed text-zinc-400">{{ BITTERCLIP_BUSINESS }}</p>
       </div>
 
     </section>

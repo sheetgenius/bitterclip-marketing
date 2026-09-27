@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 import { compareMethodology, compareTally } from '~/utils/compare-methodology'
-import { BITTERCLIP_AGENT_PRICING, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
+import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -552,9 +552,6 @@ useHead(() => {
             </div>
           </div>
           <p class="mt-5 text-sm leading-relaxed text-zinc-300">
-            <span class="font-semibold text-white">Agent use:</span> {{ BITTERCLIP_AGENT_PRICING }}
-          </p>
-          <p class="mt-3 text-sm leading-relaxed text-zinc-300">
             <span class="font-semibold text-white">The catch:</span> {{ BITTERCLIP_CATCH }}
           </p>
           <div class="mt-auto pt-6">
@@ -577,6 +574,10 @@ useHead(() => {
             <a :href="page.pricing.sourceUrl" rel="noopener nofollow" target="_blank" class="text-zinc-400 underline decoration-white/20 underline-offset-2 hover:text-white">Source</a>
           </p>
         </article>
+      </div>
+      <div class="mt-7 max-w-3xl">
+        <h3 class="text-[15px] font-semibold text-white">How we make money</h3>
+        <p class="mt-1.5 text-[15px] leading-relaxed text-zinc-300">{{ BITTERCLIP_BUSINESS }}</p>
       </div>
     </section>
 

@@ -24,10 +24,10 @@ export function fillCompareTokens<T>(value: T): T {
   return value
 }
 
-// How the built-in agent is billed, in the product's own terms (Rails
-// AgentUsageSettlement: OpenRouter's billed cost plus a 15% fee; the model list
-// lives in config/agent_model_tiers.yml and gets repointed, so no names here).
-export const BITTERCLIP_AGENT_PRICING = "Pick the built-in agent's model for the job, from low-cost models to the strongest, served through OpenRouter. Each request costs what OpenRouter billed for it, plus 15%."
+// How BitterClip makes money, said the same way on the homepage, every
+// comparison, the Markdown twins and llms.txt. The 15% and what it covers are
+// the product's own terms (Rails AgentUsageSettlement).
+export const BITTERCLIP_BUSINESS = "From the subscription, by building a good workbench, not by reselling AI. The built-in agent costs what OpenRouter billed for each request plus a flat 15%, which covers OpenRouter's fees, card processing and requests that fail after they're billed. Your own ChatGPT or Claude can run the whole editor on the plan you already pay for. We run the company lean, so the subscription is enough."
 
 // Said on every comparison, next to the plans, and in every Markdown twin.
 export const BITTERCLIP_CATCH = 'The $1 trial covers one recording up to two hours and $5 of AI agent use, card required, with watermarked exports. Studio and clean exports start on a paid plan.'

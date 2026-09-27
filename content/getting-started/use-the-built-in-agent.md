@@ -49,7 +49,8 @@ through OpenRouter, and the chooser shows what a typical request costs on each.
 
 Every plan includes agent work: $5 during the Creator trial, $10 a month on Creator, and $40 a
 month on Producer, with $20, $50, and $100 top-ups. Each request costs what OpenRouter billed
-for it, plus 15%, and Billing shows what's left. When it runs out, the editor still works by
+for it, plus a flat 15% that covers OpenRouter's fees, card processing and requests that fail
+after they're billed. Billing shows what's left. When it runs out, the editor still works by
 hand.
 
 ## Prefer ChatGPT or Claude?
