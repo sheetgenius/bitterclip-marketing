@@ -32,28 +32,20 @@ export const compareMethodology = (page: CompareMethodologyPage, supportEmail: s
   const sourceCount = page.sources?.length ?? 0
   return [
     {
-      term: 'Who wrote this',
-      detail: 'The BitterClip team. We sell BitterClip, so read this as a vendor’s comparison rather than an independent review, and check the sources.',
+      term: 'Who wrote it',
+      detail: `The BitterClip team. We sell BitterClip, so this is a vendor’s comparison: every fact about ${page.competitor} comes from the public sources listed on this page.`,
     },
     {
-      term: 'What we compared',
-      detail: `${plural(tally.total, 'job')} a person brings to both products when turning long recordings into finished episodes and clips, from getting the recording in to what the monthly bill buys. Jobs ${page.competitor} does better are included.`,
-    },
-    {
-      term: 'How each row is called',
-      detail: `A row goes to the product that does that job better. When both do it well in different ways, or neither clearly wins, it is a tie. Every comparison gives at least two rows to the other product or to a tie. This one: BitterClip ${tally.bitterclip}, ${page.competitor} ${tally.competitor}, tie ${tally.even}.`,
+      term: 'How jobs are scored',
+      detail: `Each job goes to the product that does it better, or is a tie when both do it well or the choice comes down to taste. Here: BitterClip ${tally.bitterclip}, ${page.competitor} ${tally.competitor}, tie ${tally.even}.`,
     },
     {
       term: 'Where the facts come from',
-      detail: `${page.competitor}’s prices, limits, and terms come from the ${plural(sourceCount, 'public source')} listed at the end of this page, mostly its own pricing, help, and legal pages. Prices are the US-dollar prices those pages listed on the check date. BitterClip’s side describes what every customer on the named plan had that day; features still in private testing are left out.`,
-    },
-    {
-      term: 'When it was checked',
-      detail: `${formatReviewed(page.reviewed)}. The date changes only when the facts are checked again.`,
+      detail: `${plural(sourceCount, 'public source')}, mostly ${page.competitor}’s own pricing, help, and legal pages. Prices are in US dollars as listed that day. BitterClip’s side covers what’s live for customers on the plan named.`,
     },
     {
       term: 'Corrections',
-      detail: `If something here is wrong or out of date, email ${supportEmail} and we will fix the page.`,
+      detail: `Something out of date? Email ${supportEmail} and we’ll fix it.`,
     },
   ]
 }

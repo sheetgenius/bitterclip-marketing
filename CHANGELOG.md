@@ -46,6 +46,14 @@ under a dated entry.
 
 ### Website
 
+- Rebuilt every `/compare` page answer-first:
+  - The first screen now holds a one-sentence answer, "Choose BitterClip if / Choose X if", a call to action, and a product diagram or editor still.
+  - New sections: three "what actually differs" cards (one always the competitor's strength), a one-minute cut shown as proof, a grouped job-by-job table with an "only differences" filter, side-by-side pricing with each product's catch (BitterClip's included), and switching steps for recording tools.
+  - Folded: the fine print beyond the first two items, the FAQ, and the full write-up.
+  - Scoring now applies the same rules on every page and no longer marks competitors down for metering BitterClip shares. Publishing is stated as YouTube, LinkedIn and X. A test keeps snark and hedging phrases out.
+  - The hub groups comparisons by kind of tool.
+  - Markdown twins carry the short answer, the differences, the pricing and the switching steps.
+  - nginx now serves `/compare/<slug>`, `/docs/…` and `/blog/…` directly instead of redirecting to a trailing slash.
 - Led the docs home, "What is BitterClip?", and the `llms.txt` introduction with
   the built-in agent, and added a "Use the built-in agent" getting-started page.
   Embeds are described as included on paid Creator and Producer plans. Salvaged

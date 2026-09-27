@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
     <!-- Page Content Viewport. Overflow clip lives here, not on the wrapper
          above, so the homepage's position:fixed site bar is not clipped
          away on scroll. -->
-    <div class="grow w-full overflow-x-hidden">
+    <div class="grow w-full overflow-x-clip">
       <slot />
     </div>
 

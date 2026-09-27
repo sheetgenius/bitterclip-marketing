@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
+import { BITTERCLIP_TRIAL, compareRank } from '~/utils/compare-plans'
 
 const route = useRoute()
 
@@ -8,34 +9,28 @@ const { data: allMatchups } = await useAsyncData('compare:matchups', () =>
   queryCollection('compare').order('competitor', 'ASC').all(),
 )
 
-// Search demand, not the alphabet. Descript and Riverside are what people
-// actually type; alphabetical order buried them behind CapCut and Captions.
-// Zoom is where most interviews are recorded today.
-const PRIORITY = [
-  'descript', 'riverside', 'zoom', 'opus-clip', 'capcut', 'submagic', 'captions',
-  'veed', 'podcastle', 'kapwing', 'vizard', 'klap', 'munch',
-]
-const rank = (path: string) => {
-  const slug = path.split('/').pop() ?? ''
-  const index = PRIORITY.indexOf(slug)
-  return index === -1 ? PRIORITY.length : index
-}
-
-const scoreOf = (matchup: { rows?: { edge?: string }[]; competitor?: string }) => {
-  const rows = matchup.rows ?? []
-  return {
-    bitterclip: rows.filter((r) => r.edge === 'bitterclip').length,
-    competitor: rows.filter((r) => r.edge === 'competitor').length,
-    even: rows.filter((r) => r.edge === 'even').length,
-  }
-}
+// Search demand, not the alphabet (shared with each page's related links).
+const rank = compareRank
 
 const ordered = computed(() =>
   [...(allMatchups.value ?? [])].sort((a, b) => rank(a.path) - rank(b.path)),
 )
-const featured = computed(() => ordered.value.slice(0, 3))
-const rest = computed(() => ordered.value.slice(3))
 const matchups = ordered
+
+// Readers arrive knowing their job, not our taxonomy: group by the kind of
+// tool they're weighing, most-searched first within each group.
+const GROUPS = [
+  { key: 'recording', label: 'Recording tools', lede: 'You record calls, interviews, or podcasts with guests.' },
+  { key: 'editing', label: 'Editors', lede: 'You edit many kinds of video in one app.' },
+  { key: 'clipping', label: 'Clip generators', lede: 'You turn long videos into a stack of shorts.' },
+] as const
+const groups = computed(() => {
+  const all = ordered.value
+  const grouped = GROUPS.map((g) => ({ ...g, matchups: all.filter((m) => m.category === g.key) }))
+  const ungrouped = all.filter((m) => !GROUPS.some((g) => g.key === m.category))
+  if (ungrouped.length) grouped.push({ key: 'other', label: 'Other tools', lede: '', matchups: ungrouped } as never)
+  return grouped.filter((g) => g.matchups.length)
+})
 
 const signupUrl = computed(() => buildSignupUrl({
   baseUrl: SIGNUP_BASE_URL,
@@ -61,7 +56,7 @@ const formatDate = (value?: string) => {
 }
 
 useHead({
-  title: 'Compare BitterClip — honest head-to-head comparisons',
+  title: 'Compare BitterClip — head to head with Descript, Riverside, OpusClip and more',
   meta: [
     {
       name: 'description',
@@ -97,11 +92,15 @@ useHead({
           <p class="telemetry-label mb-5">Comparisons</p>
           <h1 class="font-display text-5xl sm:text-7xl font-bold tracking-[-0.04em] text-white leading-[0.98] mb-7">
             Which one should
-            <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">you actually use?</span>
+            <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">you use?</span>
           </h1>
           <p class="text-zinc-300 text-lg sm:text-2xl leading-[1.55] max-w-2xl text-balance">
-            Riverside connects recording to production. Descript helps you edit almost anything. OpusClip helps you make more shorts. BitterClip finishes and refines the session you already recorded — wherever you recorded it. Here is an honest read on each one, including the parts where they beat us.
+            Pick by the job. Riverside and Zoom record the call. Descript and VEED edit anything. OpusClip and Vizard turn out shorts in bulk. BitterClip records the conversation and finishes it: the episode, then the clips.
           </p>
+          <a
+            :href="signupUrl"
+            class="mt-8 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >Try it on one recording <span aria-hidden="true">→</span></a>
         </div>
 
         <dl class="space-y-5 border-l border-white/[0.09] pl-6">
@@ -111,7 +110,7 @@ useHead({
           </div>
           <div>
             <dt class="font-semibold text-sm text-white mb-1">We say where we lose</dt>
-            <dd class="text-sm text-zinc-400 leading-[1.6]">Every row names the tool it favours. Plenty of them aren't us.</dd>
+            <dd class="text-sm text-zinc-400 leading-[1.6]">Every row names the better tool, and each page says plainly who should pick the other one.</dd>
           </div>
           <div>
             <dt class="font-semibold text-sm text-white mb-1">They carry a date</dt>
@@ -125,74 +124,57 @@ useHead({
       <div class="telemetry-ruler mt-14" aria-hidden="true" />
     </section>
 
-    <!-- The three matchups people actually search, given real estate. -->
-    <section v-if="featured.length" aria-labelledby="featured-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-16">
-      <h2 id="featured-heading" class="telemetry-label mb-5">Most compared</h2>
-      <nav aria-label="Most compared" class="grid gap-4 md:grid-cols-3">
+    <!-- One section per kind of tool; each card answers in a line and shows the score. -->
+    <section
+      v-for="group in groups"
+      :key="group.key"
+      :aria-labelledby="`group-${group.key}`"
+      class="mx-auto max-w-6xl px-4 pt-12 sm:pt-16"
+    >
+      <div class="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <h2 :id="`group-${group.key}`" class="font-display text-2xl sm:text-3xl font-bold tracking-[-0.02em] text-white">{{ group.label }}</h2>
+        <p v-if="group.lede" class="text-zinc-400">{{ group.lede }}</p>
+      </div>
+      <nav :aria-label="group.label" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <NuxtLink
-          v-for="matchup in featured"
+          v-for="matchup in group.matchups"
           :key="matchup.path"
           :to="matchup.path"
-          class="group glass-panel-accented rounded-2xl corner-ticks p-7 flex flex-col transition hover:border-[#f28f84]/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
+          class="group flex flex-col rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6 transition hover:border-[#f28f84]/35 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84]"
         >
-          <h3 class="font-display text-2xl font-bold text-white mb-4 leading-tight">
-            BitterClip <span class="text-zinc-600 font-normal">vs</span><br>{{ matchup.competitor }}
+          <h3 class="font-display text-xl font-bold leading-tight text-white">
+            BitterClip <span class="font-normal text-zinc-500">vs</span> {{ matchup.competitor }}
           </h3>
-          <p v-if="matchup.competitorStrength" class="mb-5 text-sm text-zinc-400 leading-relaxed">
-            <span class="block font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600 mb-1.5">Where they win</span>
-            {{ matchup.competitorStrength }}
-          </p>
-          <p class="mt-auto pt-4 border-t border-white/[0.07] font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500">
-            <span class="text-zinc-300">{{ scoreOf(matchup).bitterclip }}</span> us
-            <span class="mx-1.5 text-zinc-700">·</span>
-            <span class="text-zinc-300">{{ scoreOf(matchup).competitor }}</span> them
-            <span class="mx-1.5 text-zinc-700">·</span>
-            <span class="text-zinc-300">{{ scoreOf(matchup).even }}</span> tied
-          </p>
+          <p class="mt-3 text-[15px] leading-relaxed text-zinc-300">{{ matchup.shortAnswer || matchup.competitorStrength }}</p>
+          <dl v-if="matchup.chooseThemShort" class="mt-auto space-y-2 pt-5 text-[13px] leading-snug">
+            <div>
+              <dt class="font-semibold text-zinc-200">Pick {{ matchup.competitor }} if</dt>
+              <dd class="text-zinc-400">{{ matchup.chooseThemShort }}</dd>
+            </div>
+            <div>
+              <dt class="font-semibold text-[#f28f84]">Pick BitterClip if</dt>
+              <dd class="text-zinc-400">{{ matchup.chooseUsShort }}</dd>
+            </div>
+          </dl>
         </NuxtLink>
       </nav>
-    </section>
-
-    <!-- Everything else, denser: a directory, not twelve identical hero cards. -->
-    <section v-if="rest.length" aria-labelledby="rest-heading" class="mx-auto max-w-6xl px-4 pt-10 sm:pt-12">
-      <h2 id="rest-heading" class="telemetry-label mb-5">Also compared</h2>
-      <nav aria-label="Other comparisons" class="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-3 border-t border-white/[0.07]">
-        <NuxtLink
-          v-for="matchup in rest"
-          :key="matchup.path"
-          :to="matchup.path"
-          class="group flex items-baseline gap-3 border-b border-white/[0.07] py-4 transition hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
-        >
-          <span class="font-semibold text-[15px] text-zinc-200 transition group-hover:text-white">
-            vs {{ matchup.competitor }}
-          </span>
-          <span class="ml-auto font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-600 tabular-nums">
-            {{ scoreOf(matchup).bitterclip }}–{{ scoreOf(matchup).competitor }}–{{ scoreOf(matchup).even }}
-          </span>
-          <span aria-hidden="true" class="text-zinc-700 transition group-hover:text-[#f28f84]">→</span>
-        </NuxtLink>
-      </nav>
-      <p class="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-600">
-        Scores read: jobs we win — jobs they win — tied
-      </p>
     </section>
 
     <section class="mx-auto max-w-6xl px-4 pt-20 sm:pt-24 pb-24">
       <div class="cta-glass-panel rounded-3xl corner-ticks p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
         <div>
-          <p class="telemetry-label mb-4">Try it on one recording</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-[-0.02em] text-white mb-3 text-balance">
-            Bring a session. Leave with the finished cut.
+            Bring one session. Leave with the finished cut.
           </h2>
-          <p class="text-zinc-400 max-w-xl leading-relaxed">
-            Start Creator with one recording up to two hours. The card-required trial is $1 today for seven days, includes $5 of agent work for analysis, the First Cut, and direction, and becomes $24/month after that; cancel anytime.
+          <p class="text-zinc-300 max-w-xl leading-relaxed">
+            {{ BITTERCLIP_TRIAL }}, cancel anytime. The trial takes one recording up to two hours with $5 of AI agent use; trial exports are watermarked.
           </p>
         </div>
         <a
           :href="signupUrl"
-          class="btn-glow shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-6 py-3.5 font-mono text-xs font-bold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          class="btn-glow shrink-0 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-6 py-3.5 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
-          Try BitterClip
+          Try it on one recording
           <span aria-hidden="true">→</span>
         </a>
       </div>

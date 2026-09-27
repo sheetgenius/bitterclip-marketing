@@ -4,7 +4,7 @@ Canonical HTML page: https://bitterclip.com/compare
 
 Markdown version: https://bitterclip.com/compare.md
 
-BitterClip turns a recorded conversation into a finished cut and clips. Plenty of tools overlap with some of that. These pages give an honest read on each one — including the parts where they beat us.
+BitterClip turns a recorded conversation into a finished episode and clips. Pick by the job: Riverside and Zoom record the call, Descript and VEED edit anything, OpusClip and Vizard turn out shorts in bulk. Each page gives a short answer, a job-by-job table, and says plainly who should pick the other tool.
 
 ## Head-to-head comparisons
 
@@ -34,7 +34,7 @@ Each matchup has its own page. Add `.md` to any URL for the Markdown version.
 
 ## What BitterClip is for
 
-Turning recorded conversations into finished cuts and clips. Record straight into a project from your browser — camera and mic on a laptop or phone — or bring footage you already shot from a phone, Zoom, Riverside, or a camera. It is built for sessions of roughly 20 minutes to 2 hours: podcasts, interviews, coaching calls, workshops.
+Turning recorded conversations into finished cuts and clips. Record straight into a project from your browser — camera and mic on a laptop or phone — or bring footage you already shot from a phone, Zoom, Riverside, or a camera. It is built for recorded conversations: podcasts, interviews, coaching calls, workshops.
 
 On Producer, you can also collect recordings from other people without a call. Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut. You share the link yourself; BitterClip doesn't send invitations or reminders.
 
@@ -42,6 +42,6 @@ For a live conversation, paid plans include Studio: your guest joins from a link
 
 You edit by selecting words in the transcript and deleting them, and the cut lands on the word rather than near it. Anything you can click, you can ask for instead — in ChatGPT, Claude, any MCP client, or the editor — and what comes back is a normal edit you can keep changing by hand or undo. Up to five cameras. Captions, music, brand openers and outros. One tap makes the vertical version.
 
-Pricing: Creator is $1 for 7 days (card required), then $24/month; cancel anytime. Bring one recording up to two hours; the trial includes $5 of agent work for analysis, the First Cut, and direction while balance remains. Trial exports are watermarked; clean exports unlock after the first $24 monthly payment. Add exactly $20, $50, or $100 of agent work during an active trial or paid plan. Top-ups never auto-activate paid Creator; early activation requires a separate explicit $24 authorization. Paid Creator includes 10 source-footage hours, $10 of included agent work, and files up to 4 GB. Producer is $99/month with 40 source-footage hours, $40 of included agent work, larger files, and priority rendering. If you cancel, your source material, edits, purchased agent work, and completed work stay available.
+Pricing: Creator is $1 for 7 days (card required), then $24/month; cancel anytime. The trial takes one recording up to two hours with $5 of AI agent use; trial exports are watermarked, and Studio and clean exports start on a paid plan. Paid Creator includes 10 hours of footage and $10 of AI agent use a month, with files up to 4 GB. Producer is $99/month with 40 hours of footage, $40 of AI agent use, larger files, priority rendering, and async recording. Top-ups of exactly $20, $50, or $100 of AI agent use are available during an active trial or plan. If you cancel, your recordings, edits, purchased AI agent use, and finished work stay available.
 
 Start the Creator trial: https://app.bitterclip.com/sign_up?plan=clip

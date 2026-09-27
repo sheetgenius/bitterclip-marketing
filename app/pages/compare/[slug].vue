@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 import { compareMethodology, compareTally } from '~/utils/compare-methodology'
+import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank } from '~/utils/compare-plans'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -18,12 +19,19 @@ if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Comparison not found', fatal: true })
 }
 
-// Sibling matchups for the "keep comparing" rail at the foot of the page.
+// Related matchups: the same kind of tool first, so a Riverside reader is
+// offered Zoom and Podcastle, not whatever sorts first alphabetically.
 const { data: siblings } = await useAsyncData(`compare:siblings:${pagePath}`, () =>
   queryCollection('compare').order('competitor', 'ASC').all(),
 )
-const otherMatchups = computed(() =>
-  (siblings.value ?? []).filter((m) => m.path !== pagePath).slice(0, 6),
+const otherMatchups = computed(() => {
+  const others = (siblings.value ?? []).filter((m) => m.path !== pagePath)
+  const byDemand = [...others].sort((a, b) => compareRank(a.path) - compareRank(b.path))
+  const sameKind = byDemand.filter((m) => page.value?.category && m.category === page.value.category)
+  return [...sameKind, ...byDemand.filter((m) => !sameKind.includes(m))].slice(0, 6)
+})
+const categoryLabel = computed(() =>
+  page.value?.category ? COMPARE_CATEGORIES[page.value.category as keyof typeof COMPARE_CATEGORIES] : '',
 )
 
 const signupUrl = computed(() => buildSignupUrl({
@@ -64,6 +72,45 @@ const cellClass = (row: { edge?: string }, side: 'bitterclip' | 'competitor') =>
 
 // Running score, so the shape of the answer is readable before any row is.
 const tally = computed(() => compareTally(page.value?.rows ?? []))
+
+// The table groups rows by stage when the page says which stage each row is,
+// and can hide ties so only the real differences remain.
+const GROUPS = [
+  { key: 'record', label: 'Recording' },
+  { key: 'edit', label: 'Editing' },
+  { key: 'deliver', label: 'Publishing' },
+  { key: 'price', label: 'Price' },
+] as const
+const onlyDifferences = ref(false)
+// Phones show each row's two verdicts side by side; details open on request.
+const showDetails = ref(false)
+const tableGroups = computed(() => {
+  const rows = (page.value?.rows ?? []).filter((r) => !onlyDifferences.value || r.edge !== 'even')
+  if (!rows.some((r) => r.group)) return [{ key: 'all', label: '', rows }]
+  return GROUPS
+    .map((g) => ({ key: g.key, label: g.label, rows: rows.filter((r) => r.group === g.key) }))
+    .filter((g) => g.rows.length)
+})
+const winnerName = (edge?: string) => edgeLabel(edge ?? 'even', page.value?.competitor ?? '')
+
+const favorsLabel = (favors: string) => {
+  if (favors === 'bitterclip') return 'Where BitterClip wins'
+  if (favors === 'competitor') return `Where ${page.value?.competitor} wins`
+  return 'Even'
+}
+
+// Mobile keeps one way in on screen once the hero's button has scrolled away.
+const heroCta = ref<HTMLElement | null>(null)
+const showStickyCta = ref(false)
+let ctaObserver: IntersectionObserver | undefined
+onMounted(() => {
+  if (!heroCta.value || typeof IntersectionObserver === 'undefined') return
+  ctaObserver = new IntersectionObserver(([entry]) => {
+    showStickyCta.value = !entry.isIntersecting && entry.boundingClientRect.top < 0
+  })
+  ctaObserver.observe(heroCta.value)
+})
+onBeforeUnmount(() => ctaObserver?.disconnect())
 
 const { data: site } = await useAsyncData('site', () =>
   queryCollection('site').first(),
@@ -156,7 +203,71 @@ useHead(() => {
   <main v-if="page" class="relative">
 
     <!-- ============================ HERO ============================ -->
-    <section class="mx-auto max-w-6xl px-4 pt-10 sm:pt-16">
+    <!-- Answer first: the verdict, who each product is for, a way in, and the
+         score, all inside the first viewport. Pages without a short answer
+         keep the long-form hero below until their content migrates. -->
+    <section v-if="page.shortAnswer" class="mx-auto max-w-6xl px-4 pt-8 sm:pt-12">
+      <div class="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-zinc-400">
+        <NuxtLink
+          to="/compare"
+          class="transition hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
+        >← All comparisons</NuxtLink>
+        <span aria-hidden="true" class="text-zinc-700">·</span>
+        <a href="#method" class="transition hover:text-white">Checked {{ formatDate(page.reviewed) }} against {{ page.sources?.length ?? 0 }} public sources</a>
+      </div>
+
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center">
+        <div>
+          <h1 class="font-display text-[2.6rem] sm:text-6xl font-bold tracking-[-0.04em] text-white leading-[1.02]">
+            BitterClip <span class="text-zinc-600 font-normal">vs</span>{{ ' ' }}<span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">{{ page.competitor }}</span>
+          </h1>
+          <p class="mt-5 max-w-xl text-lg sm:text-xl text-zinc-200 leading-[1.5] text-balance">{{ page.shortAnswer }}</p>
+
+          <div class="mt-7 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl border border-[#f28f84]/30 bg-[#f28f84]/[0.06] p-4">
+              <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#f28f84]">Choose BitterClip if</p>
+              <p class="mt-1.5 text-[15px] leading-snug text-zinc-100">{{ page.chooseUsShort }}</p>
+            </div>
+            <div class="rounded-xl border border-white/[0.1] bg-white/[0.03] p-4">
+              <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-300">Choose {{ page.competitor }} if</p>
+              <p class="mt-1.5 text-[15px] leading-snug text-zinc-100">{{ page.chooseThemShort }}</p>
+            </div>
+          </div>
+
+          <div ref="heroCta" class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a
+              :href="signupUrl"
+              class="btn-glow inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              Try it on one recording
+              <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="#proof"
+              class="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 transition hover:text-white hover:decoration-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
+            >Watch a one-minute cut</a>
+          </div>
+        </div>
+
+        <CompareTracksVisual v-if="page.heroVisual === 'tracks'" :competitor="page.competitor" />
+        <CompareClipsVisual v-else-if="page.category === 'clipping'" :competitor="page.competitor" />
+        <!-- Cropped to the episode, its camera track, and the transcript: at
+             hero size the full editor is too small to read. -->
+        <figure class="overflow-hidden rounded-2xl border border-white/[0.09] bg-black shadow-2xl shadow-black/50" v-else>
+          <img
+            src="/images/hero/sizzle-editor-5.webp"
+            alt="The BitterClip editor: a recorded episode with its chapters, the episode and camera tracks, and the transcript."
+            width="2560"
+            height="1252"
+            fetchpriority="high"
+            class="compare-hero-crop block aspect-[5/4] w-full object-cover object-[54%_50%]"
+          >
+        </figure>
+      </div>
+
+    </section>
+
+    <section v-else class="mx-auto max-w-6xl px-4 pt-10 sm:pt-16">
       <NuxtLink
         to="/compare"
         class="inline-block mb-8 font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-500 transition hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
@@ -211,8 +322,64 @@ useHead(() => {
       </p>
     </aside>
 
-    <!-- ======================= THE SHORT ANSWER ======================= -->
-    <section aria-label="The short answer" class="mx-auto max-w-6xl px-4 pt-14 sm:pt-20">
+    <!-- ===================== WHAT ACTUALLY DIFFERS ===================== -->
+    <section v-if="page.keyDifferences?.length" aria-labelledby="differs-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+      <h2 id="differs-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+        What differs
+      </h2>
+      <div class="mt-7 grid gap-4 md:grid-cols-3">
+        <article
+          v-for="diff in page.keyDifferences"
+          :key="diff.title"
+          class="rounded-2xl border p-6"
+          :class="diff.favors === 'bitterclip' ? 'border-[#f28f84]/25 bg-[#f28f84]/[0.04]' : 'border-white/[0.1] bg-white/[0.03]'"
+        >
+          <p
+            class="text-[12px] font-semibold uppercase tracking-[0.12em]"
+            :class="diff.favors === 'bitterclip' ? 'text-[#f28f84]' : 'text-zinc-300'"
+          >{{ favorsLabel(diff.favors) }}</p>
+          <h3 class="mt-3 font-display text-xl font-bold leading-snug text-white">{{ diff.title }}</h3>
+          <p class="mt-2 text-[15px] leading-relaxed text-zinc-300">{{ diff.body }}</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================ PROOF ============================
+         The same product the table describes, shown: a real cut, made from a
+         recorded Zoom conversation. -->
+    <section v-if="page.shortAnswer" id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+      <div class="grid items-center gap-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-14">
+        <figure class="mx-auto w-full max-w-[290px] overflow-hidden rounded-2xl border border-white/[0.1] bg-black shadow-2xl shadow-black/60">
+          <DeferredVideo
+            class="block aspect-[9/16] w-full bg-black"
+            poster="/clips/day-1-sizzle-poster.jpg"
+            src="/clips/day-1-sizzle.mp4"
+            type="video/mp4"
+            controls
+            playsinline
+            width="1080"
+            height="1920"
+            title="A one-minute cut BitterClip made from a recorded Zoom conversation"
+            data-bc-proof-video
+            data-bc-placement="comparison_proof"
+          />
+        </figure>
+        <div>
+          <h2 id="proof-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">One conversation. The cut you'd send.</h2>
+          <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-300">
+            {{ page.proofNote || "BitterClip's founder, Michael Ruescher, recorded a conversation about quitting a twelve-year job to build bitter.sh. This one-minute vertical cut came out of it, made in BitterClip." }}
+          </p>
+          <ol class="mt-6 max-w-xl space-y-3 text-[15px] text-zinc-300">
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">1</span>The recording comes in and every word is transcribed, tied to the moment it was said.</li>
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">2</span>The agent makes a first cut; you direct it in plain words or by deleting words in the transcript.</li>
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">3</span>One tap makes the 9:16 version, captions and timing carried over.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Long-form verdicts, for pages that have not moved to the answer-first hero. -->
+    <section v-if="!page.shortAnswer" aria-label="The short answer" class="mx-auto max-w-6xl px-4 pt-14 sm:pt-20">
       <div class="grid gap-4 md:grid-cols-2">
         <article class="glass-panel-accented rounded-2xl corner-ticks p-7 sm:p-8">
           <p class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#f28f84] mb-4">Pick BitterClip</p>
@@ -226,55 +393,70 @@ useHead(() => {
     </section>
 
     <!-- ========================= COMPARISON ========================= -->
-    <section id="comparison" aria-labelledby="comparison-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28 scroll-mt-24">
-      <div class="max-w-2xl mb-7">
-        <p class="telemetry-label mb-4">The comparison</p>
-        <h2 id="comparison-heading" class="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-white leading-[1.05]">
-          Job by job.
-        </h2>
+    <section id="comparison" aria-labelledby="comparison-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 id="comparison-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+            Job by job
+          </h2>
+          <p class="mt-2 text-sm text-zinc-300">
+            BitterClip better on <strong class="text-white tabular-nums">{{ tally.bitterclip }}</strong>,
+            {{ page.competitor }} better on <strong class="text-white tabular-nums">{{ tally.competitor }}</strong>,
+            tie on <strong class="text-white tabular-nums">{{ tally.even }}</strong>.
+            <a href="#method" class="text-zinc-400 underline decoration-white/20 underline-offset-4 hover:text-white">How we score</a>
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <div role="radiogroup" aria-label="Rows to show" class="inline-flex rounded-lg border border-white/[0.1] bg-white/[0.02] p-1 text-sm">
+            <button
+              type="button"
+              role="radio"
+              class="compare-toggle rounded-md px-3 py-1.5 transition"
+              :class="!onlyDifferences ? 'bg-white/[0.1] text-white' : 'text-zinc-400 hover:text-white'"
+              :aria-checked="!onlyDifferences"
+              @click="onlyDifferences = false"
+            >All {{ tally.total }}</button>
+            <button
+              type="button"
+              role="radio"
+              class="compare-toggle rounded-md px-3 py-1.5 transition"
+              :class="onlyDifferences ? 'bg-white/[0.1] text-white' : 'text-zinc-400 hover:text-white'"
+              :aria-checked="onlyDifferences"
+              @click="onlyDifferences = true"
+            >Only differences ({{ tally.bitterclip + tally.competitor }})</button>
+          </div>
+          <button
+            type="button"
+            class="compare-toggle rounded-lg border border-white/[0.1] px-3 py-2 text-sm text-zinc-300 md:hidden"
+            :aria-pressed="showDetails"
+            @click="showDetails = !showDetails"
+          >{{ showDetails ? 'Hide details' : 'Show details' }}</button>
+        </div>
       </div>
 
       <!-- One semantic table; CSS reflows it into cards below md so a phone
-           never side-scrolls the thing the page exists to compare. The score
-           strip is attached to the table so the two read as one object. -->
-      <div class="compare-table-wrap rounded-2xl md:overflow-hidden md:border md:border-white/[0.09] md:bg-white/[0.022] md:shadow-2xl md:shadow-black/50">
-        <!-- The score, before any row is read. Doubles as the legend: a green
-             check means "better here", whichever product it sits on. -->
-        <div class="mb-5 flex flex-wrap items-center gap-x-6 gap-y-2.5 md:mb-0 md:border-b md:border-white/[0.07] md:bg-white/[0.03] md:px-5 md:py-3.5">
-          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">
-            Across {{ tally.total }} jobs
-          </span>
-          <span class="flex items-center gap-1.5 text-sm">
-            <span aria-hidden="true" class="compare-check">✓</span>
-            <span class="text-zinc-400">BitterClip better on <span class="font-semibold text-zinc-100 tabular-nums">{{ tally.bitterclip }}</span></span>
-          </span>
-          <span class="flex items-center gap-1.5 text-sm">
-            <span aria-hidden="true" class="compare-check">✓</span>
-            <span class="text-zinc-400">{{ page.competitor }} better on <span class="font-semibold text-zinc-100 tabular-nums">{{ tally.competitor }}</span></span>
-          </span>
-          <span class="flex items-center gap-1.5 text-sm">
-            <span aria-hidden="true" class="text-zinc-600">—</span>
-            <span class="text-zinc-500">Tie on <span class="font-semibold text-zinc-300 tabular-nums">{{ tally.even }}</span></span>
-          </span>
-        </div>
-
+           never side-scrolls the thing the page exists to compare. -->
+      <div :class="{ 'show-details': showDetails }" class="compare-table-wrap rounded-2xl md:overflow-clip md:border md:border-white/[0.09] md:bg-white/[0.022] md:shadow-2xl md:shadow-black/50">
         <table class="compare-table w-full border-collapse text-left">
-          <caption class="sr-only">Comparison of BitterClip and {{ page.competitor }}</caption>
+          <caption class="sr-only">Comparison of BitterClip and {{ page.competitor }}, job by job</caption>
           <thead>
             <tr>
-              <th scope="col" class="w-[26%] px-5 py-3.5 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500 font-normal">What you're comparing</th>
+              <th scope="col" class="w-[26%] px-5 py-3.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-zinc-400">The job</th>
               <th scope="col" class="compare-col-ours w-[37%] px-5 py-3.5 text-[13px] font-semibold tracking-wide text-[#f28f84] border-l border-white/[0.09]">BitterClip</th>
               <th scope="col" class="w-[37%] px-5 py-3.5 text-[13px] font-semibold tracking-wide text-zinc-200 border-l border-white/[0.09]">{{ page.competitor }}</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="row in page.rows" :key="row.axis" class="compare-row border-t border-white/[0.05] align-top">
+          <tbody v-for="group in tableGroups" :key="group.key">
+            <tr v-if="group.label" class="compare-group">
+              <th colspan="3" scope="rowgroup" class="px-5 pb-2 pt-6 text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-400">{{ group.label }}</th>
+            </tr>
+            <tr v-for="row in group.rows" :key="row.axis" class="compare-row border-t border-white/[0.05] align-top">
               <th scope="row" class="px-5 py-4">
                 <span class="block font-semibold text-[15px] text-zinc-100 leading-snug">{{ row.axis }}</span>
                 <span
-                  v-if="tied(row)"
-                  class="mt-2 inline-block rounded-full border border-dashed border-white/15 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-500"
-                >Tie</span>
+                  class="compare-badge mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                  :class="row.edge === 'bitterclip' ? 'compare-badge--ours' : row.edge === 'competitor' ? 'compare-badge--theirs' : 'compare-badge--tie'"
+                >{{ row.edge === 'even' ? 'Tie' : `${winnerName(row.edge)} better` }}</span>
               </th>
               <td :data-label="'BitterClip'" class="compare-cell compare-col-ours px-5 py-4 border-l border-white/[0.09]" :class="cellClass(row, 'bitterclip')">
                 <span class="compare-lead font-semibold text-[15px] leading-snug">
@@ -282,7 +464,6 @@ useHead(() => {
                     <span v-if="wins(row, 'bitterclip')" class="compare-check">✓</span>
                   </span>
                   <span>{{ row.bitterclip.lead }}</span>
-                  <span v-if="wins(row, 'bitterclip')" class="sr-only"> — better for {{ row.axis }}</span>
                 </span>
                 <span class="compare-detail text-sm">{{ row.bitterclip.detail }}</span>
               </td>
@@ -292,7 +473,6 @@ useHead(() => {
                     <span v-if="wins(row, 'competitor')" class="compare-check">✓</span>
                   </span>
                   <span>{{ row.competitor.lead }}</span>
-                  <span v-if="wins(row, 'competitor')" class="sr-only"> — better for {{ row.axis }}</span>
                 </span>
                 <span class="compare-detail text-sm">{{ row.competitor.detail }}</span>
               </td>
@@ -302,35 +482,69 @@ useHead(() => {
       </div>
     </section>
 
-    <!-- ======================== CHOOSE WHICH ======================== -->
-    <section aria-labelledby="choose-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28">
-      <h2 id="choose-heading" class="sr-only">Which product should you choose?</h2>
-      <div class="grid gap-4 md:grid-cols-2">
-        <article class="rounded-2xl border border-[#f28f84]/25 bg-[#f28f84]/[0.05] p-7 sm:p-8">
-          <h3 class="font-display text-2xl font-bold text-white mb-6">Choose BitterClip when…</h3>
-          <ul class="space-y-4">
-            <li v-for="item in page.chooseUs" :key="item" class="flex gap-3.5 text-[15px] text-zinc-300 leading-[1.6]">
-              <span aria-hidden="true" class="text-[#f28f84] shrink-0 mt-1 text-xs">◆</span>
-              <span>{{ item }}</span>
-            </li>
-          </ul>
+    <!-- =========================== PRICING =========================== -->
+    <section id="pricing" aria-labelledby="pricing-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+      <h2 id="pricing-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+        What you'd pay
+      </h2>
+      <div class="mt-7 grid gap-4" :class="page.pricing ? 'md:grid-cols-2' : ''">
+        <article class="flex flex-col rounded-2xl border border-[#f28f84]/25 bg-[#f28f84]/[0.04] p-6 sm:p-7">
+          <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#f28f84]">BitterClip</p>
+          <div class="mt-4 grid gap-5 sm:grid-cols-2">
+            <div v-for="plan in BITTERCLIP_PLANS" :key="plan.name">
+              <p class="text-sm text-zinc-300">{{ plan.name }}</p>
+              <p class="mt-1 font-display text-3xl font-bold text-white">{{ plan.price }}<span class="text-base font-medium text-zinc-400">/month</span></p>
+              <ul class="mt-3 space-y-1.5 text-sm text-zinc-300">
+                <li v-for="item in plan.includes" :key="item" class="flex gap-2"><span aria-hidden="true" class="text-[#f28f84]">·</span>{{ item }}</li>
+              </ul>
+            </div>
+          </div>
+          <p class="mt-5 text-sm leading-relaxed text-zinc-300">
+            <span class="font-semibold text-white">The catch:</span> {{ BITTERCLIP_CATCH }}
+          </p>
+          <div class="mt-auto pt-6">
+            <a
+              :href="signupUrl"
+              class="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >Start Creator: {{ BITTERCLIP_TRIAL }} <span aria-hidden="true">→</span></a>
+          </div>
         </article>
-        <article class="rounded-2xl border border-white/[0.08] bg-black/25 p-7 sm:p-8">
-          <h3 class="font-display text-2xl font-bold text-white mb-6">Choose {{ page.competitor }} when…</h3>
-          <ul class="space-y-4">
-            <li v-for="item in page.chooseThem" :key="item" class="flex gap-3.5 text-[15px] text-zinc-400 leading-[1.6]">
-              <span aria-hidden="true" class="text-zinc-600 shrink-0 mt-1 text-xs">◆</span>
-              <span>{{ item }}</span>
-            </li>
+        <article v-if="page.pricing" class="flex flex-col rounded-2xl border border-white/[0.1] bg-white/[0.03] p-6 sm:p-7">
+          <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-300">{{ page.competitor }}</p>
+          <p class="mt-4 text-sm text-zinc-300">{{ page.pricing.plan }}</p>
+          <p class="mt-1 font-display text-3xl font-bold text-white">{{ page.pricing.price }}</p>
+          <p v-if="page.pricing.note" class="mt-1 text-sm text-zinc-400">{{ page.pricing.note }}</p>
+          <ul class="mt-3 space-y-1.5 text-sm text-zinc-300">
+            <li v-for="item in page.pricing.includes" :key="item" class="flex gap-2"><span aria-hidden="true" class="text-zinc-500">·</span>{{ item }}</li>
           </ul>
+          <p class="mt-auto pt-6 text-sm leading-relaxed text-zinc-300">
+            <span class="font-semibold text-white">The catch:</span> {{ page.pricing.catch }}
+            <a :href="page.pricing.sourceUrl" rel="noopener nofollow" target="_blank" class="text-zinc-400 underline decoration-white/20 underline-offset-2 hover:text-white">Source</a>
+          </p>
         </article>
       </div>
     </section>
 
-    <!-- ========================= TESTIMONIAL =========================
-         The only human face on the page, placed between the analytical read
-         and the evidence file. Quotes run verbatim, as on the homepage. -->
-    <section aria-label="Customer" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28">
+    <!-- ========================== SWITCHING ========================== -->
+    <section v-if="page.switching?.length" aria-labelledby="switching-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+      <h2 id="switching-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+        Coming from {{ page.competitor }}
+      </h2>
+      <ol class="mt-7 grid gap-4 md:grid-cols-3">
+        <li v-for="(step, index) in page.switching" :key="step" class="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6">
+          <span class="font-display text-2xl font-bold text-[#f28f84] tabular-nums">{{ index + 1 }}</span>
+          <p class="mt-2 text-[15px] leading-relaxed text-zinc-200">{{ step }}</p>
+        </li>
+      </ol>
+      <a
+        v-if="page.switchingLink"
+        :href="page.switchingLink.url"
+        class="mt-5 inline-block text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+      >{{ page.switchingLink.label }} →</a>
+    </section>
+
+    <!-- ========================= TESTIMONIAL ========================= -->
+    <section aria-label="Customer" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
       <figure class="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center sm:flex-row sm:items-start sm:text-left sm:gap-10">
         <div class="shrink-0 flex flex-col items-center gap-3">
           <img
@@ -340,168 +554,206 @@ useHead(() => {
             height="120"
             loading="lazy"
             decoding="async"
-            class="w-28 h-28 rounded-full object-cover ring-1 ring-white/10 bg-white/[0.04]"
+            class="w-24 h-24 rounded-full object-cover ring-1 ring-white/10 bg-white/[0.04]"
           >
-          <figcaption class="font-mono text-[10px] uppercase tracking-widest leading-relaxed text-center">
-            <span class="block text-zinc-200">{{ testimonial.name }}</span>
-            <span class="block mt-0.5 text-zinc-500">{{ testimonial.role }}</span>
-            <a
-              :href="testimonial.orgUrl"
-              target="_blank"
-              rel="noopener"
-              class="mt-1 inline-block text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]"
-            >{{ testimonial.org }}</a>
+          <figcaption class="text-center text-[12px] leading-relaxed">
+            <span class="block font-semibold text-zinc-200">{{ testimonial.name }}</span>
+            <span class="block text-zinc-400">{{ testimonial.role }},
+              <a :href="testimonial.orgUrl" target="_blank" rel="noopener" class="text-[#f28f84]/90 transition-colors hover:text-[#ffa89e]">{{ testimonial.org }}</a>
+            </span>
           </figcaption>
         </div>
-        <blockquote class="font-display text-xl sm:text-2xl font-medium tracking-tight leading-[1.55] text-zinc-500 text-balance">
+        <blockquote class="font-display text-xl sm:text-2xl font-medium tracking-tight leading-[1.55] text-zinc-400 text-balance">
           &ldquo;{{ testimonial.before }}<span class="text-white">{{ testimonial.key }}</span>{{ testimonial.after }}&rdquo;
         </blockquote>
       </figure>
     </section>
 
     <!-- ========================= FINE PRINT =========================
-         The evidence file: every claim below is quoted from the competitor's
-         own pricing or terms pages and stamped with where it came from. -->
+         Quoted from the competitor's own pricing, help, or terms pages, each
+         stamped with where it came from. -->
     <section
       v-if="page.gotchas && page.gotchas.length"
       id="fine-print"
       aria-labelledby="fine-print-heading"
-      class="relative mt-20 sm:mt-28 py-16 sm:py-24 border-y border-white/[0.07] bg-black/60 scroll-mt-24"
+      class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24"
     >
-      <div class="mx-auto max-w-6xl px-4">
-        <div class="max-w-2xl mb-10">
-          <p class="telemetry-label mb-4">The fine print</p>
-          <h2 id="fine-print-heading" class="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-white leading-[1.05] mb-5">
-            Worth reading before you commit.
-          </h2>
-          <p class="text-zinc-400 leading-relaxed">
-            Every line below comes from {{ page.competitor }}'s own pricing, help, or terms pages. Follow the link and check us.
-          </p>
-        </div>
-
-        <ol class="grid gap-4 md:grid-cols-2">
-          <li
-            v-for="(gotcha, index) in page.gotchas"
-            :key="gotcha.title"
-            class="group relative rounded-2xl border border-white/[0.09] bg-white/[0.03] p-7 corner-ticks transition hover:border-[#f28f84]/25"
+      <h2 id="fine-print-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+        Before you pay for {{ page.competitor }}
+      </h2>
+      <p class="mt-3 max-w-2xl text-zinc-400">From {{ page.competitor }}'s own pricing, help, and terms pages.</p>
+      <ol class="mt-7 grid gap-4 md:grid-cols-2">
+        <li
+          v-for="gotcha in page.gotchas.slice(0, 2)"
+          :key="gotcha.title"
+          class="rounded-2xl border border-white/[0.09] bg-white/[0.03] p-6"
+        >
+          <h3 class="font-display text-lg font-bold leading-snug text-white">{{ gotcha.title }}</h3>
+          <p class="mt-2 text-sm leading-[1.7] text-zinc-300">{{ gotcha.body }}</p>
+          <a
+            :href="gotcha.sourceUrl"
+            rel="noopener nofollow"
+            target="_blank"
+            class="mt-4 inline-flex items-center gap-1.5 text-[13px] text-zinc-400 transition hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
           >
-            <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600 tabular-nums">
-              {{ String(index + 1).padStart(2, '0') }}
-            </span>
-            <h3 class="mt-3 font-display text-xl font-bold text-white leading-snug">{{ gotcha.title }}</h3>
-            <p class="mt-3 text-sm text-zinc-400 leading-[1.7]">{{ gotcha.body }}</p>
-            <a
-              :href="gotcha.sourceUrl"
-              rel="noopener nofollow"
-              target="_blank"
-              class="mt-5 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500 transition group-hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
-            >
-              <span aria-hidden="true">↗</span>
-              {{ gotcha.sourceLabel }}
-            </a>
+            <span aria-hidden="true">↗</span>
+            {{ gotcha.sourceLabel }}
+          </a>
+        </li>
+      </ol>
+      <details v-if="page.gotchas.length > 2" class="mt-4 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+        <summary class="cursor-pointer px-6 py-4 text-[15px] font-semibold text-white">
+          {{ page.gotchas.length - 2 }} more from {{ page.competitor }}'s terms
+        </summary>
+        <ul class="grid gap-4 px-6 pb-6 md:grid-cols-2">
+          <li v-for="gotcha in page.gotchas.slice(2)" :key="gotcha.title">
+            <h3 class="font-semibold text-white">{{ gotcha.title }}</h3>
+            <p class="mt-1.5 text-sm leading-[1.7] text-zinc-300">{{ gotcha.body }}</p>
+            <a :href="gotcha.sourceUrl" rel="noopener nofollow" target="_blank" class="mt-2 inline-block text-[13px] text-zinc-400 hover:text-[#f28f84]">↗ {{ gotcha.sourceLabel }}</a>
           </li>
-        </ol>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ============================= FAQ ============================= -->
+    <section v-if="page.faq && page.faq.length" id="faq" aria-labelledby="faq-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+      <div class="max-w-3xl">
+        <h2 id="faq-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+          Questions
+        </h2>
+        <div class="mt-6 divide-y divide-white/[0.07] border-y border-white/[0.07]">
+          <details v-for="item in page.faq" :key="item.q" class="compare-faq group py-1">
+            <summary class="flex cursor-pointer list-none items-start justify-between gap-6 py-4 text-left text-[17px] font-semibold text-white">
+              <span>{{ item.q }}</span>
+              <span aria-hidden="true" class="mt-0.5 text-zinc-500 transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="pb-5 text-[15px] leading-[1.75] text-zinc-300">{{ item.a }}</p>
+          </details>
+        </div>
       </div>
     </section>
 
-    <!-- ========================== THE PROSE ========================== -->
-    <section class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28">
+    <!-- ========================= THE LONG VERSION ========================= -->
+    <section v-if="page.shortAnswer" class="mx-auto max-w-6xl px-4 pt-10">
+      <details class="compare-long max-w-3xl rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+        <summary class="cursor-pointer list-none px-6 py-5 text-[15px] font-semibold text-white">
+          Read the full comparison <span aria-hidden="true" class="text-zinc-500">↓</span>
+        </summary>
+        <div class="px-6 pb-6">
+          <div class="grid gap-6 border-b border-white/[0.07] pb-8 md:grid-cols-2">
+            <div>
+              <h3 class="font-semibold text-white">Choose BitterClip when</h3>
+              <ul class="mt-3 space-y-2.5 text-[15px] leading-relaxed text-zinc-300">
+                <li v-for="item in page.chooseUs" :key="item" class="flex gap-2.5"><span aria-hidden="true" class="text-[#f28f84]">·</span>{{ item }}</li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-semibold text-white">Choose {{ page.competitor }} when</h3>
+              <ul class="mt-3 space-y-2.5 text-[15px] leading-relaxed text-zinc-300">
+                <li v-for="item in page.chooseThem" :key="item" class="flex gap-2.5"><span aria-hidden="true" class="text-zinc-500">·</span>{{ item }}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-8 space-y-4 text-[15px] leading-relaxed text-zinc-300">
+            <p><strong class="text-white">BitterClip.</strong> {{ page.verdictBitterclip }}</p>
+            <p><strong class="text-white">{{ page.competitor }}.</strong> {{ page.verdictCompetitor }}</p>
+          </div>
+          <div class="docs-prose compare-prose mt-8">
+            <ContentRenderer :value="page" />
+          </div>
+        </div>
+      </details>
+    </section>
+    <section v-else class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28">
       <div class="docs-prose compare-prose">
         <ContentRenderer :value="page" />
       </div>
     </section>
 
-    <!-- ============================= FAQ ============================= -->
-    <section v-if="page.faq && page.faq.length" id="faq" aria-labelledby="faq-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28 scroll-mt-24">
-      <div class="max-w-3xl">
-        <p class="telemetry-label mb-4">FAQ</p>
-        <h2 id="faq-heading" class="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-white leading-[1.05] mb-10">
-          Questions people actually ask.
-        </h2>
-        <dl>
-          <div
-            v-for="item in page.faq"
-            :key="item.q"
-            class="border-t border-white/[0.07] py-7 first:border-t-0 first:pt-0"
-          >
-            <dt class="font-display text-xl sm:text-2xl font-bold text-white leading-snug mb-3">{{ item.q }}</dt>
-            <dd class="text-[15px] sm:text-base text-zinc-400 leading-[1.75]">{{ item.a }}</dd>
-          </div>
-        </dl>
-      </div>
-    </section>
-
     <!-- ======================== HOW WE COMPARED ======================== -->
-    <section id="method" aria-labelledby="method-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28 scroll-mt-24">
+    <section id="method" aria-labelledby="method-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
       <div class="max-w-3xl">
-        <p class="telemetry-label mb-4">Method</p>
-        <h2 id="method-heading" class="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-white leading-[1.05] mb-10">
-          How we compared.
+        <h2 id="method-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+          How we compared
         </h2>
-        <dl class="space-y-5 border-l border-white/[0.09] pl-6">
+        <dl class="mt-6 space-y-4">
           <div v-for="item in methodology" :key="item.term">
-            <dt class="font-semibold text-[15px] text-white mb-1">{{ item.term }}</dt>
-            <dd class="text-[15px] text-zinc-400 leading-[1.7]">{{ item.detail }}</dd>
+            <dt class="text-[15px] font-semibold text-white">{{ item.term }}</dt>
+            <dd class="mt-1 text-[15px] leading-[1.7] text-zinc-300">{{ item.detail }}</dd>
           </div>
         </dl>
+        <details class="mt-6">
+          <summary class="cursor-pointer text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white">
+            All {{ page.sources?.length ?? 0 }} sources, checked {{ formatDate(page.reviewed) }}
+          </summary>
+          <ul class="mt-4 space-y-2">
+            <li v-for="source in page.sources" :key="source.url">
+              <a
+                class="text-sm text-zinc-400 transition hover:text-[#f28f84]"
+                :href="source.url"
+                rel="noopener nofollow"
+                target="_blank"
+              >{{ source.label }} ↗</a>
+            </li>
+          </ul>
+        </details>
       </div>
     </section>
 
     <!-- ============================= CTA ============================= -->
-    <section class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28">
-      <div class="cta-glass-panel rounded-3xl corner-ticks p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
+    <section class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+      <div class="cta-glass-panel rounded-3xl p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
         <div>
-          <p class="telemetry-label mb-4">Try it on one recording</p>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-[-0.02em] text-white mb-3 text-balance">
-            Bring a session. Leave with the finished cut.
+            Bring one session. Leave with the finished cut.
           </h2>
-          <p class="text-zinc-400 max-w-xl leading-relaxed">
-            Start Creator with one recording up to two hours. The card-required trial is $1 today for seven days, includes $5 of agent work for analysis, the First Cut, and direction, and becomes $24/month after that; cancel anytime.
+          <p class="text-zinc-300 max-w-xl leading-relaxed">
+            {{ BITTERCLIP_TRIAL }}, cancel anytime. The trial takes one recording up to two hours with $5 of AI agent use; trial exports are watermarked.
           </p>
         </div>
         <a
           :href="signupUrl"
-          class="btn-glow shrink-0 inline-flex items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-6 py-3.5 font-mono text-xs font-bold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          class="btn-glow shrink-0 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-6 py-3.5 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
-          Try BitterClip
+          Try it on one recording
           <span aria-hidden="true">→</span>
         </a>
       </div>
     </section>
 
-    <!-- ====================== KEEP COMPARING ====================== -->
-    <section v-if="otherMatchups.length" aria-labelledby="siblings-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-24">
-      <h2 id="siblings-heading" class="telemetry-label mb-5">Keep comparing</h2>
-      <nav aria-label="Other comparisons" class="flex flex-wrap gap-2.5">
+    <!-- ====================== RELATED COMPARISONS ====================== -->
+    <section v-if="otherMatchups.length" aria-labelledby="siblings-heading" class="mx-auto max-w-6xl px-4 pt-16 pb-24">
+      <h2 id="siblings-heading" class="text-[13px] font-semibold uppercase tracking-[0.12em] text-zinc-400">
+        {{ categoryLabel ? `More comparisons, starting with ${categoryLabel.toLowerCase()}` : 'More comparisons' }}
+      </h2>
+      <nav aria-label="Other comparisons" class="mt-4 flex flex-wrap gap-2.5">
         <NuxtLink
           v-for="matchup in otherMatchups"
           :key="matchup.path"
           :to="matchup.path"
-          class="rounded-full border border-white/[0.09] bg-white/[0.02] px-4 py-2 text-sm text-zinc-400 transition hover:border-[#f28f84]/35 hover:text-[#ffb9af] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
+          class="rounded-full border border-white/[0.09] bg-white/[0.02] px-4 py-2 text-sm text-zinc-300 transition hover:border-[#f28f84]/35 hover:text-[#ffb9af] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
         >
           BitterClip vs {{ matchup.competitor }}
         </NuxtLink>
       </nav>
     </section>
 
-    <!-- =========================== SOURCES =========================== -->
-    <footer class="mx-auto max-w-6xl px-4 mt-16 pb-24">
-      <div class="pt-7 border-t border-white/[0.07]">
-        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600 mb-4">
-          Sources · {{ page.competitor }} facts checked {{ formatDate(page.reviewed) }}
-        </p>
-        <ul class="flex flex-wrap gap-x-5 gap-y-2">
-          <li v-for="source in page.sources" :key="source.url">
-            <a
-              class="text-xs text-zinc-500 hover:text-[#f28f84] transition"
-              :href="source.url"
-              rel="noopener nofollow"
-              target="_blank"
-            >{{ source.label }} ↗</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <!-- Mobile: a way in stays on screen after the hero's button scrolls away. -->
+    <div
+      v-if="page.shortAnswer"
+      class="compare-sticky-cta fixed inset-x-3 bottom-3 z-40 md:hidden"
+      :class="showStickyCta ? 'is-visible' : ''"
+      :aria-hidden="!showStickyCta"
+    >
+      <a
+        :href="signupUrl"
+        :tabindex="showStickyCta ? 0 : -1"
+        class="flex min-h-12 items-center justify-between rounded-xl bg-[#f28f84] px-5 text-sm font-semibold text-zinc-950 shadow-2xl shadow-black/60"
+      >
+        <span>Try it on one recording</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </main>
 </template>
 
@@ -569,7 +821,8 @@ useHead(() => {
 @media (min-width: 768px) {
   .compare-table thead th {
     position: sticky;
-    top: 0;
+    /* Clear the floating site header. */
+    top: 4.5rem;
     z-index: 10;
     backdrop-filter: blur(14px);
     background: rgba(30, 30, 34, 0.96);
@@ -590,6 +843,56 @@ useHead(() => {
   }
 }
 
+.compare-toggle:focus-visible {
+  outline: 2px solid #f28f84;
+  outline-offset: 2px;
+}
+
+/* Who won the row, said in words in the job column, so the verdict never
+   depends on spotting a check mark. */
+.compare-badge--ours {
+  color: #f28f84;
+  background: rgba(242, 143, 132, 0.1);
+  border: 1px solid rgba(242, 143, 132, 0.3);
+}
+.compare-badge--theirs {
+  color: rgb(228 228 231);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.compare-badge--tie {
+  color: rgb(161 161 170);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+.compare-group th {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.compare-faq summary::-webkit-details-marker,
+.compare-long summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The editor still is cropped for legibility; fading its edges makes the
+   crop read as framing rather than a cut-off screenshot. */
+.compare-hero-crop {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
+.compare-sticky-cta {
+  opacity: 0;
+  transform: translateY(1rem);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.compare-sticky-cta.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
 /* Mobile: the table stops being a table. Each row becomes a card with the two
    products stacked and labelled, so nothing truncates and nothing side-scrolls. */
 @media (max-width: 767px) {
@@ -606,6 +909,16 @@ useHead(() => {
     display: none;
   }
 
+  .compare-table tr.compare-group {
+    margin: 1.4rem 0 0.6rem;
+    border: 0;
+    background: transparent;
+  }
+  .compare-table tr.compare-group th {
+    padding: 0;
+    background: transparent;
+  }
+
   .compare-table tr {
     margin-bottom: 0.85rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -620,14 +933,35 @@ useHead(() => {
     background: rgba(255, 255, 255, 0.025);
   }
 
+  /* Each row: the job across the top, the two verdicts side by side. */
+  .compare-table tr.compare-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .compare-table tr.compare-row > th[scope='row'] {
+    grid-column: 1 / -1;
+  }
+
   .compare-cell {
     position: relative;
-    padding: 1.05rem 1.15rem;
+    padding: 0.9rem 1rem;
     border-left: 0 !important;
   }
 
   .compare-cell + .compare-cell {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .compare-table-wrap:not(.show-details) .compare-detail {
+    display: none;
+  }
+  .compare-detail {
+    padding-left: 0;
+    margin-top: 0.35rem;
+  }
+  .compare-lead {
+    grid-template-columns: 1.1rem 1fr;
+    margin-bottom: 0;
   }
 
   /* The product name each block belongs to — without it, stacked cells are
@@ -636,11 +970,11 @@ useHead(() => {
     content: attr(data-label);
     display: block;
     margin-bottom: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.16em;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .compare-cell[data-label='BitterClip']::before {
