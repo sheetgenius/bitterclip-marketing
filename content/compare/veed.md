@@ -3,11 +3,11 @@ title: "BitterClip vs VEED: Toolbox or Workshop?"
 description: "VEED does a lot of different video jobs in a browser. BitterClip does one recurring job — recordings into finished episodes and clips. Which fits your week."
 competitor: VEED
 competitorUrl: https://www.veed.io
-reviewed: "2026-08-17"
+reviewed: "2026-09-25"
 competitorStrength: "Almost any small video job, done fast in one browser tab."
 heroLede: "Stay with VEED if your month is a pile of different video jobs — subtitles, a dub, a captioned ad, a screen walkthrough. Pick BitterClip if it is the same job every week: a podcast, an interview, a client session that has to come out as a finished episode plus a few vertical clips. VEED is a toolbox. BitterClip is a workshop set up for one bench."
-verdictBitterclip: "BitterClip records one person straight from the browser — camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p — and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Up to five cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
-verdictCompetitor: "VEED is the browser tool that covers the widest spread of small video jobs: auto-subtitles in a long language list, translation, dubbing, avatars, a screen recorder, templates, brand kits, and real team workspaces. Right call when the work changes shape every week. Watch the bill — paid plans multiply by the number of editors in the workspace, including invitations nobody has accepted, and AI credits and transcription minutes never roll over."
+verdictBitterclip: "BitterClip records straight from the browser — solo, or you and a guest in Studio, each on your own track — collects recordings people make on their own time from one link on Producer, and most weeks you bring the session you already shot from a phone, Zoom, Riverside, or a camera. Either way you cut it by selecting words in the transcript: cuts land on the word, not near it, because they resolve against the actual audio. Up to five cameras, captions you can fix word by word, and one tap for the 9:16 version. Anything you can click, you can also ask for, in ChatGPT, in Claude, or in the panel beside the editor."
+verdictCompetitor: "VEED is the browser tool that covers the widest spread of small video jobs: auto-subtitles in a long language list, translation, dubbing, avatars, a screen recorder, templates, brand kits, and real team workspaces. Right call when the work changes shape every week. Watch the bill — paid plans multiply by the number of editors in the workspace, including invitations nobody has accepted, and AI credits and translation minutes never roll over."
 rows:
   - axis: The twenty other video jobs on your list
     bitterclip:
@@ -19,12 +19,20 @@ rows:
     edge: competitor
   - axis: Getting the session recorded
     bitterclip:
-      lead: "One person, one device."
-      detail: "Camera and mic from a laptop or phone browser, or your screen in desktop Chrome, up to 1080p."
+      lead: "You and a guest, live."
+      detail: "A guest joins from a link, no account, and each of you is recorded on your own track."
     competitor:
       lead: "Screen and webcam, capped."
       detail: "Its browser recorder handles screen and webcam but stops at sixty minutes."
-    edge: even
+    edge: bitterclip
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
+    competitor:
+      lead: "Only by adding a seat."
+      detail: "Someone can record into your workspace only as an invited collaborator, with a VEED account and a billed seat."
+    edge: bitterclip
   - axis: A ninety-minute session
     bitterclip:
       lead: "That is the whole job."
@@ -55,7 +63,7 @@ rows:
       detail: "Active-word highlight, custom placement, accent colour, speaker titles, and per-word fixes for misheard words."
     competitor:
       lead: "Captions in more languages."
-      detail: "Per-speaker styling, low-confidence words flagged, and a long translation list; SRT download needs a higher tier."
+      detail: "Per-speaker styling, low-confidence words flagged, and a long translation list; SRT download needs a paid plan."
     edge: competitor
   - axis: Editing while you are already in ChatGPT
     bitterclip:
@@ -63,7 +71,7 @@ rows:
       detail: "The same edits work from ChatGPT, Claude, the editor, or the command line."
     competitor:
       lead: "A local beta, Macs only."
-      detail: "OpenEdit is genuinely agent-driven but runs on your own machine, Apple Silicon on macOS 26."
+      detail: "OpenEdit is agent-driven but runs on your own Apple Silicon Mac; VEED's MCP server generates avatar videos rather than editing."
     edge: bitterclip
   - axis: Who decides which moments are good
     bitterclip:
@@ -79,12 +87,12 @@ rows:
       detail: "Private review links anyone can watch without an account, and nobody has to make one."
     competitor:
       lead: "Real shared workspaces."
-      detail: "Collaborators, comments, brand kits and version control, with SSO and analytics on higher tiers."
+      detail: "Collaborators, comments, brand kits and version control, with reviewers and SSO on higher tiers."
     edge: competitor
   - axis: Getting the finished video out the door
     bitterclip:
       lead: "Link, download, or YouTube."
-      detail: "A 1080p MP4, review links that keep playing the version they watched, YouTube behind a confirm."
+      detail: "A 1080p MP4, review links that play the exact version you sent for up to two weeks, YouTube behind a confirm."
     competitor:
       lead: "Download, then post by hand."
       detail: "VEED hosts and embeds, but tells you to download and upload to sharing sites yourself."
@@ -95,23 +103,24 @@ rows:
       detail: "Creator is $1 today for seven days, then $24/month, cancel anytime. Producer is $99/month."
     competitor:
       lead: "Depends who is in the workspace."
-      detail: "Plan price multiplies by editor, and AI credits and transcription minutes never roll over."
+      detail: "Plan price multiplies by editor, and AI credits and translation minutes never roll over."
     edge: even
 chooseUs:
   - You record the same kind of session every week and it has to come out as the same finished package every time, not merely started.
   - "You would rather say 'tighten the intro and cut the tangent at fourteen twenty' than go hunting for it on a timeline. That works from ChatGPT, Claude, or the panel beside the editor, and what comes back is a normal edit you can keep changing by hand."
   - You have been burned by cuts that clip the first word. These land on the word, because they are matched against the actual audio.
   - You shoot two or three angles and want to cut between them without wrecking the audio.
+  - You want guests or customers to record on their own time from one link, without an account or a seat each, and every answer to arrive as its own episode.
   - You want the terms on the page — a card-required seven-day Creator trial at $1 today, then $24/month, cancel anytime. Producer is $99/month.
 chooseThem:
   - Your month is many different video jobs rather than one recurring one. A dub here, a captioned ad there, a screen walkthrough, a talking-head explainer. VEED covers all of it and BitterClip covers almost none of it.
-  - "You need subtitles or translation across a lot of languages. Read VEED's own per-language matrix first: the transcription list and the translation list are not the same list, and both draw down the same pool of minutes."
+  - "You need subtitles or translation across a lot of languages. Read VEED's own per-language matrix first: the transcription list and the translation list are not the same list. Subtitles are unlimited on paid plans within a 50-hour monthly fair-use limit; translation draws down minutes that don't roll over."
   - You want a template library and a brand kit so someone who is not an editor can produce something on-brand without you.
   - Two or three people co-edit the same project. Budget per editor rather than per plan, and clear out invitations you are not using, because pending ones are billed too.
   - "You need 4K: VEED's higher tiers export up to 4K, while BitterClip delivers 1080p."
 gotchas:
   - title: Every seat is billed, including invitations nobody accepted
-    body: "VEED's help centre is blunt about it: 'All paid plans are per-user based. This means you are charged for each user invited/added to your workspace - including pending invitations.' Adding a collaborator raises a prorated invoice immediately. Removing one gives you a credit against the next invoice, not a refund."
+    body: "VEED's help centre is blunt about it: 'All VEED paid plans are billed per seat.' And: 'Pending invitations count as seats. If you have invited someone who has not accepted yet, you are still charged for them.' A new seat is charged, prorated, straight away. Removing one turns the unused time into account credit, not a refund."
     sourceLabel: VEED collaborator charges
     sourceUrl: https://support.veed.io/en/articles/8517339-how-collaborator-charges-are-calculated
   - title: The free tier licenses your footage for AI training
@@ -128,7 +137,7 @@ gotchas:
     sourceUrl: https://support.veed.io/en/articles/7060527-why-is-watermark-still-showing-if-i-am-a-paid-subscriber
 faq:
   - q: Is VEED worth it?
-    a: "Yes, if your video work is many different small jobs done fast in a browser — subtitles, translation, dubbing, a screen recording, a template-driven ad. It fits worse when the work is one recurring job. Templates and a brand kit carry the look across, but the assembly is hand work every session, paid plans multiply by the number of editors in the workspace, and subtitles and translations draw down one shared pool of transcription minutes that does not roll over."
+    a: "Yes, if your video work is many different small jobs done fast in a browser — subtitles, translation, dubbing, a screen recording, a template-driven ad. It fits worse when the work is one recurring job. Templates and a brand kit carry the look across, but the assembly is hand work every session, paid plans multiply by the number of editors in the workspace, and AI credits and translation minutes do not roll over."
   - q: What is the best VEED alternative?
     a: "For turning podcasts, interviews, or client sessions into finished episodes and vertical clips week after week, BitterClip. You record it in the browser or bring the file you already have, cut it by editing the transcript, and get the full cut plus the 9:16 version out of the same pass. If what you actually want is another general-purpose browser toolbox, VEED is hard to beat at that and a straight swap will disappoint you."
   - q: Does VEED train AI on my videos?
@@ -138,9 +147,11 @@ faq:
   - q: Can VEED edit a two-hour podcast?
     a: "It can hold one, but it is not built around one. VEED advises keeping a project under five gigabytes and around four to five hours, the browser recorder stops at sixty minutes on every plan, and Clips needs a source with between one minute and three hours of speech. BitterClip is built for 20-minute-to-2-hour sessions and treats the whole assembly — cut, cameras, captions, opener, vertical — as one job."
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "It records, within a narrow lane. Every project has a browser recorder — 'Record in browser' on the Sources tab, or 'Record here' in the editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record, so nothing large sits on your device and transcription starts the moment you stop. Now the boundary: one signed-in person on one device. No remote guests, no guest recording links, no separate track per participant, no 4K, and no local backup copy. To record someone over the internet, a dedicated remote-recording tool is genuinely better. Bringing footage you already shot — phone, Zoom, Riverside, a camera — is still completely normal."
+    a: "It records. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. It doesn't record 4K. Bringing footage you already shot — phone, Zoom, Riverside, a camera — is still completely normal."
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. VEED has no equivalent: someone can record into your workspace only as an invited collaborator with a VEED account, billed as a seat."
   - q: Does VEED have an API?
-    a: "Two hosted AI models, not an editor API. The Subtitles API and Fabric 1.0 both run on fal.ai, a third-party marketplace, authenticated with a FAL key and needing no VEED account, and there is no documented API for projects or the timeline. In BitterClip, anything you can click you can also ask for — from ChatGPT, Claude, any MCP client, or the command line — and the result is an ordinary edit you can keep changing by hand."
+    a: "Hosted AI models and an MCP server, not an editor API. VEED's models — Fabric 1.0, Lip Sync, Subtitles, Green Screen, and Background Removal — run on fal.ai, a third-party marketplace, with a FAL key; its MCP server generates Fabric avatar videos from Claude and other MCP clients; and VEED says it doesn't offer an API for the full editor. In BitterClip, anything you can click you can also ask for — from ChatGPT, Claude, any MCP client, or the command line — and the result is an ordinary edit you can keep changing by hand."
 sources:
   - label: VEED homepage
     url: https://www.veed.io/
@@ -157,7 +168,7 @@ sources:
   - label: VEED Edit by Script
     url: https://support.veed.io/en/articles/11137955-how-to-use-our-edit-by-script-tool
   - label: VEED recorder
-    url: https://support.veed.io/en/articles/11099678-how-to-use-our-recorder
+    url: https://support.veed.io/en/articles/11099678-how-to-use-veeds-recorder
   - label: VEED timeline
     url: https://support.veed.io/en/articles/10804541-what-you-need-to-know-about-veeds-timeline
   - label: VEED subtitles
@@ -170,6 +181,10 @@ sources:
     url: https://support.veed.io/en/articles/11029688-how-to-share-your-videos
   - label: VEED OpenEdit
     url: https://support.veed.io/en/articles/16342833-how-to-use-openedit-veed-s-agent-driven-video-editor
+  - label: VEED API
+    url: https://www.veed.io/api
+  - label: VEED MCP
+    url: https://www.veed.io/tools/veed-mcp
   - label: VEED Subtitles API
     url: https://support.veed.io/en/articles/15230204-veed-subtitles-api
 ---
@@ -182,7 +197,7 @@ The trouble starts when your month is not three different jobs but the same job,
 
 ## What one bench looks like
 
-BitterClip records, in one narrow lane: every project has a browser recorder — "Record in browser" on the Sources tab, or "Record here" in the editor, which drops the take into the edit at the playhead. Camera and mic from a laptop or phone, or your screen in desktop Chrome, up to 1080p, uploaded in chunks as you record so transcription starts when you stop. One person, one device, signed in — no remote guests, no guest links, no separate tracks, no 4K. For someone across the internet, a dedicated remote-recording tool is genuinely better. Most weeks you bring the file anyway: phone, Zoom, Riverside, a camera.
+BitterClip records: every project has a browser recorder — "Record in browser" on the Sources tab, or "Record here" in the editor, which drops the take into the edit at the playhead. Camera and mic from a laptop or phone, up to 1080p. For a conversation, open Studio: your guest joins from a link and each of you is recorded on your own track, so you cut between you afterward. On Producer there's a third way in: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Most weeks you bring the file anyway: phone, Zoom, Riverside, a camera.
 
 Either way you get a transcript you edit like a document: delete the rambling sentence and a real cut happens in the video, landing on the word rather than near it because it resolves against the actual audio — no clipped syllables, no half-swallowed first word.
 
@@ -190,6 +205,6 @@ VEED has real transcript editing too; Edit by Script is on every plan. What diff
 
 ## Ask for the edit instead of finding it
 
-Anything you can click, you can ask for. From ChatGPT, Claude, the editor, or the command line: tighten the intro, cut the tangent at fourteen twenty. What comes back is a normal edit you can keep changing by hand. VEED is moving this way too — OpenEdit is genuinely agent-driven — but it is a beta that runs on your own machine, on recent Apple Silicon Macs only.
+Anything you can click, you can ask for. From ChatGPT, Claude, the editor, or the command line: tighten the intro, cut the tangent at fourteen twenty. What comes back is a normal edit you can keep changing by hand. VEED is moving this way too — OpenEdit is genuinely agent-driven, and its MCP server generates avatar videos from Claude — but OpenEdit is a beta that runs on your own machine, on recent Apple Silicon Macs only.
 
 The terms are on the page: Creator's card-required seven-day trial is $1 today, then $24/month; cancel anytime. It includes one recording up to two hours, $5 of agent work for analysis, the First Cut, and continued direction, plus watermarked exports. Paid Creator includes 10 source-footage hours and $10 of included agent work; Producer is $99/month with 40 source-footage hours, $40 of included agent work, larger files, and priority rendering. If your week is many small video jobs, stay with VEED. If it is one recording that has to come out finished, bring one over.

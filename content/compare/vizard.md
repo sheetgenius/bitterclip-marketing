@@ -3,10 +3,10 @@ title: "BitterClip vs Vizard: Fix the Cut, Don't Run It Again"
 description: Vizard makes a lot of clips fast and cheap. BitterClip finishes the whole recording and fixes the cut you have. Which one fits your week.
 competitor: Vizard
 competitorUrl: https://vizard.ai
-reviewed: 2026-08-17
+reviewed: 2026-09-25
 competitorStrength: A generous free tier, and a lot of clips for little money.
 heroLede: "Pick Vizard if you want volume: one upload comes back as thirty-plus captioned vertical clips, scheduled out to six platforms, for very little money. Pick BitterClip if you record long conversations and each one has to leave finished — the full cut plus the vertical version — and you'd rather fix an almost-right cut than run the generator again and hope. One makes a lot of clips. The other finishes the recording."
-verdictBitterclip: "BitterClip is where a recording becomes a finished episode and the clips that come off it. Record straight into the project from a browser — camera and mic on a laptop or a phone, one person at a time, no remote guests — or bring footage from your phone, Zoom, Riverside, or a camera. Then edit by selecting words in the transcript: the cut lands on the word, because it's reading the actual audio underneath. Work in the editor or just ask in ChatGPT or Claude; it's the same edit either way, and undo works all the way back."
+verdictBitterclip: "BitterClip is where a recording becomes a finished episode and the clips that come off it. Record straight into the project from a browser — camera and mic on a laptop or a phone, or you and a guest in Studio, each on your own track — collect recordings people make on their own time from one link on Producer, or bring footage from your phone, Zoom, Riverside, or a camera. Then edit by selecting words in the transcript: the cut lands on the word, because it's reading the actual audio underneath. Work in the editor or just ask in ChatGPT or Claude; it's the same edit either way, and undo works all the way back."
 verdictCompetitor: "Vizard is a clip machine. Upload a long video and it hands back 30+ captioned vertical clips with reframing, emoji, and social copy, then posts them on a schedule to six platforms. Cheap per clip — the free plan gives 60 upload-minutes a month at 720p with a watermark — as long as you accept that the meter runs when you upload and that you'll tidy up the AI's boundaries afterward."
 rows:
   - axis: Turning one long upload into a pile of shorts
@@ -23,7 +23,7 @@ rows:
       detail: Say what's wrong and get the same cut back corrected; undo works all the way back.
     competitor:
       lead: Stretch it, or start over.
-      detail: Push the boundary out sentence by sentence, or go select the segments by hand.
+      detail: Push the boundary out sentence by sentence, select segments by hand, or give the new Vizard Agent direction on its own site.
     edge: bitterclip
   - axis: When a clip starts half a word late
     bitterclip:
@@ -38,8 +38,8 @@ rows:
       lead: Ask in ChatGPT or Claude.
       detail: Anything you can click, you can ask for, and the result is a normal edit.
     competitor:
-      lead: An API, not a conversation.
-      detail: Submit videos, retrieve clips; the editing endpoint refuses anything three minutes or longer.
+      lead: A separate agent, plus an API.
+      detail: Vizard Agent revises from your direction on its own site; the API's editing endpoint refuses anything three minutes or longer.
     edge: bitterclip
   - axis: Deciding which moments are worth clipping
     bitterclip:
@@ -62,7 +62,7 @@ rows:
       lead: Fix the misheard word.
       detail: Active-word highlight, your placement and accent color, and per-word corrections when it hears wrong.
     competitor:
-      lead: Thirty-plus languages, animated.
+      lead: 50+ languages, animated.
       detail: Fonts, colors, animated styles, and emoji inserted for you, which you can edit or switch off.
     edge: even
   - axis: Getting it posted everywhere
@@ -73,6 +73,14 @@ rows:
       lead: Six platforms on a calendar.
       detail: TikTok, YouTube, LinkedIn, X, Instagram, and Facebook Pages, scheduled ahead of time.
     edge: competitor
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
+    competitor:
+      lead: Screen only, just you.
+      detail: Vizard advertises a free screen recorder for your own screen and mic; there's no camera recording and no way to collect a take from someone else.
+    edge: bitterclip
   - axis: What the bill actually counts
     bitterclip:
       lead: Production plus agent work.
@@ -94,6 +102,7 @@ chooseUs:
   - You shot with more than one camera and need real switching — two-up, picture-in-picture, a speaker rail — without the audio flinching every time you cut.
   - You'd rather edit by asking. Say it in ChatGPT or Claude, or right in the editor, and what comes back is a normal edit you can keep nudging by hand.
   - Every recording has to leave finished — the full cut, plus the vertical version with captions and timing already carried across.
+  - You collect answers from guests or customers and want them to record on their own time from one link, each answer arriving as its own episode.
   - You need to find things again later. Every clip remembers where it came from, one click jumps back to that spot in the full recording, and you can search everything you've recorded by what was said, who said it, or what was on screen.
 chooseThem:
   - You want the most clips per hour of footage for the least attention — one upload becomes 30+ captioned verticals with the caption copy already written.
@@ -130,7 +139,9 @@ faq:
   - q: Do Vizard credits roll over?
     a: "Not usefully on monthly plans: each batch lasts 60 days, or 13 months on yearly plans, and unused Creator credits don't transfer when you upgrade to Business. Credits also come out when you upload, whether you keep a clip or not."
   - q: Does BitterClip record, or do I have to bring footage?
-    a: "Yes, it records. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take lands in the edit at the playhead. It captures camera and mic on a laptop or a phone, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record so transcription starts the moment you press stop. The boundary is one person, one device, signed in — no remote guests, no guest recording links, no separate track per person. To record a guest over the internet, a dedicated remote-recording tool is still the better tool. Bringing footage you shot elsewhere stays completely normal."
+    a: "Yes, it records. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. Bringing footage you shot elsewhere stays completely normal."
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Vizard has no equivalent; its only recorder is a screen recorder for your own screen and mic."
   - q: Can I use BitterClip from ChatGPT or Claude?
     a: 'Yes. Anything you can click in the editor you can ask for instead — in ChatGPT, in Claude, in any MCP client, right in the editor, or from the command line. Say "cut the tangent at 14:20" and what comes back is a normal edit you can open, nudge by hand, or undo.'
 sources:
@@ -168,6 +179,10 @@ sources:
     url: https://help.vizard.ai/en/collections/8474224-editor
   - label: Vizard auto subtitle generator
     url: https://vizard.ai/tools/auto-subtitle-generator-online
+  - label: Vizard Agent announcement
+    url: https://vizard.ai/blog/the-next-shift-in-ai-is-coming-to-video
+  - label: Vizard screen recorder
+    url: https://vizard.ai/tools/screen-recorder
 ---
 
 ## The clip that starts half a word late
@@ -176,7 +191,7 @@ You have ninety minutes of a good conversation and about three hours of dread. S
 
 Vizard is honest about this part. Its own help docs say the AI "will stop in the middle of a sentence" and call it "some glitch in ChatGPT that we cannot fix." From there you can push the boundary out sentence by sentence, put struck-out transcript text back, or go select the segments by hand. Whichever you pick, you've already paid — Vizard takes credits when you upload, so those ninety minutes cost the same whether you keep twenty clips or two.
 
-BitterClip starts from the opposite assumption: the first cut is a draft, and drafts get changed. Select words in the transcript and a real edit happens. The cut lands on the word because it's reading the actual audio underneath — no clipped syllables, no half-swallowed first word. Something's off, you say what's wrong and fix the cut you have. You went too far, undo takes you back. The review link you already sent your co-host still plays the exact version they watched. There's nothing to run again, because nothing got thrown away.
+BitterClip starts from the opposite assumption: the first cut is a draft, and drafts get changed. Select words in the transcript and a real edit happens. The cut lands on the word because it's reading the actual audio underneath — no clipped syllables, no half-swallowed first word. Something's off, you say what's wrong and fix the cut you have. You went too far, undo takes you back. A review link you sent your co-host plays the exact version you sent, never a later one, for up to two weeks. There's nothing to run again, because nothing got thrown away.
 
 ## Anything you can click, you can ask for
 

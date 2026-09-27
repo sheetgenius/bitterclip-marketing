@@ -6,6 +6,7 @@ import { defineNuxtModule } from '@nuxt/kit'
 import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
 import { parse as parseHtml } from 'parse5'
+import { assertCompareBalance, compareMethodology } from '../app/utils/compare-methodology'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
@@ -210,6 +211,8 @@ interface ComparePage {
   mdPath: string
   /** Markdown body only (frontmatter stripped). */
   body: string
+  /** From content/_data/site.yml, for the method's corrections line. */
+  supportEmail: string
   frontmatter: {
     title?: string
     description?: string
@@ -319,6 +322,7 @@ async function readBlogPosts(contentDir: string): Promise<BlogPost[]> {
 
 async function readComparePages(contentDir: string): Promise<ComparePage[]> {
   const pages: ComparePage[] = []
+  const { support_email: supportEmail } = await readSite(contentDir)
   for await (const entry of glob('compare/*.md', { cwd: contentDir })) {
     const sourceRel = entry.replace(/\\/g, '/')
     const slug = sourceRel.replace(/^compare\//, '').replace(/\.md$/, '')
@@ -331,7 +335,9 @@ async function readComparePages(contentDir: string): Promise<ComparePage[]> {
       mdPath: `/compare/${slug}.md`,
       body,
       frontmatter: frontmatter as ComparePage['frontmatter'],
+      supportEmail,
     })
+    assertCompareBalance(slug, (frontmatter as ComparePage['frontmatter']).rows ?? [])
   }
   pages.sort((a, b) => (a.frontmatter.competitor ?? a.slug).localeCompare(b.frontmatter.competitor ?? b.slug))
   return pages
@@ -429,6 +435,13 @@ function buildCompareMarkdown(page: ComparePage): string {
       lines.push(item.a)
       lines.push('')
     }
+  }
+  if (fm.competitor && fm.reviewed && fm.rows) {
+    lines.push('## How we compared')
+    lines.push('')
+    const method = compareMethodology({ competitor: fm.competitor, reviewed: fm.reviewed, rows: fm.rows, sources: fm.sources }, page.supportEmail)
+    for (const item of method) lines.push(`- **${item.term}.** ${item.detail}`)
+    lines.push('')
   }
   if (fm.sources && fm.sources.length > 0) {
     lines.push('## Sources')

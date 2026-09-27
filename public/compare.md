@@ -22,6 +22,7 @@ Each matchup has its own page. Add `.md` to any URL for the Markdown version.
 - [BitterClip vs Submagic](https://bitterclip.com/compare/submagic)
 - [BitterClip vs VEED](https://bitterclip.com/compare/veed)
 - [BitterClip vs Vizard](https://bitterclip.com/compare/vizard)
+- [BitterClip vs Zoom](https://bitterclip.com/compare/zoom)
 
 ## How these are written
 
@@ -33,9 +34,11 @@ Each matchup has its own page. Add `.md` to any URL for the Markdown version.
 
 ## What BitterClip is for
 
-Turning recorded conversations into finished cuts and clips. Record straight into a project from your browser — camera and mic on a laptop or phone, or your screen in desktop Chrome, up to 1080p — or bring footage you already shot from a phone, Zoom, Riverside, or a camera. It is built for sessions of roughly 20 minutes to 2 hours: podcasts, interviews, coaching calls, workshops.
+Turning recorded conversations into finished cuts and clips. Record straight into a project from your browser — camera and mic on a laptop or phone — or bring footage you already shot from a phone, Zoom, Riverside, or a camera. It is built for sessions of roughly 20 minutes to 2 hours: podcasts, interviews, coaching calls, workshops.
 
-The recorder is one signed-in person on one device. There are no remote guests, no guest recording links, and no separate per-participant tracks — for recording someone over the internet, a dedicated remote-recording tool is better.
+On Producer, you can also collect recordings from other people without a call. Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut. You share the link yourself; BitterClip doesn't send invitations or reminders.
+
+For a live conversation, paid plans include Studio: your guest joins from a link with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and the finished conversation arrives as an episode, transcribed and ready to cut.
 
 You edit by selecting words in the transcript and deleting them, and the cut lands on the word rather than near it. Anything you can click, you can ask for instead — in ChatGPT, Claude, any MCP client, or the editor — and what comes back is a normal edit you can keep changing by hand or undo. Up to five cameras. Captions, music, brand openers and outros. One tap makes the vertical version.
 

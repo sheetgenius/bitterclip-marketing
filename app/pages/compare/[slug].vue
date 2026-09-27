@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
+import { compareMethodology, compareTally } from '~/utils/compare-methodology'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -62,15 +63,16 @@ const cellClass = (row: { edge?: string }, side: 'bitterclip' | 'competitor') =>
 }
 
 // Running score, so the shape of the answer is readable before any row is.
-const tally = computed(() => {
-  const rows = page.value?.rows ?? []
-  return {
-    total: rows.length,
-    bitterclip: rows.filter((r) => r.edge === 'bitterclip').length,
-    competitor: rows.filter((r) => r.edge === 'competitor').length,
-    even: rows.filter((r) => r.edge === 'even').length,
-  }
-})
+const tally = computed(() => compareTally(page.value?.rows ?? []))
+
+const { data: site } = await useAsyncData('site', () =>
+  queryCollection('site').first(),
+)
+// How the page was made, stated with this page's own numbers. The Markdown
+// twin renders the same items (modules/generated-surfaces.ts).
+const methodology = computed(() => page.value && site.value
+  ? compareMethodology(page.value, site.value.support_email)
+  : [])
 
 // The two customer quotes already running on the homepage (signed off
 // 2026-06-10), verbatim. Andrew speaks for long client-session footage; Rohan
@@ -98,7 +100,7 @@ const TESTIMONIALS = {
   },
 } as const
 
-const SESSION_FOOTAGE_MATCHUPS = new Set(['descript', 'riverside', 'podcastle', 'captions', 'veed', 'kapwing'])
+const SESSION_FOOTAGE_MATCHUPS = new Set(['descript', 'riverside', 'zoom', 'podcastle', 'captions', 'veed', 'kapwing'])
 const testimonial = computed(() =>
   SESSION_FOOTAGE_MATCHUPS.has(slug) ? TESTIMONIALS.andrew : TESTIMONIALS.rohan,
 )
@@ -188,6 +190,7 @@ useHead(() => {
               { href: '#comparison', label: 'The comparison' },
               { href: '#fine-print', label: 'Fine print' },
               { href: '#faq', label: 'FAQ' },
+              { href: '#method', label: 'How we compared' },
             ]"
             :key="link.href"
             :href="link.href"
@@ -423,6 +426,22 @@ useHead(() => {
           >
             <dt class="font-display text-xl sm:text-2xl font-bold text-white leading-snug mb-3">{{ item.q }}</dt>
             <dd class="text-[15px] sm:text-base text-zinc-400 leading-[1.75]">{{ item.a }}</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ======================== HOW WE COMPARED ======================== -->
+    <section id="method" aria-labelledby="method-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:pt-28 scroll-mt-24">
+      <div class="max-w-3xl">
+        <p class="telemetry-label mb-4">Method</p>
+        <h2 id="method-heading" class="font-display text-3xl sm:text-5xl font-bold tracking-[-0.03em] text-white leading-[1.05] mb-10">
+          How we compared.
+        </h2>
+        <dl class="space-y-5 border-l border-white/[0.09] pl-6">
+          <div v-for="item in methodology" :key="item.term">
+            <dt class="font-semibold text-[15px] text-white mb-1">{{ item.term }}</dt>
+            <dd class="text-[15px] text-zinc-400 leading-[1.7]">{{ item.detail }}</dd>
           </div>
         </dl>
       </div>

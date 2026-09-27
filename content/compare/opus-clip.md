@@ -3,7 +3,7 @@ title: "BitterClip vs OpusClip: Fix the Cut or Roll Again"
 description: OpusClip turns one long video into a pile of captioned shorts. BitterClip lets you fix the cut you have. Which one fits how you work?
 competitor: OpusClip
 competitorUrl: https://www.opus.pro
-reviewed: 2026-08-17
+reviewed: 2026-09-25
 competitorStrength: The fastest way to get ten shorts out of one video.
 heroLede: "If you need ten captioned vertical clips by Friday and no desire to touch a timeline, that's OpusClip — from the $15 Starter tier it posts them for you. If what you have is one almost-right cut and you need it right, that's BitterClip: edit by deleting words in the transcript, or just ask for the change in ChatGPT, Claude, or the editor. Same recording, two very different jobs."
 verdictBitterclip: "Where your recordings become finished episodes and clips. Record straight into the project from your browser, or bring footage from a phone, Zoom, Riverside, or a camera, and turn a twenty-minute-to-two-hour session into a full cut plus the vertical version — editing in the transcript, up to five cameras, and every change something you can ask for by name or undo. Built for people who fix the cut they have instead of generating another batch."
@@ -39,16 +39,16 @@ rows:
       detail: No mystery number decides which of your moments are good — you pick, or you ask.
     competitor:
       lead: It grades your clips.
-      detail: On paid tiers a 0–99 score ranks hook strength, flow, and trend alignment — a suggestion, their docs say.
+      detail: On paid tiers a 0–99 score ranks hook, flow, value, and trend — a suggestion, their docs say.
     edge: even
   - axis: Asking for an edit instead of clicking for it
     bitterclip:
       lead: Ask instead of click.
       detail: Anything you can click, you can ask for — in ChatGPT, Claude, any MCP client, or the editor.
     competitor:
-      lead: An API, behind a plan.
-      detail: Full API access is Business-plan only, with self-serve caps on credits, requests, and projects.
-    edge: bitterclip
+      lead: Claude and MCP, from Pro.
+      detail: An official Claude connector and MCP server start on the $29 Pro plan, in beta and capped at 900 credits a month.
+    edge: even
   - axis: Sessions you shot on more than one camera
     bitterclip:
       lead: Cut between five cameras.
@@ -63,7 +63,7 @@ rows:
       detail: Per-word corrections, an active-word highlight, and your own placement and accent color.
     competitor:
       lead: Animated templates, every tier.
-      detail: Emoji and keyword highlighting, editable caption text; custom fonts and speaker colors are paid.
+      detail: Emoji and keyword highlighting, editable caption text, and a brand vocabulary for names; custom fonts are paid.
     edge: even
   - axis: Getting it in front of an audience
     bitterclip:
@@ -81,6 +81,14 @@ rows:
       lead: Clips gameplay and vlogs.
       detail: On paid plans ClipAnything picks on visuals, sound, and emotion, from sources up to 10 hours.
     edge: competitor
+  - axis: Getting recordings from other people
+    bitterclip:
+      lead: Send one link.
+      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
+    competitor:
+      lead: Uploads and links only.
+      detail: OpusClip takes files and links from YouTube, Zoom, Riverside, and others; it has no camera recorder and no way to collect a take.
+    edge: bitterclip
   - axis: What a month actually costs
     bitterclip:
       lead: $1 for seven days, then $24.
@@ -94,13 +102,14 @@ chooseUs:
   - "Every recording needs the whole package: the full episode and the vertical version, not just shorts."
   - You shoot with more than one camera and want to cut between them, not crop a single video.
   - 'You want to say "cut the tangent at 14:20 and tighten the intro" in ChatGPT and get back an edit you can open, keep changing by hand, or undo.'
+  - You want guests or customers to record on their own time from one link, each answer arriving as its own episode you can cut and clip.
   - You'd rather pick the moments yourself than take a 0–99 score's word for it.
 chooseThem:
   - "Volume is the job: one upload becomes a stack of captioned vertical shorts with almost no hands-on time."
   - You want posting built in — straight from the $15 Starter tier, plus Pro's six-platform scheduler with auto titles and hashtags.
   - Your footage isn't people talking. On paid plans, ClipAnything picks on visuals, sound, and emotion — gaming, sports, vlogs.
   - Your videos run long. OpusClip takes uploads up to 10 hours; BitterClip is built for twenty-minute to two-hour sessions.
-  - You want an iOS app for tweaking captions and overlays away from your desk.
+  - You want iOS and Android apps for tweaking captions and overlays away from your desk.
 gotchas:
   - title: Credits are spent on what you upload, not what you keep
     body: One credit equals one minute of source video processed, charged on the full upload length no matter how many clips you use; videos under a minute round up to a full credit. On monthly plans, unused credits expire 60 days after they're issued.
@@ -128,7 +137,9 @@ faq:
   - q: Does BitterClip have a virality score?
     a: No, on purpose. No mystery number decides which of your moments are good — you pick them, or you ask your assistant to. OpusClip's 0–99 score is a paid-tier feature its own docs describe as suggesting engagement potential.
   - q: Does BitterClip record?
-    a: "Yes. Every project has a browser recorder: \"Record in browser\" from the Sources tab, or \"Record here\" in the episode editor's insert sheet, which drops the finished take into the edit at the playhead. It captures camera and mic on a laptop or a phone browser, or your screen in desktop Chrome, up to 1080p, and it uploads in short chunks while you record so transcription starts the moment you press stop. The boundary matters: it's one person, one device, signed in. No remote guests, no guest recording links, no separate per-participant tracks. If the job is recording a guest over the internet, use a dedicated remote-recording tool and bring the file in — that's still completely normal here."
+    a: "Yes. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. Bringing a file you recorded elsewhere is still completely normal here. OpusClip has no camera recorder."
+  - q: Does BitterClip do async recording?
+    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. OpusClip doesn't record camera footage or collect it from anyone; it works from files and links you bring."
   - q: Can BitterClip post directly to TikTok and Instagram?
     a: "No. BitterClip can send a finished export to a connected YouTube destination after a fresh confirmation, then hands off everything else through review links and 1080p MP4 downloads. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?
@@ -148,6 +159,8 @@ sources:
     url: https://www.opus.pro/terms-of-service
   - label: OpusClip MCP server
     url: https://www.opus.pro/mcp
+  - label: OpusClip Claude connector
+    url: https://help.opus.pro/api-reference/claude-connector
   - label: OpusClip API reference — Limitations
     url: https://help.opus.pro/api-reference/limitation
   - label: OpusClip Help — Video length and upload limits
@@ -168,11 +181,11 @@ BitterClip's unit of work is the clip you already have. Open the transcript, sel
 
 ## Why the cut doesn't eat your first word
 
-Cuts land on the word, not near it, because they resolve against the actual audio in your recording. No clipped syllables, no half-swallowed opening. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and the review link you sent a client always plays the exact version they watched.
+Cuts land on the word, not near it, because they resolve against the actual audio in your recording. No clipped syllables, no half-swallowed opening. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and a review link plays the exact version you sent, never a later one, for up to two weeks.
 
-There is no score, deliberately. OpusClip grades each clip 0–99 on hook strength, flow, and trend alignment, and its own docs describe the number as suggesting engagement potential. BitterClip doesn't have one. No mystery number decides which of your moments are good.
+There is no score, deliberately. OpusClip grades each clip 0–99 on hook, flow, value, and trend, and its own docs describe the number as suggesting engagement potential. BitterClip doesn't have one. No mystery number decides which of your moments are good.
 
-Anything you can click, you can ask for. The editor, ChatGPT, Claude, the command line — same operations, same result, and the result is a normal edit you can keep changing or undo. OpusClip publishes an API too, but full access is Business-plan only, and self-serve is capped at 900 credits a month, 30 requests a minute, and four projects at once.
+Anything you can click, you can ask for. The editor, ChatGPT, Claude, the command line — same operations, same result, and the result is a normal edit you can keep changing or undo. OpusClip now reaches Claude too: since September 2026 an official Claude connector and an MCP server work from the $29 Pro plan, in beta, capped at 900 credits a month, 30 requests a minute, and four projects at once. Full API access is still Business-only.
 
 ## Where OpusClip is simply the right tool
 

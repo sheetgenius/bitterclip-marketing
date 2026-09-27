@@ -51,6 +51,33 @@ under a dated entry.
   the introductory payment and the cancel-before time; the full terms now live
   at checkout and in the trial emails. The homepage pricing fine-print
   paragraph is gone and the cancellation FAQ is three sentences.
+- Re-checked all twelve `/compare` pages against competitors' current pricing,
+  help, and legal pages (2026-09-25). Added a row and FAQ answer on each for
+  Producer's async recording (one link, up to 25 people, no account needed,
+  each answer arriving as its own episode), and corrected claims that had gone
+  stale since August: Riverside's MCP, Business-only async links, and Pro
+  hosting; Async's (Podcastle's) plan names and 4K gating; Submagic's and
+  OpusClip's Claude connectors; Captions' three-hour Clips; Kapwing's MCP beta
+  and Kai; Klap's ChatGPT app, prices, and privacy policy; CapCut's desktop
+  multicam, regional license wording, and refund condition; VEED's per-seat
+  wording and API; Munch's annual refund; Descript's moved help pages. The
+  BitterClip recorder is now described without plan-specific details, and
+  review links carry their two-week limit everywhere.
+- Added `/compare/zoom`: Zoom records views of a call (active speaker, gallery,
+  shared screen) with optional per-person audio; BitterClip's Studio records
+  each person on their own track and delivers a transcribed episode. Sourced
+  from Zoom's support articles, pricing page, and two staff replies on Zoom's
+  community forum.
+- Comparison pages and the compare hub now describe live Studio on paid plans:
+  a guest joins from a link with no account, each person is recorded on their
+  own track, each browser keeps a backup copy, and the conversation arrives as
+  a transcribed episode. Async takes are described as recorded on the
+  respondent's device and verified whole after upload.
+- Added a "How we compared" section to every comparison page and its Markdown
+  twin: who wrote it, how rows are called, the page's own score, where the facts
+  come from, the check date, and a corrections address. The build now fails if
+  a comparison gives fewer than two rows to the competitor or a tie, the rule
+  that section states.
 - Made the main MCP tool reference list the 63 tools exposed to the default
   model. A separate app-only catalog links the other 50 registered operations;
   all 113 individual contracts remain public.
