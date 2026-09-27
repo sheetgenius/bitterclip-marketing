@@ -212,8 +212,8 @@ interface ComparePage {
   mdPath: string
   /** Markdown body only (frontmatter stripped). */
   body: string
-  /** From content/_data/site.yml, for the method's corrections line. */
-  supportEmail: string
+  /** This page's file in the public repository, for the method's corrections line. */
+  sourceUrl: string
   frontmatter: {
     title?: string
     description?: string
@@ -330,7 +330,7 @@ async function readBlogPosts(contentDir: string): Promise<BlogPost[]> {
 
 async function readComparePages(contentDir: string): Promise<ComparePage[]> {
   const pages: ComparePage[] = []
-  const { support_email: supportEmail } = await readSite(contentDir)
+  const { source_repo: sourceRepo } = await readSite(contentDir)
   for await (const entry of glob('compare/*.md', { cwd: contentDir })) {
     const sourceRel = entry.replace(/\\/g, '/')
     const slug = sourceRel.replace(/^compare\//, '').replace(/\.md$/, '')
@@ -343,7 +343,7 @@ async function readComparePages(contentDir: string): Promise<ComparePage[]> {
       mdPath: `/compare/${slug}.md`,
       body,
       frontmatter: frontmatter as ComparePage['frontmatter'],
-      supportEmail,
+      sourceUrl: `${sourceRepo}/blob/main/content/${sourceRel}`,
     })
     assertCompareBalance(slug, (frontmatter as ComparePage['frontmatter']).rows ?? [])
   }
@@ -480,8 +480,8 @@ function buildCompareMarkdown(page: ComparePage): string {
   if (fm.competitor && fm.reviewed && fm.rows) {
     lines.push('## How we compared')
     lines.push('')
-    const method = compareMethodology({ competitor: fm.competitor, reviewed: fm.reviewed, rows: fm.rows, sources: fm.sources }, page.supportEmail)
-    for (const item of method) lines.push(`- **${item.term}.** ${item.detail}`)
+    const method = compareMethodology({ competitor: fm.competitor, reviewed: fm.reviewed, rows: fm.rows, sources: fm.sources }, page.sourceUrl)
+    for (const item of method) lines.push(`- **${item.term}.** ${item.detail}${item.link ? ` [${item.link.label}](${item.link.url})` : ''}`)
     lines.push('')
   }
   if (fm.sources && fm.sources.length > 0) {

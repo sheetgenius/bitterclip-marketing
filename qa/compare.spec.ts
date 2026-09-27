@@ -70,6 +70,8 @@ test.describe('head-to-head comparison pages', () => {
       // The method states this page's own score and check date.
       await expect(page.getByRole('heading', { name: 'How we compared' })).toBeVisible()
       await expect(page.getByText(/Here: BitterClip \d+, .+ \d+, tie \d+\./)).toBeVisible()
+      // Corrections go through the public repository, straight to this page's file.
+      await expect(page.getByRole('link', { name: /Edit this page on GitHub/ })).toHaveAttribute('href', `https://github.com/sheetgenius/bitterclip-marketing/blob/main/content/compare/${slug}.md`)
       await expect(page.getByRole('link', { name: 'Try it on one recording' }).first()).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
       await expect(page.locator('script[type="application/ld+json"]').first()).toHaveCount(1)
       await expect(page.getByRole('link', { name: '← All comparisons' })).toHaveAttribute('href', '/compare')

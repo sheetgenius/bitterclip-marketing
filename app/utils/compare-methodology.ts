@@ -27,7 +27,8 @@ const formatReviewed = (value: string) =>
 
 const plural = (count: number, one: string, many = `${one}s`) => `${count} ${count === 1 ? one : many}`
 
-export const compareMethodology = (page: CompareMethodologyPage, supportEmail: string) => {
+// `sourceUrl` is this page's own file in the public repository.
+export const compareMethodology = (page: CompareMethodologyPage, sourceUrl: string) => {
   const tally = compareTally(page.rows)
   const sourceCount = page.sources?.length ?? 0
   return [
@@ -45,7 +46,8 @@ export const compareMethodology = (page: CompareMethodologyPage, supportEmail: s
     },
     {
       term: 'Corrections',
-      detail: `Something out of date? Email ${supportEmail} and we’ll fix it.`,
+      detail: 'This page is open source. If something is wrong or out of date, edit its file on GitHub and open a pull request.',
+      link: { label: 'Edit this page on GitHub', url: sourceUrl },
     },
   ]
 }
