@@ -13,7 +13,7 @@ tags:
 
 # What is BitterClip?
 
-If you make long videos or podcasts and want short clips out of them, this page explains what BitterClip does and the few words you'll see throughout the docs.
+If you record conversations, interviews, or sessions and want a finished episode and clips out of them, this page explains what BitterClip does and the few words you'll see throughout the docs.
 
 ## BitterClip in plain words
 

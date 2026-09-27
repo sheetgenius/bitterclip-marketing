@@ -300,7 +300,7 @@ test('renders the developer documentation page and navigation', async ({ page })
   await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="/docs.md"]')).toHaveCount(1)
   await expect(page.getByRole('heading', { level: 1, name: 'BitterClip docs' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 2, name: 'Start here' })).toBeVisible()
-  await expect(page.getByRole('heading', { level: 2, name: 'Use it from your AI assistant' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: "Use BitterClip's agent, or yours" })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Your first clip' }).first()).toBeVisible()
   await expect(page.getByRole('link', { name: 'Connect ChatGPT' }).first()).toBeVisible()
 })
@@ -667,7 +667,7 @@ test('serves crawlable markdown alternates and discovery files', async ({ reques
   const markdownPages = [
     { path: '/index.md', text: 'Footage in. Episode out.' },
     { path: '/founder-onboarding.md', text: "Tell me your story. I'll make the first cut." },
-    { path: '/docs.md', text: 'Use it from your AI assistant' },
+    { path: '/docs.md', text: "Use BitterClip's agent, or yours" },
     { path: '/docs/assistants/overview.md', text: 'Use BitterClip from your AI assistant' },
     {
       path: '/docs/getting-started/import-youtube-takeout.md',
