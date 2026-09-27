@@ -41,7 +41,7 @@ rows:
   - axis: Getting everyone on the call recorded
     bitterclip:
       lead: Records you and a guest.
-      detail: A guest joins your Studio from a link, no account; each of you is recorded on your own track.
+      detail: "{studio}"
     competitor:
       lead: Records ten people at once.
       detail: Each person captured locally with uncompressed WAV, 4K from the $39.99 Pro plan, so a bad connection can't spoil the tracks.

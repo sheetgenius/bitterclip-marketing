@@ -38,7 +38,7 @@ rows:
   - axis: Recording a remote guest on a separate track
     bitterclip:
       lead: A guest joins from a link.
-      detail: On paid plans, a guest joins Studio from a link with no account, and each of you is recorded on your own track.
+      detail: "{studio}"
     competitor:
       lead: Records on your phone.
       detail: The iOS app records in-app with a teleprompter and edits without leaving the app; its docs describe no remote guest track.

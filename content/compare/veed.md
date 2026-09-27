@@ -47,7 +47,7 @@ rows:
   - axis: Getting the session recorded
     bitterclip:
       lead: "You and a guest, live."
-      detail: "A guest joins from a link, no account, and each of you is recorded on your own track."
+      detail: "{studio}"
     competitor:
       lead: "Screen and webcam, 60 minutes."
       detail: "Its browser recorder handles screen and webcam and stops at 60 minutes."

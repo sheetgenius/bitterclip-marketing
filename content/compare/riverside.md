@@ -41,7 +41,7 @@ rows:
   - axis: Getting the recording in the first place
     bitterclip:
       lead: "Records you and a guest."
-      detail: "A guest joins from a link, no account; each of you on your own track, plus a local copy from each browser, checked intact."
+      detail: "{studio} Each browser also keeps a local copy, checked intact."
     competitor:
       lead: "Local tracks, up to 4K."
       detail: "Each guest is recorded locally on their own track, up to 4K, so bad wifi can't ruin the take."

@@ -100,7 +100,7 @@ rows:
   - axis: Getting the session recorded
     bitterclip:
       lead: You and a guest, live.
-      detail: A guest joins from a link, no account; each of you is recorded on your own track, and the episode arrives transcribed.
+      detail: "{studio} The episode arrives transcribed."
     competitor:
       lead: Records on the phone.
       detail: The mobile app shoots straight into an edit, with the phone's own camera and effects.

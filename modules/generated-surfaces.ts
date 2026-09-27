@@ -7,7 +7,7 @@ import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
 import { parse as parseHtml } from 'parse5'
 import { assertCompareBalance, compareMethodology, compareTally } from '../app/utils/compare-methodology'
-import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, MCP_TOOL_COUNT, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '../app/utils/compare-plans'
+import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_GLANCE, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, BITTERCLIP_TRIAL_LINE, COMPARE_CATEGORIES, compareRank, fillCompareTokens, MCP_TOOL_COUNT, PROOF_AGENT_LINE, PROOF_NOTE_DEFAULT } from '../app/utils/compare-plans'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
@@ -394,7 +394,7 @@ function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): strin
         ? `${fm.pricing.plan}: ${fm.pricing.price}${fm.pricing.note ? ` (${fm.pricing.note})` : ''}.`
         : priceRow ? `${priceRow.competitor.lead} ${priceRow.competitor.detail}` : '',
     ].filter(Boolean).join(' ')
-    const ourPrice = [`Creator: ${BITTERCLIP_TRIAL}`, ...BITTERCLIP_PLANS.slice(1).map((plan) => `${plan.name}: ${plan.price}/month`)].join('. ')
+    const ourPrice = BITTERCLIP_GLANCE.map((plan) => `${plan.name}: ${plan.price}, ${plan.note}`).join('. ')
     lines.push('## Short answer')
     lines.push('')
     lines.push(fm.shortAnswer)
@@ -403,6 +403,8 @@ function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): strin
     lines.push('| --- | --- | --- |')
     if (fm.chooseUsShort && fm.chooseThemShort) lines.push(`| Choose it if | ${cell(upper(fm.chooseUsShort))} | ${cell(upper(fm.chooseThemShort))} |`)
     lines.push(`| Price | ${cell(ourPrice)}. | ${cell(theirPrice)} |`)
+    lines.push('')
+    lines.push(`Try BitterClip: ${BITTERCLIP_TRIAL_LINE}`)
     lines.push('')
   }
   if (fm.keyDifferences && fm.keyDifferences.length > 0) {
@@ -453,22 +455,21 @@ function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): strin
     lines.push(`${fm.competitor}: ${fm.pricing.plan} ${fm.pricing.price}${fm.pricing.note ? ` (${fm.pricing.note})` : ''}, including ${fm.pricing.includes.join('; ')}. The catch: ${fm.pricing.catch} Source: ${fm.pricing.sourceUrl}`)
     lines.push('')
   }
-  if (fm.switching && fm.switching.length > 0) {
-    lines.push(`## Coming from ${fm.competitor}`)
+  // How to come over, with the one-minute cut beside it; then the
+  // competitor's fine print, the FAQ and the long read, as on the HTML page.
+  const switching = fm.switching && fm.switching.length > 0
+  if (switching || fm.shortAnswer) {
+    lines.push(switching ? `## Coming from ${fm.competitor}` : '## See the result')
     lines.push('')
-    fm.switching.forEach((step, index) => lines.push(`${index + 1}. ${step}`))
-    if (fm.switchingLink) lines.push(`\n[${fm.switchingLink.label}](${SITE_ORIGIN}${fm.switchingLink.url})`)
-    lines.push('')
-  }
-  // The proof, then the competitor's fine print and the FAQ, then the long
-  // read: the same order as the HTML page.
-  if (fm.shortAnswer) {
-    lines.push('## See the result')
-    lines.push('')
-    lines.push(fm.proofNote || PROOF_NOTE_DEFAULT)
-    lines.push('')
-    PROOF_STEPS.forEach((step, index) => lines.push(`${index + 1}. ${step}`))
-    lines.push('')
+    if (switching) {
+      fm.switching!.forEach((step, index) => lines.push(`${index + 1}. ${step}`))
+      if (fm.switchingLink) lines.push(`\n[${fm.switchingLink.label}](${SITE_ORIGIN}${fm.switchingLink.url})`)
+      lines.push('')
+    }
+    if (fm.shortAnswer) {
+      lines.push(`The one-minute cut: ${fm.proofNote || PROOF_NOTE_DEFAULT} ${PROOF_AGENT_LINE}`)
+      lines.push('')
+    }
   }
   if (fm.gotchas && fm.gotchas.length > 0) {
     lines.push(`## Before you pay for ${fm.competitor}`)
@@ -494,24 +495,27 @@ function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): strin
       lines.push('')
     }
   }
-  const longRead = (fm.chooseUs?.length ?? 0) + (fm.chooseThem?.length ?? 0) > 0 || fm.verdictBitterclip || fm.verdictCompetitor || page.body.trim()
+  // Answer-first pages already said who each product is for; their long read
+  // is the essay alone. Legacy pages keep their lists and verdicts.
+  const legacy = !fm.shortAnswer
+  const longRead = page.body.trim() || (legacy && ((fm.chooseUs?.length ?? 0) + (fm.chooseThem?.length ?? 0) > 0 || fm.verdictBitterclip || fm.verdictCompetitor))
   if (longRead) {
     lines.push(fm.shortAnswer ? '## The full comparison' : '## In detail')
     lines.push('')
-    if (fm.chooseUs && fm.chooseUs.length > 0) {
+    if (legacy && fm.chooseUs && fm.chooseUs.length > 0) {
       lines.push('### Choose BitterClip when')
       lines.push('')
       for (const item of fm.chooseUs) lines.push(`- ${item}`)
       lines.push('')
     }
-    if (fm.chooseThem && fm.chooseThem.length > 0) {
+    if (legacy && fm.chooseThem && fm.chooseThem.length > 0) {
       lines.push(`### Choose ${fm.competitor} when`)
       lines.push('')
       for (const item of fm.chooseThem) lines.push(`- ${item}`)
       lines.push('')
     }
-    if (fm.verdictBitterclip) lines.push(`**BitterClip.** ${fm.verdictBitterclip}`, '')
-    if (fm.verdictCompetitor) lines.push(`**${fm.competitor}.** ${fm.verdictCompetitor}`, '')
+    if (legacy && fm.verdictBitterclip) lines.push(`**BitterClip.** ${fm.verdictBitterclip}`, '')
+    if (legacy && fm.verdictCompetitor) lines.push(`**${fm.competitor}.** ${fm.verdictCompetitor}`, '')
     if (page.body.trim()) lines.push(page.body.trim(), '')
   }
   if (fm.competitor && fm.reviewed && fm.rows) {

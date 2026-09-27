@@ -16,6 +16,8 @@ const ordered = computed(() =>
   [...(allMatchups.value ?? [])].sort((a, b) => rank(a.path) - rank(b.path)),
 )
 const matchups = ordered
+// The comparisons people ask about most, linked on the first screen.
+const topMatchups = computed(() => ordered.value.slice(0, 4))
 
 // Readers arrive knowing their job, not our taxonomy: group by the kind of
 // tool they're weighing, most-searched first within each group.
@@ -40,21 +42,6 @@ const signupUrl = computed(() => buildSignupUrl({
   landingPath: route.path,
 }))
 
-const lastReviewed = computed(() => {
-  const dates = (matchups.value ?? []).map((m) => m.reviewed).filter(Boolean).sort()
-  return dates[dates.length - 1] ?? ''
-})
-
-const formatDate = (value?: string) => {
-  if (!value) return ''
-  return new Intl.DateTimeFormat('en', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${value}T00:00:00Z`))
-}
-
 // Every comparison as a list, with its one-line answer, for crawlers.
 const itemListStructuredData = computed(() => ({
   '@context': 'https://schema.org',
@@ -70,7 +57,7 @@ const itemListStructuredData = computed(() => ({
 }))
 
 useHead(() => ({
-  title: 'Compare BitterClip — head to head with Descript, Riverside, OpusClip and more',
+  title: 'Compare BitterClip with Zoom, Riverside, Descript, OpusClip and more',
   meta: [
     {
       name: 'description',
@@ -101,44 +88,31 @@ useHead(() => ({
 <template>
   <main class="relative">
 
-    <!-- Hero carries the method on the right rather than leaving 40% of the
-         fold empty and deferring trust to a band further down. -->
-    <section class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20">
-      <div class="grid gap-12 lg:grid-cols-[1.35fr_0.65fr] lg:gap-16 lg:items-end">
-        <div>
-          <p class="telemetry-label mb-5">Comparisons</p>
-          <h1 class="font-display text-5xl sm:text-7xl font-bold tracking-[-0.04em] text-white leading-[0.98] mb-7">
-            Which one should
-            <span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent block">you use?</span>
-          </h1>
-          <p class="text-zinc-300 text-lg sm:text-2xl leading-[1.55] max-w-2xl text-balance">
-            Pick by the job. Riverside and Zoom record the call. Descript and VEED edit anything. OpusClip and Vizard turn out shorts in bulk. BitterClip records the conversation and finishes it: the episode, then the clips.
-          </p>
-          <a
-            :href="signupUrl"
-            class="mt-8 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-          >Try it on one recording <span aria-hidden="true">→</span></a>
-        </div>
-
-        <dl class="space-y-5 border-l border-white/[0.09] pl-6">
-          <div>
-            <dt class="font-semibold text-sm text-white mb-1">Every claim is sourced</dt>
-            <dd class="text-sm text-zinc-400 leading-[1.6]">Prices, limits, and terms come from the other product's own pages, linked.</dd>
-          </div>
-          <div>
-            <dt class="font-semibold text-sm text-white mb-1">We say where we lose</dt>
-            <dd class="text-sm text-zinc-400 leading-[1.6]">Every row names the better tool, and each page says plainly who should pick the other one.</dd>
-          </div>
-          <div>
-            <dt class="font-semibold text-sm text-white mb-1">They carry a date</dt>
-            <dd class="text-sm text-zinc-400 leading-[1.6]">
-              Software changes weekly.{{ lastReviewed ? ` Last checked ${formatDate(lastReviewed)}.` : '' }}
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <div class="telemetry-ruler mt-14" aria-hidden="true" />
+    <!-- Route first: the answer to "which should I use?" in one line, then the
+         comparisons people actually ask about, on the first screen. -->
+    <section class="mx-auto max-w-6xl px-4 pt-8 sm:pt-12">
+      <p class="telemetry-label mb-4">Comparisons</p>
+      <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-[-0.04em] text-white leading-[1.05]">
+        Compare BitterClip with the tool you use now
+      </h1>
+      <p class="mt-5 max-w-3xl text-lg sm:text-xl leading-[1.5] text-zinc-300">
+        Pick by the job. Riverside and Zoom record the call. Descript and VEED edit anything. OpusClip and Vizard turn out shorts in bulk. BitterClip records the conversation and finishes it: the episode, then the clips.
+      </p>
+      <nav aria-label="Most compared" class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[15px]">
+        <NuxtLink
+          v-for="top in topMatchups"
+          :key="top.path"
+          :to="top.path"
+          class="text-white underline decoration-white/25 underline-offset-4 transition hover:decoration-[#f28f84]"
+        >BitterClip vs {{ top.competitor }}</NuxtLink>
+        <span aria-hidden="true" class="text-zinc-700">·</span>
+        <a
+          v-for="group in groups"
+          :key="group.key"
+          :href="`#group-${group.key}`"
+          class="text-zinc-400 underline decoration-white/15 underline-offset-4 transition hover:text-white"
+        >{{ group.label }}</a>
+      </nav>
     </section>
 
     <!-- One section per kind of tool; each card answers in a line and shows the score. -->
@@ -146,7 +120,7 @@ useHead(() => ({
       v-for="group in groups"
       :key="group.key"
       :aria-labelledby="`group-${group.key}`"
-      class="mx-auto max-w-6xl px-4 pt-12 sm:pt-16"
+      class="mx-auto max-w-6xl px-4 pt-12 sm:pt-16 scroll-mt-24"
     >
       <div class="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <h2 :id="`group-${group.key}`" class="font-display text-2xl sm:text-3xl font-bold tracking-[-0.02em] text-white">{{ group.label }}</h2>
@@ -162,8 +136,8 @@ useHead(() => ({
           <h3 class="font-display text-xl font-bold leading-tight text-white">
             BitterClip <span class="font-normal text-zinc-500">vs</span> {{ matchup.competitor }}
           </h3>
-          <p class="mt-3 text-[15px] leading-relaxed text-zinc-300">{{ matchup.shortAnswer || matchup.competitorStrength }}</p>
-          <dl v-if="matchup.chooseThemShort" class="mt-auto space-y-2 pt-5 text-[13px] leading-snug">
+          <p v-if="!matchup.chooseThemShort" class="mt-3 text-[15px] leading-relaxed text-zinc-300">{{ matchup.shortAnswer || matchup.competitorStrength }}</p>
+          <dl v-if="matchup.chooseThemShort" class="mt-4 space-y-3 text-sm leading-relaxed">
             <div>
               <dt class="font-semibold text-zinc-200">Pick {{ matchup.competitor }} if</dt>
               <dd class="text-zinc-400">{{ matchup.chooseThemShort }}</dd>
@@ -177,7 +151,11 @@ useHead(() => ({
       </nav>
     </section>
 
-    <section class="mx-auto max-w-6xl px-4 pt-20 sm:pt-24 pb-24">
+    <p class="mx-auto max-w-6xl px-4 pt-12 text-sm leading-relaxed text-zinc-400">
+      By the BitterClip team, from each tool's own pages. Every comparison names the better tool for each job, lists its sources and the date they were checked, and takes corrections as pull requests on GitHub.
+    </p>
+
+    <section class="mx-auto max-w-6xl px-4 pt-16 sm:pt-20 pb-24">
       <div class="cta-glass-panel rounded-3xl corner-ticks p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
         <div>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-[-0.02em] text-white mb-3 text-balance">

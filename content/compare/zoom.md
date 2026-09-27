@@ -46,7 +46,7 @@ rows:
   - axis: How a two-person conversation gets recorded
     bitterclip:
       lead: Each of you, separately.
-      detail: On paid plans, Studio records a separate video of you and of your guest, so the picture can follow whoever is talking.
+      detail: "{studio} The picture can follow whoever is talking."
     competitor:
       lead: A view of the call.
       detail: Cloud recording saves active-speaker, gallery, or shared-screen views, not a video file per person.

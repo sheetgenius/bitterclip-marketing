@@ -24,11 +24,12 @@ test.describe('comparison hub', () => {
 
     await expect(page.locator('link[rel="canonical"][href="https://bitterclip.com/compare"]')).toHaveCount(1)
     await expect(page.locator('link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/compare.md"]')).toHaveCount(1)
-    await expect(page.getByRole('heading', { level: 1, name: /Which one should/ })).toBeVisible()
-    // The method is the trust argument; it belongs above the fold.
-    await expect(page.getByText('Every claim is sourced')).toBeVisible()
-    await expect(page.getByText('We say where we lose')).toBeVisible()
-    await expect(page.getByText('They carry a date')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /Compare BitterClip with/ })).toBeVisible()
+    // Routes first: the most-asked comparisons are links on the first screen.
+    const top = page.getByRole('navigation', { name: 'Most compared' })
+    await expect(top.getByRole('link', { name: 'BitterClip vs Zoom' })).toBeInViewport()
+    // The method, said once and plainly, below the directory.
+    await expect(page.getByText(/takes corrections as pull requests on GitHub/)).toBeVisible()
     await expect(page.getByRole('link', { name: 'Try it on one recording' }).first()).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
   })
 
@@ -37,7 +38,7 @@ test.describe('comparison hub', () => {
 
     // Split across the featured cards and the denser directory below them.
     for (const slug of COMPARISON_SLUGS) {
-      await expect(page.locator(`a[href="/compare/${slug}"]`)).toHaveCount(1)
+      await expect(page.locator(`a[href="/compare/${slug}"]`)).not.toHaveCount(0)
     }
     // Grouped by the kind of tool a reader is weighing.
     await expect(page.getByRole('navigation', { name: 'Recording tools' }).locator('a[href="/compare/riverside"]')).toHaveCount(1)
@@ -81,6 +82,13 @@ test.describe('head-to-head comparison pages', () => {
       const agentRow = jobs.getByRole('row', { name: /Editing from your own ChatGPT or Claude/ })
       await expect(agentRow).toContainText(/The whole editor, \d+ tools\./)
       await expect(page.locator('main')).not.toContainText('{tools}')
+      await expect(page.locator('main')).not.toContainText('{studio}')
+      // The $1 trial never reads as "Studio for $1": the plan names what
+      // includes Studio, and the trial is described under the button.
+      const glance = page.getByRole('table', { name: /at a glance/ })
+      await expect(glance).toContainText('Creator $24/month, includes live Studio')
+      await expect(page.getByText('$1 for your first 7 days: one recording up to 2 hours, watermarked exports.')).toBeVisible()
+      await expect(page.getByText('Now I make the clips inside Claude')).toBeVisible()
       // Each cell names its product in real text, so flattened tables keep attribution.
       await expect(page.getByRole('table', { name: /at a glance/ }).locator('tbody td').first()).toContainText('BitterClip:')
     })

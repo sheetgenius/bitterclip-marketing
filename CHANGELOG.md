@@ -46,6 +46,12 @@ under a dated entry.
 
 ### Website
 
+- Tightened every `/compare` page and the hub:
+  - The at-a-glance price row says "Creator $24/month, includes live Studio" and "Producer $99/month, adds async recording for up to 25 people", and the $1 trial is described under the button. The trial no longer reads as "Studio for $1".
+  - Live Studio's specification is stated once, from one shared line (you and one guest, a separate 720p video of each, up to 75 minutes, paid plans). It appears in every Studio recording row and in the plan list.
+  - "Coming from X" and the one-minute cut are now one section. The folded full comparison keeps only the long-form essay, with no repeated choose lists or verdicts, and the Markdown twins match. Every page uses Rohan's quote about making clips inside Claude.
+  - The nav is solid on comparison pages, the phone's sticky "Try it" bar is gone, and the table's sticky header gets its background after any jump into the table.
+  - The hub opens with a smaller headline, links to the four most-compared tools and the categories on the first screen, and one plain line on method instead of the three-part panel. Its cards show just the two "pick" lines.
 - Corrected and sharpened every `/compare` page after three independent reviews:
   - **The agent row.** Every comparison now has one row, "Editing from your own ChatGPT or Claude". ChatGPT, Claude or Codex can run BitterClip's whole editing workbench (the live MCP tool count, from the pinned catalog) on the AI plan the person already pays for. Each competitor's narrower bridge is named from its own docs: an in-app assistant, a drafting plugin, or an MCP for a few jobs, often metered in the vendor's credits.
   - **Revision scoring.** "Changing the first cut by saying what's wrong" is now scored the same way everywhere: a tie where the competitor revises by chat in its own app, a BitterClip win where revision is by hand or by regenerating.

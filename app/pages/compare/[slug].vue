@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 import { compareMethodology, compareTally } from '~/utils/compare-methodology'
-import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
+import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_GLANCE, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, BITTERCLIP_TRIAL_LINE, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_AGENT_LINE, PROOF_NOTE_DEFAULT } from '~/utils/compare-plans'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -89,12 +89,8 @@ const tableGroups = computed(() => {
 })
 const winnerName = (edge?: string) => edgeLabel(edge ?? 'even', page.value?.competitor ?? '')
 
-// The hero's price row: both products' entry prices, or, where no plan price
-// is verified, the table's own price verdict for the competitor.
-const glancePlans = [
-  { name: 'Creator', price: BITTERCLIP_TRIAL },
-  ...BITTERCLIP_PLANS.slice(1).map((plan) => ({ name: plan.name, price: `${plan.price}/month` })),
-]
+// The hero's competitor price falls back to the table's own price verdict
+// where no plan price is verified.
 const priceRow = computed(() => page.value?.rows?.find((r) => r.group === 'price'))
 // The short "choose" lines finish a sentence ("Choose Zoom if …"); in the
 // table they stand alone.
@@ -106,32 +102,21 @@ const favorsLabel = (favors: string) => {
   return 'Even'
 }
 
-// Mobile keeps one way in on screen once the hero's button has scrolled away.
-const heroCta = ref<HTMLElement | null>(null)
-const showStickyCta = ref(false)
-let ctaObserver: IntersectionObserver | undefined
-onMounted(() => {
-  if (!heroCta.value || typeof IntersectionObserver === 'undefined') return
-  ctaObserver = new IntersectionObserver(([entry]) => {
-    showStickyCta.value = !entry.isIntersecting && entry.boundingClientRect.top < 0
-  })
-  ctaObserver.observe(heroCta.value)
-})
-onBeforeUnmount(() => ctaObserver?.disconnect())
 
 // The table's header row only gets a background once it is stuck under the
-// site header; at rest it is type on the page like everything else.
+// site header; at rest it is type on the page like everything else. A scroll
+// listener, not an IntersectionObserver: a jump that skips past the table
+// (a link, a restored scroll position) never crosses an observer's edge.
 const tableTop = ref<HTMLElement | null>(null)
 const headStuck = ref(false)
-let headObserver: IntersectionObserver | undefined
+const updateHeadStuck = () => {
+  headStuck.value = !!tableTop.value && tableTop.value.getBoundingClientRect().top < 72
+}
 onMounted(() => {
-  if (!tableTop.value || typeof IntersectionObserver === 'undefined') return
-  headObserver = new IntersectionObserver(([entry]) => {
-    headStuck.value = !entry.isIntersecting && entry.boundingClientRect.top < 100
-  }, { rootMargin: '-72px 0px 0px 0px' })
-  headObserver.observe(tableTop.value)
+  updateHeadStuck()
+  window.addEventListener('scroll', updateHeadStuck, { passive: true })
 })
-onBeforeUnmount(() => headObserver?.disconnect())
+onBeforeUnmount(() => window.removeEventListener('scroll', updateHeadStuck))
 
 const { data: site } = await useAsyncData('site', () =>
   queryCollection('site').first(),
@@ -143,36 +128,19 @@ const methodology = computed(() => page.value && site.value
   ? compareMethodology(page.value, sourceFileUrl.value)
   : [])
 
-// The two customer quotes already running on the homepage (signed off
-// 2026-06-10), verbatim. Andrew speaks for long client-session footage; Rohan
-// for the clip-friction that sends people to auto-clippers. Pick by matchup.
-const TESTIMONIALS = {
-  andrew: {
-    name: 'Andrew Williams',
-    role: 'Head Coach',
-    org: 'Strength & Positions',
-    orgUrl: 'https://www.strengthandpositions.com/coaches',
-    photo: '/images/andrew_williams_strength_and_positions_coach.jpg',
-    before: 'Working through session footage is ',
-    key: 'the worst three hours of my week — and the most important.',
-    after: ' It’s how I remember exactly what happened with a client and build on it next session.',
-  },
-  rohan: {
-    name: 'Rohan Karunakaran',
-    role: 'Founder',
-    org: 'Frontier Studio',
-    orgUrl: 'https://www.frontier-studio.com/',
-    photo: '/images/rohan_karunakaran.jpg',
-    before: 'The friction was the whole problem with founder content — timestamps, clunky editors, the back-and-forth on every clip. ',
-    key: 'Now I make the clips inside Claude, while I’m already in there.',
-    after: '',
-  },
+// Rohan's quote, as it runs on the homepage (signed off 2026-06-10), verbatim.
+// It speaks to the outcome these pages argue for: the clips get made inside
+// the AI assistant he already uses.
+const testimonial = {
+  name: 'Rohan Karunakaran',
+  role: 'Founder',
+  org: 'Frontier Studio',
+  orgUrl: 'https://www.frontier-studio.com/',
+  photo: '/images/rohan_karunakaran.jpg',
+  before: 'The friction was the whole problem with founder content — timestamps, clunky editors, the back-and-forth on every clip. ',
+  key: 'Now I make the clips inside Claude, while I’m already in there.',
+  after: '',
 } as const
-
-const SESSION_FOOTAGE_MATCHUPS = new Set(['descript', 'riverside', 'zoom', 'podcastle', 'captions', 'veed', 'kapwing'])
-const testimonial = computed(() =>
-  SESSION_FOOTAGE_MATCHUPS.has(slug) ? TESTIMONIALS.andrew : TESTIMONIALS.rohan,
-)
 
 const canonicalUrl = `${siteOrigin}${pagePath}`
 const markdownUrl = `${canonicalUrl}.md`
@@ -297,7 +265,7 @@ useHead(() => {
       </div>
 
       <h1 class="font-display text-[2.6rem] sm:text-6xl font-bold tracking-[-0.04em] text-white leading-[1.02]">
-        BitterClip <span class="text-zinc-600 font-normal">vs</span>{{ ' ' }}<span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">{{ page.competitor }}</span>
+        BitterClip <span class="text-zinc-500 font-normal">vs</span>{{ ' ' }}<span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">{{ page.competitor }}</span>
       </h1>
       <p class="mt-5 max-w-3xl text-lg sm:text-2xl text-zinc-200 leading-[1.45] text-balance">{{ page.shortAnswer }}</p>
 
@@ -305,9 +273,9 @@ useHead(() => {
         <caption class="sr-only">BitterClip and {{ page.competitor }} at a glance</caption>
         <thead>
           <tr>
-            <td class="w-[18%]" />
-            <th scope="col" class="w-[41%] pb-3 text-[13px] font-semibold tracking-wide text-[#f28f84]">BitterClip</th>
-            <th scope="col" class="w-[41%] pb-3 text-[13px] font-semibold tracking-wide text-zinc-200">{{ page.competitor }}</th>
+            <td class="w-[24%]" />
+            <th scope="col" class="w-[38%] pb-3 pl-7 text-sm font-semibold tracking-wide text-[#f28f84]">BitterClip</th>
+            <th scope="col" class="w-[38%] pb-3 pl-7 text-sm font-semibold tracking-wide text-zinc-200">{{ page.competitor }}</th>
           </tr>
         </thead>
         <tbody>
@@ -320,8 +288,8 @@ useHead(() => {
             <th scope="row">Price</th>
             <td>
               <span class="cell-label cell-label--ours" aria-hidden="true">BitterClip<span class="sr-only">: </span></span>
-              <span v-for="plan in glancePlans" :key="plan.name" class="block">
-                <span class="text-zinc-400">{{ plan.name }}</span> {{ plan.price }}
+              <span v-for="plan in BITTERCLIP_GLANCE" :key="plan.name" class="block">
+                <span class="text-zinc-400">{{ plan.name }}</span> {{ plan.price }}<span class="text-zinc-400">, {{ plan.note }}</span>
               </span>
             </td>
             <td>
@@ -340,7 +308,7 @@ useHead(() => {
         </tbody>
       </table>
 
-      <div ref="heroCta" class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+      <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
         <a
           :href="signupUrl"
           class="btn-glow inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -353,6 +321,7 @@ useHead(() => {
           class="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 transition hover:text-white hover:decoration-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
         >What each plan includes</a>
       </div>
+      <p class="mt-3 text-sm text-zinc-400">{{ BITTERCLIP_TRIAL_LINE }}</p>
     </section>
 
     <section v-else class="mx-auto max-w-6xl px-4 pt-10 sm:pt-16">
@@ -411,7 +380,7 @@ useHead(() => {
     </aside>
 
     <!-- ===================== WHAT ACTUALLY DIFFERS ===================== -->
-    <section v-if="page.keyDifferences?.length" aria-labelledby="differs-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+    <section v-if="page.keyDifferences?.length" aria-labelledby="differs-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20">
       <h2 id="differs-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
         What differs
       </h2>
@@ -447,7 +416,7 @@ useHead(() => {
     </section>
 
     <!-- ========================= COMPARISON ========================= -->
-    <section id="comparison" aria-labelledby="comparison-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+    <section id="comparison" aria-labelledby="comparison-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24">
       <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="comparison-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
@@ -535,7 +504,7 @@ useHead(() => {
     </section>
 
     <!-- =========================== PRICING =========================== -->
-    <section id="pricing" aria-labelledby="pricing-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+    <section id="pricing" aria-labelledby="pricing-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24">
       <h2 id="pricing-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
         What you'd pay
       </h2>
@@ -581,58 +550,54 @@ useHead(() => {
       </div>
     </section>
 
-    <!-- ========================== SWITCHING ========================== -->
-    <section v-if="page.switching?.length" aria-labelledby="switching-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
-      <h2 id="switching-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
-        Coming from {{ page.competitor }}
-      </h2>
-      <ol class="mt-7 grid gap-4 md:grid-cols-3">
-        <li v-for="(step, index) in page.switching" :key="step" class="rounded-2xl border border-white/[0.09] bg-white/[0.025] p-6">
-          <span class="font-display text-2xl font-bold text-[#f28f84] tabular-nums">{{ index + 1 }}</span>
-          <p class="mt-2 text-[15px] leading-relaxed text-zinc-200">{{ step }}</p>
-        </li>
-      </ol>
-      <a
-        v-if="page.switchingLink"
-        :href="page.switchingLink.url"
-        class="mt-5 inline-block text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
-      >{{ page.switchingLink.label }} →</a>
-    </section>
-
-    <!-- ============================ PROOF ============================
-         The same product the table describes, shown: a real cut, made from a
-         recorded Zoom conversation. -->
-    <section v-if="page.shortAnswer" id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
-      <div class="grid items-center gap-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-14">
-        <figure class="mx-auto w-full max-w-[290px] overflow-hidden rounded-2xl border border-white/[0.1] bg-black shadow-2xl shadow-black/60">
-          <DeferredVideo
-            class="block aspect-[9/16] w-full bg-black"
-            poster="/clips/day-1-sizzle-poster.jpg"
-            src="/clips/day-1-sizzle.mp4"
-            type="video/mp4"
-            controls
-            playsinline
-            width="1080"
-            height="1920"
-            title="A one-minute cut BitterClip made from a recorded Zoom conversation"
-            data-bc-proof-video
-            data-bc-placement="comparison_proof"
-          />
-        </figure>
-        <div>
-          <h2 id="proof-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">One conversation. The cut you'd send.</h2>
-          <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-300">
-            {{ page.proofNote || PROOF_NOTE_DEFAULT }}
-          </p>
-          <ol class="mt-6 max-w-xl space-y-3 text-[15px] text-zinc-300">
-            <li v-for="(step, index) in PROOF_STEPS" :key="step" class="flex gap-3"><span class="text-[#f28f84] tabular-nums">{{ index + 1 }}</span>{{ step }}</li>
+    <!-- =============== COMING FROM X, AND WHAT COMES OUT ===============
+         How to bring recordings over, beside a real cut made in BitterClip
+         from a recorded conversation. Words first, so a phone reads the steps
+         before the tall video. -->
+    <section v-if="page.shortAnswer" id="proof" aria-labelledby="switching-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24">
+      <div class="grid items-start gap-10 md:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] lg:gap-16">
+        <div class="md:order-2">
+          <h2 id="switching-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
+            {{ page.switching?.length ? `Coming from ${page.competitor}` : 'See the result' }}
+          </h2>
+          <ol v-if="page.switching?.length" class="mt-6 max-w-xl space-y-4">
+            <li v-for="(step, index) in page.switching" :key="step" class="flex gap-4 text-[15px] leading-relaxed text-zinc-200">
+              <span class="font-display text-lg font-bold leading-snug text-[#f28f84] tabular-nums">{{ index + 1 }}</span>
+              <span>{{ step }}</span>
+            </li>
           </ol>
+          <a
+            v-if="page.switchingLink"
+            :href="page.switchingLink.url"
+            class="mt-5 inline-block text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+          >{{ page.switchingLink.label }} →</a>
+          <p class="mt-8 max-w-xl text-sm leading-relaxed text-zinc-400">
+            <span class="font-semibold text-zinc-200">The one-minute cut.</span>
+            {{ page.proofNote || PROOF_NOTE_DEFAULT }} {{ PROOF_AGENT_LINE }}
+          </p>
         </div>
+        <figure class="mx-auto w-full max-w-[260px] md:order-1">
+          <div class="overflow-hidden rounded-2xl border border-white/[0.1] bg-black shadow-2xl shadow-black/60">
+            <DeferredVideo
+              class="block aspect-[9/16] w-full bg-black"
+              poster="/clips/day-1-sizzle-poster.jpg"
+              src="/clips/day-1-sizzle.mp4"
+              type="video/mp4"
+              controls
+              playsinline
+              width="1080"
+              height="1920"
+              title="A one-minute cut BitterClip made from a recorded Zoom conversation"
+              data-bc-proof-video
+              data-bc-placement="comparison_proof"
+            />
+          </div>
+        </figure>
       </div>
     </section>
 
     <!-- ========================= TESTIMONIAL ========================= -->
-    <section aria-label="Customer" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+    <section aria-label="Customer" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20">
       <figure class="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center sm:flex-row sm:items-start sm:text-left sm:gap-10">
         <div class="shrink-0 flex flex-col items-center gap-3">
           <img
@@ -664,7 +629,7 @@ useHead(() => {
       v-if="page.gotchas && page.gotchas.length"
       id="fine-print"
       aria-labelledby="fine-print-heading"
-      class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24"
+      class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24"
     >
       <h2 id="fine-print-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
         Before you pay for {{ page.competitor }}
@@ -704,7 +669,7 @@ useHead(() => {
     </section>
 
     <!-- ============================= FAQ ============================= -->
-    <section v-if="page.faq && page.faq.length" id="faq" aria-labelledby="faq-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+    <section v-if="page.faq && page.faq.length" id="faq" aria-labelledby="faq-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24">
       <div class="max-w-3xl">
         <h2 id="faq-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
           Questions
@@ -728,25 +693,7 @@ useHead(() => {
           Read the full comparison <span aria-hidden="true" class="text-zinc-500">↓</span>
         </summary>
         <div class="px-6 pb-6">
-          <div class="grid gap-6 border-b border-white/[0.07] pb-8 md:grid-cols-2">
-            <div>
-              <h3 class="font-semibold text-white">Choose BitterClip when</h3>
-              <ul class="mt-3 space-y-2.5 text-[15px] leading-relaxed text-zinc-300">
-                <li v-for="item in page.chooseUs" :key="item" class="flex gap-2.5"><span aria-hidden="true" class="text-[#f28f84]">·</span>{{ item }}</li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="font-semibold text-white">Choose {{ page.competitor }} when</h3>
-              <ul class="mt-3 space-y-2.5 text-[15px] leading-relaxed text-zinc-300">
-                <li v-for="item in page.chooseThem" :key="item" class="flex gap-2.5"><span aria-hidden="true" class="text-zinc-500">·</span>{{ item }}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="mt-8 space-y-4 text-[15px] leading-relaxed text-zinc-300">
-            <p><strong class="text-white">BitterClip.</strong> {{ page.verdictBitterclip }}</p>
-            <p><strong class="text-white">{{ page.competitor }}.</strong> {{ page.verdictCompetitor }}</p>
-          </div>
-          <div class="docs-prose compare-prose mt-8">
+          <div class="docs-prose compare-prose">
             <ContentRenderer :value="page" />
           </div>
         </div>
@@ -759,7 +706,7 @@ useHead(() => {
     </section>
 
     <!-- ======================== HOW WE COMPARED ======================== -->
-    <section id="method" aria-labelledby="method-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+    <section id="method" aria-labelledby="method-heading" class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 scroll-mt-24">
       <div class="max-w-3xl">
         <h2 id="method-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
           How we compared
@@ -798,7 +745,7 @@ useHead(() => {
     </section>
 
     <!-- ============================= CTA ============================= -->
-    <section class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24">
+    <section class="mx-auto max-w-6xl px-4 pt-12 sm:pt-20">
       <div class="cta-glass-panel rounded-3xl p-8 sm:p-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
         <div>
           <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-[-0.02em] text-white mb-3 text-balance">
@@ -835,22 +782,6 @@ useHead(() => {
       </nav>
     </section>
 
-    <!-- Mobile: a way in stays on screen after the hero's button scrolls away. -->
-    <div
-      v-if="page.shortAnswer"
-      class="compare-sticky-cta fixed inset-x-3 bottom-3 z-40 md:hidden"
-      :class="showStickyCta ? 'is-visible' : ''"
-      :aria-hidden="!showStickyCta"
-    >
-      <a
-        :href="signupUrl"
-        :tabindex="showStickyCta ? 0 : -1"
-        class="flex min-h-12 items-center justify-between rounded-xl bg-[#f28f84] px-5 text-sm font-semibold text-zinc-950 shadow-2xl shadow-black/60"
-      >
-        <span>Try it on one recording</span>
-        <span aria-hidden="true">→</span>
-      </a>
-    </div>
   </main>
 </template>
 
@@ -994,7 +925,7 @@ useHead(() => {
    boxes, the row label in small caps. */
 .compare-glance tbody th,
 .compare-glance tbody td {
-  padding: 0.95rem 1.25rem 0.95rem 0;
+  padding: 0.95rem 1.25rem 0.95rem 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   vertical-align: top;
 }
@@ -1003,6 +934,7 @@ useHead(() => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 .compare-glance tbody th {
+  padding-left: 0;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -1016,17 +948,6 @@ useHead(() => {
   color: rgb(228 228 231);
 }
 
-.compare-sticky-cta {
-  opacity: 0;
-  transform: translateY(1rem);
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-.compare-sticky-cta.is-visible {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
 
 /* Mobile: the table stops being a table. Each row becomes a card with the two
    products stacked and labelled, so nothing truncates and nothing side-scrolls. */
