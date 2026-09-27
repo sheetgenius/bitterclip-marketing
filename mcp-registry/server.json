@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.bitterclip/bitterclip",
+  "title": "BitterClip",
+  "description": "Video editor and producer that remembers everything you've recorded.",
+  "version": "1.0.0",
+  "websiteUrl": "https://bitterclip.com",
+  "icons": [
+    {
+      "src": "https://bitterclip.com/icon.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.bitterclip.com/mcp"
+    }
+  ]
+}

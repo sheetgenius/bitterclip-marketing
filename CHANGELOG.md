@@ -549,6 +549,10 @@ under a dated entry.
 
 ### Repository Metadata
 
+- The official MCP Registry lists BitterClip's hosted server as
+  `com.bitterclip/bitterclip` (`mcp-registry/server.json`), which MCP clients and
+  directories that mirror the registry can find. `/.well-known/mcp-registry-auth`
+  proves the domain.
 - Added a current-state entrypoint, a complete internal-document authority map,
   and focused homepage, public-content, ISO4 authoring, and ISO4 release
   runbooks. Historical specs and workshop records now identify themselves as
