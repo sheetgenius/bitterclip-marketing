@@ -46,6 +46,12 @@ under a dated entry.
 
 ### Website
 
+- Led the docs home, "What is BitterClip?", and the `llms.txt` introduction with
+  the built-in agent, and added a "Use the built-in agent" getting-started page.
+  Embeds are described as included on paid Creator and Producer plans. Salvaged
+  from the September 2 truth pass (PR #1), re-verified against the product on
+  2026-09-27; its compare, publishing, ChatGPT, and square-export changes were
+  superseded or no longer true and were dropped.
 - Stated the Creator offer in one line wherever it appears ("$1 for 7 days,
   then $24/month · Cancel anytime") and removed the repeated fine print about
   the introductory payment and the cancel-before time; the full terms now live
