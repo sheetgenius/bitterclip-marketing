@@ -117,8 +117,9 @@ const { data: site } = await useAsyncData('site', () =>
 )
 // How the page was made, stated with this page's own numbers. The Markdown
 // twin renders the same items (modules/generated-surfaces.ts).
+const sourceFileUrl = computed(() => site.value ? `${site.value.source_repo}/blob/main/content/compare/${slug}.md` : '')
 const methodology = computed(() => page.value && site.value
-  ? compareMethodology(page.value, site.value.support_email)
+  ? compareMethodology(page.value, sourceFileUrl.value)
   : [])
 
 // The two customer quotes already running on the homepage (signed off
@@ -679,7 +680,16 @@ useHead(() => {
         <dl class="mt-6 space-y-4">
           <div v-for="item in methodology" :key="item.term">
             <dt class="text-[15px] font-semibold text-white">{{ item.term }}</dt>
-            <dd class="mt-1 text-[15px] leading-[1.7] text-zinc-300">{{ item.detail }}</dd>
+            <dd class="mt-1 text-[15px] leading-[1.7] text-zinc-300">
+              {{ item.detail }}
+              <a
+                v-if="item.link"
+                :href="item.link.url"
+                rel="noopener"
+                target="_blank"
+                class="text-zinc-200 underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-[#f28f84]"
+              >{{ item.link.label }} ↗</a>
+            </dd>
           </div>
         </dl>
         <details class="mt-6">
