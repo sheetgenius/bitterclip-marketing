@@ -54,6 +54,35 @@ const compareSchema = z.object({
   // hub cards and as the honest concession in the hero.
   competitorStrength: z.string(),
   heroLede: z.string(),
+  // Answer-first hero, optional while pages migrate: one sentence, one line each
+  // for who should pick which product, and which product visual sits beside it.
+  shortAnswer: z.string().optional(),
+  chooseUsShort: z.string().optional(),
+  chooseThemShort: z.string().optional(),
+  heroVisual: z.enum(['editor', 'tracks']).optional(),
+  // Replaces the proof section's default caption where the page needs its own framing.
+  proofNote: z.string().optional(),
+  // Which kind of tool the competitor is; drives "related comparisons".
+  category: z.enum(['recording', 'editing', 'clipping']).optional(),
+  // Three differences that decide it, in plain words. At least one favors the
+  // competitor; the page labels each with who it favors.
+  keyDifferences: z
+    .array(z.object({ title: z.string(), body: z.string(), favors: z.enum(['bitterclip', 'competitor', 'even']) }))
+    .optional(),
+  // How to bring recordings over from the competitor: short, concrete steps.
+  switching: z.array(z.string()).optional(),
+  switchingLink: z.object({ label: z.string(), url: z.string() }).optional(),
+  // The competitor's entry price for the job this page compares, and its catch.
+  pricing: z
+    .object({
+      plan: z.string(),
+      price: z.string(),
+      note: z.string().optional(),
+      includes: z.array(z.string()),
+      catch: z.string(),
+      sourceUrl: z.string(),
+    })
+    .optional(),
   // Optional one-line banner for unusual situations (e.g. a competitor sunsetting).
   statusNote: z.string().optional(),
   verdictBitterclip: z.string(),
@@ -67,6 +96,8 @@ const compareSchema = z.object({
       // a checkmark. A page where every row favors BitterClip is not credible —
       // the validator enforces at least two non-BitterClip rows.
       edge: z.enum(['bitterclip', 'competitor', 'even']),
+      // Stage of the job, for grouping the table: record, edit, deliver, price.
+      group: z.enum(['record', 'edit', 'deliver', 'price']).optional(),
     }),
   ),
   chooseUs: z.array(z.string()),

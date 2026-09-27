@@ -7,6 +7,7 @@ import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
 import { parse as parseHtml } from 'parse5'
 import { assertCompareBalance, compareMethodology } from '../app/utils/compare-methodology'
+import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL } from '../app/utils/compare-plans'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
@@ -222,6 +223,13 @@ interface ComparePage {
     competitorStrength?: string
     heroLede?: string
     statusNote?: string
+    shortAnswer?: string
+    chooseUsShort?: string
+    chooseThemShort?: string
+    keyDifferences?: { title: string; body: string; favors: string }[]
+    pricing?: { plan: string; price: string; note?: string; includes: string[]; catch: string; sourceUrl: string }
+    switching?: string[]
+    switchingLink?: { label: string; url: string }
     verdictBitterclip?: string
     verdictCompetitor?: string
     rows?: {
@@ -365,6 +373,24 @@ function buildCompareMarkdown(page: ComparePage): string {
     lines.push(`> ${fm.statusNote}`)
     lines.push('')
   }
+  if (fm.shortAnswer) {
+    lines.push('## Short answer')
+    lines.push('')
+    lines.push(fm.shortAnswer)
+    lines.push('')
+    if (fm.chooseUsShort) lines.push(`- Choose BitterClip if ${fm.chooseUsShort}`)
+    if (fm.chooseThemShort) lines.push(`- Choose ${fm.competitor} if ${fm.chooseThemShort}`)
+    lines.push('')
+  }
+  if (fm.keyDifferences && fm.keyDifferences.length > 0) {
+    lines.push('## What differs')
+    lines.push('')
+    for (const diff of fm.keyDifferences) {
+      const who = diff.favors === 'bitterclip' ? 'BitterClip' : diff.favors === 'competitor' ? fm.competitor : 'Even'
+      lines.push(`- **${diff.title}** (favors ${who}). ${diff.body}`)
+    }
+    lines.push('')
+  }
   if (fm.heroLede) {
     lines.push(fm.heroLede)
     lines.push('')
@@ -408,6 +434,21 @@ function buildCompareMarkdown(page: ComparePage): string {
     lines.push(`## Choose ${fm.competitor} when`)
     lines.push('')
     for (const item of fm.chooseThem) lines.push(`- ${item}`)
+    lines.push('')
+  }
+  lines.push("## What you'd pay")
+  lines.push('')
+  lines.push(`BitterClip: ${BITTERCLIP_TRIAL}. ` + BITTERCLIP_PLANS.map((plan) => `${plan.name} ${plan.price}/month (${plan.includes.join('; ')})`).join('. ') + `. The catch: ${BITTERCLIP_CATCH}`)
+  lines.push('')
+  if (fm.pricing) {
+    lines.push(`${fm.competitor}: ${fm.pricing.plan} ${fm.pricing.price}${fm.pricing.note ? ` (${fm.pricing.note})` : ''}, including ${fm.pricing.includes.join('; ')}. The catch: ${fm.pricing.catch} Source: ${fm.pricing.sourceUrl}`)
+    lines.push('')
+  }
+  if (fm.switching && fm.switching.length > 0) {
+    lines.push(`## Coming from ${fm.competitor}`)
+    lines.push('')
+    fm.switching.forEach((step, index) => lines.push(`${index + 1}. ${step}`))
+    if (fm.switchingLink) lines.push(`\n[${fm.switchingLink.label}](${SITE_ORIGIN}${fm.switchingLink.url})`)
     lines.push('')
   }
   if (fm.gotchas && fm.gotchas.length > 0) {
@@ -536,7 +577,7 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
   }
   lines.push('## Comparisons')
   lines.push('')
-  lines.push('- [BitterClip vs Descript vs OpusClip](https://bitterclip.com/compare): A workflow comparison of source-linked understanding, full production control, and high-volume social clipping.')
+  lines.push('- [Compare BitterClip](https://bitterclip.com/compare): Head-to-head comparisons with recording tools, editors, and clip generators, each with a short answer, a job-by-job table, and fine print from the other tool\'s own pages.')
   for (const comparison of comparisons) {
     const title = comparison.frontmatter.title ?? `BitterClip vs ${comparison.frontmatter.competitor ?? comparison.slug}`
     const desc = comparison.frontmatter.description ?? ''
@@ -581,10 +622,10 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: Compare
   }
   parts.push('---')
   parts.push('')
-  parts.push('# BitterClip vs Descript vs OpusClip')
+  parts.push('# Compare BitterClip')
   parts.push('Source: https://bitterclip.com/compare')
   parts.push('')
-  parts.push('A workflow comparison of source-linked understanding, full production control, and high-volume social clipping. See the canonical page for the current comparison and official sources.')
+  parts.push('Head-to-head comparisons with recording tools, editors, and clip generators, each with a short answer, a job-by-job table, and fine print from the other tool\'s own pages. See the canonical page for the current comparison and official sources.')
   parts.push('')
   for (const comparison of comparisons) {
     parts.push('---')

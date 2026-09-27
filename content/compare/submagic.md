@@ -1,38 +1,65 @@
 ---
 title: "BitterClip vs Submagic: Clips or Whole Recordings?"
-description: Submagic styles short clips fast. BitterClip turns a whole recording into a finished cut plus vertical clips. Prices, caps, and fine print compared.
+description: Submagic styles short clips fast. BitterClip turns a whole recording into a finished episode plus vertical clips. Prices, caps, and fine print compared.
 competitor: Submagic
 competitorUrl: https://www.submagic.co
 reviewed: 2026-09-25
 competitorStrength: Trend-perfect captions in seconds, with effects that fire on the words.
 heroLede: "If what you have is already a short clip and you want it captioned and posted today, pick Submagic — it is fast and it looks good. If what you have is a 90-minute conversation and you need a finished episode plus the vertical clips out of it, pick BitterClip. Submagic caps how long a video can be; long recordings are BitterClip's normal day."
-verdictBitterclip: "Record straight into the project from your browser, or bring in a recording from your phone, Zoom, Riverside, or a camera, then edit it by selecting words in the transcript — delete a sentence and a real cut happens. Ask for changes with BitterClip's built-in agent, ChatGPT, Claude, or the editor and what comes back is a normal edit you can keep adjusting by hand or undo. Paid plans include source-footage hours and agent work."
+shortAnswer: "Submagic styles a short clip with trend-perfect captions in minutes. BitterClip turns a whole recording into a finished episode plus vertical clips."
+chooseUsShort: "you record whole conversations and each needs an episode plus vertical clips."
+chooseThemShort: "your footage is already short and you want it captioned and posted today."
+heroVisual: editor
+category: clipping
+keyDifferences:
+  - favors: bitterclip
+    title: Whole recordings, not two-minute clips
+    body: "Submagic caps a video at 2 minutes on Starter, 5 on Pro and 30 on Business; longer costs extra. BitterClip takes the whole recording and cuts the episode first, then the clips."
+  - favors: bitterclip
+    title: Cut between up to five cameras
+    body: "Solo, side by side, picture-in-picture, speaker rail or grid, and switching never touches the audio. Submagic's product and docs don't mention multiple cameras."
+  - favors: competitor
+    title: Captions that look right, fast
+    body: "Upload a short clip, pick a template, export. Submagic captions in 123 languages with emoji, zooms, B-roll and a hook title, and schedules to TikTok, Instagram and YouTube on Pro and Business."
+pricing:
+  plan: Pro
+  price: $39/month
+  note: Per member
+  includes:
+    - 40 videos a month, up to 5 minutes each
+    - Scheduling to TikTok, Instagram and YouTube
+  catch: "Anything over 5 minutes goes through Magic Clips, which costs extra: credits on the pricing page, or $19 a month for 10 long videos per the help center."
+  sourceUrl: https://www.submagic.co/pricing
+verdictBitterclip: "Record straight into the project from your browser, or bring in a recording from your phone, Zoom, Riverside, or a camera, then edit it by selecting words in the transcript — delete a sentence and a real cut happens. Ask for changes with BitterClip's built-in agent, ChatGPT, Claude, or the editor and what comes back is a normal edit you can keep adjusting by hand or undo. Paid plans include hours of footage and AI agent use."
 verdictCompetitor: "The fastest good-looking path from a short raw clip to a captioned vertical: captions in 123 languages, emoji, zooms, B-roll, and a scheduler for TikTok, Instagram, and YouTube. Pick it when your footage is already short and you want volume with a ready-made look. Know the caps before you pay: 2-minute videos on Starter, 5 on Pro, and clipping long videos costs extra."
 rows:
-  - axis: What you can actually bring in
+  - axis: What you can bring in
     bitterclip:
       lead: A whole recording.
-      detail: Footage from a phone, Zoom, Riverside, or a camera, a take recorded in the browser, or answers people recorded from your link.
+      detail: Footage from a phone, Zoom, Riverside, or a camera, or a take recorded in the browser.
     competitor:
       lead: A clip you already cut.
       detail: Short raw footage in, styled vertical out; a long video needs the Magic Clips add-on.
     edge: bitterclip
+    group: record
   - axis: Getting one short posted today
     bitterclip:
       lead: One tap, after the cut.
-      detail: The vertical version carries captions and timing across — but the cut has to exist first.
+      detail: Once the episode is cut, the vertical version is one tap, captions and timing included.
     competitor:
       lead: Minutes, start to finish.
-      detail: Upload, pick a template, export — Submagic takes this one outright.
+      detail: Upload, pick a template, export.
     edge: competitor
+    group: deliver
   - axis: When the first cut is wrong
     bitterclip:
-      lead: Fix the cut you have.
+      lead: Say what's off.
       detail: Say what's off and the same cut changes; undo works all the way back.
     competitor:
       lead: Fix it by hand.
       detail: Delete words from the transcript or trim the timeline, redo the captions, change the hook title, one change at a time.
     edge: bitterclip
+    group: edit
   - axis: Editing by asking instead of clicking
     bitterclip:
       lead: Just ask for it.
@@ -40,23 +67,26 @@ rows:
     competitor:
       lead: Claude, through an API key.
       detail: An MCP server lets Claude Code, Claude Desktop, or Cursor make clips, export, and publish; ChatGPT and claude.ai on the web aren't supported.
-    edge: bitterclip
+    edge: even
+    group: edit
   - axis: How long your video is allowed to be
     bitterclip:
-      lead: No ceiling to work around.
-      detail: A 20-minute to 2-hour recording is the normal case here, not an upsell.
+      lead: Long recordings are normal.
+      detail: The trial takes one recording up to two hours; Creator includes 10 hours of footage a month.
     competitor:
       lead: 2 minutes on Starter.
       detail: 5 minutes on Pro, 30 on Business; anything longer needs the Magic Clips add-on.
     edge: bitterclip
+    group: record
   - axis: Who decides which moments are good
     bitterclip:
       lead: You do.
-      detail: No mystery score picks your moments, and every clip remembers where it came from.
+      detail: Nothing scores your moments, and every clip links back to where it came from.
     competitor:
       lead: It picks, in bulk.
       detail: Magic Clips pulls 20+ highlights per long video, each with a virality score, and costs extra on top of the base plan.
     edge: even
+    group: edit
   - axis: Making the captions look right
     bitterclip:
       lead: Right words, your look.
@@ -65,42 +95,38 @@ rows:
       lead: Templates that just look right.
       detail: Captions in 123 languages, with fonts, colors, and emoji effects that fire on the words.
     edge: competitor
+    group: edit
   - axis: When you shot with more than one camera
     bitterclip:
       lead: Up to five cameras.
-      detail: Solo, two-up, picture-in-picture, speaker rail, or grid — switching never disturbs the audio.
+      detail: Solo, side by side, picture-in-picture, speaker rail, or grid, and switching never touches the audio.
     competitor:
       lead: One video in, one out.
-      detail: Nothing about multiple cameras appears on the product or anywhere in the docs.
+      detail: Submagic's product and docs don't mention multiple cameras.
     edge: bitterclip
+    group: edit
   - axis: Getting it out the door
     bitterclip:
-      lead: Download, link, or YouTube.
-      detail: A 1080p MP4 of the exact current version, private review links, and YouTube behind a final confirm.
+      lead: Download, link, or post.
+      detail: A 1080p MP4 of the exact current version, private review links, and YouTube, LinkedIn and X after you confirm each post.
     competitor:
       lead: Three platforms, scheduled.
-      detail: TikTok, Instagram, and YouTube on Pro and Business, with LinkedIn, Facebook, and X listed as coming soon — wider reach than BitterClip today.
+      detail: TikTok, Instagram, and YouTube on Pro and Business, with LinkedIn, Facebook, and X listed as coming soon.
     edge: competitor
-  - axis: Getting recordings from other people
-    bitterclip:
-      lead: Send one link.
-      detail: On Producer, up to 25 people record on their own device, on their own time, with no account; a bad connection can't blur the take, and each answer lands as its own episode.
-    competitor:
-      lead: Doesn't record.
-      detail: Submagic takes uploads and YouTube links; there's no recorder and no way to collect a take from someone else.
-    edge: bitterclip
+    group: deliver
   - axis: What a month costs
     bitterclip:
-      lead: $24 or $99 monthly.
-      detail: "Paid Creator: 10 source-footage hours and $10 of included agent work; Producer: 40 hours, $40 of included agent work, and priority rendering."
+      lead: $1 for 7 days, then $24/month.
+      detail: "Creator: 10 hours of footage and $10 of AI agent use. Producer ($99): 40 hours, $40 of AI agent use, and priority rendering."
     competitor:
       lead: $19 to $69 per member.
       detail: "Free is 3 watermarked videos; Starter $19 ($12 annually) buys 15 videos, Pro $39 buys 40, Business $69 buys 100, each per member."
     edge: even
+    group: price
 chooseUs:
   - Your recordings run 20 minutes to two hours, and every one of them has to become a finished episode plus vertical clips.
   - "You'd rather say \"cut the tangent about the flight\" than go hunting for it on a timeline."
-  - You're done re-rolling AI output — you want to fix the cut you have, and undo it when a change was wrong.
+  - You're done regenerating AI output — you want to fix the cut you have, and undo it when a change was wrong.
   - You shoot two to five cameras and want to cut between them without touching the audio.
   - You collect answers from guests, clients, or customers and want each one to arrive as an editable episode, not a file to download and re-upload.
   - You want to know where every clip came from, and jump straight back to that spot in the full recording.
@@ -111,39 +137,35 @@ chooseThem:
   - "You run no-code pipelines: Zapier, Make, or n8n dropping raw footage in one end and posts out the other."
   - You work in Claude Code or Cursor and want an assistant to run a clip pipeline through Submagic's MCP server.
 gotchas:
-  - title: Every fee is non-refundable
-    body: Submagic's terms make all monthly and annual fees non-refundable, with the 14-day consumer withdrawal right as the stated exception where it applies. Monthly plans renew on their own, month to month, until you cancel in the billing panel.
+  - title: Clipping long videos costs extra
+    body: Magic Clips, the feature that turns long videos into shorts, isn't part of the base allowance. Submagic's help center prices it as a $19-a-month add-on covering 10 long videos; its pricing page now says Magic Clips spends credits, with extra credit packs for sale.
+    sourceLabel: "Submagic help: how much it costs"
+    sourceUrl: https://care.submagic.co/en/article/how-much-does-it-cost-to-use-submagic-1xm83pa/
+  - title: The license you grant when you upload
+    body: Uploading grants TURBO STUDIO (the company behind Submagic) a worldwide, non-exclusive license to use, modify, reproduce, and distribute your content on and through the platform. Using your content to promote the product is a separate clause; email support to opt out.
     sourceLabel: Submagic Terms of Use
     sourceUrl: https://www.submagic.co/terms-of-use
   - title: What happens to your projects if you cancel
     body: Access ends when the agreement does. Ask for your data back within 60 days of expiry or termination — after that, the terms say the company destroys it across all environments and servers.
     sourceLabel: Submagic Terms of Use
     sourceUrl: https://www.submagic.co/terms-of-use
-  - title: Clipping long videos costs extra
-    body: Magic Clips, the feature that turns long videos into shorts, isn't part of the base allowance. Submagic's help center prices it as a $19-a-month add-on covering 10 long videos; its pricing page now says Magic Clips spends credits, with extra credit packs for sale.
-    sourceLabel: "Submagic help: how much it costs"
-    sourceUrl: https://care.submagic.co/en/article/how-much-does-it-cost-to-use-submagic-1xm83pa/
-  - title: The license you grant when you upload
-    body: Uploading grants TURBO STUDIO (the company behind Submagic) a worldwide, non-exclusive license to use, modify, reproduce, and distribute your content on and through the platform — a scope common for running a hosted service. Using your content to promote the product is a separate clause; email support to opt out.
-    sourceLabel: Submagic Terms of Use
-    sourceUrl: https://www.submagic.co/terms-of-use
 faq:
   - q: Is Submagic worth it?
     a: "For short clips, yes — it's one of the fastest ways to turn raw footage into a captioned vertical that looks the part. What costs you is the caps, not the price: 15 videos of 2 minutes on Starter, 40 of 5 minutes on Pro, and clipping long videos costs extra. If what you have is whole recordings rather than clips, it's the wrong shape of tool."
   - q: What is the best Submagic alternative?
-    a: BitterClip, if the wall you keep hitting is video length — you work in 20-minute to 2-hour recordings, not 2-minute clips. Whole recordings go in, a finished cut plus vertical clips come out, and you fix the cut you have instead of rolling the dice again. If you only want cheaper captions for shorts, a simpler caption tool will serve you better than either of us.
+    a: BitterClip, if the wall you keep hitting is video length — you work in whole recordings, not 2-minute clips. Whole recordings go in, a finished episode plus vertical clips come out, and you fix the cut you have instead of starting over. If you only want cheaper captions for shorts, a simpler caption tool will serve you better than either of us.
   - q: Can I edit Submagic's output?
     a: "Yes, inside its editor: the docs cover trimming the timeline, correcting transcript and caption mistakes, changing hook titles, and swapping B-roll and music. It's a real hands-on finishing pass. Where BitterClip differs is what happens after — a change you don't like undoes exactly, and a review link plays the exact version you sent, never a later one, for up to two weeks."
   - q: Can Submagic handle long videos?
-    a: Only on Business, and only up to 30 minutes a video. Starter stops at 2 minutes and Pro at 5; anything longer goes through Magic Clips, which costs extra (its help center lists a $19-a-month add-on for 10 long videos). A 20-minute to 2-hour recording is BitterClip's normal case — the trial accepts one recording up to two hours, paid Creator includes 10 source-footage hours, and Producer 40.
+    a: Only on Business, and only up to 30 minutes a video. Starter stops at 2 minutes and Pro at 5; anything longer goes through Magic Clips, which costs extra (its help center lists a $19-a-month add-on for 10 long videos). In BitterClip, the trial accepts one recording up to two hours, Creator includes 10 hours of footage a month, and Producer 40.
   - q: Does Submagic work with ChatGPT or Claude?
     a: "Claude, partly. Submagic documents an MCP server that Claude Code, Claude Desktop, and Cursor can use with an API key to make Magic Clips, export, and publish; claude.ai on the web isn't supported yet, and there's no ChatGPT integration. Zapier, Make, n8n, and a REST API cover the rest. In BitterClip, anything you can do in the editor you can ask for in ChatGPT, Claude (including claude.ai), any MCP client, the built-in agent panel, or the command line, with the same permissions you have yourself."
   - q: Does BitterClip record?
-    a: "Yes. Every project has a browser recorder for solo takes: Record in browser on the Sources tab, or Record here in the editor's insert sheet, where the finished take drops into the edit at the playhead. For a conversation, open Studio on any paid plan: your guest joins from a link, with no account and nothing to install, and each of you is recorded on your own track, so you can cut between you instead of living with one mixed-down call recording. Each browser also keeps its own copy as a backup, and when you finish, the conversation arrives as an episode, transcribed and ready to cut. On Producer you can also send a link and have people record themselves on their own time, each answer arriving as its own episode. Submagic doesn't record at all."
+    a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link. Submagic doesn't record at all."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Write a short brief and share one link: up to 25 people record themselves with camera and mic in their browser, on their own time, with no account and no call to schedule. Each take is recorded on the person's own device — 720p by default, 1080p if they choose — so a weak connection can't degrade it. They can retake privately and send one; it uploads after they send it, BitterClip checks the whole file arrived intact, and each answer lands in your project as its own transcribed episode, ready to cut and clip. You share the link yourself; BitterClip doesn't send invitations or reminders. Submagic has no recorder, so there's nothing to compare it with there."
+    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. Submagic has no recorder."
   - q: Is BitterClip better than Submagic?
-    a: For finishing whole recordings, yes. For putting a trend-perfect caption look on a clip that's already short, no — Submagic is faster there and it looks better. Submagic is a finishing pass; BitterClip is where the cut gets made in the first place. Plenty of people could reasonably use both.
+    a: For finishing whole recordings, yes. For putting a trend-perfect caption look on a clip that's already short, no — Submagic is faster there and it looks better. Submagic is a finishing pass; BitterClip is where the cut gets made in the first place.
 sources:
   - label: Submagic homepage
     url: https://www.submagic.co/
@@ -175,9 +197,9 @@ That is usually the whole problem. There are 90 minutes of a podcast, a client s
 
 The catch is how much you're allowed to bring in. Starter caps a video at 2 minutes, Pro at 5, Business at 30. Turning a long recording into shorts is Magic Clips, which costs extra and hands you a batch of machine-picked highlights.
 
-BitterClip starts at the recording. Drop in the file — phone, Zoom, Riverside, a camera — and the transcript becomes the thing you edit. Find the tangent in the words, select it, delete it, and a real cut happens. The cut lands on the word rather than near it, because it is timed against the actual audio: no clipped syllables, no half-swallowed first word. One tap makes the vertical version, captions and timing carried across.
+BitterClip starts at the recording. Drop in the file — phone, Zoom, Riverside, a camera — and the transcript becomes the thing you edit. Find the tangent in the words, select it, delete it, and a real cut happens. The cut lands on the word rather than near it, because it is timed to the audio itself: no clipped syllables, no half-swallowed first word. One tap makes the vertical version, captions and timing carried across.
 
-You can also skip the drop and record straight into the project. Every project has a browser recorder: Record in browser on the Sources tab, or Record here in the editor's insert sheet, which lands the finished take in the edit at the playhead. Prop your phone up and go — it takes camera and mic from a laptop or phone browser, up to 1080p. For a conversation, open Studio: your guest joins from a link and each of you is recorded on your own track. And on Producer there's a third way in: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer landing as its own episode ready to cut. Submagic doesn't record at all — it styles footage you already have.
+You can also skip the drop and record straight into the project. Every project has a browser recorder for solo takes, and the take drops straight into your edit. Prop your phone up and go — it takes camera and mic from a laptop or phone browser, up to 1080p. For a conversation, open Studio on a paid plan: your guest joins from a link and each of you is recorded on your own track. And on Producer there's a third way in: share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode ready to cut. Submagic doesn't record at all — it styles footage you already have.
 
 ## A template can read the text. It can't hear the point.
 
@@ -187,8 +209,8 @@ In BitterClip, captions are something you can ask for. Tell ChatGPT to highlight
 
 ## Fix the cut you have.
 
-Credit where it's due: Submagic's output is editable, not take-it-or-leave-it. You can trim the timeline, correct the captions, change the hook, swap the B-roll. What its docs describe is a finishing pass over a result the machine already produced.
+Submagic's output is editable, not take-it-or-leave-it. You can trim the timeline, correct the captions, change the hook, swap the B-roll. What its docs describe is a finishing pass over a result the machine already produced.
 
-BitterClip is built the other way around. When the first cut isn't right, you say what's wrong and the same cut gets better — no starting over and hoping for a luckier draw. Undo works, all the way back. A review link you send a client plays the exact version you sent, never a later one, for up to two weeks. And every clip remembers where it came from, so "where did this line actually come from" still has an answer months later.
+BitterClip is built the other way around. When the first cut isn't right, you say what's wrong and the same cut gets better, with no starting over. Undo works, all the way back. A review link you send a client plays the exact version you sent, never a later one, for up to two weeks. And every clip remembers where it came from, so "where did this line come from" still has an answer months later.
 
-The trade in one line: Submagic is a fast finish for footage you have already made the decisions about. BitterClip is where the deciding happens. Creator's card-required seven-day trial is $1 today and includes $5 of agent work for analysis, the First Cut, and continued direction; trial exports are watermarked. Then $24/month; cancel anytime.
+The trade in one line: Submagic is a fast finish for footage you have already made the decisions about. BitterClip is where the deciding happens. Creator is $1 for 7 days, then $24/month, card required, cancel anytime. The trial includes $5 of AI agent use to analyze the recording, make a first cut, and keep refining it; trial exports are watermarked.
