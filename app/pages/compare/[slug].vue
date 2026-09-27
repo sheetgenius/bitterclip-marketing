@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 import { compareMethodology, compareTally } from '~/utils/compare-methodology'
-import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
+import { BITTERCLIP_AGENT_PRICING, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -552,6 +552,9 @@ useHead(() => {
             </div>
           </div>
           <p class="mt-5 text-sm leading-relaxed text-zinc-300">
+            <span class="font-semibold text-white">Agent use:</span> {{ BITTERCLIP_AGENT_PRICING }}
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-zinc-300">
             <span class="font-semibold text-white">The catch:</span> {{ BITTERCLIP_CATCH }}
           </p>
           <div class="mt-auto pt-6">

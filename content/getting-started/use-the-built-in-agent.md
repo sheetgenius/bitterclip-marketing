@@ -39,13 +39,21 @@ wrong; the agent chooses how to fix it.
 - Nothing renders until you ask, and nothing is published until you confirm that exact post.
 - Ask for a clip and it makes a new one from the Episode rather than changing the Episode.
 
+## Choose the model
+
+Pick the agent's model in the chooser beside the composer, from low-cost models for simple
+changes to the strongest for hard jobs like multicam cuts and reels. The models are served
+through OpenRouter, and the chooser shows what a typical request costs on each.
+
 ## Agent work
 
 Every plan includes agent work: $5 during the Creator trial, $10 a month on Creator, and $40 a
-month on Producer, with $20, $50, and $100 top-ups. Each request uses some of it, and Billing
-shows what's left. When it runs out, the editor still works by hand.
+month on Producer, with $20, $50, and $100 top-ups. Each request costs what OpenRouter billed
+for it, plus 15%, and Billing shows what's left. When it runs out, the editor still works by
+hand.
 
 ## Prefer ChatGPT or Claude?
 
-They can operate the same workbench through a connector. See
+They can operate the whole workbench through a connector, and their work runs on your ChatGPT
+or Claude plan rather than on your agent work. See
 [Use BitterClip from your AI assistant](/docs/assistants/overview).

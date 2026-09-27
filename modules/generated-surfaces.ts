@@ -7,7 +7,7 @@ import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
 import { parse as parseHtml } from 'parse5'
 import { assertCompareBalance, compareMethodology, compareTally } from '../app/utils/compare-methodology'
-import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, MCP_TOOL_COUNT, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '../app/utils/compare-plans'
+import { BITTERCLIP_AGENT_PRICING, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, MCP_TOOL_COUNT, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '../app/utils/compare-plans'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
@@ -445,7 +445,7 @@ function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): strin
   }
   lines.push("## What you'd pay")
   lines.push('')
-  lines.push(`BitterClip: ${BITTERCLIP_TRIAL}. ` + BITTERCLIP_PLANS.map((plan) => `${plan.name} ${plan.price}/month (${plan.includes.join('; ')})`).join('. ') + `. The catch: ${BITTERCLIP_CATCH}`)
+  lines.push(`BitterClip: ${BITTERCLIP_TRIAL}. ` + BITTERCLIP_PLANS.map((plan) => `${plan.name} ${plan.price}/month (${plan.includes.join('; ')})`).join('. ') + `. Agent use: ${BITTERCLIP_AGENT_PRICING} The catch: ${BITTERCLIP_CATCH}`)
   lines.push('')
   if (fm.pricing) {
     lines.push(`${fm.competitor}: ${fm.pricing.plan} ${fm.pricing.price}${fm.pricing.note ? ` (${fm.pricing.note})` : ''}, including ${fm.pricing.includes.join('; ')}. The catch: ${fm.pricing.catch} Source: ${fm.pricing.sourceUrl}`)
@@ -595,6 +595,7 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
   lines.push('')
   lines.push(`- There is no free plan. Creator is ${BITTERCLIP_TRIAL}: ${BITTERCLIP_PLANS[0].includes.join('; ')}. ${BITTERCLIP_CATCH}`)
   lines.push(`- Producer is ${BITTERCLIP_PLANS[1].price}/month: ${BITTERCLIP_PLANS[1].includes.join('; ')}.`)
+  lines.push(`- Built-in agent: ${BITTERCLIP_AGENT_PRICING} Agent work can be topped up in exact $20, $50 or $100 amounts.`)
   lines.push(`- ChatGPT, Claude or Codex can run the whole editing workbench over MCP (${MCP_TOOL_COUNT} tools, listed at ${SITE_ORIGIN}/docs/assistants/tool-reference), on the AI plan the person already pays for. That doesn't draw on BitterClip's included agent use, which pays for the built-in agent.`)
   lines.push('')
   lines.push('## Comparisons')

@@ -24,6 +24,11 @@ export function fillCompareTokens<T>(value: T): T {
   return value
 }
 
+// How the built-in agent is billed, in the product's own terms (Rails
+// AgentUsageSettlement: OpenRouter's billed cost plus a 15% fee; the model list
+// lives in config/agent_model_tiers.yml and gets repointed, so no names here).
+export const BITTERCLIP_AGENT_PRICING = "Pick the built-in agent's model for the job, from low-cost models to the strongest, served through OpenRouter. Each request costs what OpenRouter billed for it, plus 15%."
+
 // Said on every comparison, next to the plans, and in every Markdown twin.
 export const BITTERCLIP_CATCH = 'The $1 trial covers one recording up to two hours and $5 of AI agent use, card required, with watermarked exports. Studio and clean exports start on a paid plan.'
 
