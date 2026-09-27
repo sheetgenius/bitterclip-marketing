@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
 import { compareMethodology, compareTally } from '~/utils/compare-methodology'
-import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank } from '~/utils/compare-plans'
+import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '~/utils/compare-plans'
 
 const siteOrigin = 'https://bitterclip.com'
 const route = useRoute()
@@ -13,7 +13,7 @@ const pagePath = `/compare/${slug}`
 
 const { data: page } = await useAsyncData(`compare:${pagePath}`, () =>
   queryCollection('compare').path(pagePath).first(),
-)
+{ transform: fillCompareTokens })
 
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Comparison not found', fatal: true })
@@ -23,7 +23,7 @@ if (!page.value) {
 // offered Zoom and Podcastle, not whatever sorts first alphabetically.
 const { data: siblings } = await useAsyncData(`compare:siblings:${pagePath}`, () =>
   queryCollection('compare').order('competitor', 'ASC').all(),
-)
+{ transform: fillCompareTokens })
 const otherMatchups = computed(() => {
   const others = (siblings.value ?? []).filter((m) => m.path !== pagePath)
   const byDemand = [...others].sort((a, b) => compareRank(a.path) - compareRank(b.path))
@@ -81,9 +81,11 @@ const showDetails = ref(false)
 const tableGroups = computed(() => {
   const rows = (page.value?.rows ?? []).filter((r) => !onlyDifferences.value || r.edge !== 'even')
   if (!rows.some((r) => r.group)) return [{ key: 'all', label: '', rows }]
-  return GROUPS
-    .map((g) => ({ key: g.key, label: g.label, rows: rows.filter((r) => r.group === g.key) }))
-    .filter((g) => g.rows.length)
+  const known: string[] = GROUPS.map((g) => g.key)
+  return [
+    ...GROUPS.map((g) => ({ key: g.key, label: g.label, rows: rows.filter((r) => r.group === g.key) })),
+    { key: 'other', label: 'Other', rows: rows.filter((r) => !r.group || !known.includes(r.group)) },
+  ].filter((g) => g.rows.length)
 })
 const winnerName = (edge?: string) => edgeLabel(edge ?? 'even', page.value?.competitor ?? '')
 
@@ -198,9 +200,16 @@ useHead(() => {
     name: title,
     description,
     abstract: page.value?.shortAnswer,
-    dateModified: page.value?.reviewed,
+    dateModified: page.value?.updated ?? page.value?.reviewed,
+    lastReviewed: page.value?.reviewed,
+    breadcrumb: { '@id': `${canonicalUrl}#breadcrumb` },
     inLanguage: 'en',
-    publisher: { '@id': 'https://company.sheetgenius.com/#organization' },
+    publisher: {
+      '@type': 'Organization',
+      '@id': 'https://company.sheetgenius.com/#organization',
+      name: 'SheetGenius, Inc.',
+      url: 'https://company.sheetgenius.com',
+    },
     about: [
       {
         '@type': 'SoftwareApplication',
@@ -219,7 +228,9 @@ useHead(() => {
             priceCurrency: 'USD',
             unitText: 'month',
           },
-          description: plan.includes.join('; '),
+          description: plan.name === 'Creator'
+            ? `${BITTERCLIP_TRIAL}. ${plan.includes.join('; ')}. ${BITTERCLIP_CATCH}`
+            : plan.includes.join('; '),
         })),
       },
       {
@@ -237,6 +248,7 @@ useHead(() => {
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl}#breadcrumb`,
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Compare', item: `${siteOrigin}/compare` },
       { '@type': 'ListItem', position: 2, name: `BitterClip vs ${page.value?.competitor ?? ''}`, item: canonicalUrl },
@@ -301,17 +313,19 @@ useHead(() => {
         <tbody>
           <tr>
             <th scope="row">Choose it if</th>
-            <td data-label="BitterClip">{{ sentence(page.chooseUsShort) }}</td>
-            <td :data-label="page.competitor">{{ sentence(page.chooseThemShort) }}</td>
+            <td><span class="cell-label cell-label--ours" aria-hidden="true">BitterClip<span class="sr-only">: </span></span>{{ sentence(page.chooseUsShort) }}</td>
+            <td><span class="cell-label" aria-hidden="true">{{ page.competitor }}<span class="sr-only">: </span></span>{{ sentence(page.chooseThemShort) }}</td>
           </tr>
           <tr>
             <th scope="row">Price</th>
-            <td data-label="BitterClip">
+            <td>
+              <span class="cell-label cell-label--ours" aria-hidden="true">BitterClip<span class="sr-only">: </span></span>
               <span v-for="plan in glancePlans" :key="plan.name" class="block">
                 <span class="text-zinc-400">{{ plan.name }}</span> {{ plan.price }}
               </span>
             </td>
-            <td :data-label="page.competitor">
+            <td>
+              <span class="cell-label" aria-hidden="true">{{ page.competitor }}<span class="sr-only">: </span></span>
               <span v-if="page.freePlan" class="block"><span class="text-zinc-400">Free</span> {{ page.freePlan }}</span>
               <template v-if="page.pricing">
                 <span class="block"><span class="text-zinc-400">{{ page.pricing.plan }}</span> {{ page.pricing.price }}</span>
@@ -504,11 +518,13 @@ useHead(() => {
                 <span class="compare-job">{{ row.axis }}</span>
                 <span class="compare-verdict" :class="`compare-verdict--${verdictTone(row.edge)}`">{{ row.edge === 'even' ? 'Tie' : `${winnerName(row.edge)} better` }}</span>
               </th>
-              <td data-label="BitterClip" class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'bitterclip') }">
+              <td class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'bitterclip') }">
+                <span class="cell-label cell-label--ours" aria-hidden="true">BitterClip<span class="sr-only">: </span></span>
                 <span class="compare-lead">{{ row.bitterclip.lead }}</span>
                 <span class="compare-detail">{{ row.bitterclip.detail }}</span>
               </td>
-              <td :data-label="page.competitor" class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'competitor') }">
+              <td class="compare-cell" :class="{ 'compare-cell--win': wins(row, 'competitor') }">
+                <span class="cell-label" aria-hidden="true">{{ page.competitor }}<span class="sr-only">: </span></span>
                 <span class="compare-lead">{{ row.competitor.lead }}</span>
                 <span class="compare-detail">{{ row.competitor.detail }}</span>
               </td>
@@ -602,12 +618,10 @@ useHead(() => {
         <div>
           <h2 id="proof-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">One conversation. The cut you'd send.</h2>
           <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-300">
-            {{ page.proofNote || "BitterClip's founder, Michael Ruescher, recorded a conversation about quitting a twelve-year job to build bitter.sh. This one-minute vertical cut came out of it, made in BitterClip." }}
+            {{ page.proofNote || PROOF_NOTE_DEFAULT }}
           </p>
           <ol class="mt-6 max-w-xl space-y-3 text-[15px] text-zinc-300">
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">1</span>The recording comes in and every word is transcribed, tied to the moment it was said.</li>
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">2</span>The agent makes a first cut; you direct it in plain words or by deleting words in the transcript.</li>
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">3</span>One tap makes the 9:16 version, captions and timing carried over.</li>
+            <li v-for="(step, index) in PROOF_STEPS" :key="step" class="flex gap-3"><span class="text-[#f28f84] tabular-nums">{{ index + 1 }}</span>{{ step }}</li>
           </ol>
         </div>
       </div>
@@ -841,6 +855,18 @@ useHead(() => {
   max-width: 44rem;
 }
 
+/* Each cell names its product in real text, so a table flattened by a crawler
+   or an agent still says which product a fact belongs to. On desktop the
+   column header shows it, so the label is visually hidden; phones show it. */
+.cell-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* The job-by-job table, set in type. Base rules are the desktop table; the
    phone layout below overrides them. */
 .compare-head {
@@ -1030,19 +1056,6 @@ useHead(() => {
   .compare-glance tbody td {
     font-size: 15px;
   }
-  .compare-glance td::before {
-    content: attr(data-label);
-    display: block;
-    margin-bottom: 0.3rem;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  .compare-glance td[data-label='BitterClip']::before {
-    color: rgba(242, 143, 132, 0.85);
-  }
 
 
   /* The job table: each row is the job across the top with its verdict, then
@@ -1106,17 +1119,22 @@ useHead(() => {
     display: none;
   }
   /* Which product each block is, now that the column headers are gone. */
-  .compare-cell::before {
-    content: attr(data-label);
+  .cell-label {
+    position: static;
     display: block;
+    width: auto;
+    height: auto;
     margin-bottom: 0.3rem;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.55);
   }
-  .compare-cell[data-label='BitterClip']::before {
+  .cell-label--ours {
     color: rgba(242, 143, 132, 0.85);
   }
 }

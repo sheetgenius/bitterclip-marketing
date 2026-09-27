@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { buildSignupUrl, SIGNUP_BASE_URL } from '~/utils/signup-attribution'
-import { BITTERCLIP_TRIAL, compareRank } from '~/utils/compare-plans'
+import { BITTERCLIP_TRIAL, compareRank, fillCompareTokens } from '~/utils/compare-plans'
 
 const route = useRoute()
 
 const { data: allMatchups } = await useAsyncData('compare:matchups', () =>
   queryCollection('compare').order('competitor', 'ASC').all(),
-)
+{ transform: fillCompareTokens })
 
 // Search demand, not the alphabet (shared with each page's related links).
 const rank = compareRank
@@ -60,7 +60,7 @@ const itemListStructuredData = computed(() => ({
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: 'BitterClip comparisons',
-  itemListElement: ordered.value.map((m, index) => ({
+  itemListElement: groups.value.flatMap((g) => g.matchups).map((m, index) => ({
     '@type': 'ListItem',
     position: index + 1,
     name: `BitterClip vs ${m.competitor}`,

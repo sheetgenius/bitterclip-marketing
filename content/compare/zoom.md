@@ -4,8 +4,9 @@ description: "Zoom records a view of your call. BitterClip records a separate vi
 competitor: Zoom
 competitorUrl: https://www.zoom.com
 reviewed: 2026-09-25
+updated: 2026-09-27
 competitorStrength: "Everyone already has it, and the free plan holds a hundred people."
-heroLede: "If the meeting is the point — a team call, a client check-in, a webinar — use Zoom; your guests already have it. If the conversation is going to become an episode, a Zoom recording is the wrong raw material: a view of the call, where active-speaker view cuts wherever Zoom decided someone was speaking, at 360p unless the host turned HD on. On paid plans, BitterClip's Studio records you and your guest on separate tracks from a browser link, and the conversation arrives as an episode ready to edit."
+heroLede: "If the meeting is the point — a team call, a client check-in, a webinar — use Zoom; your guests already have it. If the conversation is going to become an episode, a Zoom recording is the wrong raw material: a view of the call, where active-speaker view cuts wherever Zoom decided someone was speaking, and cloud-recorded camera video is 360p unless the host turns on HD. On paid plans, BitterClip's Studio records you and your guest on separate tracks from a browser link, and the conversation arrives as an episode ready to edit."
 shortAnswer: "Zoom records the meeting. BitterClip records a separate video of each person and hands you the episode, ready to edit."
 chooseUsShort: "the call is going to become an episode, clips, or something you send a client."
 chooseThemShort: "the meeting itself is the point, or more than two people are on it."
@@ -21,7 +22,7 @@ keyDifferences:
     body: When the call ends, you have a transcribed episode. Delete words to cut, make the vertical version in one tap, or ask for the edit in ChatGPT or Claude.
   - favors: competitor
     title: Everyone already has Zoom
-    body: A hundred people on the free plan, webinars, and AI summaries after every meeting. For team calls and anything bigger than two people, stay with Zoom.
+    body: A hundred people on the free plan for 40 minutes, webinars, and AI Companion summaries. For team calls and anything bigger than two people, stay with Zoom.
 pricing:
   plan: Pro
   price: $16.99/month
@@ -30,7 +31,7 @@ pricing:
     - Meetings up to 30 hours
     - Cloud recording with 10 GB of storage
     - AI highlights and chapters
-  catch: Cloud recordings are 360p unless the host turns on HD, and no setting gives you a video file per person.
+  catch: Cloud-recorded camera video is 360p unless the host turns on HD, and cloud recording saves layouts, not a video file per person.
   sourceUrl: https://zoom.us/pricing
 switching:
   - Keep Zoom for meetings. Download the recordings you want to finish, or set up Zoom import so new cloud recordings arrive on their own.
@@ -39,7 +40,7 @@ switching:
 switchingLink:
   label: How Zoom import works
   url: /docs/getting-started/import-zoom-cloud-recording
-verdictBitterclip: "Pick BitterClip when the recording is going to become something — an episode, clips, a client deliverable. In Studio, on any paid plan, your guest joins from a link with no account and nothing to install, each of you is recorded as a separate video, and each browser keeps its own backup copy; when you finish, the conversation is already a transcribed episode. Delete words in the transcript to cut, switch between the two of you wherever you want, make the vertical version in one tap, or ask for any of it in ChatGPT or Claude. On Producer, people can also record answers on their own time from one link."
+verdictBitterclip: "Pick BitterClip when the recording is going to become something — an episode, clips, a client deliverable. In Studio, on any paid plan, your guest joins from a link with no account and nothing to install, each of you is recorded as a separate video, with a local copy from each browser, checked intact; when you finish, the conversation is already a transcribed episode. Delete words in the transcript to cut, switch between the two of you wherever you want, make the vertical version in one tap, or ask for any of it in ChatGPT or Claude. On Producer, people can also record answers on their own time from one link."
 verdictCompetitor: "Pick Zoom when the meeting itself is the product. A hundred people on the free plan, three hundred on Business, webinars, AI Companion summaries, and nobody needs instructions to join. Its recordings are a record of the call: a video per layout — active speaker, gallery, or shared screen — plus separate per-person audio files if you switch them on. Editing stops at trimming, AI highlights, and Clips."
 rows:
   - axis: How a two-person conversation gets recorded
@@ -48,7 +49,7 @@ rows:
       detail: On paid plans, Studio records a separate video of you and of your guest, so the picture can follow whoever is talking.
     competitor:
       lead: A view of the call.
-      detail: Cloud recording saves active-speaker, gallery, or shared-screen views; no setting makes a video file per person.
+      detail: Cloud recording saves active-speaker, gallery, or shared-screen views, not a video file per person.
     edge: bitterclip
     group: record
   - axis: Cutting back and forth between people
@@ -56,7 +57,7 @@ rows:
       lead: You decide, on the word.
       detail: Cut to either of you wherever you like, or go side by side or picture-in-picture, and the audio never moves.
     competitor:
-      lead: Zoom already decided.
+      lead: Active speaker decides.
       detail: Active-speaker recording switches to whoever Zoom detected speaking, and that choice is baked into the file.
     edge: bitterclip
     group: edit
@@ -71,8 +72,8 @@ rows:
     group: record
   - axis: When a connection wobbles mid-call
     bitterclip:
-      lead: A backup in each browser.
-      detail: Each browser keeps its own copy of its camera, uploaded after the call and checked intact.
+      lead: A local copy from each browser.
+      detail: Each browser records its own 720p copy, uploaded after the call and checked intact; swap it in by hand if the call glitched.
     competitor:
       lead: The glitch is in the file.
       detail: Recordings are made from what the call delivered; Zoom's staff say network-damaged recordings can't be restored.
@@ -93,7 +94,7 @@ rows:
       detail: Studio is you and a guest; a panel or a team meeting belongs in a meeting tool.
     competitor:
       lead: A hundred people, free.
-      detail: Basic hosts 100 people for 40 minutes; paid plans run 30 hours with room for 300 or more.
+      detail: Basic hosts 100 people for 40 minutes; Pro runs 30 hours for 100, and Business holds 300.
     edge: competitor
     group: record
   - axis: Turning the recording into an episode
@@ -101,8 +102,8 @@ rows:
       lead: It arrives as one.
       detail: The conversation lands as a transcribed episode; delete words to cut, and the cut lands on the word.
     competitor:
-      lead: Trim the ends.
-      detail: Cloud recordings trim to start and end ranges; AI highlights and chapters come on Pro and up.
+      lead: Trim sections.
+      detail: Cut sections out of a cloud recording; AI highlights and chapters come on Pro and up.
     edge: bitterclip
     group: edit
   - axis: Making the vertical version
@@ -114,13 +115,13 @@ rows:
       detail: Zoom's Meetings and Clips docs don't mention vertical reframing or burned-in captions.
     edge: bitterclip
     group: deliver
-  - axis: Asking for an edit instead of clicking it
+  - axis: Editing from your own ChatGPT or Claude
     bitterclip:
-      lead: Ask in ChatGPT or Claude.
-      detail: Anything you can click, you can ask for, and it comes back as an ordinary edit you can keep changing.
+      lead: "The whole editor, {tools} tools."
+      detail: "ChatGPT, Claude or Codex can run every editing tool on the AI plan you already pay for, without drawing on BitterClip's included agent use."
     competitor:
       lead: Summaries, not edits.
-      detail: AI Companion writes summaries and next steps and marks highlights; it doesn't cut the recording for you.
+      detail: "AI Companion writes summaries and next steps and marks highlights (three meetings a month on Basic); it doesn't cut the recording."
     edge: bitterclip
     group: edit
   - axis: Collecting recordings on people's own time
@@ -129,7 +130,7 @@ rows:
       detail: On Producer, one link lets up to 25 people record on their own device, on their own time, with no account. Each answer arrives as its own episode.
     competitor:
       lead: No request link.
-      detail: Zoom Clips records the account owner's own screen and camera; nothing lets someone record into your account.
+      detail: Zoom Clips records the signed-in user's own screen and camera.
     edge: bitterclip
     group: record
   - axis: What the monthly bill buys
@@ -154,12 +155,12 @@ chooseThem:
   - Everyone you talk to already has Zoom, and you'd rather not send anyone a new kind of link.
   - You need something free. Zoom's Basic plan records locally with no subscription, 40 minutes at a time.
 gotchas:
-  - title: Cloud recordings default to 360p
-    body: Zoom's recording-resolution article lists 640×360 for cloud recordings unless the host has turned on the account's HD video setting. 720p needs Pro or above; 1080p needs Business or higher (or Pro with an add-on) and Zoom Support switching it on, plus a fast enough computer on the sending end.
+  - title: Cloud-recorded camera video defaults to 360p
+    body: Zoom's recording-resolution article lists 640×360 for cloud-recorded camera video unless the host has turned on the account's HD video setting. 720p needs Pro or above; 1080p needs Business or higher (or Pro with an add-on) and Zoom Support switching it on, plus a fast enough computer on the sending end.
     sourceLabel: "Zoom support: resolution of recorded video"
     sourceUrl: https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0066421
-  - title: There is no video file per person
-    body: Cloud recording can save separate files for active speaker, gallery view, and shared screen — one per view, never one per participant. The closest thing Zoom sells is ZoomISO, an open-beta macOS app that comes with the Enhanced Media add-on ($25 a month on top of a paid plan) and records the streams Zoom delivers to that Mac.
+  - title: Zoom Meetings cloud recording saves layouts, not a video file per person
+    body: Cloud recording can save separate files for active speaker, gallery view, and shared screen — one per view, not one per participant. The closest thing Zoom sells is ZoomISO, an open-beta macOS app that comes with the Enhanced Media add-on ($25 a month on top of a paid plan) and records the streams Zoom delivers to that Mac.
     sourceLabel: "Zoom support: adjusting recording video layouts"
     sourceUrl: https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0062314
   - title: A bad connection stays in the recording
@@ -172,7 +173,7 @@ gotchas:
     sourceUrl: https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0067966
 faq:
   - q: Is Zoom good for recording a podcast?
-    a: "For a record of the call, it's fine. As raw material for an episode it's a weak start: each recording is a view of the call — active speaker, gallery, or shared screen — at 360p unless the host turned HD on, with any network glitch baked in. In active-speaker view, Zoom already decided who is on screen. Paid cloud plans and desktop local recording can add a separate audio file per person, but there's no separate video per person to cut between."
+    a: "For a record of the call, it's fine. As raw material for an episode it's a weak start: each recording is a view of the call — active speaker, gallery, or shared screen — with any network glitch baked in, and cloud-recorded camera video is 360p unless the host turns on HD. In active-speaker view, Zoom already decided who is on screen. Paid cloud plans and desktop local recording can add a separate audio file per person, but there's no separate video per person to cut between."
   - q: Does Zoom record each participant separately?
     a: "Audio, yes, if you switch it on: paid cloud recording can save one M4A per person, and desktop local recording can too, even on the free plan; phone callers share an audio file. Video, no. Zoom Meetings records views of the call, not people. The one Zoom-owned exception is ZoomISO, an open-beta macOS app sold with the Enhanced Media add-on, which records the streams Zoom delivers to that computer."
   - q: What's the best Zoom alternative for recording interviews?
@@ -180,7 +181,7 @@ faq:
   - q: Can I bring my Zoom recordings into BitterClip?
     a: "Yes. Download them from Zoom and upload the files, and each becomes an episode you can search and cut. Where Zoom import is set up for your account, finished cloud recordings arrive on their own, with the available views gathered into one editable episode. Old calls you'd never re-edit become findable by what was said and who said it."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. Zoom has nothing like it: Zoom Clips records the account owner's own screen and camera, and nobody else can record into your account."
+    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. Zoom's docs describe no request link: Zoom Clips records the signed-in user's own screen and camera."
   - q: Is BitterClip cheaper than Zoom?
     a: "They buy different things. Zoom Pro is $16.99 a user monthly ($14.16 billed annually) and buys meetings plus 10 GB of cloud storage. BitterClip Creator is $1 for 7 days, then $24/month, cancel anytime, and buys 10 hours of footage and $10 of AI agent use a month to turn recordings into episodes and clips; Producer is $99/month with 40 hours. Plenty of people keep Zoom for meetings and record the conversations that matter in BitterClip."
 sources:
@@ -224,13 +225,13 @@ sources:
 
 Most interviews, coaching sessions, and founder conversations get recorded in Zoom because the guest already has it. That's a good reason to take the call there. It's a bad reason to edit from what comes out.
 
-What comes out is a view of the call. Zoom's cloud recording saves active speaker, gallery view, or shared screen — separately if you ask, but always a file per *view*, never one per *person*. In active-speaker view, Zoom already chose who's on screen at every moment, and that choice is baked into the pixels. Unless someone turned on the HD setting, the cloud file is 360p. And because it's recorded from what the call delivered, a guest's bad wifi is in the file for good. Zoom can save a separate audio file for each person if you switch that on, which helps the sound. It doesn't give you a second camera to cut to.
+What comes out is a view of the call. Zoom's cloud recording saves active speaker, gallery view, or shared screen — separately if you ask, but always a file per *view*, never one per *person*. In active-speaker view, Zoom already chose who's on screen at every moment, and that choice is baked into the pixels. Unless someone turned on the HD setting, cloud-recorded camera video is 360p. And because it's recorded from what the call delivered, a guest's bad wifi is in the file for good. Zoom can save a separate audio file for each person if you switch that on, which helps the sound. It doesn't give you a second camera to cut to.
 
 ## Record the conversation instead
 
-BitterClip's Studio, included on every paid plan, is built for the two-person conversation that's going to become an episode. You send your guest a link. They open it in a browser, check their camera and mic, and join — no account, nothing to install. From the moment you press record, each of you is recorded as a separate video, and each browser keeps its own copy of its camera as a backup.
+BitterClip's Studio, included on every paid plan, is built for the two-person conversation that's going to become an episode. You send your guest a link. They open it in a browser, check their camera and mic, and join — no account, nothing to install. From the moment you press record, each of you is recorded as a separate video. Each browser also records its own 720p copy, uploaded after the call and checked intact. The edit starts from the server recording, and you can swap in a local copy by hand.
 
-When you finish, there's no export-download-upload loop. The conversation arrives in your project as an episode, already transcribed. Delete a sentence in the transcript and the cut lands on the word. Cut to your guest for the answer and back to you for the follow-up, or put you side by side, and the audio never moves. One tap makes the vertical version with captions and timing carried across. Anything you can click, you can also ask for in ChatGPT or Claude.
+When you finish, there's no export-download-upload loop. The conversation arrives in your project as an episode, already transcribed. Delete a sentence in the transcript and the cut lands on the word. Cut to your guest for the answer and back to you for the follow-up, or put you side by side, and the audio never moves. One tap makes the vertical version with captions and timing carried across. ChatGPT, Claude or Codex can run the whole editing workbench on the AI plan you already pay for.
 
 And for the people who can't make a call at all, Producer adds async recording: write a short brief, share one link, and up to 25 people record themselves on their own device, on their own time. Each answer arrives as its own episode.
 

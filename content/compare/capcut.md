@@ -4,6 +4,7 @@ description: "CapCut is a free phone editor built for short-form video. BitterCl
 competitor: CapCut
 competitorUrl: https://www.capcut.com
 reviewed: 2026-09-25
+updated: 2026-09-27
 competitorStrength: A free, deep, fun phone editor wired straight into TikTok.
 heroLede: "Stay with CapCut if you make short videos on your phone: the templates, effects, and one tap to TikTok are the point, and much of it is free. Come to BitterClip if you record people talking and the hard part is turning that into a finished episode plus clips, again next week. Record the session in the browser or bring the file you already shot, then edit by deleting words in the transcript, or by asking for the change in ChatGPT or Claude."
 shortAnswer: "CapCut is a free phone editor built for short videos. BitterClip turns long recorded conversations into finished episodes and clips."
@@ -14,12 +15,12 @@ freePlan: "a capable editor"
 keyDifferences:
   - favors: bitterclip
     title: Record a guest on separate tracks
-    body: On paid plans, a guest joins from a link with no account, each of you is recorded on your own track, and the episode arrives transcribed. CapCut's recorders capture only your own camera or screen.
+    body: On paid plans, a guest joins from a link with no account, each of you is recorded on your own track, and the episode arrives transcribed. CapCut's recorders capture your own camera or screen; its docs describe no way to record a remote guest.
   - favors: bitterclip
-    title: Ask for edits in ChatGPT or Claude
-    body: Ask in ChatGPT, Claude or the editor's chat panel, and a real edit comes back that you can keep changing or undo. CapCut documents no API, automation or agent feature.
+    title: Your own AI runs the whole editor
+    body: "ChatGPT, Claude or Codex get all {tools} editing tools, on the AI plan you already pay for. CapCut × Codex drafts and adjusts timelines from the ChatGPT desktop app, outside the U.S. for now."
   - favors: competitor
-    title: The best free phone editor
+    title: A free phone editor with templates and effects
     body: The template, effects and sound library is enormous and much of it free; the phone and tablet apps publish to TikTok in one tap. Desktop exports reach 4K at 60fps, device permitting.
 pricing:
   plan: Pro
@@ -42,28 +43,28 @@ rows:
       detail: On desktop, turn on transcript-based editing from the Layout menu, edit the text, and the media follows.
     edge: even
     group: edit
-  - axis: Asking for a change instead of making it
+  - axis: Editing from your own ChatGPT or Claude
     bitterclip:
-      lead: Just ask.
-      detail: Ask in ChatGPT, Claude, or the editor's own chat panel, and a real edit comes back.
+      lead: "The whole editor, {tools} tools."
+      detail: "ChatGPT, Claude or Codex can run every editing tool on the AI plan you already pay for, without drawing on BitterClip's included agent use."
     competitor:
-      lead: Not on offer.
-      detail: capcut.com documents no public API, automation surface, or agent feature; editing happens inside CapCut's apps.
+      lead: A drafting plugin, outside the U.S.
+      detail: CapCut × Codex drafts a video and adjusts its timeline from the ChatGPT desktop app on PC; a U.S. launch is listed as coming soon.
     edge: bitterclip
     group: edit
-  - axis: When the first cut is wrong
+  - axis: Changing the first cut by saying what's wrong
     bitterclip:
       lead: Say what's off.
       detail: Tell it what's wrong and the same cut changes; undo goes all the way back.
     competitor:
-      lead: Open it and polish.
-      detail: Preview the generated short, then open "Edit more" for manual work before export.
-    edge: bitterclip
+      lead: By hand, or by chat outside the U.S.
+      detail: Preview the generated short and open "Edit more" to work on it by hand; outside the U.S., CapCut × Codex adjusts the timeline from chat.
+    edge: even
     group: edit
   - axis: Deciding which moments are worth clipping
     bitterclip:
-      lead: You pick.
-      detail: Nothing scores your moments; you or your assistant pick them.
+      lead: The agent, or you.
+      detail: Ask BitterClip's agent to find the moments and make a first cut, or pick them yourself. There's no virality score.
     competitor:
       lead: The scene detector picks.
       detail: It reads changes in visuals, audio, and context, then builds shorts with auto subtitles.
@@ -83,9 +84,9 @@ rows:
       lead: Fix that one word.
       detail: Active-word highlight, your own placement and accent color, and per-word fixes for misheard words.
     competitor:
-      lead: Fix the block.
+      lead: Correct the caption text.
       detail: Auto Captions run on web, desktop, and mobile, corrected one caption block at a time.
-    edge: bitterclip
+    edge: even
     group: edit
   - axis: Making the vertical version
     bitterclip:
@@ -143,7 +144,7 @@ rows:
     group: price
 chooseUs:
   - You record long conversations (podcasts, coaching sessions, webinars) and every one of them has to come out as a finished episode plus clips, week after week.
-  - You'd rather delete a sentence in the transcript than hunt for it on a timeline, and you want the cut to land on the word instead of clipping the first syllable.
+  - You'd rather delete a sentence in the transcript than hunt for it on a timeline, and you want the cut to land on the word.
   - You want to ask for the edit in ChatGPT, in Claude, or in the editor, and get back an ordinary edit you can keep changing by hand or undo exactly.
   - You record conversations. On a paid plan, a guest joins your Studio from a link, each of you lands on your own track, and the episode is transcribed and ready to cut when you finish.
   - You shoot two to five cameras and want side-by-side, picture-in-picture, or grid layouts you can ask for, with switching that never touches the audio.
@@ -153,7 +154,7 @@ chooseThem:
   - You make short videos on your phone. CapCut's mobile and tablet apps are the real thing, and one-tap TikTok publishing lives only there.
   - You want the templates, effects, stock, and sound in one place. The library is enormous and much of it is free.
   - "You need exports above 1080p: CapCut desktop documents up to 4K at 60fps, device permitting, while BitterClip renders 1080p."
-  - You'd rather the machine picked the moments. CapCut's scene detection builds shorts with subtitles and you polish from there.
+  - You want shorts found from changes in visuals and audio. CapCut's scene detection builds them with subtitles and you polish from there.
   - You edit now and then and don't want a subscription at all. The free tier is a capable editor.
 gotchas:
   - title: What you agree to when you upload
@@ -170,17 +171,17 @@ gotchas:
     sourceUrl: https://www.capcut.com/help/how-much-does-capcut-pro-cost
 faq:
   - q: Is CapCut worth it in 2026?
-    a: "Yes, if you make short videos on your phone: the free tier is a real editor and the template and effects library is deep. If your raw material is an hour of people talking, the math shifts: Pro is $19.99/month after the March 2026 restructure, its AI credits expire monthly with no rollover, multicam is manual and desktop-only, there's no way to drive it from a chat, and transcript editing is desktop-only."
+    a: "Yes, if you make short videos on your phone: the free tier is a real editor, the template and effects library is deep, and TikTok is one tap away. If your raw material is an hour of people talking that has to become an episode and clips every week, BitterClip fits better."
   - q: What is the best CapCut alternative for podcasts and talking-head video?
     a: BitterClip, if your work starts with a recording. Record it in the browser or bring the session in from your phone, Zoom, Riverside, or a camera, cut it by deleting words in the transcript, and every clip remembers exactly where in the recording it came from. CapCut stays the better pick for effects-heavy short-form made on a phone.
   - q: Does BitterClip record, or do I have to bring footage?
     a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. CapCut has no equivalent: its recorders capture you, and its team spaces and review links let people watch and comment, not record into your account."
+    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. CapCut's docs describe no equivalent: its recorders capture you, and its team spaces and review links let people watch and comment, not record into your account."
   - q: Does CapCut own your videos?
     a: No. CapCut has stated it "has never claimed ownership of users' work," and the license's stated purpose is operating, developing, and providing the Services. In CapCut's global terms that license is still transferable, sub-licensable, perpetual, and worldwide (US users have separate terms), and a separate clause licenses your username, image, and likeness, including for use in sponsored content. Read both clauses before you upload a client's footage.
   - q: Does CapCut have an API or agent support?
-    a: "No. capcut.com documents no public API, Zapier or Make integration, automation surface, or agent feature. BitterClip works the other way round: anything you can click in the editor, you can ask for in ChatGPT, Claude, any MCP client, the editor's own chat panel, or the command line."
+    a: "Partly. CapCut × Codex, a plugin for the ChatGPT desktop app on PC (outside the U.S. for now), drafts a video and adjusts its timeline from chat; capcut.com documents no public API. BitterClip opens the whole editing workbench ({tools} tools) to ChatGPT, Claude or Codex, on the AI plan you already pay for."
   - q: Is CapCut still owned by ByteDance?
     a: In the U.S., partly. CapCut's U.S. operations were folded into the TikTok USDS Joint Venture, which closed on January 22, 2026 — majority U.S.-owned, with Oracle, Silver Lake, and MGX each holding about 15% and ByteDance retaining 19.9%. The joint venture's data and oversight safeguards explicitly extend to CapCut.
   - q: Is BitterClip free?
@@ -188,6 +189,8 @@ faq:
 sources:
   - label: CapCut homepage
     url: https://www.capcut.com/
+  - label: "CapCut × Codex: ChatGPT desktop plugin"
+    url: https://www.capcut.com/tools/capcut-x-codex
   - label: CapCut Terms of Service (updated April 15, 2026)
     url: https://www.capcut.com/clause/terms-of-service
   - label: "CapCut: About CapCut's Terms of Service (ToS explainer)"
@@ -230,13 +233,13 @@ BitterClip starts from the words. However the session got there, it arrives as p
 
 The session does not have to arrive from somewhere else. Every project has a browser recorder, and the finished take drops straight into your edit. Prop your phone up, or sit at a laptop, and it captures camera and mic, up to 1080p, and the take arrives in the project already transcribed.
 
-Recording a conversation works the same way. On a paid plan, open Studio and send your guest a link — no account, nothing to install — and each of you is recorded on your own track, so afterward you cut between you like a two-camera shoot, while each browser keeps its own backup copy. Or, on Producer, skip the call: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. Nothing in CapCut records a remote guest or lets someone else record into your account.
+Recording a conversation works the same way. On a paid plan, open Studio and send your guest a link — no account, nothing to install — and each of you is recorded on your own track, so afterward you cut between you like a two-camera shoot. Each browser also records its own 720p copy, uploaded after the call and checked intact. The edit starts from the server recording, and you can swap in a local copy by hand. Or, on Producer, skip the call: write a short brief, share one link, and up to 25 people record themselves on their own time, no account needed, each answer arriving as its own episode. CapCut's docs describe no way to record a remote guest or to let someone else record into your account.
 
 ## Say what you want changed
 
-The other difference is how you give the instruction. In CapCut you click. In BitterClip you can click too, or you can just ask — in ChatGPT, in Claude, or in the editor's own chat panel: cut the tangent around 14:20 and tighten the intro. What comes back is an ordinary edit. Open it, drag it, change your mind, undo it, all the way back. Anything you can click, you can ask for, and nothing your assistant does lands somewhere you cannot reach by hand.
+The other difference is how you give the instruction, and who can give it. In CapCut you mostly click; outside the U.S., the CapCut × Codex plugin for the ChatGPT desktop app on PC can also draft a video and adjust its timeline from chat. In BitterClip you can click too, or you can just ask — in ChatGPT, in Claude, or in the editor's own chat panel: cut the tangent around 14:20 and tighten the intro. What comes back is an ordinary edit. Open it, drag it, change your mind, undo it, all the way back. Your own ChatGPT, Claude or Codex can run the whole editing workbench, and nothing your assistant does lands somewhere you cannot reach by hand.
 
-Nothing scores your moments, either. CapCut's shorts tool watches for changes in visuals, audio, and context and decides what counts as a highlight. BitterClip has no such thing. You point at the moment, or you describe what you are after and search everything you have recorded by what was said, who said it, or what was on screen.
+Picking the moments works the same way: ask BitterClip's agent to find them and make a first cut, or pick them yourself. There's no virality score. CapCut's shorts tool, by contrast, watches for changes in visuals, audio, and context and decides what counts as a highlight. To find a moment yourself, search everything you have recorded by what was said, who said it, or what was on screen.
 
 ## Keep CapCut for what it's great at
 
