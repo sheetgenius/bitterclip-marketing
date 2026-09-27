@@ -9,9 +9,9 @@ heroLede: "If the meeting is the point — a team call, a client check-in, a web
 shortAnswer: "Zoom records the meeting. BitterClip records a separate video of each person and hands you the episode, ready to edit."
 chooseUsShort: "the call is going to become an episode, clips, or something you send a client."
 chooseThemShort: "the meeting itself is the point, or more than two people are on it."
-heroVisual: tracks
 proofNote: "BitterClip's founder, Michael Ruescher, recorded this conversation over Zoom. The one-minute vertical cut came out of that recording, made in BitterClip. Record in Studio and each person also gets their own video."
 category: recording
+freePlan: "meetings end at 40 minutes and record locally only"
 keyDifferences:
   - favors: bitterclip
     title: A separate video of each person

@@ -9,8 +9,8 @@ heroLede: "Pick Kapwing if your videos start as a prompt or a template, often wi
 shortAnswer: "Kapwing is a browser studio where a team makes short social video from prompts and templates. BitterClip turns long recordings into finished episodes and clips."
 chooseUsShort: "your videos start as a long recording that has to become an episode plus clips."
 chooseThemShort: "your videos start as a prompt or template, with two or three people editing together."
-heroVisual: editor
 category: editing
+freePlan: "720p exports with a watermark; projects can be deleted after three days"
 keyDifferences:
   - favors: bitterclip
     title: Cut between up to five cameras

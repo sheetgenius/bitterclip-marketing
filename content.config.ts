@@ -59,11 +59,12 @@ const compareSchema = z.object({
   shortAnswer: z.string().optional(),
   chooseUsShort: z.string().optional(),
   chooseThemShort: z.string().optional(),
-  heroVisual: z.enum(['editor', 'tracks']).optional(),
   // Replaces the proof section's default caption where the page needs its own framing.
   proofNote: z.string().optional(),
   // Which kind of tool the competitor is; drives "related comparisons".
   category: z.enum(['recording', 'editing', 'clipping']).optional(),
+  // What the competitor's free plan gives, when the page documents one.
+  freePlan: z.string().optional(),
   // Three differences that decide it, in plain words. At least one favors the
   // competitor; the page labels each with who it favors.
   keyDifferences: z

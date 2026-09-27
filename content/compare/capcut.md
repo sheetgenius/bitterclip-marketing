@@ -9,8 +9,8 @@ heroLede: "Stay with CapCut if you make short videos on your phone: the template
 shortAnswer: "CapCut is a free phone editor built for short videos. BitterClip turns long recorded conversations into finished episodes and clips."
 chooseUsShort: "you record long conversations and every one has to become an episode plus clips."
 chooseThemShort: "you make short videos on your phone and want templates, effects, and one tap to TikTok."
-heroVisual: editor
 category: editing
+freePlan: "a capable editor"
 keyDifferences:
   - favors: bitterclip
     title: Record a guest on separate tracks

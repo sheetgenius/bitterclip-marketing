@@ -55,7 +55,21 @@ const formatDate = (value?: string) => {
   }).format(new Date(`${value}T00:00:00Z`))
 }
 
-useHead({
+// Every comparison as a list, with its one-line answer, for crawlers.
+const itemListStructuredData = computed(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'BitterClip comparisons',
+  itemListElement: ordered.value.map((m, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: `BitterClip vs ${m.competitor}`,
+    url: `https://bitterclip.com${m.path}`,
+    description: m.shortAnswer ?? m.description,
+  })),
+}))
+
+useHead(() => ({
   title: 'Compare BitterClip — head to head with Descript, Riverside, OpusClip and more',
   meta: [
     {
@@ -78,7 +92,10 @@ useHead({
     { rel: 'canonical', href: 'https://bitterclip.com/compare' },
     { rel: 'alternate', type: 'text/markdown', href: 'https://bitterclip.com/compare.md', title: 'BitterClip comparison Markdown' },
   ],
-})
+  script: [
+    { type: 'application/ld+json', innerHTML: JSON.stringify(itemListStructuredData.value) },
+  ],
+}))
 </script>
 
 <template>

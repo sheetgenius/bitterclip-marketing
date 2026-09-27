@@ -46,6 +46,11 @@ under a dated entry.
 
 ### Website
 
+- Made every `/compare` page lead with facts, set in type, for the search crawlers and agents that read most of it:
+  - The hero is now the answer and an "at a glance" table: who should choose each product, and both prices, including the competitor's free plan where the page documents one. The Zoom and clip-generator diagrams and the editor still are gone.
+  - The one-minute cut moved down beside the customer quote. The facts, the differences, the job-by-job table and the prices now come before any picture.
+  - New structured data: a `WebPage` with its check date, both products, BitterClip's plan offers and every source as a citation. The hub adds an `ItemList` of all comparisons.
+  - The Markdown twins follow the page's order: check date, short answer with the same table, differences, job by job with its tally, then prices. `llms.txt` lists each comparison with its short answer and who each product is for.
 - Rebuilt every `/compare` page answer-first:
   - The first screen now holds a one-sentence answer, "Choose BitterClip if / Choose X if", a call to action, and a product diagram or editor still.
   - New sections: three "what actually differs" cards (one always the competitor's strength), a one-minute cut shown as proof, a grouped job-by-job table with an "only differences" filter, side-by-side pricing with each product's catch (BitterClip's included), and switching steps for recording tools.

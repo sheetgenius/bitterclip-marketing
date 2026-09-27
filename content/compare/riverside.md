@@ -9,8 +9,8 @@ heroLede: "If you need a big remote panel recorded in 4K, use Riverside. BitterC
 shortAnswer: "Riverside records big remote panels in up to 4K. BitterClip records you and a guest, then turns the session into a finished episode and clips."
 chooseUsShort: "finishing the episode is the part you dread, or you collect answers from one link."
 chooseThemShort: "you record big remote panels in 4K, or want podcast hosting in the same place."
-heroVisual: editor
 category: recording
+freePlan: "includes Magic Clips, without spending AI credits"
 keyDifferences:
   - favors: bitterclip
     title: Choose the angle after the shoot

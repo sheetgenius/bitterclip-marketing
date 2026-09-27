@@ -9,8 +9,8 @@ heroLede: "Pick Vizard if you want volume: one upload comes back as thirty-plus 
 shortAnswer: "Vizard turns one upload into 30+ captioned clips for very little money. BitterClip finishes the whole recording: the episode, then the clips."
 chooseUsShort: "you'd rather fix an almost-right cut than run the generator again."
 chooseThemShort: "you want the most clips per hour of footage, posted on a schedule to six platforms."
-heroVisual: editor
 category: clipping
+freePlan: "60 upload-minutes a month at 720p, watermarked"
 keyDifferences:
   - favors: bitterclip
     title: Say what's wrong, get the same clip back

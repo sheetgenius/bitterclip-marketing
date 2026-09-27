@@ -9,7 +9,6 @@ heroLede: "If you came for the clips, pick BitterClip — turning recordings int
 shortAnswer: "Munch writes your social posts and publishes them across five platforms. BitterClip turns your recordings into finished episodes and clips you can keep editing."
 chooseUsShort: "you came for the clips and want to edit them, not generate new ones."
 chooseThemShort: "you want AI to write your posts and publish them to five platforms on a schedule."
-heroVisual: editor
 category: clipping
 keyDifferences:
   - favors: bitterclip

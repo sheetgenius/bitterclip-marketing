@@ -9,8 +9,8 @@ heroLede: "Stay with Descript if you want to record remote guests and your scree
 shortAnswer: "Descript records and edits every kind of video in one app. BitterClip turns each recording into a finished episode and clips."
 chooseUsShort: "every session has to come out as an episode plus vertical clips."
 chooseThemShort: "you want recording, screen capture and editing in one app, or voice cloning to patch lines."
-heroVisual: editor
 category: editing
+freePlan: "720p exports with a watermark"
 keyDifferences:
   - favors: bitterclip
     title: Five cameras, switched by you
