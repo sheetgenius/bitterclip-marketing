@@ -78,7 +78,13 @@ const isActive = (to: string) => {
       overlay ? 'fixed inset-x-0 top-4' : 'sticky top-4',
     ]"
   >
-    <nav aria-label="Primary" class="flex items-center justify-between gap-3 px-5 py-2.5 rounded-full nav-glass">
+    <!-- Comparison pages are read, not skimmed past: the bar goes solid there so
+         table text never shows through it. -->
+    <nav
+      aria-label="Primary"
+      class="flex items-center justify-between gap-3 px-5 py-2.5 rounded-full nav-glass"
+      :class="{ 'nav-solid': currentPath === '/compare' || currentPath.startsWith('/compare/') }"
+    >
       <div class="flex items-center gap-3 font-bold text-lg tracking-tight">
         <!-- 821px is docs.vue's drawer breakpoint (max-width: 820px) plus one:
              the toggle has to appear on exactly the widths where the sidebar has

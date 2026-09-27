@@ -41,7 +41,7 @@ rows:
   - axis: Getting the recording in the first place
     bitterclip:
       lead: Records you and a guest.
-      detail: A guest joins from a link, no account; each of you is recorded on your own track, and screen sharing works too.
+      detail: "{studio} Screen sharing works too."
     competitor:
       lead: Bigger rooms, recorded locally.
       detail: Rooms records up to ten people in up to 4K, and the screen recorder lives in the same app you edit in.

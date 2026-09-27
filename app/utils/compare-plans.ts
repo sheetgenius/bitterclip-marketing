@@ -12,11 +12,17 @@ export const BITTERCLIP_TRIAL = '$1 for 7 days, then $24/month'
 export const MCP_TOOL_COUNT = catalog.profiles.model.descriptors.length
 const TOOLS_TOKEN = /\{tools\}/g
 
-// Replace `{tools}` in every string of a comparison page's data. Applied once
+// Live Studio's specification, said once wherever a page describes recording
+// a guest (pages write `{studio}`). Keep in step with the Studio room limits in
+// the product; when 1080p ships, this is the one line to change.
+export const STUDIO_SPEC = 'Studio on paid plans: you and one guest who joins from a link with no account, each recorded as a separate 720p video, for up to 75 minutes.'
+const STUDIO_TOKEN = /\{studio\}/g
+
+// Replace `{tools}` and `{studio}` in every string of a comparison page's data. Applied once
 // where the data is loaded, so the page, its JSON-LD and its Markdown twin
 // all say the same number.
 export function fillCompareTokens<T>(value: T): T {
-  if (typeof value === 'string') return value.replace(TOOLS_TOKEN, String(MCP_TOOL_COUNT)) as T
+  if (typeof value === 'string') return value.replace(TOOLS_TOKEN, String(MCP_TOOL_COUNT)).replace(STUDIO_TOKEN, STUDIO_SPEC) as T
   if (Array.isArray(value)) return value.map((item) => fillCompareTokens(item)) as T
   if (value && typeof value === 'object') {
     return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, fillCompareTokens(item)])) as T
@@ -40,7 +46,7 @@ export const BITTERCLIP_PLANS = [
       '10 hours of footage a month',
       '$10 of AI agent use a month',
       `The whole editor for your own ChatGPT, Claude or Codex (${MCP_TOOL_COUNT} tools)`,
-      'Live Studio with a guest',
+      'Live Studio: you and one guest, a separate 720p video of each, up to 75 minutes',
       'Clean exports, files up to 4 GB',
     ],
   },
@@ -80,8 +86,12 @@ export type CompareCategory = keyof typeof COMPARE_CATEGORIES
 // The proof section: a real one-minute cut made in BitterClip. The page and its
 // Markdown twin both render these.
 export const PROOF_NOTE_DEFAULT = "BitterClip's founder, Michael Ruescher, recorded a conversation about quitting a twelve-year job to build bitter.sh. This one-minute vertical cut came out of it, made in BitterClip."
-export const PROOF_STEPS = [
-  'The recording comes in and every word is transcribed, tied to the moment it was said.',
-  'The agent makes a first cut; you direct it in plain words or by deleting words in the transcript.',
-  'One tap makes the 9:16 version, captions and timing carried over.',
+export const PROOF_AGENT_LINE = "BitterClip's agent made the first cut; the edit can be revised in plain words or in the transcript, and the 9:16 version is one tap."
+
+// The top of every comparison: each plan in one line, and the trial in one
+// line under the button, so the $1 price never reads as "Studio for $1".
+export const BITTERCLIP_GLANCE = [
+  { name: 'Creator', price: '$24/month', note: 'includes live Studio' },
+  { name: 'Producer', price: '$99/month', note: 'adds async recording for up to 25 people' },
 ] as const
+export const BITTERCLIP_TRIAL_LINE = '$1 for your first 7 days: one recording up to 2 hours, watermarked exports.'
