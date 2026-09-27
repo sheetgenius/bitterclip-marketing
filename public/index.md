@@ -97,6 +97,10 @@ More agent work can be added at any time while a trial or paid plan is active.
 Purchased agent work persists if the plan later lapses. Existing recordings,
 edits, and completed work remain in the Studio after cancellation.
 
+## How we make money
+
+From the subscription, by building a good workbench, not by reselling AI. The built-in agent costs what OpenRouter billed for each request plus a flat 15%, which covers OpenRouter's fees, card processing and requests that fail after they're billed. Your own ChatGPT or Claude can run the whole editor on the plan you already pay for. We run the company lean, so the subscription is enough.
+
 
 
 ## Common questions
@@ -129,6 +133,10 @@ No. BitterClip has an agent built into the editor. External agents are optional.
 Download the full episode or a portrait cut, share a review link, or prepare a
 connected YouTube, LinkedIn, or X destination. Publishing always stops for a
 fresh final confirmation; connecting a channel never makes it automatic.
+
+### How does BitterClip make money?
+
+From the subscription, by building a good workbench, not by reselling AI. The built-in agent costs what OpenRouter billed for each request plus a flat 15%, which covers OpenRouter's fees, card processing and requests that fail after they're billed. Your own ChatGPT or Claude can run the whole editor on the plan you already pay for. We run the company lean, so the subscription is enough.
 
 ### What happens if I cancel?
 

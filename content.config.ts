@@ -65,6 +65,8 @@ const compareSchema = z.object({
   category: z.enum(['recording', 'editing', 'clipping']).optional(),
   // What the competitor's free plan gives, when the page documents one.
   freePlan: z.string().optional(),
+  // When the page's content last changed materially (reviewed = when its facts were checked).
+  updated: z.string().optional(),
   // Three differences that decide it, in plain words. At least one favors the
   // competitor; the page labels each with who it favors.
   keyDifferences: z

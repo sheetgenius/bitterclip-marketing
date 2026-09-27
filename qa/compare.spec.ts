@@ -76,6 +76,13 @@ test.describe('head-to-head comparison pages', () => {
       await expect(page.getByRole('link', { name: 'Try it on one recording' }).first()).toHaveAttribute('href', /app\.bitterclip\.com\/sign_up/)
       await expect(page.locator('script[type="application/ld+json"]').first()).toHaveCount(1)
       await expect(page.getByRole('link', { name: '← All comparisons' })).toHaveAttribute('href', '/compare')
+      // The difference that matters most to someone with their own AI plan:
+      // every page states it, with the live tool count, never a raw token.
+      const agentRow = jobs.getByRole('row', { name: /Editing from your own ChatGPT or Claude/ })
+      await expect(agentRow).toContainText(/The whole editor, \d+ tools\./)
+      await expect(page.locator('main')).not.toContainText('{tools}')
+      // Each cell names its product in real text, so flattened tables keep attribution.
+      await expect(page.getByRole('table', { name: /at a glance/ }).locator('tbody td').first()).toContainText('BitterClip:')
     })
   }
 
@@ -135,6 +142,8 @@ test.describe('head-to-head comparison pages', () => {
       expect(webPage?.about?.[0]?.offers?.map((offer: { price: string }) => offer.price)).toEqual(['24', '99'])
 
       const twin = await (await request.get(`/compare/${slug}.md`)).text()
+      expect(twin).not.toContain('{tools}')
+      expect(twin).toMatch(/\| Editing from your own ChatGPT or Claude \| \*\*The whole editor, \d+ tools\.\*\*/)
       const at = (needle: string) => twin.indexOf(needle)
       expect(at('## Short answer')).toBeGreaterThan(-1)
       expect(at('## Short answer')).toBeLessThan(at('| Price |'))

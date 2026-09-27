@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BITTERCLIP_BUSINESS } from '~/utils/compare-plans'
 /**
  * The homepage — promoted from /lab/iso4 (owner ruling, 2026-08-20; the
  * cut-over plan is docs/homepage-promotion-audit.md). The fold is the ISO4
@@ -60,6 +61,10 @@ const faqItems = [
   {
     q: 'What can I upload?',
     a: 'Podcasts, interviews, calls, coaching sessions, and workshops — audio or video. The Creator trial accepts one recording up to two hours. Paid Creator supports files up to 4 GB; Producer supports files up to 20 GB. Several synchronized angles of the same session stay together as one production.',
+  },
+  {
+    q: 'How does BitterClip make money?',
+    a: BITTERCLIP_BUSINESS,
   },
   {
     q: 'What happens if I cancel?',
@@ -367,6 +372,7 @@ useHead({
           <p class="mb-2 font-mono text-[10px] uppercase tracking-widest text-zinc-500">After the trial</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
             <li>10 source-footage hours · $10 included agent work</li>
+            <li>Pick the agent's model · each request costs what OpenRouter billed, plus 15%</li>
             <li>Clean exports · files up to 4 GB</li>
             <li>Top up exactly $20, $50, or $100 of agent work while active</li>
           </ul>
@@ -391,7 +397,7 @@ useHead({
           <p class="mb-5 mt-1.5 text-xs text-zinc-400">High-volume recurring production.</p>
           <ul class="mb-7 space-y-2 text-[13px] leading-snug text-zinc-300">
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>40 source-footage hours per billing period</li>
-            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$40 included agent work</li>
+            <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>$40 included agent work, at model cost plus 15%</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Clean exports · files up to 20 GB</li>
             <li class="flex items-start gap-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="mt-1 h-3 w-3 shrink-0 text-[#f28f84]" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>Priority rendering · exact $20/$50/$100 top-ups</li>
           </ul>
@@ -410,6 +416,11 @@ useHead({
           <p class="mt-2.5 text-center text-[11px] text-zinc-500">Month to month · cancel anytime</p>
         </div>
 
+      </div>
+
+      <div class="mt-10 max-w-2xl">
+        <h3 class="text-base font-semibold text-white">How we make money</h3>
+        <p class="mt-2 text-base leading-relaxed text-zinc-400">{{ BITTERCLIP_BUSINESS }}</p>
       </div>
 
     </section>

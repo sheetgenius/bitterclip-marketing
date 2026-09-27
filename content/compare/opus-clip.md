@@ -4,22 +4,23 @@ description: OpusClip turns one long video into a stack of captioned shorts. Bit
 competitor: OpusClip
 competitorUrl: https://www.opus.pro
 reviewed: 2026-09-25
-competitorStrength: The fastest way to get ten shorts out of one video.
+updated: 2026-09-27
+competitorStrength: Ten captioned shorts from one upload, posted for you.
 heroLede: "If you need ten captioned vertical clips by Friday and no desire to touch a timeline, that's OpusClip — from the $15 Starter tier it posts them for you. If you want the clips you ask for, plus the full episode, that's BitterClip: edit by deleting words in the transcript, or ask for the change in ChatGPT, Claude, or the editor. Same recording, two very different jobs."
 shortAnswer: "OpusClip turns one long video into a stack of captioned shorts. BitterClip makes the clips you ask for, plus the full episode."
 chooseUsShort: "you'd rather say what each clip should be, and you want the full episode too."
 chooseThemShort: "you want ten captioned vertical clips by Friday, posted for you, without touching a timeline."
 category: clipping
-freePlan: "makes clips, with no editing"
+freePlan: "60 credits a month; watermarked clips, no editing, kept for three days"
 keyDifferences:
   - favors: bitterclip
-    title: Edit the clip, don't regenerate it
-    body: Tell it what's off and the same clip changes, or delete words in the transcript; undo goes all the way back. OpusClip's reprompt runs the selection again.
+    title: Your own AI runs the whole editor
+    body: "ChatGPT, Claude or Codex get all {tools} editing tools and do the work on the AI plan you already pay for. OpusClip's connector starts on Pro, in beta, and spends OpusClip credits."
   - favors: bitterclip
     title: The full episode, not just shorts
     body: Every recording leaves as the full episode plus the vertical version, made in one tap. Cut between up to five cameras; OpusClip re-frames a single upload.
   - favors: competitor
-    title: The fastest route to ten shorts
+    title: A stack of shorts from one upload, posted for you
     body: Upload up to ten hours and get back a stack of captioned vertical clips. Starter posts them directly; Pro schedules six platforms with auto titles and hashtags.
 pricing:
   plan: Starter
@@ -42,19 +43,19 @@ rows:
       detail: Feed it up to 10 hours; captioned vertical clips come back, and Free picks on spoken words only.
     edge: even
     group: edit
-  - axis: When the first cut is wrong
+  - axis: Changing the first cut by saying what's wrong
     bitterclip:
       lead: Say what's wrong.
       detail: Tell it what's off and the same clip changes; undo goes all the way back.
     competitor:
-      lead: Edit on paid plans.
-      detail: Paid plans add text and timeline editing plus a reprompt that runs the selection again; Free has no editing.
+      lead: Edit it by hand on paid plans.
+      detail: Starter and up include text and timeline editing, plus a reprompt that runs the selection again; Free has no editing.
     edge: bitterclip
     group: edit
   - axis: Cuts that don't clip your first word
     bitterclip:
-      lead: Lands on the word.
-      detail: Cuts are timed to the audio itself, so no word starts clipped.
+      lead: Cut on the word.
+      detail: Cuts follow the transcript's word timings; delete words to move a cut.
     competitor:
       lead: The model sets the edges.
       detail: The clipping model picks each boundary; moving one later means text or timeline editing, a paid feature.
@@ -62,21 +63,21 @@ rows:
     group: edit
   - axis: Deciding which moments are worth posting
     bitterclip:
-      lead: You pick.
-      detail: Nothing scores your moments; you choose, or you ask.
+      lead: The agent, or you.
+      detail: Ask BitterClip's agent to find the moments and make a first cut, or pick them yourself. There's no virality score.
     competitor:
       lead: It grades your clips.
       detail: On paid tiers a 0–99 score ranks hook, flow, value, and trend — a suggestion, their docs say.
     edge: even
     group: edit
-  - axis: Asking for an edit instead of clicking for it
+  - axis: Editing from your own ChatGPT or Claude
     bitterclip:
-      lead: Ask instead of click.
-      detail: Anything you can click, you can ask for, in ChatGPT, Claude or the editor.
+      lead: "The whole editor, {tools} tools."
+      detail: "ChatGPT, Claude or Codex can run every editing tool on the AI plan you already pay for, without drawing on BitterClip's included agent use."
     competitor:
-      lead: Claude and MCP, from Pro.
-      detail: An official Claude connector and MCP server start on the $29 Pro plan, in beta and capped at 900 credits a month.
-    edge: even
+      lead: A beta connector, from $29 Pro.
+      detail: An official Claude connector and MCP server start on Pro, in beta and capped at 900 OpusClip credits a month.
+    edge: bitterclip
     group: edit
   - axis: Sessions you shot on more than one camera
     bitterclip:
@@ -117,7 +118,7 @@ rows:
   - axis: What a month costs
     bitterclip:
       lead: $1 for 7 days, then $24/month.
-      detail: Creator includes 10 hours of footage, $10 of AI agent use, no watermark, and 4 GB files.
+      detail: Paid Creator includes 10 hours of footage, $10 of AI agent use, clean exports, and 4 GB files.
     competitor:
       lead: A free plan, then $15.
       detail: The free plan makes clips with no editing; Starter is $15 for 150 credits, one per source minute, and credits expire after 60 days.
@@ -151,17 +152,17 @@ gotchas:
     sourceUrl: https://www.opus.pro/terms-of-service
 faq:
   - q: Is OpusClip worth it?
-    a: "Yes, if the job is volume. For turning long videos into a lot of captioned vertical shorts and scheduling them across six platforms, nothing is more complete. It fits worse if you expect to fix individual clips: editing only exists on paid plans, and monthly credits expire after 60 days."
+    a: "Yes, for generating and scheduling captioned shorts. OpusClip combines clip generation, captions and scheduling across six platforms, and paid plans include text and timeline editing. BitterClip fits better when every recording also needs the full episode and you want to direct the edit in words."
   - q: What is the best OpusClip alternative?
-    a: "If you're leaving because the clips miss the point and your only move is generating another batch, BitterClip is built for that gap: you edit by deleting words in the transcript, cuts land on the word, and you fix the cut you have. If you're leaving over price, do the credit math first — how you're metered usually matters more than the sticker."
+    a: "Choose BitterClip when you want to finish the full episode and its clips in one workbench and direct the edit in words. OpusClip's paid plans also let you revise clips by hand in its text and timeline editor."
   - q: Can I edit OpusClip's output?
     a: "On paid plans, yes: Starter and up include text-based and timeline editing plus a reprompt that runs the selection again. Free has no editing — generating another batch is the only move. In BitterClip, editing is the whole product: select words in the transcript, delete them, and the video changes."
   - q: Does BitterClip have a virality score?
-    a: No. You pick the moments, or ask your assistant to find them. OpusClip's 0–99 score is a paid-tier feature its own docs describe as suggesting engagement potential.
+    a: No. Ask BitterClip's agent to find the moments and make a first cut, or pick them yourself. OpusClip's 0–99 score is a paid-tier feature its own docs describe as suggesting engagement potential.
   - q: Does BitterClip record?
-    a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link. OpusClip has no camera recorder."
+    a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link. OpusClip's docs describe no camera recorder."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. OpusClip doesn't record camera footage or collect it from anyone; it works from files and links you bring."
+    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. OpusClip's docs describe no way to record camera footage or collect it from anyone; it works from files and links you bring."
   - q: Can BitterClip post directly to TikTok and Instagram?
     a: "No. BitterClip publishes to connected YouTube, LinkedIn and X accounts, with each post confirmed first; for TikTok and Instagram you get a review link or a 1080p MP4 download. If six-platform auto-posting is the center of your week, choose OpusClip."
   - q: How is BitterClip's pricing different from OpusClip's credits?
@@ -197,20 +198,20 @@ sources:
 
 The clips land, and clip four is good — except it starts two seconds late and swallows the setup line. So what do you do with an almost-right clip?
 
-On OpusClip's paid plans you can open the text and timeline editor and nudge it, or reprompt and review a fresh batch. But the product is built around generating — it sells itself on turning long videos into viral clips — so the unit of work is the batch, and the usual fix for a bad batch is another batch.
+On OpusClip's paid plans you can open that clip in the text and timeline editor and fix it by hand, or reprompt and review a fresh selection. Both work: the first means making the fix yourself, and the second means reviewing a new batch.
 
 BitterClip's unit of work is the clip you already have. Open the transcript, select the words that shouldn't be there, delete them, and the video changes. If the intro drags, say so — in the editor or in ChatGPT: "cut the tangent at 14:20 and tighten the intro." Either way what comes back is an ordinary edit. Open it, keep changing it by hand, or undo it, all the way back.
 
-## Why the cut doesn't eat your first word
+## Cut on the word, and find your way back
 
-Cuts land on the word, not near it, because they're timed to the audio itself. No clipped syllables, no half-swallowed opening. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and a review link plays the exact version you sent, never a later one, for up to two weeks.
+Cuts follow the transcript's word timings, so you cut on the word rather than near it. Every clip remembers where it came from, so one click jumps you back to that spot in the full recording — and a review link plays the exact version you sent, never a later one, for up to two weeks.
 
-There is no score. OpusClip grades each clip 0–99 on hook, flow, value, and trend, and its own docs describe the number as suggesting engagement potential. BitterClip doesn't have one; you pick the moments, or ask for them.
+There is no score. OpusClip grades each clip 0–99 on hook, flow, value, and trend, and its own docs describe the number as suggesting engagement potential. BitterClip doesn't have one: ask its agent to find the moments and make a first cut, or pick them yourself.
 
-Anything you can click, you can ask for. The editor, ChatGPT, Claude, the command line — same operations, same result, and the result is a normal edit you can keep changing or undo. OpusClip now reaches Claude too: since September 2026 an official Claude connector and an MCP server work from the $29 Pro plan, in beta, capped at 900 credits a month, 30 requests a minute, and four projects at once. Full API access is still Business-only.
+ChatGPT, Claude or Codex can run the whole editing workbench, the same tools the editor uses, and the result is a normal edit you can keep changing or undo. OpusClip now reaches Claude too: since September 2026 an official Claude connector and an MCP server work from the $29 Pro plan, in beta, capped at 900 credits a month, 30 requests a minute, and four projects at once. Full API access is still Business-only.
 
 ## Where OpusClip is the right tool
 
-If the job is throughput — one long upload into a stack of scored, captioned vertical shorts, scheduled across six platforms with barely any of your time — OpusClip is the most complete machine for it. It takes videos up to ten hours, clips footage that isn't people talking, and its scheduler saves you a second tool. It raised a round from SoftBank and is expanding from clipping into a full AI video-agent platform.
+If the job is throughput — one long upload into a stack of scored, captioned vertical shorts with barely any of your time — OpusClip is built for it. It combines clip generation, captions and scheduling across six platforms, takes videos up to ten hours, and clips footage that isn't people talking. It raised a round from SoftBank and is expanding from clipping into a full AI video-agent platform.
 
 BitterClip is for the other job. You have a recording — twenty minutes to two hours, recorded straight into the project from your browser or shot on a phone, Zoom, Riverside, or a camera and brought in — and every time you need the finished thing: the full episode, the vertical version, captions with the misheard names fixed, and a way to search everything you've recorded when you need that one moment from March back. Creator is $1 for 7 days, then $24/month, card required. The trial covers one recording up to two hours and $5 of AI agent use to analyze the recording, make a first cut, and keep refining it; trial exports are watermarked.

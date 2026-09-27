@@ -7,7 +7,7 @@ import { glob } from 'node:fs/promises'
 import { parse as parseYaml } from 'yaml'
 import { parse as parseHtml } from 'parse5'
 import { assertCompareBalance, compareMethodology, compareTally } from '../app/utils/compare-methodology'
-import { BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL } from '../app/utils/compare-plans'
+import { BITTERCLIP_BUSINESS, BITTERCLIP_CATCH, BITTERCLIP_PLANS, BITTERCLIP_TRIAL, COMPARE_CATEGORIES, compareRank, fillCompareTokens, MCP_TOOL_COUNT, PROOF_NOTE_DEFAULT, PROOF_STEPS } from '../app/utils/compare-plans'
 
 /**
  * Generated machine-readable surfaces — produced at build time, NEVER hand-maintained.
@@ -229,6 +229,9 @@ interface ComparePage {
     keyDifferences?: { title: string; body: string; favors: string }[]
     pricing?: { plan: string; price: string; note?: string; includes: string[]; catch: string; sourceUrl: string }
     freePlan?: string
+    updated?: string
+    category?: string
+    proofNote?: string
     switching?: string[]
     switchingLink?: { label: string; url: string }
     verdictBitterclip?: string
@@ -344,7 +347,7 @@ async function readComparePages(contentDir: string): Promise<ComparePage[]> {
       urlPath: `/compare/${slug}`,
       mdPath: `/compare/${slug}.md`,
       body,
-      frontmatter: frontmatter as ComparePage['frontmatter'],
+      frontmatter: fillCompareTokens(frontmatter) as ComparePage['frontmatter'],
       sourceUrl: `${sourceRepo}/blob/main/content/${sourceRel}`,
     })
     assertCompareBalance(slug, (frontmatter as ComparePage['frontmatter']).rows ?? [])
@@ -359,7 +362,7 @@ async function readComparePages(contentDir: string): Promise<ComparePage[]> {
  * frontmatter carries the table/verdicts/FAQ, so a verbatim twin would be raw
  * YAML — render it properly instead.
  */
-function buildCompareMarkdown(page: ComparePage): string {
+function buildCompareMarkdown(page: ComparePage, all: ComparePage[] = []): string {
   const fm = page.frontmatter
   const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
   const lines: string[] = []
@@ -368,7 +371,8 @@ function buildCompareMarkdown(page: ComparePage): string {
   lines.push(`Canonical HTML page: ${SITE_ORIGIN}${page.urlPath}`)
   lines.push('')
   if (fm.reviewed) {
-    lines.push(`Checked ${fm.reviewed} against ${fm.sources?.length ?? 0} public sources, listed at the end.`)
+    const updated = fm.updated && fm.updated !== fm.reviewed ? ` Updated ${fm.updated}.` : ''
+    lines.push(`Checked ${fm.reviewed} against ${fm.sources?.length ?? 0} public sources, listed at the end.${updated}`)
     lines.push('')
   }
   if (fm.description) {
@@ -443,6 +447,8 @@ function buildCompareMarkdown(page: ComparePage): string {
   lines.push('')
   lines.push(`BitterClip: ${BITTERCLIP_TRIAL}. ` + BITTERCLIP_PLANS.map((plan) => `${plan.name} ${plan.price}/month (${plan.includes.join('; ')})`).join('. ') + `. The catch: ${BITTERCLIP_CATCH}`)
   lines.push('')
+  lines.push(`How BitterClip makes money: ${BITTERCLIP_BUSINESS}`)
+  lines.push('')
   if (fm.pricing) {
     lines.push(`${fm.competitor}: ${fm.pricing.plan} ${fm.pricing.price}${fm.pricing.note ? ` (${fm.pricing.note})` : ''}, including ${fm.pricing.includes.join('; ')}. The catch: ${fm.pricing.catch} Source: ${fm.pricing.sourceUrl}`)
     lines.push('')
@@ -454,28 +460,20 @@ function buildCompareMarkdown(page: ComparePage): string {
     if (fm.switchingLink) lines.push(`\n[${fm.switchingLink.label}](${SITE_ORIGIN}${fm.switchingLink.url})`)
     lines.push('')
   }
-  if (fm.chooseUs && fm.chooseUs.length > 0) {
-    lines.push('## Choose BitterClip when')
+  // The proof, then the competitor's fine print and the FAQ, then the long
+  // read: the same order as the HTML page.
+  if (fm.shortAnswer) {
+    lines.push('## See the result')
     lines.push('')
-    for (const item of fm.chooseUs) lines.push(`- ${item}`)
+    lines.push(fm.proofNote || PROOF_NOTE_DEFAULT)
     lines.push('')
-  }
-  if (fm.chooseThem && fm.chooseThem.length > 0) {
-    lines.push(`## Choose ${fm.competitor} when`)
-    lines.push('')
-    for (const item of fm.chooseThem) lines.push(`- ${item}`)
-    lines.push('')
-  }
-  if (fm.verdictBitterclip || fm.verdictCompetitor) {
-    lines.push(fm.shortAnswer ? '## The verdict in full' : '## Quick verdict')
-    lines.push('')
-    if (fm.verdictBitterclip) lines.push(`**BitterClip:** ${fm.verdictBitterclip}`)
-    lines.push('')
-    if (fm.verdictCompetitor) lines.push(`**${fm.competitor}:** ${fm.verdictCompetitor}`)
+    PROOF_STEPS.forEach((step, index) => lines.push(`${index + 1}. ${step}`))
     lines.push('')
   }
   if (fm.gotchas && fm.gotchas.length > 0) {
-    lines.push(`## The fine print (from ${fm.competitor}'s own pricing and terms)`)
+    lines.push(`## Before you pay for ${fm.competitor}`)
+    lines.push('')
+    lines.push(`From ${fm.competitor}'s own pricing, help, and terms pages.`)
     lines.push('')
     for (const gotcha of fm.gotchas) {
       lines.push(`### ${gotcha.title}`)
@@ -486,10 +484,6 @@ function buildCompareMarkdown(page: ComparePage): string {
       lines.push('')
     }
   }
-  if (page.body.trim()) {
-    lines.push(page.body.trim())
-    lines.push('')
-  }
   if (fm.faq && fm.faq.length > 0) {
     lines.push('## FAQ')
     lines.push('')
@@ -499,6 +493,26 @@ function buildCompareMarkdown(page: ComparePage): string {
       lines.push(item.a)
       lines.push('')
     }
+  }
+  const longRead = (fm.chooseUs?.length ?? 0) + (fm.chooseThem?.length ?? 0) > 0 || fm.verdictBitterclip || fm.verdictCompetitor || page.body.trim()
+  if (longRead) {
+    lines.push(fm.shortAnswer ? '## The full comparison' : '## In detail')
+    lines.push('')
+    if (fm.chooseUs && fm.chooseUs.length > 0) {
+      lines.push('### Choose BitterClip when')
+      lines.push('')
+      for (const item of fm.chooseUs) lines.push(`- ${item}`)
+      lines.push('')
+    }
+    if (fm.chooseThem && fm.chooseThem.length > 0) {
+      lines.push(`### Choose ${fm.competitor} when`)
+      lines.push('')
+      for (const item of fm.chooseThem) lines.push(`- ${item}`)
+      lines.push('')
+    }
+    if (fm.verdictBitterclip) lines.push(`**BitterClip.** ${fm.verdictBitterclip}`, '')
+    if (fm.verdictCompetitor) lines.push(`**${fm.competitor}.** ${fm.verdictCompetitor}`, '')
+    if (page.body.trim()) lines.push(page.body.trim(), '')
   }
   if (fm.competitor && fm.reviewed && fm.rows) {
     lines.push('## How we compared')
@@ -513,7 +527,22 @@ function buildCompareMarkdown(page: ComparePage): string {
     for (const source of fm.sources) lines.push(`- [${source.label}](${source.url})`)
     lines.push('')
   }
+  const related = relatedComparisons(page, all)
+  if (related.length > 0) {
+    lines.push('## More comparisons')
+    lines.push('')
+    for (const other of related) lines.push(`- [BitterClip vs ${other.frontmatter.competitor}](${SITE_ORIGIN}${other.urlPath})`)
+    lines.push('')
+  }
   return lines.join('\n').trimEnd() + '\n'
+}
+
+// Same order as the HTML page's related links: the same kind of tool first,
+// then by search demand.
+function relatedComparisons(page: ComparePage, all: ComparePage[]): ComparePage[] {
+  const others = all.filter((other) => other.slug !== page.slug).sort((a, b) => compareRank(a.urlPath) - compareRank(b.urlPath))
+  const sameKind = others.filter((other) => page.frontmatter.category && other.frontmatter.category === page.frontmatter.category)
+  return [...sameKind, ...others.filter((other) => !sameKind.includes(other))].slice(0, 6)
 }
 
 async function readSite(contentDir: string): Promise<Record<string, string>> {
@@ -562,6 +591,29 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
       'hello@bitterclip.com.',
   )
   lines.push('')
+  // What an agent is most often asked, answered before the long tool index:
+  // what it costs, whether there's a free plan, and how outside agents use it.
+  lines.push('## Plans')
+  lines.push('')
+  lines.push(`- There is no free plan. Creator is ${BITTERCLIP_TRIAL}: ${BITTERCLIP_PLANS[0].includes.join('; ')}. ${BITTERCLIP_CATCH}`)
+  lines.push(`- Producer is ${BITTERCLIP_PLANS[1].price}/month: ${BITTERCLIP_PLANS[1].includes.join('; ')}.`)
+  lines.push(`- How BitterClip makes money: ${BITTERCLIP_BUSINESS} People pick the built-in agent's model, from low-cost models to the strongest, and can top up agent work in exact $20, $50 or $100 amounts.`)
+  lines.push(`- ChatGPT, Claude or Codex can run the whole editing workbench over MCP (${MCP_TOOL_COUNT} tools, listed at ${SITE_ORIGIN}/docs/assistants/tool-reference), on the AI plan the person already pays for. That doesn't draw on BitterClip's included agent use, which pays for the built-in agent.`)
+  lines.push('')
+  lines.push('## Comparisons')
+  lines.push('')
+  lines.push('- [Compare BitterClip](https://bitterclip.com/compare): Head-to-head comparisons with recording tools, editors, and clip generators, each with a short answer, a job-by-job table, and fine print from the other tool\'s own pages.')
+  for (const comparison of comparisons) {
+    const title = comparison.frontmatter.title ?? `BitterClip vs ${comparison.frontmatter.competitor ?? comparison.slug}`
+    // The short answer and who each product is for, so an agent reading only
+    // this index can already answer "which should I use?".
+    const fm = comparison.frontmatter
+    const desc = fm.shortAnswer && fm.chooseUsShort && fm.chooseThemShort
+      ? `${fm.shortAnswer} Choose BitterClip if ${fm.chooseUsShort.replace(/\.$/, '')}; choose ${fm.competitor} if ${fm.chooseThemShort}`
+      : fm.description ?? ''
+    lines.push(`- [${title}](${SITE_ORIGIN}${comparison.urlPath}): ${desc}`.trimEnd())
+  }
+  lines.push('')
   lines.push('## Install')
   lines.push('')
   lines.push(`- [Connect BitterClip](${SITE_ORIGIN}/connect): the page for people. One-click setup for Claude, ChatGPT, Claude Code and Codex, with live connection status when signed in.`)
@@ -595,20 +647,6 @@ function buildLlmsIndex(pages: DocPage[], posts: BlogPost[], comparisons: Compar
     }
     lines.push('')
   }
-  lines.push('## Comparisons')
-  lines.push('')
-  lines.push('- [Compare BitterClip](https://bitterclip.com/compare): Head-to-head comparisons with recording tools, editors, and clip generators, each with a short answer, a job-by-job table, and fine print from the other tool\'s own pages.')
-  for (const comparison of comparisons) {
-    const title = comparison.frontmatter.title ?? `BitterClip vs ${comparison.frontmatter.competitor ?? comparison.slug}`
-    // The short answer and who each product is for, so an agent reading only
-    // this index can already answer "which should I use?".
-    const fm = comparison.frontmatter
-    const desc = fm.shortAnswer && fm.chooseUsShort && fm.chooseThemShort
-      ? `${fm.shortAnswer} Choose BitterClip if ${fm.chooseUsShort.replace(/\.$/, '')}; choose ${fm.competitor} if ${fm.chooseThemShort}`
-      : fm.description ?? ''
-    lines.push(`- [${title}](${SITE_ORIGIN}${comparison.urlPath}): ${desc}`.trimEnd())
-  }
-  lines.push('')
   return lines.join('\n').trimEnd() + '\n'
 }
 
@@ -660,7 +698,7 @@ function buildLlmsFull(pages: DocPage[], posts: BlogPost[], comparisons: Compare
     if (comparison.frontmatter.description) parts.push(`Description: ${comparison.frontmatter.description}`)
     parts.push('')
     // Skip the H1 line of the rendered twin — the header above already carries it.
-    parts.push(buildCompareMarkdown(comparison).split('\n').slice(1).join('\n').trim())
+    parts.push(buildCompareMarkdown(comparison, comparisons).split('\n').slice(1).join('\n').trim())
     parts.push('')
   }
   return parts.join('\n').trimEnd() + '\n'
@@ -738,13 +776,17 @@ async function buildHelpCorpus(pages: DocPage[], publicDir: string): Promise<str
 function buildSitemap(pages: DocPage[], posts: BlogPost[], comparisons: ComparePage[]): string {
   const today = new Date().toISOString().slice(0, 10)
   const entries: { loc: string; lastmod: string }[] = []
+  // A comparison changes when its content does, not when the site rebuilds;
+  // the hub changes when any comparison does.
+  const compareDate = (c: ComparePage) => c.frontmatter.updated ?? c.frontmatter.reviewed ?? today
+  const latestComparison = comparisons.map(compareDate).sort().at(-1) ?? today
   for (const route of MARKETING_ROUTES) {
-    entries.push({ loc: `${SITE_ORIGIN}${route === '/' ? '/' : route}`, lastmod: today })
+    entries.push({ loc: `${SITE_ORIGIN}${route === '/' ? '/' : route}`, lastmod: route === '/compare' ? latestComparison : today })
   }
   for (const comparison of comparisons) {
     entries.push({
       loc: `${SITE_ORIGIN}${comparison.urlPath}`,
-      lastmod: comparison.frontmatter.reviewed ?? today,
+      lastmod: compareDate(comparison),
     })
   }
   const latestPostDate = posts[0]?.frontmatter.updated ?? posts[0]?.frontmatter.date ?? today
@@ -957,7 +999,7 @@ export default defineNuxtModule({
           twinCount++
         }
         for (const comparison of comparisons) {
-          await writeFile(publicDir, comparison.mdPath, buildCompareMarkdown(comparison))
+          await writeFile(publicDir, comparison.mdPath, buildCompareMarkdown(comparison, comparisons))
           twinCount++
         }
         await writeFile(publicDir, '/blog.md', buildBlogIndexMarkdown(posts))

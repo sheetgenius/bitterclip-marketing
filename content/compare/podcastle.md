@@ -4,12 +4,14 @@ description: "Podcastle (now called Async) records your show and cleans it up. B
 competitor: Podcastle
 competitorUrl: https://podcastle.ai
 reviewed: 2026-09-25
+updated: 2026-09-27
 competitorStrength: Records remote guests locally, track by track, and cleans the audio in one place.
 heroLede: "Both record remote guests now. Podcastle — renamed Async — records bigger rooms and ships an audio show from the same place. BitterClip records you and a guest on separate tracks, collects answers people record on their own time, and then turns the session into a real cut plus a stack of vertical clips. If the finished thing is a video episode, that last part is the whole job."
 shortAnswer: "Podcastle (now called Async) records up to ten people and hosts your audio show. BitterClip turns each session into a finished video episode and clips."
 chooseUsShort: "the finished thing is a video episode plus clips, not just cleaner audio."
 chooseThemShort: "you record several remote guests at once, or your audio show needs hosting and a feed."
 category: recording
+freePlan: "limited recording and editing"
 keyDifferences:
   - favors: bitterclip
     title: Cut between up to five cameras
@@ -50,45 +52,45 @@ rows:
       lead: Send one link.
       detail: On Producer, one link lets up to 25 people record on their own device, on their own time, with no account. Each answer arrives as its own episode.
     competitor:
-      lead: Not offered.
+      lead: Host-started sessions only.
       detail: Its help center says guests can't begin a recording; the host starts every session.
     edge: bitterclip
     group: record
   - axis: Taking out a sentence that didn't land
     bitterclip:
       lead: Cuts land on the word.
-      detail: Cuts are timed to the audio itself, so no word starts clipped, and the picture follows the text.
+      detail: Cuts follow the transcript's word timings, and the picture follows the text.
     competitor:
       lead: Clears the filler in bulk.
       detail: Search flags silences and filler words across the recording so you remove them in one pass.
     edge: even
     group: edit
-  - axis: When the first cut is wrong
+  - axis: Changing the first cut by saying what's wrong
     bitterclip:
       lead: Fix the cut you have.
       detail: Say what's off and it changes; undo works all the way back.
     competitor:
-      lead: Back to the editor.
-      detail: Adjust trims, captions, pacing, and reframing by hand after the AI pass.
-    edge: bitterclip
-    group: edit
-  - axis: Asking for an edit instead of clicking it
-    bitterclip:
-      lead: Ask from ChatGPT or Claude.
-      detail: Anything you can click, you can ask for, and what comes back is a normal edit.
-    competitor:
-      lead: Ask in its chat box.
-      detail: Say what you want in the chat and Engagement Booster restructures the video in the background.
+      lead: Revise by chat or by hand.
+      detail: Async's chat edits existing content from follow-up instructions, and you can adjust trims, captions, pacing, and reframing by hand.
     edge: even
+    group: edit
+  - axis: Editing from your own ChatGPT or Claude
+    bitterclip:
+      lead: "The whole editor, {tools} tools."
+      detail: "ChatGPT, Claude or Codex can run every editing tool on the AI plan you already pay for, without drawing on BitterClip's included agent use."
+    competitor:
+      lead: A chat box in its editor.
+      detail: Say what you want in Async's chat and it restructures the video inside Async; its docs describe no way for an outside agent to run the editor.
+    edge: bitterclip
     group: edit
   - axis: When there's more than one camera
     bitterclip:
       lead: Switch angles like a director.
       detail: Solo, side by side, picture-in-picture, speaker rail or grid, up to five cameras, and the audio never flinches.
     competitor:
-      lead: Auto-focus, no angle control.
-      detail: Its AI brings the most expressive speaker to the front; its feature pages don't mention choosing angles yourself.
-    edge: bitterclip
+      lead: AI Clips reframes speakers automatically.
+      detail: Its AI brings the most expressive speaker to the front; its feature pages don't describe choosing between camera angles yourself.
+    edge: even
     group: edit
   - axis: Making the vertical version
     bitterclip:
@@ -113,8 +115,8 @@ rows:
       lead: One click back to the source.
       detail: Every clip remembers its spot in the full recording, and a review link plays that exact version, never a later one, for up to two weeks.
     competitor:
-      lead: Clips are files you download.
-      detail: The AI Clips page describes no link back to the source moment.
+      lead: Not in its docs.
+      detail: The AI Clips page describes clips you download, and no link back to the source moment.
     edge: bitterclip
     group: deliver
   - axis: Getting the episode into podcast apps
@@ -156,17 +158,17 @@ gotchas:
     body: Monthly subscription credits reset at the start of each billing cycle and nothing carries over. Top-up credits last until the subscription ends on yearly plans but only two months on monthly plans, and yearly plans hand out credits month by month rather than all at once.
     sourceLabel: Async pricing page FAQ
     sourceUrl: https://async.com/pricing/
-  - title: Account termination deletes your content immediately
-    body: Per the terms, when an account is terminated for any reason access stops and "all content in your account(s) will be deleted." No grace period and no window to get your files out is stated.
+  - title: Account termination ends access and deletes stored content
+    body: Async's terms end access when an account is terminated and provide for deletion of the content in that account.
     sourceLabel: Async Terms of Service
     sourceUrl: https://async.com/terms/
 faq:
   - q: Is Podcastle worth it in 2026?
-    a: Yes, if you record remote interviews and want AI to handle the cleanup — the browser studio's per-guest local capture is good, though 4K starts on the $39.99 Pro plan. Know that Podcastle became Async in January 2026 and now spans a wider generative-AI suite billed in credits. Turning those recordings into a finished video episode and a set of clips is a different job, and it's BitterClip's.
+    a: Yes, if you record remote interviews and want AI to handle the cleanup — per-guest local capture for up to ten people, 4K from the $39.99 Pro plan, chat editing, and free podcast hosting. Podcastle became Async in January 2026 and now spans a wider generative-AI suite. BitterClip fits better when the finished thing is a video episode plus clips, and when you want your own ChatGPT or Claude running the whole editor.
   - q: What is the best Podcastle alternative?
-    a: "For finishing recordings into episodes and clips: BitterClip. It takes footage from anywhere — Podcastle included — and turns it into a full cut, a multicam picture, captions, and vertical clips. It records remote guests too — you and a guest, each on your own track — and on Producer it collects recordings people make on their own time, which Async doesn't offer. For rooms bigger than two, Async's studio holds more."
+    a: "For finishing recordings into episodes and clips: BitterClip. It takes footage from anywhere — Podcastle included — and turns it into a full cut, a multicam picture, captions, and vertical clips. It records remote guests too — you and a guest, each on your own track — and on Producer it collects recordings people make on their own time, where Async's help center says the host starts every session. For rooms bigger than two, Async's studio holds more."
   - q: Can I edit Podcastle's AI output, or do I have to regenerate?
-    a: "You can edit it — Async's own pages say you can fine-tune trims, captions, pacing, and reframing in the editor after an AI pass. The difference is what happens next: in BitterClip an AI edit is just an edit, so you tell it what's still wrong and it fixes that cut, and undo takes you back exactly."
+    a: "You can edit it — Async's own pages say you can fine-tune trims, captions, pacing, and reframing in the editor after an AI pass, and its chat takes follow-up instructions on existing content. BitterClip works the same way on its own cut: tell it what's still wrong and that cut changes, and undo takes you back exactly. The difference is reach: ChatGPT, Claude or Codex can run BitterClip's whole editor from outside it."
   - q: Does BitterClip record podcasts?
     a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link."
   - q: Can guests record on their own time, without a live session?
@@ -194,6 +196,8 @@ sources:
     url: https://async.com/products/video-editor/
   - label: Async Intelligence (chat editing)
     url: https://async.com/async-intelligence/
+  - label: "Async: Meet Bumblebee Chat 2.0"
+    url: https://async.com/blog/meet-bumblebee-chat-2-0/
   - label: "Async: Hosting Hub"
     url: https://async.com/products/hosting-hub/
   - label: Async Voice API
@@ -210,15 +214,15 @@ sources:
 
 Podcastle earned its users. It gets a guest on the line from a browser tab and records each person locally, with uncompressed WAV and up to 4K on Pro, uploaded as the call runs so a bad connection can't wreck the tracks. If getting a remote guest recorded is your problem, use it.
 
-Then the file lands, and you have ninety minutes of two people talking and a Tuesday to turn it into something. Async's text-based editing page is written for podcasts and voiceovers: delete a word, the audio goes with it. Its AI can bring the most expressive speaker to the front, but nothing on its feature pages lets you choose the angle yourself.
+Then the file lands, and you have ninety minutes of two people talking and a Tuesday to turn it into something. Async's text-based editing page is written for podcasts and voiceovers: delete a word, the audio goes with it. Its AI can bring the most expressive speaker to the front, but its feature pages describe no way to choose the angle yourself.
 
-That's the part BitterClip does. Bring in the recording — Podcastle's studio, Zoom, a phone, a camera — or record it here. Every project has a browser recorder: prop your phone up, hit record, and the take drops straight into your edit, already transcribed. For an interview, open Studio on a paid plan: your guest joins from a link and each of you is recorded on your own track. And on Producer, BitterClip does the thing Async's name suggests and its studio doesn't: write a short brief, share one link, and up to 25 people record themselves on their own time, each answer arriving as its own episode. Either way, the next part is building the picture: one person, side by side, picture-in-picture, a speaker rail or a grid, up to five cameras. Cutting to a different angle never touches the audio, so what people hear is one continuous conversation. When the wide cut is done, one tap makes the vertical version with the captions and timing carried over. That's a finished package out of every session, not just cleaner sound.
+That's the part BitterClip does. Bring in the recording — Podcastle's studio, Zoom, a phone, a camera — or record it here. Every project has a browser recorder: prop your phone up, hit record, and the take drops straight into your edit, already transcribed. For an interview, open Studio on a paid plan: your guest joins from a link and each of you is recorded on your own track. And on Producer, BitterClip does the thing Async's name suggests (Async's help center says the host starts every session there): write a short brief, share one link, and up to 25 people record themselves on their own time, each answer arriving as its own episode. Either way, the next part is building the picture: one person, side by side, picture-in-picture, a speaker rail or a grid, up to five cameras. Cutting to a different angle never touches the audio, so what people hear is one continuous conversation. When the wide cut is done, one tap makes the vertical version with the captions and timing carried over. That's a finished package out of every session, not just cleaner sound.
 
 ## Two different meanings of "just chat with it"
 
-Async's headline is "just chat with Async" — a chat box inside their editor. BitterClip's version is that the chat can be wherever you already are: ChatGPT, Claude, any MCP client, the panel in the editor, or the command line. Anything you can click, you can ask for.
+Async's headline is "just chat with Async" — a chat box inside their editor. BitterClip's version is that the chat can be wherever you already are: the panel in the editor, the command line, or any MCP client. ChatGPT, Claude or Codex can run the whole editing workbench on the AI plan you already pay for.
 
-What matters more is what comes back. Say "cut the tangent at 14:20 and tighten the intro" and you get an ordinary edit — open it, drag it, change your mind, undo all the way back. Nothing is a sealed result you either accept or generate again. And when you delete a sentence in the transcript, the cut lands on the word rather than near it, because it is reading the audio itself: no clipped syllables, no half-swallowed first word. Nothing scores your moments either. Which parts matter is still your call.
+Say "cut the tangent at 14:20 and tighten the intro" and you get an ordinary edit — open it, drag it, change your mind, undo all the way back. When you delete a sentence in the transcript, the cut follows the transcript's word timings, so it lands on the word rather than near it. And you can ask BitterClip's agent to find the moments and make a first cut, or pick them yourself. There's no virality score.
 
 ## What each plan counts
 

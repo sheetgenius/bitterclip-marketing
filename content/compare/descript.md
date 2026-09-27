@@ -4,23 +4,24 @@ description: Descript records and edits every kind of video in one app. BitterCl
 competitor: Descript
 competitorUrl: https://www.descript.com
 reviewed: 2026-09-25
-competitorStrength: It invented transcript editing, and it records your session too.
+updated: 2026-09-27
+competitorStrength: It edits audio and video by editing the transcript, and it records your session too.
 heroLede: "Stay with Descript if you want to record remote guests and your screen in the same place you edit. Pick BitterClip if you record straight into the project from a browser, have people record for you on their own time, or show up with footage already recorded, and need a finished episode plus a few vertical clips out of every session — editing by asking, in ChatGPT, Claude, or the editor."
-shortAnswer: "Descript records and edits every kind of video in one app. BitterClip turns each recording into a finished episode and clips."
+shortAnswer: "Descript records and edits every kind of video in one app. BitterClip's agent turns each recording into a finished episode and clips, and your own ChatGPT or Claude can run the whole editor."
 chooseUsShort: "every session has to come out as an episode plus vertical clips."
 chooseThemShort: "you want recording, screen capture and editing in one app, or voice cloning to patch lines."
 category: editing
 freePlan: "720p exports with a watermark"
 keyDifferences:
   - favors: bitterclip
-    title: Five cameras, switched by you
-    body: "Cut between up to five cameras: solo, side by side, picture-in-picture, speaker rail or grid, and switching never touches the audio. Descript's automatic switching needs multi-track sequences."
+    title: Your own AI runs the whole editor
+    body: "ChatGPT, Claude or Codex get all {tools} editing tools, on the AI plan you already pay for. Descript's MCP imports, runs Underlord and publishes, and Underlord's work spends Descript AI credits."
   - favors: bitterclip
     title: One link, up to 25 people
     body: "On Producer, write a brief and share one link: up to 25 people record on their own time, each answer its own episode. Descript's nearest thing is still a live call."
   - favors: competitor
     title: Recording and editing under one roof
-    body: Rooms records up to ten people in up to 4K, screen capture lives in the same app, and voice cloning patches a flubbed line. Descript invented transcript editing.
+    body: Rooms records up to ten people in up to 4K, screen capture lives in the same app, and voice cloning patches a flubbed line. Editing the transcript edits the video.
 pricing:
   plan: Hobbyist
   price: $24/month
@@ -35,7 +36,7 @@ switching:
   - Upload them to a BitterClip project. Each arrives transcribed, with every clip tied to its spot in the full recording.
   - Direct the first cut in plain words or by deleting words in the transcript.
 verdictBitterclip: "BitterClip is where your recordings become finished episodes and clips. Record straight into the project from your browser — solo, or with a guest who joins from a link, each of you on your own track — collect recordings people make on their own time from one link on Producer, or bring a file from anywhere. Then edit by selecting words in the transcript or just asking for the change, and every clip remembers where it came from, one click back to that spot in the full recording. Paid plans include hours of footage and AI agent use; changing a cut by hand never adds a charge."
-verdictCompetitor: "Descript records you, captures your screen, and edits the result in one app — and it invented transcript editing, which it still does better than almost anyone. Underlord, its AI co-editor, takes feedback and leaves you a normal project you can keep editing by hand. Since September 2025, plans count media minutes plus AI credits, and neither carries over to next month."
+verdictCompetitor: "Descript records you, captures your screen, and edits the result in one app, where you edit audio and video by editing the transcript. Underlord, its AI co-editor, takes feedback and leaves you a normal project you can keep editing by hand. Since September 2025, plans count media minutes plus AI credits, and neither carries over to next month."
 rows:
   - axis: Getting the recording in the first place
     bitterclip:
@@ -61,19 +62,19 @@ rows:
       detail: Built for sessions you recorded, not for every kind of video you might make.
     competitor:
       lead: The bigger toolkit.
-      detail: Voice cloning to patch a flubbed line, script collaboration, 4K export on Creator and up, and 1–5 seats.
+      detail: Voice cloning to patch a flubbed line, script collaboration, 4K export on Creator and up, and teams of up to five, billed per person.
     edge: competitor
     group: edit
-  - axis: Asking for an edit instead of clicking it
+  - axis: Editing from your own ChatGPT or Claude
     bitterclip:
-      lead: Ask anywhere, edit anywhere.
-      detail: "In ChatGPT, Claude or the editor: anything you can click, you can ask for."
+      lead: "The whole editor, {tools} tools."
+      detail: "ChatGPT, Claude or Codex can run every editing tool on the AI plan you already pay for, without drawing on BitterClip's included agent use."
     competitor:
-      lead: Inside, or through MCP.
-      detail: Underlord edits inside Descript; its MCP lets Claude, ChatGPT, or Cursor import, run Underlord, and publish.
-    edge: even
+      lead: A bridge to Underlord.
+      detail: Its MCP lets Claude, ChatGPT or Cursor import, run Underlord and publish; Underlord's work spends Descript AI credits.
+    edge: bitterclip
     group: edit
-  - axis: When the first cut is wrong
+  - axis: Changing the first cut by saying what's wrong
     bitterclip:
       lead: Fix the cut you have.
       detail: Say what's wrong and that cut changes; undo goes all the way back.
@@ -84,17 +85,17 @@ rows:
     group: edit
   - axis: Whether the cut lands on the word
     bitterclip:
-      lead: Lands on the word.
-      detail: Cuts are timed to the audio itself, so no word starts clipped.
+      lead: Cut on the word.
+      detail: Cuts follow the transcript's word timings.
     competitor:
-      lead: It invented transcript editing.
-      detail: Delete words in the document and the timeline follows. Mature, and still excellent.
+      lead: Edit it like a document.
+      detail: Delete words in the transcript and the timeline follows.
     edge: even
     group: edit
   - axis: Deciding which moments are worth clipping
     bitterclip:
-      lead: You pick.
-      detail: Search finds moments by what was said, who said it, or what was on screen.
+      lead: Its agent, or you.
+      detail: Ask BitterClip's agent to find the moments and make a first cut, or search by what was said, who said it, or what was on screen. There's no virality score.
     competitor:
       lead: It picks for you.
       detail: Create clips generates 1–20 clips at lengths you set, dressed with captions, music, and b-roll.
@@ -105,9 +106,9 @@ rows:
       lead: Up to five cameras.
       detail: Solo, side by side, picture-in-picture, speaker rail, or grid, and switching never touches the audio.
     competitor:
-      lead: Switches speakers, with caveats.
-      detail: Automatic switching needs multi-track sequences; Descript's docs warn non-overlapping tracks can produce blank scenes.
-    edge: bitterclip
+      lead: Automatic Multicam, adjustable.
+      detail: Automatic Multicam switches speakers and adds cutaways; you can tune it and edit scene layouts.
+    edge: even
     group: edit
   - axis: Getting the vertical version out
     bitterclip:
@@ -139,15 +140,15 @@ rows:
 chooseUs:
   - "You already have the footage — phone, Zoom, Riverside, a camera — or you record it in the browser right there, and you need the same thing out of every session: a full cut and a few vertical clips."
   - "You'd rather say what you want changed than go hunting for it. Ask in ChatGPT, Claude, or the editor, and what comes back is a normal edit you can keep changing by hand or undo."
-  - "You want cuts that land on the word — no clipped syllables, no half-swallowed first word — and every clip remembering the spot it came from."
+  - "You want cuts that follow the transcript's word timings, and every clip remembering the spot it came from."
   - You want guests, clients, or customers to record on their own time from one link, each answer arriving as its own episode to cut.
-  - Picking the moments is your call. Search everything you've recorded by what was said, who said it, or what was on screen, and nothing scores them for you.
+  - You want an agent to find the moments and make a first cut you direct, or to pick them yourself by searching everything you've recorded by what was said, who said it, or what was on screen. There's no virality score.
 chooseThem:
   - You record inside your editing tool — remote sessions, screen capture, a camera — and want it all in one app. That is Descript's home turf. BitterClip's Studio records you and one guest; Descript's Rooms hold up to ten, in up to 4K.
   - "You'd rather patch a flubbed line than say it again. Voice cloning is Descript's, not BitterClip's."
   - You write and revise scripts with other people in the same document, and the editing follows the script.
   - Your work spans every kind of video, not just recorded conversations — Descript's general toolkit is the broader one.
-  - "You need 4K or seats for a team: Descript's Creator plan and up export 4K, Creator includes 1–3 seats, and Business goes up to 5. BitterClip renders 1080p."
+  - "You need 4K or a team: Descript's Creator plan and up export 4K, with teams of up to three on Creator and five on Business, billed per person. BitterClip renders 1080p."
 gotchas:
   - title: Monthly minutes and credits don't roll over
     body: On current Descript plans, unused media minutes and AI credits do not roll over month to month. Top-ups are consumed only after the monthly allowance runs out, roll over for up to 12 months from purchase, then expire — and they are non-refundable.
@@ -163,7 +164,7 @@ gotchas:
     sourceUrl: https://help.descript.com/billing-payments-plans/cancel
 faq:
   - q: Is Descript worth it?
-    a: "Yes, if you record and edit in the same app — remote recording, screen capture, and transcript editing under one roof is a real thing to pay for. The catch since September 2025: media minutes plus AI credits that don't carry over to next month."
+    a: "Yes, if you record and edit in the same app — remote recording, screen capture, transcript editing and Underlord revisions under one roof is a real thing to pay for. BitterClip fits better when every session has to come out as an episode plus vertical clips, and when you want your own ChatGPT or Claude running the whole editor."
   - q: What is the best Descript alternative?
     a: Depends which half you're replacing. If your week is about turning recorded sessions into a full episode and a few vertical clips, that's the job BitterClip was built for. If you're leaving because the recording itself isn't good enough, you need a better recorder, not a different editor.
   - q: Can I edit what Descript's AI produces?
@@ -171,7 +172,7 @@ faq:
   - q: Does BitterClip record?
     a: "Yes. Every project has a browser recorder for solo takes, and the take drops straight into your edit. On paid plans, Studio records a conversation: your guest joins from a link, and each of you is recorded on your own track. On Producer, people can also record answers on their own time from one link."
   - q: Does BitterClip do async recording?
-    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. Descript has no request-and-respond feature; \"Asynchronous Recording\" is an open request on its feature board. The nearest thing is a scheduled Room that anyone with the link can start recording without you, which is still a live call, desktop only, with no brief or private retakes."
+    a: "Yes, on Producer ($99/month). Share one link and up to 25 people record themselves in their browser, on their own time, with no account. Each take is recorded on their own device, so a weak connection can't degrade it, and each answer arrives in your project as its own transcribed episode. Descript's help center describes no request-and-respond feature; \"Asynchronous Recording\" is an open request on its feature board. The nearest thing is a scheduled Room that anyone with the link can start recording without you, which is still a live call, desktop only, with no brief or private retakes."
   - q: Is BitterClip cheaper than Descript?
     a: "BitterClip Creator is $1 for 7 days (card required), then $24/month with 10 hours of footage and $10 of AI agent use; Producer is $99/month with 40 hours, $40 of AI agent use and priority rendering. Descript Hobbyist is $24/month ($16 billed annually) for 600 media minutes and 400 AI credits. They count different things, so price one real month of your work on both."
   - q: Can I switch from Descript to BitterClip?
@@ -209,13 +210,13 @@ sources:
 
 You have ninety minutes of good conversation and three hours of work in front of you. That's the problem. Descript and BitterClip both go after it — they just start from opposite ends.
 
-Descript starts at the microphone. It records you, records your screen, records the person on the other end of the call, and drops all of it into an editor that reads like a document. It invented that document. Delete a sentence in the transcript and the video loses the sentence, and years later Descript is still the best version of that idea. [Underlord](https://www.descript.com/underlord), its AI co-editor, takes feedback and leaves you a normal project you can keep editing by hand. Descript even lets assistants outside the app reach in to import, transcribe, and run Underlord — [their docs cover it](https://help.descript.com/api-and-mcp/mcp). That is more than most editors offer.
+Descript starts at the microphone. It records you, records your screen, records the person on the other end of the call, and drops all of it into an editor that reads like a document. Delete a sentence in the transcript and the video loses the sentence. [Underlord](https://www.descript.com/underlord), its AI co-editor, takes feedback and leaves you a normal project you can keep editing by hand. Descript even lets assistants outside the app reach in to import, transcribe, and run Underlord — [their docs cover it](https://help.descript.com/api-and-mcp/mcp).
 
 BitterClip starts at the file — including one it records for you. Every project has a browser recorder in it: prop your phone up and talk, and the take drops straight into your edit, already transcribed. It captures camera and mic on a laptop or phone, up to 1080p. For a conversation, open Studio on a paid plan: your guest joins from a link, and each of you is recorded on your own track, so you can cut between you. And on Producer there's async recording: write a short brief, share one link, and up to 25 people record themselves on their own time, each answer landing as its own episode. Descript's nearest equivalent is a scheduled Room that starts without you, which is still a live call. And bringing what you already shot — phone, Zoom, Riverside, a camera card — is still the common case, and everything after that is the product.
 
 ## Editing by asking
 
-The difference you feel daily is what "just ask for it" gets you. In BitterClip, anything you can click, you can ask for. Say "cut the tangent at 14:20 and tighten the intro" in ChatGPT, in Claude, or in the panel beside the editor, and what comes back is an ordinary edit. Open it, nudge the in-point by hand, undo it. There is no separate AI mode with its own rules, and nothing you can only do one way.
+The difference you feel daily is how much of the editor an assistant can reach. Descript's MCP hands the job to Underlord. In BitterClip, ChatGPT, Claude or Codex can run the whole editing workbench directly. Say "cut the tangent at 14:20 and tighten the intro" in ChatGPT, in Claude, or in the panel beside the editor, and what comes back is an ordinary edit. Open it, nudge the in-point by hand, undo it. There is no separate AI mode with its own rules, and nothing you can only do one way.
 
 ## What each plan counts
 
@@ -223,6 +224,6 @@ Since September 2025, Descript's plans count media minutes plus AI credits, and 
 
 BitterClip's paid plans include hours of footage and AI agent use: Creator is $24/month with 10 hours and $10; Producer is $99/month with 40 hours, $40, and priority rendering. Changing a cut by hand costs nothing extra. When the first pass is wrong, you say what's wrong and that cut changes, and a review link plays the exact version you sent, never a later one, for up to two weeks.
 
-## Nobody scores your footage
+## Finding the moments
 
-Descript's [Create clips](https://help.descript.com/repurpose/create-clips-from-your-content) will hand you one to twenty clips at whatever length you ask for. BitterClip won't: nothing scores your moments. What it gives you instead is a way to find them yourself: search everything you have ever recorded by what was said, who said it, or what was on screen. Cuts land on the word rather than near it, and one click on any clip jumps back to that spot in the full recording. You still pick. That is the part worth keeping.
+Descript's [Create clips](https://help.descript.com/repurpose/create-clips-from-your-content) will hand you one to twenty clips at whatever length you ask for. In BitterClip, ask the agent to find the moments and make a first cut, or pick them yourself. There's no virality score. You can also search everything you have ever recorded by what was said, who said it, or what was on screen. Cuts follow the transcript's word timings, and one click on any clip jumps back to that spot in the full recording.
