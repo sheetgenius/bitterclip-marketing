@@ -1,58 +1,69 @@
 <script setup lang="ts">
-// A diagram, not a screenshot: what a meeting recorder hands you (one file,
-// switching already decided) next to what Studio hands you (a track per person).
+// What you get out of the call, drawn as the videos themselves: a meeting
+// recorder hands you one video with both people and the layout baked in;
+// Studio hands you a separate video of each person.
 defineProps<{ competitor: string }>()
-
-// Who the recorder showed, in order. Widths are percentages of the call.
-const baked = [
-  { w: 16, who: 'a' }, { w: 9, who: 'b' }, { w: 21, who: 'a' }, { w: 7, who: 'b' },
-  { w: 13, who: 'a' }, { w: 24, who: 'b' }, { w: 10, who: 'a' },
-]
 </script>
 
 <template>
   <figure class="tracks-visual rounded-2xl border border-white/[0.09] bg-white/[0.02] p-5 sm:p-6">
     <div>
-      <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-400">What a {{ competitor }} recording gives you</p>
-      <div class="mt-3 flex h-9 overflow-hidden rounded-md" aria-hidden="true">
-        <span
-          v-for="(seg, i) in baked"
-          :key="i"
-          class="block h-full"
-          :class="seg.who === 'a' ? 'bg-zinc-500/70' : 'bg-zinc-700/80'"
-          :style="{ width: `${seg.w}%` }"
-        />
+      <p class="flex items-baseline justify-between text-[13px] font-semibold text-zinc-200">{{ competitor }} <span class="font-normal text-zinc-400">1 video</span></p>
+      <div class="mt-2.5 flex aspect-[32/9] overflow-hidden rounded-lg border border-white/[0.08] bg-zinc-800" aria-hidden="true">
+        <div class="tile relative flex-1 border-r border-black/40">
+          <svg viewBox="0 0 100 100" class="person text-zinc-500"><circle cx="50" cy="40" r="15" /><path d="M20 100c0-24 13-37 30-37s30 13 30 37z" /></svg>
+          <span class="name-tag">You</span>
+        </div>
+        <div class="tile relative flex-1">
+          <svg viewBox="0 0 100 100" class="person text-zinc-500"><circle cx="50" cy="40" r="15" /><path d="M20 100c0-24 13-37 30-37s30 13 30 37z" /></svg>
+          <span class="name-tag">Guest</span>
+        </div>
       </div>
-      <p class="mt-2 text-[13px] text-zinc-300">A view of the call. Who's on screen was decided while you talked.</p>
+      <p class="mt-2 text-[14px] text-zinc-300">One video of the call, with the layout already decided.</p>
     </div>
 
     <div class="mt-6">
-      <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#f28f84]">What BitterClip Studio gives you</p>
-      <div class="mt-3 space-y-2" aria-hidden="true">
-        <div class="flex items-center gap-3">
-          <span class="w-12 shrink-0 text-[12px] text-zinc-300">You</span>
-          <span class="lane lane--you h-7 flex-1 rounded-md" />
+      <p class="flex items-baseline justify-between text-[13px] font-semibold text-[#f28f84]">BitterClip Studio <span class="font-normal text-zinc-300">2 videos</span></p>
+      <div class="mt-2.5 grid grid-cols-2 gap-2" aria-hidden="true">
+        <div class="tile relative aspect-video overflow-hidden rounded-lg border border-[#f28f84]/30 bg-[#3a2220]">
+          <svg viewBox="0 0 100 100" class="person text-[#f28f84]"><circle cx="50" cy="40" r="15" /><path d="M20 100c0-24 13-37 30-37s30 13 30 37z" /></svg>
+          <span class="name-tag">You</span>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="w-12 shrink-0 text-[12px] text-zinc-300">Guest</span>
-          <span class="lane lane--guest h-7 flex-1 rounded-md" />
+        <div class="tile relative aspect-video overflow-hidden rounded-lg border border-[#f28f84]/30 bg-[#3a2220]">
+          <svg viewBox="0 0 100 100" class="person text-[#ffc4ba]"><circle cx="50" cy="40" r="15" /><path d="M20 100c0-24 13-37 30-37s30 13 30 37z" /></svg>
+          <span class="name-tag">Guest</span>
         </div>
       </div>
-      <p class="mt-2 text-[13px] text-zinc-300">A track per person. You decide who's on screen, on the word.</p>
+      <p class="mt-2 text-[14px] text-zinc-200">A separate video of each person. You choose who's on screen when you edit.</p>
     </div>
     <figcaption class="sr-only">
-      A {{ competitor }} recording is a view of the call, with the speaker switching already decided. BitterClip Studio records each person on their own track, so you choose who is on screen when you edit.
+      A {{ competitor }} recording is one video of the call with the layout already decided. BitterClip Studio records a separate video of each person, so you choose who is on screen when you edit.
     </figcaption>
   </figure>
 </template>
 
 <style scoped>
-/* A waveform-ish texture so the lanes read as recorded media, not bars. */
-.lane {
-  background-image:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0 2px, transparent 2px 7px),
-    linear-gradient(90deg, var(--lane-a), var(--lane-b));
+.tile {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
-.lane--you { --lane-a: #f28f84; --lane-b: #d66f5f; }
-.lane--guest { --lane-a: #ffd0c7; --lane-b: #f2a99f; }
+.person {
+  width: 58%;
+  height: auto;
+  fill: currentColor;
+  margin-bottom: -2px;
+}
+/* Styled after a meeting app's name label, so the frames read as video. */
+.name-tag {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #e4e4e7;
+  font-size: 11px;
+  line-height: 16px;
+}
 </style>
