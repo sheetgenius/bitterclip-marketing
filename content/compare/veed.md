@@ -9,8 +9,8 @@ heroLede: "Stay with VEED if your month is a pile of different video jobs: subti
 shortAnswer: "VEED handles many different video jobs in one browser tab. BitterClip does one job, every week: a recording in, a finished episode and clips out."
 chooseUsShort: "you record the same kind of session every week and it has to come out finished."
 chooseThemShort: "your month is many different video jobs: subtitles, a dub, a captioned ad, a screen walkthrough."
-heroVisual: editor
 category: editing
+freePlan: "watermarked, and content on it is licensed for AI training"
 keyDifferences:
   - favors: bitterclip
     title: The same show, finished every week

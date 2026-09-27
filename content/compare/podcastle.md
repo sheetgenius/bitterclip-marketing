@@ -9,7 +9,6 @@ heroLede: "Both record remote guests now. Podcastle — renamed Async — record
 shortAnswer: "Podcastle (now called Async) records up to ten people and hosts your audio show. BitterClip turns each session into a finished video episode and clips."
 chooseUsShort: "the finished thing is a video episode plus clips, not just cleaner audio."
 chooseThemShort: "you record several remote guests at once, or your audio show needs hosting and a feed."
-heroVisual: editor
 category: recording
 keyDifferences:
   - favors: bitterclip

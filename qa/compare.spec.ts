@@ -60,8 +60,9 @@ test.describe('head-to-head comparison pages', () => {
       await expect(page.locator(`link[rel="canonical"][href="https://bitterclip.com/compare/${slug}"]`)).toHaveCount(1)
       await expect(page.locator(`link[rel="alternate"][type="text/markdown"][href="https://bitterclip.com/compare/${slug}.md"]`)).toHaveCount(1)
       await expect(page.getByRole('heading', { level: 1, name: /^BitterClip vs / })).toBeVisible()
-      await expect(page.getByRole('table')).toBeVisible()
-      await expect(page.getByRole('columnheader', { name: 'BitterClip' })).toBeVisible()
+      const jobs = page.getByRole('table', { name: /job by job/ })
+      await expect(jobs).toBeVisible()
+      await expect(jobs.getByRole('columnheader', { name: 'BitterClip' })).toBeVisible()
       // Every row declares a verdict, and the running tally is stated up front.
       await expect(page.getByText(/^(Tie|.+ better)$/).first()).toBeVisible()
       await expect(page.getByText(/BitterClip better on \d/)).toBeVisible()
@@ -97,7 +98,48 @@ test.describe('head-to-head comparison pages', () => {
     await page.goto(`/compare/${COMPARISON_SLUGS[0]}`)
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.getByRole('table')).toBeVisible()
+    await expect(page.getByRole('table', { name: /at a glance/ })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Try it on one recording' }).first()).toBeVisible()
   })
+
+  // Most readers are crawlers and other people's agents: they read the text in
+  // order and quote the first facts they find. So the answer, who each product
+  // is for and both prices come first, as text and a table, never a picture.
+  for (const slug of ['zoom', 'veed', 'opus-clip']) {
+    test(`/compare/${slug} leads with the answer and the facts`, async ({ page, request }) => {
+      await page.goto(`/compare/${slug}`)
+
+      const glance = page.getByRole('table', { name: /at a glance/ })
+      await expect(glance.getByRole('rowheader', { name: 'Choose it if' })).toBeVisible()
+      await expect(glance.getByRole('rowheader', { name: 'Price' })).toBeVisible()
+      await expect(glance).toContainText('$24/month')
+      const order = await page.locator('main').evaluate((main) => {
+        const text = main.textContent ?? ''
+        const firstMedia = main.querySelector('img, video, figure')
+        return {
+          glance: text.indexOf('at a glance'),
+          differs: text.indexOf('What differs'),
+          jobs: text.indexOf('Job by job'),
+          mediaAfterJobs: !!firstMedia && !!main.querySelector('#comparison')
+            && (main.querySelector('#comparison')!.compareDocumentPosition(firstMedia) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0,
+        }
+      })
+      expect(order.glance).toBeGreaterThan(-1)
+      expect(order.glance).toBeLessThan(order.differs)
+      expect(order.differs).toBeLessThan(order.jobs)
+      expect(order.mediaAfterJobs).toBe(true)
+
+      const graph = await page.locator('script[type="application/ld+json"]').allTextContents()
+      const webPage = graph.map((json) => JSON.parse(json)).find((entry) => entry['@type'] === 'WebPage')
+      expect(webPage?.dateModified).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(webPage?.about?.[0]?.offers?.map((offer: { price: string }) => offer.price)).toEqual(['24', '99'])
+
+      const twin = await (await request.get(`/compare/${slug}.md`)).text()
+      const at = (needle: string) => twin.indexOf(needle)
+      expect(at('## Short answer')).toBeGreaterThan(-1)
+      expect(at('## Short answer')).toBeLessThan(at('| Price |'))
+      expect(at('| Price |')).toBeLessThan(at('## What differs'))
+      expect(at('## What differs')).toBeLessThan(at('## Job by job'))
+    })
+  }
 })

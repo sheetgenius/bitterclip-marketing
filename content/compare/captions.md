@@ -9,8 +9,8 @@ heroLede: "Stay with Captions if you shoot short vertical video on your phone; i
 shortAnswer: "Captions styles short vertical videos shot on your phone. BitterClip turns a whole recorded session into a finished episode and the clips you choose."
 chooseUsShort: "you record long conversations, and each one needs an episode plus clips."
 chooseThemShort: "you shoot short vertical video on an iPhone, or want an avatar presenting for you."
-heroVisual: editor
 category: editing
+freePlan: "basic tools, no watermark"
 keyDifferences:
   - favors: bitterclip
     title: The whole session, not ten minutes

@@ -9,8 +9,8 @@ heroLede: "If what you have is already a short clip and you want it captioned an
 shortAnswer: "Submagic styles a short clip with trend-perfect captions in minutes. BitterClip turns a whole recording into a finished episode plus vertical clips."
 chooseUsShort: "you record whole conversations and each needs an episode plus vertical clips."
 chooseThemShort: "your footage is already short and you want it captioned and posted today."
-heroVisual: editor
 category: clipping
+freePlan: "3 watermarked videos"
 keyDifferences:
   - favors: bitterclip
     title: Whole recordings, not two-minute clips

@@ -9,7 +9,6 @@ heroLede: "Pick Klap when you want a lot of shorts and don't want to think about
 shortAnswer: "Klap turns a link into a stack of shorts, fast. BitterClip turns the whole recording into a finished episode and clips you can keep editing."
 chooseUsShort: "you want the whole recording finished, and you'd rather edit a clip than regenerate it."
 chooseThemShort: "you want the most shorts for the least effort, posted to four platforms on a schedule."
-heroVisual: editor
 category: clipping
 keyDifferences:
   - favors: bitterclip

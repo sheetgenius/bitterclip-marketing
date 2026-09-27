@@ -93,6 +93,17 @@ const tableGroups = computed(() => {
 })
 const winnerName = (edge?: string) => edgeLabel(edge ?? 'even', page.value?.competitor ?? '')
 
+// The hero's price row: both products' entry prices, or, where no plan price
+// is verified, the table's own price verdict for the competitor.
+const glancePlans = [
+  { name: 'Creator', price: BITTERCLIP_TRIAL },
+  ...BITTERCLIP_PLANS.slice(1).map((plan) => ({ name: plan.name, price: `${plan.price}/month` })),
+]
+const priceRow = computed(() => page.value?.rows?.find((r) => r.group === 'price'))
+// The short "choose" lines finish a sentence ("Choose Zoom if …"); in the
+// table they stand alone.
+const sentence = (text?: string) => text ? text.charAt(0).toUpperCase() + text.slice(1) : ''
+
 const favorsLabel = (favors: string) => {
   if (favors === 'bitterclip') return 'Where BitterClip wins'
   if (favors === 'competitor') return `Where ${page.value?.competitor} wins`
@@ -169,6 +180,52 @@ useHead(() => {
       acceptedAnswer: { '@type': 'Answer', text: item.a },
     })),
   }
+  // What the page is about, when it was checked, and what it rests on, for
+  // crawlers that read schema.org rather than the prose.
+  const pageStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${canonicalUrl}#page`,
+    url: canonicalUrl,
+    name: title,
+    description,
+    abstract: page.value?.shortAnswer,
+    dateModified: page.value?.reviewed,
+    inLanguage: 'en',
+    publisher: { '@id': 'https://company.sheetgenius.com/#organization' },
+    about: [
+      {
+        '@type': 'SoftwareApplication',
+        name: 'BitterClip',
+        url: `${siteOrigin}/`,
+        applicationCategory: 'MultimediaApplication',
+        operatingSystem: 'Web',
+        offers: BITTERCLIP_PLANS.map((plan) => ({
+          '@type': 'Offer',
+          name: plan.name,
+          price: plan.price.replace('$', ''),
+          priceCurrency: 'USD',
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: plan.price.replace('$', ''),
+            priceCurrency: 'USD',
+            unitText: 'month',
+          },
+          description: plan.includes.join('; '),
+        })),
+      },
+      {
+        '@type': 'SoftwareApplication',
+        name: page.value?.competitor,
+        url: page.value?.competitorUrl,
+      },
+    ],
+    citation: (page.value?.sources ?? []).map((source) => ({
+      '@type': 'CreativeWork',
+      name: source.label,
+      url: source.url,
+    })),
+  }
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -193,6 +250,7 @@ useHead(() => {
       { rel: 'alternate', type: 'text/markdown', href: markdownUrl, title: `${title} Markdown` },
     ],
     script: [
+      { type: 'application/ld+json', innerHTML: JSON.stringify(pageStructuredData) },
       { type: 'application/ld+json', innerHTML: JSON.stringify(faqStructuredData) },
       { type: 'application/ld+json', innerHTML: JSON.stringify(breadcrumbStructuredData) },
     ],
@@ -204,68 +262,75 @@ useHead(() => {
   <main v-if="page" class="relative">
 
     <!-- ============================ HERO ============================ -->
-    <!-- Answer first: the verdict, who each product is for, a way in, and the
-         score, all inside the first viewport. Pages without a short answer
-         keep the long-form hero below until their content migrates. -->
+    <!-- Answer first, in words and one small table: most readers of this page
+         are search crawlers and other people's agents, which read the text in
+         order and quote the first self-contained facts they find. Pages
+         without a short answer keep the long-form hero below. -->
     <section v-if="page.shortAnswer" class="mx-auto max-w-6xl px-4 pt-8 sm:pt-12">
       <div class="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-zinc-400">
         <NuxtLink
           to="/compare"
           class="transition hover:text-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
         >← All comparisons</NuxtLink>
-        <span aria-hidden="true" class="text-zinc-700">·</span>
-        <a href="#method" class="transition hover:text-white">Checked {{ formatDate(page.reviewed) }} against {{ page.sources?.length ?? 0 }} public sources</a>
+        <span aria-hidden="true" class="hidden text-zinc-700 sm:inline">·</span>
+        <a href="#method" class="transition hover:text-white">Checked <time :datetime="page.reviewed">{{ formatDate(page.reviewed) }}</time> against {{ page.sources?.length ?? 0 }} public sources</a>
       </div>
 
-      <div class="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:items-center">
-        <div>
-          <h1 class="font-display text-[2.6rem] sm:text-6xl font-bold tracking-[-0.04em] text-white leading-[1.02]">
-            BitterClip <span class="text-zinc-600 font-normal">vs</span>{{ ' ' }}<span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">{{ page.competitor }}</span>
-          </h1>
-          <p class="mt-5 max-w-xl text-lg sm:text-xl text-zinc-200 leading-[1.5] text-balance">{{ page.shortAnswer }}</p>
+      <h1 class="font-display text-[2.6rem] sm:text-6xl font-bold tracking-[-0.04em] text-white leading-[1.02]">
+        BitterClip <span class="text-zinc-600 font-normal">vs</span>{{ ' ' }}<span class="bg-gradient-to-r from-[#ffd0c7] via-[#f28f84] to-[#d66f5f] bg-clip-text text-transparent">{{ page.competitor }}</span>
+      </h1>
+      <p class="mt-5 max-w-3xl text-lg sm:text-2xl text-zinc-200 leading-[1.45] text-balance">{{ page.shortAnswer }}</p>
 
-          <div class="mt-7 grid gap-3 sm:grid-cols-2">
-            <div class="rounded-xl border border-[#f28f84]/30 bg-[#f28f84]/[0.06] p-4">
-              <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-[#f28f84]">Choose BitterClip if</p>
-              <p class="mt-1.5 text-[15px] leading-snug text-zinc-100">{{ page.chooseUsShort }}</p>
-            </div>
-            <div class="rounded-xl border border-white/[0.1] bg-white/[0.03] p-4">
-              <p class="text-[12px] font-semibold uppercase tracking-[0.12em] text-zinc-300">Choose {{ page.competitor }} if</p>
-              <p class="mt-1.5 text-[15px] leading-snug text-zinc-100">{{ page.chooseThemShort }}</p>
-            </div>
-          </div>
+      <table class="compare-glance mt-9 w-full border-collapse text-left">
+        <caption class="sr-only">BitterClip and {{ page.competitor }} at a glance</caption>
+        <thead>
+          <tr>
+            <td class="w-[18%]" />
+            <th scope="col" class="w-[41%] pb-3 text-[13px] font-semibold tracking-wide text-[#f28f84]">BitterClip</th>
+            <th scope="col" class="w-[41%] pb-3 text-[13px] font-semibold tracking-wide text-zinc-200">{{ page.competitor }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Choose it if</th>
+            <td data-label="BitterClip">{{ sentence(page.chooseUsShort) }}</td>
+            <td :data-label="page.competitor">{{ sentence(page.chooseThemShort) }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Price</th>
+            <td data-label="BitterClip">
+              <span v-for="plan in glancePlans" :key="plan.name" class="block">
+                <span class="text-zinc-400">{{ plan.name }}</span> {{ plan.price }}
+              </span>
+            </td>
+            <td :data-label="page.competitor">
+              <span v-if="page.freePlan" class="block"><span class="text-zinc-400">Free</span> {{ page.freePlan }}</span>
+              <template v-if="page.pricing">
+                <span class="block"><span class="text-zinc-400">{{ page.pricing.plan }}</span> {{ page.pricing.price }}</span>
+                <span v-if="page.pricing.note" class="block text-zinc-400">{{ page.pricing.note }}</span>
+              </template>
+              <template v-else-if="priceRow">
+                <span class="block">{{ priceRow.competitor.lead }}</span>
+                <span class="block text-zinc-400">{{ priceRow.competitor.detail }}</span>
+              </template>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-          <div ref="heroCta" class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <a
-              :href="signupUrl"
-              class="btn-glow inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              Try it on one recording
-              <span aria-hidden="true">→</span>
-            </a>
-            <a
-              href="#proof"
-              class="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 transition hover:text-white hover:decoration-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
-            >Watch a one-minute cut</a>
-          </div>
-        </div>
-
-        <CompareTracksVisual v-if="page.heroVisual === 'tracks'" :competitor="page.competitor" />
-        <CompareClipsVisual v-else-if="page.category === 'clipping'" :competitor="page.competitor" />
-        <!-- Cropped to the episode, its camera track, and the transcript: at
-             hero size the full editor is too small to read. -->
-        <figure class="overflow-hidden rounded-2xl border border-white/[0.09] bg-black shadow-2xl shadow-black/50" v-else>
-          <img
-            src="/images/hero/sizzle-editor-5.webp"
-            alt="The BitterClip editor: a recorded episode with its chapters, the episode and camera tracks, and the transcript."
-            width="2560"
-            height="1252"
-            fetchpriority="high"
-            class="compare-hero-crop block aspect-[5/4] w-full object-cover object-[54%_50%]"
-          >
-        </figure>
+      <div ref="heroCta" class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+        <a
+          :href="signupUrl"
+          class="btn-glow inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#f28f84] px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-[#ffa89e] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f28f84] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        >
+          Try it on one recording
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="#pricing"
+          class="text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 transition hover:text-white hover:decoration-[#f28f84] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#f28f84]"
+        >What each plan includes</a>
       </div>
-
     </section>
 
     <section v-else class="mx-auto max-w-6xl px-4 pt-10 sm:pt-16">
@@ -328,54 +393,20 @@ useHead(() => {
       <h2 id="differs-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">
         What differs
       </h2>
-      <div class="mt-7 grid gap-4 md:grid-cols-3">
+      <div class="mt-7 grid gap-x-10 gap-y-9 md:grid-cols-3">
         <article
           v-for="diff in page.keyDifferences"
           :key="diff.title"
-          class="rounded-2xl border p-6"
-          :class="diff.favors === 'bitterclip' ? 'border-[#f28f84]/25 bg-[#f28f84]/[0.04]' : 'border-white/[0.1] bg-white/[0.03]'"
+          class="border-t-2 pt-5"
+          :class="diff.favors === 'bitterclip' ? 'border-[#f28f84]/60' : 'border-white/25'"
         >
           <p
             class="text-[12px] font-semibold uppercase tracking-[0.12em]"
             :class="diff.favors === 'bitterclip' ? 'text-[#f28f84]' : 'text-zinc-300'"
           >{{ favorsLabel(diff.favors) }}</p>
-          <h3 class="mt-3 font-display text-xl font-bold leading-snug text-white">{{ diff.title }}</h3>
+          <h3 class="mt-2 font-display text-xl font-bold leading-snug text-white">{{ diff.title }}</h3>
           <p class="mt-2 text-[15px] leading-relaxed text-zinc-300">{{ diff.body }}</p>
         </article>
-      </div>
-    </section>
-
-    <!-- ============================ PROOF ============================
-         The same product the table describes, shown: a real cut, made from a
-         recorded Zoom conversation. -->
-    <section v-if="page.shortAnswer" id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
-      <div class="grid items-center gap-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-14">
-        <figure class="mx-auto w-full max-w-[290px] overflow-hidden rounded-2xl border border-white/[0.1] bg-black shadow-2xl shadow-black/60">
-          <DeferredVideo
-            class="block aspect-[9/16] w-full bg-black"
-            poster="/clips/day-1-sizzle-poster.jpg"
-            src="/clips/day-1-sizzle.mp4"
-            type="video/mp4"
-            controls
-            playsinline
-            width="1080"
-            height="1920"
-            title="A one-minute cut BitterClip made from a recorded Zoom conversation"
-            data-bc-proof-video
-            data-bc-placement="comparison_proof"
-          />
-        </figure>
-        <div>
-          <h2 id="proof-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">One conversation. The cut you'd send.</h2>
-          <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-300">
-            {{ page.proofNote || "BitterClip's founder, Michael Ruescher, recorded a conversation about quitting a twelve-year job to build bitter.sh. This one-minute vertical cut came out of it, made in BitterClip." }}
-          </p>
-          <ol class="mt-6 max-w-xl space-y-3 text-[15px] text-zinc-300">
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">1</span>The recording comes in and every word is transcribed, tied to the moment it was said.</li>
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">2</span>The agent makes a first cut; you direct it in plain words or by deleting words in the transcript.</li>
-            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">3</span>One tap makes the 9:16 version, captions and timing carried over.</li>
-          </ol>
-        </div>
       </div>
     </section>
 
@@ -542,6 +573,40 @@ useHead(() => {
         :href="page.switchingLink.url"
         class="mt-5 inline-block text-sm text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
       >{{ page.switchingLink.label }} →</a>
+    </section>
+
+    <!-- ============================ PROOF ============================
+         The same product the table describes, shown: a real cut, made from a
+         recorded Zoom conversation. -->
+    <section v-if="page.shortAnswer" id="proof" aria-labelledby="proof-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:pt-24 scroll-mt-24">
+      <div class="grid items-center gap-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-14">
+        <figure class="mx-auto w-full max-w-[290px] overflow-hidden rounded-2xl border border-white/[0.1] bg-black shadow-2xl shadow-black/60">
+          <DeferredVideo
+            class="block aspect-[9/16] w-full bg-black"
+            poster="/clips/day-1-sizzle-poster.jpg"
+            src="/clips/day-1-sizzle.mp4"
+            type="video/mp4"
+            controls
+            playsinline
+            width="1080"
+            height="1920"
+            title="A one-minute cut BitterClip made from a recorded Zoom conversation"
+            data-bc-proof-video
+            data-bc-placement="comparison_proof"
+          />
+        </figure>
+        <div>
+          <h2 id="proof-heading" class="font-display text-2xl sm:text-4xl font-bold tracking-[-0.03em] text-white">One conversation. The cut you'd send.</h2>
+          <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-300">
+            {{ page.proofNote || "BitterClip's founder, Michael Ruescher, recorded a conversation about quitting a twelve-year job to build bitter.sh. This one-minute vertical cut came out of it, made in BitterClip." }}
+          </p>
+          <ol class="mt-6 max-w-xl space-y-3 text-[15px] text-zinc-300">
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">1</span>The recording comes in and every word is transcribed, tied to the moment it was said.</li>
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">2</span>The agent makes a first cut; you direct it in plain words or by deleting words in the transcript.</li>
+            <li class="flex gap-3"><span class="text-[#f28f84] tabular-nums">3</span>One tap makes the 9:16 version, captions and timing carried over.</li>
+          </ol>
+        </div>
+      </div>
     </section>
 
     <!-- ========================= TESTIMONIAL ========================= -->
@@ -884,11 +949,30 @@ useHead(() => {
   display: none;
 }
 
-/* The editor still is cropped for legibility; fading its edges makes the
-   crop read as framing rather than a cut-off screenshot. */
-.compare-hero-crop {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+/* The hero table is set like text, not like a widget: hairline rules, no
+   boxes, the row label in small caps. */
+.compare-glance tbody th,
+.compare-glance tbody td {
+  padding: 0.95rem 1.25rem 0.95rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  vertical-align: top;
+}
+.compare-glance tbody tr:last-child th,
+.compare-glance tbody tr:last-child td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.compare-glance tbody th {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(161 161 170);
+  padding-top: 1.15rem;
+}
+.compare-glance tbody td {
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgb(228 228 231);
 }
 
 .compare-sticky-cta {
@@ -906,6 +990,49 @@ useHead(() => {
 /* Mobile: the table stops being a table. Each row becomes a card with the two
    products stacked and labelled, so nothing truncates and nothing side-scrolls. */
 @media (max-width: 767px) {
+  .compare-glance thead {
+    display: none;
+  }
+  .compare-glance,
+  .compare-glance tbody {
+    display: block;
+  }
+  .compare-glance tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.9rem 0;
+  }
+  .compare-glance tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .compare-glance tbody th,
+  .compare-glance tbody td {
+    border: 0 !important;
+    padding: 0;
+  }
+  .compare-glance tbody th {
+    grid-column: 1 / -1;
+    margin-bottom: 0.6rem;
+  }
+  .compare-glance tbody td {
+    font-size: 15px;
+  }
+  .compare-glance td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .compare-glance td[data-label='BitterClip']::before {
+    color: rgba(242, 143, 132, 0.85);
+  }
+
   .compare-table,
   .compare-table tbody,
   .compare-table tr,

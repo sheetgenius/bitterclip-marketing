@@ -9,8 +9,8 @@ heroLede: "If you need ten captioned vertical clips by Friday and no desire to t
 shortAnswer: "OpusClip turns one long video into a stack of captioned shorts. BitterClip makes the clips you ask for, plus the full episode."
 chooseUsShort: "you'd rather say what each clip should be, and you want the full episode too."
 chooseThemShort: "you want ten captioned vertical clips by Friday, posted for you, without touching a timeline."
-heroVisual: editor
 category: clipping
+freePlan: "makes clips, with no editing"
 keyDifferences:
   - favors: bitterclip
     title: Edit the clip, don't regenerate it
