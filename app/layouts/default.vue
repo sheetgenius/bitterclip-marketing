@@ -123,11 +123,61 @@ onBeforeUnmount(() => {
         <!-- One parent, named once. "A Bitter project." used to sit opposite this
              line, which left the reader to work out how Bitter and SheetGenius
              relate; Bitter is infrastructure and keeps its Developers-column link. -->
-        <div class="mt-12 pt-6 border-t border-zinc-900/80 text-[11px] text-zinc-400 text-center sm:text-left">
+        <div class="footer-bottom mt-12 pt-6 border-t border-zinc-900/80 text-[11px] text-zinc-400 text-center sm:text-left">
           <p class="font-sans">BitterClip is a product of <a class="focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded hover:text-zinc-300 transition" href="https://company.sheetgenius.com">SheetGenius, Inc.</a> <span aria-hidden="true" class="text-zinc-700">·</span> © 2026</p>
+          <!-- The listing's social link: There's An AI For That checks for this
+               link (v= ties it to our account) to verify BitterClip. -->
+          <a
+            class="footer-listing focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none rounded"
+            href="https://theresanaiforthat.com/ai/bitterclip/?ref=social-icon&v=12858865"
+            target="_blank"
+            rel="nofollow noopener"
+            title="BitterClip on There's An AI For That"
+          >
+            <img
+              src="https://media.theresanaiforthat.com/social/icon_hollow.svg"
+              width="24"
+              height="24"
+              alt="BitterClip on There's An AI For That"
+              loading="lazy"
+              decoding="async"
+            >
+          </a>
         </div>
       </div>
     </footer>
 
   </div>
 </template>
+
+<style scoped>
+/* Scoped CSS, not new utilities: the dev Tailwind watcher has dropped newly
+   introduced classes before (see pages/index.vue). */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer-listing {
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.footer-listing:hover,
+.footer-listing:focus-visible {
+  opacity: 1;
+}
+
+.footer-listing img {
+  display: block;
+}
+</style>

@@ -450,6 +450,28 @@ useHead({
           <p class="faq-a">{{ item.a }}</p>
         </details>
       </div>
+
+      <!-- There's An AI For That verifies the listing by finding this link (its
+           v= ties it to our account) on the homepage, and only here: a shared
+           footer would confuse its crawler. Inverted and dimmed so it reads as a
+           credit on the dark page, not an ad. -->
+      <div class="directory-credit">
+        <a
+          class="rounded focus-visible:ring-1 focus-visible:ring-[#f28f84] focus-visible:outline-none"
+          href="https://theresanaiforthat.com/ai/bitterclip/?ref=featured&v=12858865"
+          target="_blank"
+          rel="nofollow noopener"
+        >
+          <img
+            src="https://media.theresanaiforthat.com/featured-on-taaft.png?width=600"
+            width="150"
+            height="31"
+            alt="Featured on There's An AI For That"
+            loading="lazy"
+            decoding="async"
+          >
+        </a>
+      </div>
     </section>
   </main>
 </template>
@@ -911,6 +933,28 @@ useHead({
 
 .btf-last {
   padding-bottom: 4rem;
+}
+
+/* Directory credit under the FAQ: small, inverted to the page's dark and dimmed
+   until hovered, so it reads as a credit rather than an ad. */
+.directory-credit {
+  display: flex;
+  margin-top: 2.5rem;
+}
+
+.directory-credit a {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.directory-credit a:hover,
+.directory-credit a:focus-visible {
+  opacity: 1;
+}
+
+.directory-credit img {
+  display: block;
+  filter: invert(1);
 }
 
 @media (min-width: 48rem) {
