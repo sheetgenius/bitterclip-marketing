@@ -30,6 +30,11 @@ under a dated entry.
 
 ### Product Context
 
+- Caption treatment uses Active Word by default with an independent
+  `word_highlight` boolean. Size and placement work with highlighting on or off;
+  the chosen highlight color is retained when it is off. Older preset inputs
+  remain accepted for compatibility; new authoring resolves them to Active Word.
+  Earlier frozen Exports retain their treatment.
 - The public Agent contract now authors 112 MCP tool contracts. AI music
   generation (`identity_music_beds_generate`) left the MCP surface and stays in
   the web app's Music Studio, so the app-only catalog lists 49 operations and
