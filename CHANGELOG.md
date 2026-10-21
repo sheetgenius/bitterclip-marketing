@@ -40,6 +40,10 @@ under a dated entry.
   and capture time, lists oldest first, and pages photos as compact rows. The
   `make-a-clip` skill (package 0.2.3) carries the photo-film craft. The count
   stays at 112 tool contracts.
+- `music_cue_mutate` accepts `ducking_db` from -60 to 0, so music drops under an
+  Episode's own sound, and names the beat grid `episode_read` prints for each
+  cue. `identity_assets_list` music beds carry `music_role` and a measured
+  `rhythm` summary.
 - Caption treatment uses Active Word by default with an independent
   `word_highlight` boolean. Size and placement work with highlighting on or off;
   the chosen highlight color is retained when it is off. Older preset inputs

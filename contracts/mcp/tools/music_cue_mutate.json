@@ -1,7 +1,7 @@
 {
   "name": "music_cue_mutate",
   "title": "Change music in an Episode",
-  "description": "Adds, moves, trims, replaces, mutes, removes, or restores one music cue in an Episode. Requires the Episode's current revision from episode_read. Each cue uses one ready song from the project's music library, an Episode range, volume, fades, a song start offset, and trim or loop-to-fill behavior. Music cues cannot overlap. The idempotency key makes an exact retry safe. Music authoring remains available only where the project has enabled it.",
+  "description": "Adds, moves, trims, replaces, mutes, removes, or restores one music cue in an Episode. Requires the Episode's current revision from episode_read. Each cue uses one ready song from the project's music library, an Episode range, volume, fades, a song start offset, and trim or loop-to-fill behavior. Music cues cannot overlap. episode_read prints each cue's beat grid on the Episode clock (beats, downbeats, phrase starts, where the song's natural end lands and what the cue's end lands on), so cuts and the cue's end can be set from those exact times. The idempotency key makes an exact retry safe. Music authoring remains available only where the project has enabled it.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -70,10 +70,9 @@
                   },
                   "ducking_db": {
                     "type": "number",
-                    "enum": [
-                      0
-                    ],
-                    "description": "Reserved music-side speech ducking amount; 0 until speech-aware ducking is available."
+                    "minimum": -60,
+                    "maximum": 0,
+                    "description": "How far this music drops under the Episode's own sound (a video's audio, a Live Photo's natural sound, speech), in decibels: it ramps down over 250 ms and back up over 500 ms. 0 keeps the music level."
                   },
                   "fit_mode": {
                     "type": "string",
@@ -147,10 +146,9 @@
                   },
                   "ducking_db": {
                     "type": "number",
-                    "enum": [
-                      0
-                    ],
-                    "description": "Reserved music-side speech ducking amount; 0 until speech-aware ducking is available."
+                    "minimum": -60,
+                    "maximum": 0,
+                    "description": "How far this music drops under the Episode's own sound (a video's audio, a Live Photo's natural sound, speech), in decibels: it ramps down over 250 ms and back up over 500 ms. 0 keeps the music level."
                   },
                   "fit_mode": {
                     "type": "string",
@@ -227,10 +225,9 @@
                   },
                   "ducking_db": {
                     "type": "number",
-                    "enum": [
-                      0
-                    ],
-                    "description": "Reserved music-side speech ducking amount; 0 until speech-aware ducking is available."
+                    "minimum": -60,
+                    "maximum": 0,
+                    "description": "How far this music drops under the Episode's own sound (a video's audio, a Live Photo's natural sound, speech), in decibels: it ramps down over 250 ms and back up over 500 ms. 0 keeps the music level."
                   },
                   "fit_mode": {
                     "type": "string",

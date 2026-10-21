@@ -418,6 +418,67 @@
                 },
                 "default": {
                   "type": "boolean"
+                },
+                "music_role": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "underscore",
+                    "featured",
+                    null
+                  ],
+                  "description": "underscore sits under picture and sound; featured carries the moment as the main sound."
+                },
+                "rhythm": {
+                  "type": "object",
+                  "description": "Measured rhythm, once analysis is ready: status, bpm, steady_tempo, beats_per_bar, phrase_bars, ending (how the song ends) and natural_end_seconds.",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "ready"
+                      ]
+                    },
+                    "bpm": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "steady_tempo": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "beats_per_bar": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "phrase_bars": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "ending": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "natural_end_seconds": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    }
+                  }
                 }
               }
             }
