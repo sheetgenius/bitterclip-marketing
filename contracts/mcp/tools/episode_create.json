@@ -1,13 +1,13 @@
 {
   "name": "episode_create",
   "title": "Create an episode or derived reel",
-  "description": "Assembles a new EPISODE or derived reel from ordered recording/episode/template ranges into ONE combined video. A reel cut from an Episode takes derived_from_id for lineage and one segment row per chosen moment in the canonical shape {episode_id, range:[start_seconds,end_seconds]}; segments[].range is a half-open [start,end) interval in EPISODE time. derived_from_id does not select a range. Creation selects Program ranges; simultaneous participant boxes are composed afterwards with camera_program_set, not with extra segment fields. Use this when the user asks to make, cut together, or export a multi-segment highlight, reel, montage, or supercut. Suggestions alone create nothing (saved Moments are review_points_place), and a single-range Clip is clip_create. Branding: identity:\"project_default\" applies the project's saved Signature defaults (the user's branding); identity_assets_list lists the saved assets an explicit choice names. Episode-range slices keep what their parent plays there (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried, such as a pinned microphone in a montage without derived_from_id, refuses with program_audio_not_preservable and its exact span. Persists the edit only — does not render or charge. The rendered video is a separate render_create with the exact returned target_type, target_id, and revision; render_status reports it. Publishing is separate. Always returns edge_warnings. A warning means a cut edge overlaps an approximate transcript word span, not that acoustic evidence proved a mid-word cut. Each warning's episode_seconds is the created target's point for a narrow episode_zoom region and edge, and occurrence_id and source_id identify the exact side; when those coordinates are absent, episode_read of the target maps the edge. A point whose speech evidence is supported inter_word_silence or supported aligned_word_edge stands; any other point is revised on the same target with episode_edit at an exact supported point. Acoustic envelope/onset suggestions alone are not boundary authority. A second episode_create or a superseding Clip does not resolve edge_warnings. Accepts idempotency_key. A creation with derived_from_id produces a Clip (a derived Episode IS a Clip), addressed as target_type:\"clip\" in render_create, render_status, and workspace_open. A canvas taller than the source picture (a portrait canvas over landscape footage) keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown), and episode_edit occurrence.reframe carries the framing decision.",
+  "description": "Assembles a new EPISODE or derived reel from ordered recording/episode/template ranges into ONE combined video. A reel cut from an Episode takes derived_from_id for lineage and one segment row per chosen moment in the canonical shape {episode_id, range:[start_seconds,end_seconds]}; segments[].range is a half-open [start,end) interval in EPISODE time. derived_from_id does not select a range. Creation selects Program ranges; simultaneous participant boxes are composed afterwards with camera_program_set, not with extra segment fields. Use this when the user asks to make, cut together, or export a multi-segment highlight, reel, montage, or supercut. It also makes a film from a Project's Photos: a Photo or Live Photo row is {recording_id, photo:{seconds, motion, fill, live, live_speed}} with no range, and one call can place photo rows, Recording moments and template title or ending cards in story order, with no source Episode needed; aspect_ratio picks the canvas (16:9 is 1920x1080, 9:16 is 1080x1920, 1:1 is 1080x1080). Suggestions alone create nothing (saved Moments are review_points_place), and a single-range Clip is clip_create. Branding: identity:\"project_default\" applies the project's saved Signature defaults (the user's branding); identity_assets_list lists the saved assets an explicit choice names. Episode-range slices keep what their parent plays there (a pinned or replaced microphone, silence) and program_audio names it; audio that cannot be carried, such as a pinned microphone in a montage without derived_from_id, refuses with program_audio_not_preservable and its exact span. Persists the edit only — does not render or charge. The rendered video is a separate render_create with the exact returned target_type, target_id, and revision; render_status reports it. Publishing is separate. Always returns edge_warnings. A warning means a cut edge overlaps an approximate transcript word span, not that acoustic evidence proved a mid-word cut. Each warning's episode_seconds is the created target's point for a narrow episode_zoom region and edge, and occurrence_id and source_id identify the exact side; when those coordinates are absent, episode_read of the target maps the edge. A point whose speech evidence is supported inter_word_silence or supported aligned_word_edge stands; any other point is revised on the same target with episode_edit at an exact supported point. Acoustic envelope/onset suggestions alone are not boundary authority. A second episode_create or a superseding Clip does not resolve edge_warnings. Accepts idempotency_key. A creation with derived_from_id produces a Clip (a derived Episode IS a Clip), addressed as target_type:\"clip\" in render_create, render_status, and workspace_open. A canvas taller than the source picture (a portrait canvas over landscape footage) keeps only a vertical slice of each frame; episode_framing_guidance reports, per visible person, whether their measured extent fits that crop window (fits | too_wide | uncertain | unknown), and episode_edit occurrence.reframe carries the framing decision.",
   "input_schema": {
     "type": "object",
     "properties": {
       "segments": {
         "type": "array",
-        "description": "Ordered episode/recording/template segments. The only model-visible boundary field is range: {episode_id, range:[start,end]} in EPISODE time or {recording_id, range:[start,end]} in SOURCE time, both half-open [start,end) intervals; episode_range and start_seconds/end_seconds are not accepted. Template rows use {template, params} and have no range.",
+        "description": "Ordered episode/recording/template segments. The only model-visible boundary field is range: {episode_id, range:[start,end]} in EPISODE time or {recording_id, range:[start,end]} in SOURCE time, both half-open [start,end) intervals; episode_range and start_seconds/end_seconds are not accepted. Template rows use {template, params} and have no range. A Photo row is {recording_id, photo} and has no range.",
         "minItems": 1,
         "items": {
           "type": "object",
@@ -23,6 +23,17 @@
                 "recording_id",
                 "range"
               ]
+            },
+            {
+              "required": [
+                "recording_id",
+                "photo"
+              ],
+              "not": {
+                "required": [
+                  "range"
+                ]
+              }
             },
             {
               "required": [
@@ -42,7 +53,49 @@
             },
             "recording_id": {
               "type": "string",
-              "description": "Source Recording public ID. This row must also provide range in half-open SOURCE time."
+              "description": "Source Recording public ID. A time-based Recording row must also provide range in half-open SOURCE time; a Photo row provides photo instead."
+            },
+            "photo": {
+              "type": "object",
+              "description": "How a Photo or Live Photo plays (recordings_list media_kind photo or live_photo). A Photo has no source time, so it takes photo instead of range; {} takes every default.",
+              "properties": {
+                "seconds": {
+                  "type": "number",
+                  "minimum": 0.5,
+                  "maximum": 60,
+                  "description": "How long the photo is on screen, including any incoming crossfade, rounded to whole canvas frames. Default 5."
+                },
+                "motion": {
+                  "type": "string",
+                  "enum": [
+                    "ken_burns",
+                    "still"
+                  ],
+                  "description": "ken_burns moves slowly toward the photo's focus, keeping the subject in frame; still holds the frame."
+                },
+                "fill": {
+                  "type": "string",
+                  "enum": [
+                    "blur",
+                    "crop",
+                    "pad"
+                  ],
+                  "description": "How a photo whose shape differs from the canvas fills it: blur shows it whole over a soft blurred copy of itself, crop fills the canvas around its focus, pad shows it whole with plain bars."
+                },
+                "live": {
+                  "type": "boolean",
+                  "description": "Live Photos only: true (the default) plays the Live motion with its natural sound and settles on the still; false shows the still alone."
+                },
+                "live_speed": {
+                  "type": "number",
+                  "enum": [
+                    1,
+                    0.5
+                  ],
+                  "description": "Live motion speed: 1 is real time, 0.5 is half speed."
+                }
+              },
+              "additionalProperties": false
             },
             "template": {
               "type": "string",
@@ -162,7 +215,7 @@
           "dip_to_black",
           "overlap_dissolve"
         ],
-        "description": "Optional seam transition for segment boundaries. Defaults to cut."
+        "description": "Optional seam transition for segment boundaries, photo rows included. Defaults to cut. A Program with overlap_dissolve cannot be rearranged afterwards; crossfades set later with episode_edit junction.transition can."
       },
       "identity": {
         "oneOf": [
@@ -219,7 +272,8 @@
     "music_range_derivation_unsupported",
     "program_audio_not_preservable",
     "program_source_range_unplayable",
-    "stale_composition_revision"
+    "stale_composition_revision",
+    "program_source_unavailable"
   ],
   "examples": [
     {
@@ -283,6 +337,51 @@
         ],
         "title": "Cross-episode best moments",
         "idempotency_key": "episode-montage-1"
+      }
+    },
+    {
+      "label": "Make a photo film in capture order with a title card",
+      "input": {
+        "segments": [
+          {
+            "template": "show_open/studio_dissolve",
+            "params": {
+              "title": "Philippines 2024"
+            }
+          },
+          {
+            "recording_id": "src_photo_1...",
+            "photo": {
+              "seconds": 4,
+              "motion": "ken_burns",
+              "fill": "blur"
+            }
+          },
+          {
+            "recording_id": "src_live_2...",
+            "photo": {
+              "seconds": 3,
+              "live": true,
+              "live_speed": 0.5
+            }
+          },
+          {
+            "recording_id": "src_video_3...",
+            "range": [
+              12.0,
+              18.5
+            ]
+          },
+          {
+            "recording_id": "src_photo_4...",
+            "photo": {
+              "seconds": 2
+            }
+          }
+        ],
+        "title": "Philippines 2024",
+        "aspect_ratio": "16:9",
+        "idempotency_key": "photo-film-1"
       }
     }
   ],

@@ -332,7 +332,8 @@
               "identity_part.customize",
               "junction.roll",
               "occurrence.insert",
-              "program.restore_recording"
+              "program.restore_recording",
+              "occurrence.photo"
             ]
           },
           "selection_kind": {

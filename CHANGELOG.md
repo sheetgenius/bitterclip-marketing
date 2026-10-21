@@ -30,6 +30,16 @@ under a dated entry.
 
 ### Product Context
 
+- Agents can make films from a Project's Photos. `episode_create` accepts
+  Photo rows (`{recording_id, photo:{seconds, motion, fill, live, live_speed}}`)
+  beside Recording moments and template cards. `episode_edit` adds
+  `occurrence.insert` (up to 64 Photos and Recording moments at one
+  destination), `occurrence.photo` (retime or refill up to 64 placed photos) and
+  a `junctions` list for `junction.transition`, which also offers
+  `dip_to_black` and joins placed photos. `recordings_list` filters by media kind
+  and capture time, lists oldest first, and pages photos as compact rows. The
+  `make-a-clip` skill (package 0.2.3) carries the photo-film craft. The count
+  stays at 112 tool contracts.
 - Caption treatment uses Active Word by default with an independent
   `word_highlight` boolean. Size and placement work with highlighting on or off;
   the chosen highlight color is retained when it is off. Older preset inputs

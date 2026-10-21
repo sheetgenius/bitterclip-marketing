@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3 — photo films
+
+- `make-a-clip` gains photo-film craft: reading a Project's photos in capture
+  order, choosing among near-duplicates, when Live Photo motion helps, drafting
+  with one `episode_create` and refining with `episode_edit`, and timing photos
+  and transitions to a music bed.
+- Same four skills, package shape, and hosted OAuth service.
+
 ## 0.2.2 — standing guidance from tool descriptions
 
 - Tool descriptions now state only what each tool does, returns, records, or

@@ -36,6 +36,15 @@ Picture and title craft:
 - Use Produced transitions selectively between cold-open excerpts, not mechanically on body edits or multicamera switches.
 - For one changed Trim edge, use at most one narrow discovery read and one `detail:"edit"` zoom at the chosen point, then pass its evidence to `episode_edit` without zooming again; for a "next boundary" Trim, measure the next candidate rather than the unchanged edge. Inspect adjacent timed words, reconcile each source side with `speech.points`, keep every chosen point out of spoken-word interiors, and then listen to the rendered seam. Require source-linked context plus exact rendered seam evidence for quality; when rendered speech and seam evidence are materially unchanged, preserve the cut rather than polishing timing metadata.
 
+Photo films (a film made from a Project's Photos, Live Photos and phone videos):
+
+- List the photos with `recordings_list` (`project_id`, `media_kind:"photo"`, `order:"oldest_first"`) and read the whole set before choosing; look at candidates with `recording_sample_frames` (`times:[0]`). Capture times and descriptions show the days, places and turns a story can follow; capture order is the usual spine.
+- Photos sharing a similar group are near-duplicates, such as a burst: keep the one that best carries the moment. Sharpness, exposure and focus inform that choice; they do not make it.
+- A Live Photo's motion earns its place where movement or natural sound adds life; half speed can help a quick gesture, and the still alone serves when the motion is shaky or adds nothing.
+- Draft the film in one `episode_create` (title card, photo rows, the best seconds of any trip video, ending card, `aspect_ratio` for the destination), then refine the same Episode with `episode_edit`: `occurrence.insert` for more material, `occurrence.photo` to retime or refill photos, and `junction.transition` with `junctions` to set many transitions in one call.
+- With music, choose the bed before final timing, set photo `seconds` in whole beats of its tempo so cuts land on the beat, vary length with the material, and end on a musical phrase rather than mid-fade. Crossfades and dips to black are punctuation: a dip reads as a change of day or place.
+- Check sampled frames across the film for faces in frame and nothing sideways, stretched or washed out before rendering.
+
 Pass current revisions and returned evidence unchanged. Follow each tool's supported idempotency and revision contract; where a caller `idempotency_key` is accepted, keep it stable and reuse it only for an exact retry. `render_create` takes no caller key. If the head is stale, re-read and reconsider before writing. After a successful mutation, adopt its returned revision; do not repeat the write while waiting.
 
 Treat post-mutation edge or transcript-overlap warnings as required recovery,
