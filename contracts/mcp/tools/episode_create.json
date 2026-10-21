@@ -99,7 +99,7 @@
             },
             "template": {
               "type": "string",
-              "description": "Curated block template key, such as show_open/studio_dissolve or outro/sting_chime."
+              "description": "Curated block template key, such as show_open/studio_dissolve or outro/sting_chime. show_open/studio_dissolve with sting \"none\" is a soft title card and outro/sting_chime with sting \"none\" a silent end card; kicker \"\" removes their small corner label."
             },
             "params": {
               "type": "object",
@@ -124,6 +124,11 @@
                     "glitch",
                     "shutter"
                   ]
+                },
+                "kicker": {
+                  "type": "string",
+                  "maxLength": 32,
+                  "description": "The small corner label, \"Open\" on openers and \"End\" on outros unless set; \"\" hides it."
                 }
               }
             },

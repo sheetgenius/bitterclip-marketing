@@ -1,13 +1,23 @@
 {
   "name": "recording_sample_frames",
   "title": "Sample video frames from a recording",
-  "description": "Inspects raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. It samples up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. It serves choosing exact recording_id ranges for one multi-source episode_create, with no throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Without delivery, extracted JPEGs that fit the aggregate model-content budget arrive inline, and otherwise as linked delivery from the same artifacts. BitterClip samples pixels; it does not interpret them.",
+  "description": "Inspects raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. It samples up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. It serves choosing exact recording_id ranges for one multi-source episode_create, with no throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Without delivery, extracted JPEGs that fit the aggregate model-content budget arrive inline, and otherwise as linked delivery from the same artifacts. BitterClip samples pixels; it does not interpret them. recording_ids shows up to 24 Photos at once as one contact sheet.",
   "input_schema": {
     "type": "object",
     "properties": {
       "recording_id": {
         "type": "string",
         "description": "Exact src_... Recording handle returned by recordings_list or Project evidence."
+      },
+      "recording_ids": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 24,
+        "uniqueItems": true,
+        "items": {
+          "type": "string"
+        },
+        "description": "Instead of recording_id: 2 to 24 Photos returned as one contact sheet of whole pictures, cells left to right and top to bottom in this order, the caption naming each cell's photo and handle. Takes no times, region or count."
       },
       "times": {
         "type": "array",
@@ -56,9 +66,7 @@
         "description": "Optional short reason for sampling, echoed in the result."
       }
     },
-    "required": [
-      "recording_id"
-    ],
+    "required": [],
     "additionalProperties": false,
     "allOf": [
       {
@@ -73,6 +81,18 @@
               "region"
             ]
           }
+        ]
+      }
+    ],
+    "anyOf": [
+      {
+        "required": [
+          "recording_id"
+        ]
+      },
+      {
+        "required": [
+          "recording_ids"
         ]
       }
     ]
@@ -102,6 +122,16 @@
         ],
         "count": 4,
         "purpose": "choose the clearest squat repetitions"
+      }
+    },
+    {
+      "label": "See a dozen trip photos at once",
+      "input": {
+        "recording_ids": [
+          "src_photo_1...",
+          "src_photo_2...",
+          "src_photo_3..."
+        ]
       }
     }
   ],

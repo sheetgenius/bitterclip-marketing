@@ -35,8 +35,8 @@ under a dated entry.
   beside Recording moments and template cards. `episode_edit` adds
   `occurrence.insert` (up to 64 Photos and Recording moments at one
   destination), `occurrence.photo` (retime or refill up to 64 placed photos) and
-  a `junctions` list for `junction.transition`, which also offers
-  `dip_to_black` and joins placed photos. `recordings_list` filters by media kind
+  a `junctions` list for `junction.transition`, which joins placed photos with
+  cuts and crossfades. `occurrence.remove` takes any set of whole occurrences. `recordings_list` filters by media kind
   and capture time, lists oldest first, and pages photos as compact rows. The
   `make-a-clip` skill (package 0.2.3) carries the photo-film craft. The count
   stays at 112 tool contracts.
@@ -44,6 +44,10 @@ under a dated entry.
   Episode's own sound, and names the beat grid `episode_read` prints for each
   cue. `identity_assets_list` music beds carry `music_role` and a measured
   `rhythm` summary.
+- Title and end card templates take a `kicker` param that sets or hides their
+  corner label, `recording_sample_frames` shows up to 24 Photos as one contact
+  sheet (`recording_ids`), and a failed render's blocker names its code, stage
+  and a plain hint.
 - Caption treatment uses Active Word by default with an independent
   `word_highlight` boolean. Size and placement work with highlighting on or off;
   the chosen highlight color is retained when it is off. Older preset inputs
