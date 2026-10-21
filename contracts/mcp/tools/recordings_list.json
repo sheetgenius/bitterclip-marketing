@@ -40,7 +40,7 @@
       },
       "limit": {
         "type": "integer",
-        "description": "Rows per page. Default 20, which is also the model-context page ceiling (a larger value still pages at 20 with a next_cursor to continue; app hydration callers may receive up to 50 in one call). A photo listing defaults to and caps at 100 rows per page."
+        "description": "Rows per page. Default 20, which is also the model-context page ceiling (a larger value still pages at 20 with a next_cursor to continue). A photo listing defaults to and caps at 100 rows per page and walks up to 500; a Project-scoped app hydration listing walks up to 500 as well."
       },
       "cursor": {
         "type": "string",
