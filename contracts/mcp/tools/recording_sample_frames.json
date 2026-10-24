@@ -1,7 +1,7 @@
 {
   "name": "recording_sample_frames",
   "title": "Sample video frames from a recording",
-  "description": "Inspects raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. It samples up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. It serves choosing exact recording_id ranges for one multi-source episode_create, with no throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Without delivery, extracted JPEGs that fit the aggregate model-content budget arrive inline, and otherwise as linked delivery from the same artifacts. BitterClip samples pixels; it does not interpret them. recording_ids shows up to 24 Photos at once as one contact sheet.",
+  "description": "Inspects raw Recording pixels directly on the recording's SOURCE-time axis, including capture-session footage that intentionally has no Episode-of-one. It samples up to 4 explicit source-time points or up to 8 deterministic frames inside one <=30s region. This operation never creates or mutates an Episode, Program, or Recording. It serves choosing exact recording_id ranges for one multi-source episode_create, with no throwaway Episode as a visual probe. Results contain source-time and recording identity only—no fabricated Episode revision, Program camera, or occurrence fields. Every call publishes bounded, unguessable frame URLs and a gallery. Without delivery, extracted JPEGs that fit the aggregate model-content budget arrive inline, and otherwise as linked delivery from the same artifacts. BitterClip samples pixels; it does not interpret them. recording_ids shows up to 24 Photos at once in one response, one image per Photo.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -17,7 +17,7 @@
         "items": {
           "type": "string"
         },
-        "description": "Instead of recording_id: 2 to 24 Photos returned as one contact sheet of whole pictures, cells left to right and top to bottom in this order, the caption naming each cell's photo and handle. Takes no times, region or count."
+        "description": "Instead of recording_id: 2 to 24 Photos returned in one response as one stored image of each whole picture, in this order, each captioned with its photo and handle. Takes no times, region or count."
       },
       "times": {
         "type": "array",

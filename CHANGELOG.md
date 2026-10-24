@@ -34,19 +34,24 @@ under a dated entry.
   Photo rows (`{recording_id, photo:{seconds, motion, fill, live, live_speed}}`)
   beside Recording moments and template cards. `episode_edit` adds
   `occurrence.insert` (up to 64 Photos and Recording moments at one
-  destination), `occurrence.photo` (retime or refill up to 64 placed photos) and
+  destination), `occurrence.effect` (the `photo` effect retimes or refills up to 64 placed photos) and
   a `junctions` list for `junction.transition`, which joins placed photos with
   cuts and crossfades. `occurrence.remove` takes any set of whole occurrences. `recordings_list` filters by media kind
   and capture time, lists oldest first, and pages photos as compact rows. The
   `make-a-clip` skill (package 0.2.3) carries the photo-film craft. The count
   stays at 112 tool contracts.
+- `episode_sample_frames` at a placed photo's moment returns the photo's own
+  stored image with `frames[].photo` describing how it plays; exact photo frames
+  come from the Export. Until a released renderer draws photos, renders of an
+  Episode with photos are refused with `photo_rendering_unavailable` before any
+  charge.
 - `music_cue_mutate` accepts `ducking_db` from -60 to 0, so music drops under an
   Episode's own sound, and names the beat grid `episode_read` prints for each
   cue. `identity_assets_list` music beds carry `music_role` and a measured
   `rhythm` summary.
 - Title and end card templates take a `kicker` param that sets or hides their
-  corner label, `recording_sample_frames` shows up to 24 Photos as one contact
-  sheet (`recording_ids`), and a failed render's blocker names its code, stage
+  corner label, `recording_sample_frames` shows up to 24 Photos in one response,
+  one image each (`recording_ids`), and a failed render's blocker names its code, stage
   and a plain hint.
 - Caption treatment uses Active Word by default with an independent
   `word_highlight` boolean. Size and placement work with highlighting on or off;

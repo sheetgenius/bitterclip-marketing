@@ -1,7 +1,7 @@
 {
   "name": "episode_edit",
   "title": "Arrange an existing episode Program",
-  "description": "Edits the current Program in place through one stable occurrence operation. Several partial shortenings inspected on one revision fit one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so the same removals sent as separate trims or change-set items refuse after the first. Operations address exact occurrence IDs and a revision-bound semantic Junction from episode_read; pixels, mutable positions, transcript words, filenames, and source chronology are not arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops any set of whole supported occurrences (adjacent or not, one receipt), one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, and the resulting occurrence is addressed after a fresh episode_read. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists, not advice, when framing evidence reports a subject too_wide for the full-canvas crop window. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Active Word is the default caption treatment. word_highlight independently enables or disables the timed spoken-word accent; size and static placement remain available in either state. Legacy preset names are accepted for compatibility and resolve to Active Word for new authoring. Earlier frozen Exports retain their own treatment. Caption preview and new Exports share the caption renderer. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants, showing highlighting, placement, and any text-layer collisions. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omitting them preserves the set, [] clears it, and a correction made stale by transcript drift refuses until the word is re-read. junction.transition owns one adjacent edit point, or the same transition at up to 64 edit points (junctions) under one receipt: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Produced is designed for cold-open excerpts rather than body edits or multicamera switches; duration, intensity, and sound gain are adjustable on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only; placed photos also take Cut and Crossfade Junctions and occurrence.photo; a title or end card meets its neighbours with a cut. occurrence.insert places up to 64 items in order at one revision-bound destination under one receipt: a Photo or Live Photo as {recording_id, photo}, a whole Recording as {recording_id}, or a Recording moment as {recording_id, range} in source seconds. occurrence.photo changes how up to 64 placed photos play (seconds, motion, fill, live, live_speed), each by occurrence_id, keeping identity, order and Junctions. A plan-backed typed opener or outro changes through identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; Replace applies only where Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, junction.transition, occurrence.photo, and photo or whole-Recording inserts at a Junction need no new boundary evidence; Split, partial Range, an interior destination Point, an inserted moment's inner edges, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input, including under a new idempotency key or in parallel; its typed reason names what must change. The next structural revision is addressed after a fresh episode_read.",
+  "description": "Edits the current Program in place through one stable occurrence operation. Several partial shortenings inspected on one revision fit one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so the same removals sent as separate trims or change-set items refuse after the first. Operations address exact occurrence IDs and a revision-bound semantic Junction from episode_read; pixels, mutable positions, transcript words, filenames, and source chronology are not arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops any set of whole supported occurrences (adjacent or not, one receipt), one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, and the resulting occurrence is addressed after a fresh episode_read. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists, not advice, when framing evidence reports a subject too_wide for the full-canvas crop window. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Active Word is the default caption treatment. word_highlight independently enables or disables the timed spoken-word accent; size and static placement remain available in either state. Legacy preset names are accepted for compatibility and resolve to Active Word for new authoring. Earlier frozen Exports retain their own treatment. Caption preview and new Exports share the caption renderer. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants, showing highlighting, placement, and any text-layer collisions. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omitting them preserves the set, [] clears it, and a correction made stale by transcript drift refuses until the word is re-read. junction.transition owns one adjacent edit point, or the same transition at up to 64 edit points (junctions) under one receipt: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Produced is designed for cold-open excerpts rather than body edits or multicamera switches; duration, intensity, and sound gain are adjustable on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only; placed photos also take Cut and Crossfade Junctions and occurrence.effect; a title or end card meets its neighbours with a cut. occurrence.insert places up to 64 items in order at one revision-bound destination under one receipt: a Photo or Live Photo as {recording_id, photo}, a whole Recording as {recording_id}, or a Recording moment as {recording_id, range} in source seconds. occurrence.effect sets the photo effect on up to 64 placed photos (seconds, motion, fill, live, live_speed), each by occurrence_id; omitted settings keep their values, and identity, order and Junctions stay. A plan-backed typed opener or outro changes through identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; Replace applies only where Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, junction.transition, occurrence.effect, and photo or whole-Recording inserts at a Junction need no new boundary evidence; Split, partial Range, an interior destination Point, an inserted moment's inner edges, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input, including under a new idempotency key or in parallel; its typed reason names what must change. The next structural revision is addressed after a fresh episode_read.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -1582,15 +1582,69 @@
                 "op": {
                   "type": "string",
                   "enum": [
-                    "occurrence.photo"
+                    "occurrence.effect"
                   ],
-                  "description": "Changes how placed photos play; omitted settings keep their current values."
+                  "description": "Sets one effect's settings on placed occurrences: one occurrence (occurrence_id and settings) or up to 64 (items). Today the one occurrence effect is photo: how a placed photo plays. Omitted settings keep their current values; the receipt names the complete settings each now plays with."
+                },
+                "effect": {
+                  "type": "string",
+                  "enum": [
+                    "photo"
+                  ],
+                  "description": "photo: how a placed photo plays (seconds, motion, fill, live, live_speed)."
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "A placed photo's stable occurrence ID from episode_read or an insert receipt."
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "seconds": {
+                      "type": "number",
+                      "minimum": 0.5,
+                      "maximum": 60,
+                      "description": "How long the photo is on screen, including any incoming crossfade, rounded to whole canvas frames."
+                    },
+                    "motion": {
+                      "type": "string",
+                      "enum": [
+                        "ken_burns",
+                        "still"
+                      ],
+                      "description": "ken_burns moves slowly toward the photo's focus, keeping the subject in frame; still holds the frame."
+                    },
+                    "fill": {
+                      "type": "string",
+                      "enum": [
+                        "blur",
+                        "crop",
+                        "pad"
+                      ],
+                      "description": "How a photo whose shape differs from the canvas fills it: blur shows it whole over a soft blurred copy of itself, crop fills the canvas around its focus, pad shows it whole with plain bars."
+                    },
+                    "live": {
+                      "type": "boolean",
+                      "description": "Live Photos only: true (the default) plays the Live motion with its natural sound and settles on the still; false shows the still alone."
+                    },
+                    "live_speed": {
+                      "type": "number",
+                      "enum": [
+                        1,
+                        0.5
+                      ],
+                      "description": "Live motion speed: 1 is real time, 0.5 is half speed."
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false,
+                  "description": "The settings to change on occurrence_id."
                 },
                 "items": {
                   "type": "array",
                   "minItems": 1,
                   "maxItems": 64,
-                  "description": "One entry per placed photo.",
+                  "description": "Instead of occurrence_id and settings: up to 64 occurrences under one receipt, each with its own settings.",
                   "items": {
                     "type": "object",
                     "properties": {
@@ -1598,44 +1652,53 @@
                         "type": "string",
                         "description": "A placed photo's stable occurrence ID from episode_read or an insert receipt."
                       },
-                      "seconds": {
-                        "type": "number",
-                        "minimum": 0.5,
-                        "maximum": 60,
-                        "description": "How long the photo is on screen, including any incoming crossfade, rounded to whole canvas frames."
-                      },
-                      "motion": {
-                        "type": "string",
-                        "enum": [
-                          "ken_burns",
-                          "still"
-                        ],
-                        "description": "ken_burns moves slowly toward the photo's focus, keeping the subject in frame; still holds the frame."
-                      },
-                      "fill": {
-                        "type": "string",
-                        "enum": [
-                          "blur",
-                          "crop",
-                          "pad"
-                        ],
-                        "description": "How a photo whose shape differs from the canvas fills it: blur shows it whole over a soft blurred copy of itself, crop fills the canvas around its focus, pad shows it whole with plain bars."
-                      },
-                      "live": {
-                        "type": "boolean",
-                        "description": "Live Photos only: true (the default) plays the Live motion with its natural sound and settles on the still; false shows the still alone."
-                      },
-                      "live_speed": {
-                        "type": "number",
-                        "enum": [
-                          1,
-                          0.5
-                        ],
-                        "description": "Live motion speed: 1 is real time, 0.5 is half speed."
+                      "settings": {
+                        "type": "object",
+                        "properties": {
+                          "seconds": {
+                            "type": "number",
+                            "minimum": 0.5,
+                            "maximum": 60,
+                            "description": "How long the photo is on screen, including any incoming crossfade, rounded to whole canvas frames."
+                          },
+                          "motion": {
+                            "type": "string",
+                            "enum": [
+                              "ken_burns",
+                              "still"
+                            ],
+                            "description": "ken_burns moves slowly toward the photo's focus, keeping the subject in frame; still holds the frame."
+                          },
+                          "fill": {
+                            "type": "string",
+                            "enum": [
+                              "blur",
+                              "crop",
+                              "pad"
+                            ],
+                            "description": "How a photo whose shape differs from the canvas fills it: blur shows it whole over a soft blurred copy of itself, crop fills the canvas around its focus, pad shows it whole with plain bars."
+                          },
+                          "live": {
+                            "type": "boolean",
+                            "description": "Live Photos only: true (the default) plays the Live motion with its natural sound and settles on the still; false shows the still alone."
+                          },
+                          "live_speed": {
+                            "type": "number",
+                            "enum": [
+                              1,
+                              0.5
+                            ],
+                            "description": "Live motion speed: 1 is real time, 0.5 is half speed."
+                          }
+                        },
+                        "required": [],
+                        "additionalProperties": false,
+                        "description": "The settings to change on this occurrence."
                       }
                     },
                     "required": [
-                      "occurrence_id"
+                      "occurrence_id",
+                      "settings"
                     ],
                     "additionalProperties": false
                   }
@@ -1643,7 +1706,7 @@
               },
               "required": [
                 "op",
-                "items"
+                "effect"
               ],
               "additionalProperties": false
             },
@@ -2027,16 +2090,21 @@
         "expected_revision": 7,
         "ops": [
           {
-            "op": "occurrence.photo",
+            "op": "occurrence.effect",
+            "effect": "photo",
             "items": [
               {
                 "occurrence_id": "occ_p1...",
-                "seconds": 1.875
+                "settings": {
+                  "seconds": 1.875
+                }
               },
               {
                 "occurrence_id": "occ_p2...",
-                "seconds": 3.75,
-                "motion": "still"
+                "settings": {
+                  "seconds": 3.75,
+                  "motion": "still"
+                }
               }
             ]
           }
@@ -2322,7 +2390,7 @@
               "identity_part.replace",
               "identity_part.customize",
               "occurrence.insert",
-              "occurrence.photo"
+              "occurrence.effect"
             ]
           },
           "selection_kind": {
