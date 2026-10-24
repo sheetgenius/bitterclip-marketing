@@ -42,9 +42,15 @@ under a dated entry.
   stays at 112 tool contracts.
 - `episode_sample_frames` at a placed photo's moment returns the photo's own
   stored image with `frames[].photo` describing how it plays; exact photo frames
-  come from the Export. Until a released renderer draws photos, renders of an
-  Episode with photos are refused with `photo_rendering_unavailable` before any
-  charge.
+  come from the Export. An Episode that uses an effect or look the released
+  renderer can't draw yet, such as placed photos, is refused with
+  `effect_unavailable` before any charge, naming each effect.
+- A crossfade has a look: `junction.transition` takes `transition.look`
+  (`fade`, dips to black or white, wipes, slides, `zoomin`, `circleopen`), and
+  `episode_read` lists the looks the selected renderer draws at each Junction.
+  `episode_create`'s `transition` is `cut`, `crossfade` or
+  `{kind: "crossfade", look}`; `dip_to_black` and `overlap_dissolve` are no
+  longer offered.
 - `music_cue_mutate` accepts `ducking_db` from -60 to 0, so music drops under an
   Episode's own sound, and names the beat grid `episode_read` prints for each
   cue. `identity_assets_list` music beds carry `music_role` and a measured

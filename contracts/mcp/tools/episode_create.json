@@ -214,13 +214,51 @@
         "description": "Output shape, set only for a shape the user asked for or a named vertical destination (Reels/Shorts/TikTok). When omitted it follows the footage: the source recording's native aspect, nearest of 9:16/16:9/1:1, and 16:9 when unprobed. \"Reel\" describes the edit, not the shape: 9:16 on landscape footage crops the sides away and can cut a second person out of frame."
       },
       "transition": {
-        "type": "string",
-        "enum": [
-          "cut",
-          "dip_to_black",
-          "overlap_dissolve"
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "cut",
+              "crossfade"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "cut",
+                  "crossfade"
+                ]
+              },
+              "look": {
+                "type": "string",
+                "enum": [
+                  "fade",
+                  "fadeblack",
+                  "fadewhite",
+                  "wipeleft",
+                  "wiperight",
+                  "wipeup",
+                  "wipedown",
+                  "slideleft",
+                  "slideright",
+                  "slideup",
+                  "slidedown",
+                  "zoomin",
+                  "circleopen"
+                ],
+                "description": "The crossfade's look; fadeblack is a dip to black. A look other than fade needs a renderer that draws it."
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          }
         ],
-        "description": "Optional seam transition for segment boundaries, photo rows included. Defaults to cut. A Program with overlap_dissolve cannot be rearranged afterwards; crossfades set later with episode_edit junction.transition can."
+        "description": "Optional transition at every edit point between pieces, photo rows included. Defaults to cut. crossfade is a 0.5 second crossfade that overlaps each incoming piece's first 0.5 seconds with the outgoing one, so the Episode shortens 0.5 seconds per edit point, and a piece too short for it refuses. {kind: \"crossfade\", look} gives it a look, such as {\"kind\": \"crossfade\", \"look\": \"fadeblack\"} for a dip to black. Change single edit points later with episode_edit junction.transition."
       },
       "identity": {
         "oneOf": [
@@ -278,7 +316,8 @@
     "program_audio_not_preservable",
     "program_source_range_unplayable",
     "stale_composition_revision",
-    "program_source_unavailable"
+    "program_source_unavailable",
+    "transition_look_unavailable"
   ],
   "examples": [
     {

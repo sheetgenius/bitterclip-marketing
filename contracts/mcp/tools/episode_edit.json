@@ -1317,7 +1317,7 @@
                         "crossfade",
                         "produced"
                       ],
-                      "description": "Cut removes treatment. Crossfade overlaps the incoming footage or photo's first duration_seconds with the outgoing one and ripples later Episode time earlier. Produced uses the Project's existing flash/swish seam while preserving Program source time; it joins footage only and names one edit point."
+                      "description": "Cut removes treatment. Crossfade overlaps the incoming footage or photo's first duration_seconds with the outgoing one, in its look, and ripples later Episode time earlier. Produced uses the Project's existing flash/swish seam while preserving Program source time; it joins footage only and names one edit point."
                     },
                     "duration_seconds": {
                       "type": "number",
@@ -1339,6 +1339,25 @@
                         "high"
                       ],
                       "description": "Optional Produced-only visual intensity; low is the restrained setting for a professional interview cold open."
+                    },
+                    "look": {
+                      "type": "string",
+                      "enum": [
+                        "fade",
+                        "fadeblack",
+                        "fadewhite",
+                        "wipeleft",
+                        "wiperight",
+                        "wipeup",
+                        "wipedown",
+                        "slideleft",
+                        "slideright",
+                        "slideup",
+                        "slidedown",
+                        "zoomin",
+                        "circleopen"
+                      ],
+                      "description": "Crossfade only: how the blend looks. fade (the plain blend), fadeblack and fadewhite (dip to black or white), wipes, slides, zoomin and circleopen. Omitted, a crossfade keeps its current look (fade for a new one). A look other than fade is accepted only where episode_read lists it for that junction."
                     }
                   },
                   "required": [
@@ -1771,6 +1790,7 @@
     "picture_framing_invalid",
     "picture_framing_unsupported",
     "transition_source_handles_unavailable",
+    "transition_look_unavailable",
     "program_source_range_unplayable",
     "identity_slot_not_configured",
     "identity_asset_not_found",

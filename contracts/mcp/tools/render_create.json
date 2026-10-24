@@ -1,7 +1,7 @@
 {
   "name": "render_create",
   "title": "Render an episode or clip",
-  "description": "Renders an Episode or Clip to downloadable media. Multi-segment highlight/reel/shareable-video creation uses episode_create; a single-range Clip uses clip_create. It renders the exact creator result, not a list/search result: that result's target_type, target_id, and revision as required expected_revision. Use this for ordinary make/cut/create requests, which carry explicit private-render intent, unless the user asks for draft-only, review first, or no render. Exact-result feedback inherits one private render only when a prior ready-Output receipt or pre-edit render_status proves that exact target has a current ready Output; the final revision after committed render-affecting edits then renders once, under the same exceptions. List/search recency or mere Output existence does not establish that intent. Publishing remains separately explicit; inherited private render intent never grants publication. First-use intro/outro blocks with new text may take a few minutes to prepare; the render waits and starts automatically once ready. It has no idempotency_key; the server reuses a current in-flight or ready render for the same exact revision/settings. While no released renderer draws photos, an Episode with placed photos is refused with photo_rendering_unavailable before anything is charged or queued; next_action.kind retry_after_renderer_update.",
+  "description": "Renders an Episode or Clip to downloadable media. Multi-segment highlight/reel/shareable-video creation uses episode_create; a single-range Clip uses clip_create. It renders the exact creator result, not a list/search result: that result's target_type, target_id, and revision as required expected_revision. Use this for ordinary make/cut/create requests, which carry explicit private-render intent, unless the user asks for draft-only, review first, or no render. Exact-result feedback inherits one private render only when a prior ready-Output receipt or pre-edit render_status proves that exact target has a current ready Output; the final revision after committed render-affecting edits then renders once, under the same exceptions. List/search recency or mere Output existence does not establish that intent. Publishing remains separately explicit; inherited private render intent never grants publication. First-use intro/outro blocks with new text may take a few minutes to prepare; the render waits and starts automatically once ready. It has no idempotency_key; the server reuses a current in-flight or ready render for the same exact revision/settings. An Episode that uses an effect or look the released renderer can't draw yet, such as placed photos, is refused with effect_unavailable before anything is charged or queued; details.effects names each, and next_action either changes a look back to the plain fade or is retry_after_renderer_update.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -61,7 +61,7 @@
     "music_presentation_map_unsupported",
     "angle_interval_exceeds_recording",
     "proof_clip_mismatch",
-    "photo_rendering_unavailable",
+    "effect_unavailable",
     "invalid_input",
     "billing_required"
   ],

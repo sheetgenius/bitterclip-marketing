@@ -1,7 +1,7 @@
 {
   "name": "episode_render",
   "title": "Render an episode to a downloadable file",
-  "description": "Renders a persisted episode (composition) into a downloadable MP4 — the materialize step after episode_create / episode_edit. Music authored by the development preview is refused before queueing or charging until music export ships. Otherwise this charges one export credit, queues the render asynchronously, and returns the render status. IDEMPOTENT: re-rendering an episode that is already rendered for its current revision (or already queued/rendering) is a NO-OP — it does NOT charge a second credit or re-queue (so a retry is safe). An episode that was edited since its last render (stale_media) renders again. After a \"queued\" status, episode_status with the same episode_id reports progress until \"ready\" and then returns separate playback and download capabilities. Optional title / aspect_ratio set them on this render. While no released renderer draws photos, an Episode with placed photos is refused with photo_rendering_unavailable before anything is charged or queued; next_action.kind retry_after_renderer_update.",
+  "description": "Renders a persisted episode (composition) into a downloadable MP4 — the materialize step after episode_create / episode_edit. Music authored by the development preview is refused before queueing or charging until music export ships. Otherwise this charges one export credit, queues the render asynchronously, and returns the render status. IDEMPOTENT: re-rendering an episode that is already rendered for its current revision (or already queued/rendering) is a NO-OP — it does NOT charge a second credit or re-queue (so a retry is safe). An episode that was edited since its last render (stale_media) renders again. After a \"queued\" status, episode_status with the same episode_id reports progress until \"ready\" and then returns separate playback and download capabilities. Optional title / aspect_ratio set them on this render. An Episode that uses an effect or look the released renderer can't draw yet, such as placed photos, is refused with effect_unavailable before anything is charged or queued; details.effects names each, and next_action either changes a look back to the plain fade or is retry_after_renderer_update.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -40,7 +40,7 @@
     "music_fades_too_long",
     "music_presentation_map_unsupported",
     "angle_interval_exceeds_recording",
-    "photo_rendering_unavailable",
+    "effect_unavailable",
     "invalid_input",
     "billing_required"
   ],
