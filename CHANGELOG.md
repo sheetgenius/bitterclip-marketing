@@ -51,6 +51,13 @@ under a dated entry.
   `episode_create`'s `transition` is `cut`, `crossfade` or
   `{kind: "crossfade", look}`; `dip_to_black` and `overlap_dissolve` are no
   longer offered.
+- Picture layers: `episode_edit` adds `layer.set`, which shows a Photo or a
+  Recording's picture over part of one footage occurrence or placed photo while
+  its own sound plays on (B-roll over speech, or a boxed photo beside a
+  speaker), full frame or in a box, and `layer.clear`. Layers travel with their
+  occurrence through split, trim, duplicate, move and removal, and Undo restores
+  them. `episode_read` lists each occurrence's layers. Episodes with layers
+  render once the renderer draws them (`effect_unavailable` until then).
 - `music_cue_mutate` accepts `ducking_db` from -60 to 0, so music drops under an
   Episode's own sound, and names the beat grid `episode_read` prints for each
   cue. `identity_assets_list` music beds carry `music_role` and a measured

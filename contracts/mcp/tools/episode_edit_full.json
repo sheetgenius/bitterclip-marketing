@@ -333,7 +333,9 @@
               "junction.roll",
               "occurrence.insert",
               "program.restore_recording",
-              "occurrence.effect"
+              "occurrence.effect",
+              "layer.set",
+              "layer.clear"
             ]
           },
           "selection_kind": {

@@ -1,7 +1,7 @@
 {
   "name": "episode_edit",
   "title": "Arrange an existing episode Program",
-  "description": "Edits the current Program in place through one stable occurrence operation. Several partial shortenings inspected on one revision fit one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so the same removals sent as separate trims or change-set items refuse after the first. Operations address exact occurrence IDs and a revision-bound semantic Junction from episode_read; pixels, mutable positions, transcript words, filenames, and source chronology are not arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops any set of whole supported occurrences (adjacent or not, one receipt), one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, and the resulting occurrence is addressed after a fresh episode_read. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists, not advice, when framing evidence reports a subject too_wide for the full-canvas crop window. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Active Word is the default caption treatment. word_highlight independently enables or disables the timed spoken-word accent; size and static placement remain available in either state. Legacy preset names are accepted for compatibility and resolve to Active Word for new authoring. Earlier frozen Exports retain their own treatment. Caption preview and new Exports share the caption renderer. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants, showing highlighting, placement, and any text-layer collisions. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omitting them preserves the set, [] clears it, and a correction made stale by transcript drift refuses until the word is re-read. junction.transition owns one adjacent edit point, or the same transition at up to 64 edit points (junctions) under one receipt: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Produced is designed for cold-open excerpts rather than body edits or multicamera switches; duration, intensity, and sound gain are adjustable on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only; placed photos also take Cut and Crossfade Junctions and occurrence.effect; a title or end card meets its neighbours with a cut. occurrence.insert places up to 64 items in order at one revision-bound destination under one receipt: a Photo or Live Photo as {recording_id, photo}, a whole Recording as {recording_id}, or a Recording moment as {recording_id, range} in source seconds. occurrence.effect sets the photo effect on up to 64 placed photos (seconds, motion, fill, live, live_speed), each by occurrence_id; omitted settings keep their values, and identity, order and Junctions stay. A plan-backed typed opener or outro changes through identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; Replace applies only where Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, junction.transition, occurrence.effect, and photo or whole-Recording inserts at a Junction need no new boundary evidence; Split, partial Range, an interior destination Point, an inserted moment's inner edges, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input, including under a new idempotency key or in parallel; its typed reason names what must change. The next structural revision is addressed after a fresh episode_read.",
+  "description": "Edits the current Program in place through one stable occurrence operation. Several partial shortenings inspected on one revision fit one occurrence.remove with selection.ranges in current Program order (up to 64 disjoint ranges): all boundaries are verified against that frozen snapshot and settle atomically under one receipt. A removal retires the occurrence it cuts, which stales that occurrence's other unused evidence, so the same removals sent as separate trims or change-set items refuse after the first. Operations address exact occurrence IDs and a revision-bound semantic Junction from episode_read; pixels, mutable positions, transcript words, filenames, and source chronology are not arrangement identity. occurrence.split retires one source-backed parent and mints exact children. occurrence.duplicate duplicates a whole supported occurrence or geometric Range with new identities. occurrence.move preserves whole-occurrence identity and moves material to a beginning/interior/end Junction. occurrence.remove drops any set of whole supported occurrences (adjacent or not, one receipt), one geometric Range, or up to 64 disjoint Ranges while preserving a nonempty Program. occurrence.restore_cut takes exactly two adjacent occurrences from the same Recording, restores their omitted source interval, preserves the left identity, and retires the right; it needs no boundary evidence because it only reinstates source truth, and the resulting occurrence is addressed after a fresh episode_read. occurrence.trim changes one source-backed occurrence's source in/out points while preserving that same occurrence, its caption/framing/audio treatment, and its incoming Junction treatment; it may shorten or extend into inspected source handles and is the correction for \"start this excerpt earlier\" or \"trim the ending tighter.\" occurrence.reframe changes one source-backed clip between Fill and Fit and optionally positions its normalized focal point without changing time or identity; a Fill framing may also carry canvas_fit \"4:5\" or \"1:1\", which crops at that ratio around the same focal point and letterboxes the picture inside the canvas with black mattes — a choice that exists, not advice, when framing evidence reports a subject too_wide for the full-canvas crop window. canvas_alignment keeps that ratio window static at center, top, or bottom; top creates one deterministic lower matte that captions automatically use as a subtitle band. Reframe versus slot crop: occurrence.reframe sets one occurrence's Fill or Fit, focal point and canvas_fit crop; a Picture slot's source_crop selects a specific static Recording region for a scene or one of several views. occurrence.caption applies one caption treatment to one or more contiguous source-backed occurrences. Active Word is the default caption treatment. word_highlight independently enables or disables the timed spoken-word accent; size and static placement remain available in either state. Legacy preset names are accepted for compatibility and resolve to Active Word for new authoring. Earlier frozen Exports retain their own treatment. Caption preview and new Exports share the caption renderer. Long Episodes use bounded raster chunks rather than a whole-caption duration cap. Auto remains matte-aware, Upper/Lower are stable semantic lanes, and Custom is one static normalized center/width/alignment box that can be corrected without face tracking or rerunning analysis. The successful response attempts to attach representative Export-geometry JPEGs containing both the changed caption and any committed speaker title visible at those instants, showing highlighting, placement, and any text-layer collisions. vertical_offset is only a small semantic-lane correction. Caption treatment never changes canonical transcript text or timing. For a visible misspelling or proper noun only, one occurrence may carry display-only word_corrections bound to exact word IDs and current token text from episode_zoom; omitting them preserves the set, [] clears it, and a correction made stale by transcript drift refuses until the word is re-read. junction.transition owns one adjacent edit point, or the same transition at up to 64 edit points (junctions) under one receipt: Cut removes treatment, Crossfade overlaps available source handles, and Produced applies the Project's restrained flash/swish bridge without changing Program source time. Produced is designed for cold-open excerpts rather than body edits or multicamera switches; duration, intensity, and sound gain are adjustable on the same Junction. The intrinsic capability profiles printed by episode_read describe role/media affordances; current attachments and boundary evidence are still validated when episode_edit runs. Self-contained typed Program material may support whole-occurrence Move/Duplicate/Remove, while Trim, picture framing, captions, and Junction transitions are source-backed only; placed photos also take Cut and Crossfade Junctions and occurrence.effect; a title or end card meets its neighbours with a cut. occurrence.insert places up to 64 items in order at one revision-bound destination under one receipt: a Photo or Live Photo as {recording_id, photo}, a whole Recording as {recording_id}, or a Recording moment as {recording_id, range} in source seconds. occurrence.effect sets the photo effect on up to 64 placed photos (seconds, motion, fill, live, live_speed), each by occurrence_id; omitted settings keep their values, and identity, order and Junctions stay. layer.set shows a ready Photo or a Recording's picture over part of one footage occurrence or placed photo while its own sound plays on (B-roll over speech, or a boxed photo beside a speaker): a window in the occurrence's own seconds, full frame or a box, cover or contain; layer_id replaces a layer in place, and layer.clear removes some or all. Layers travel with their occurrence through split, trim, duplicate, move and removal. A plan-backed typed opener or outro changes through identity_part.customize with its exact occurrence_id; requested_aspect_ratio rebakes the same identity moment for a landscape, portrait, square, or feed canvas without treating it as camera footage. When a self-contained typed opener or outro reports identity_replace=true and has no identity_customization, identity_part.replace converts that same occurrence in place to a Project default, saved library entry, or explicit curated preset configuration; Replace applies only where Customize is unavailable. operation.revert applies the server-owned exact inverse named by a prior receipt. Whole-occurrence Move/Duplicate/Remove/Restore, Reframe, Caption treatment, identity_part.customize, identity_part.replace, junction.transition, occurrence.effect, layer.set, layer.clear, and photo or whole-Recording inserts at a Junction need no new boundary evidence; Split, partial Range, an interior destination Point, an inserted moment's inner edges, and every changed Trim edge require exact signed evidence returned by episode_zoom, or by an exact episode_sample_frames projection:\"original\" call when audio is unavailable. A Trim may use evidence from the source-linked parent Episode when extending beyond the derived Clip's current window. Evidence certifies the Program Audio edge at its point and stays valid across unrelated edits (Picture, music, other occurrences) until its occurrence, the inspected media or transcript, or Program Audio there changes, including a change this edit would make; a stale refusal names details.failed_check and its recovery. Program-projection and angle frame samples never authorize structural edits. One call settles one occurrence operation atomically and returns a durable receipt plus the current revision/digest. A stale revision, unsupported attachment, invalid evidence, or changed Junction fails without partial mutation. A program_attachment_conflict is non-retryable for the identical failed input, including under a new idempotency key or in parallel; its typed reason names what must change. The next structural revision is addressed after a fresh episode_read.",
   "input_schema": {
     "type": "object",
     "properties": {
@@ -1735,6 +1735,196 @@
                 "op": {
                   "type": "string",
                   "enum": [
+                    "layer.set"
+                  ],
+                  "description": "Shows a photo, or a Recording's picture, over part of one occurrence while that occurrence's own sound plays on: B-roll over speech, or a boxed photo beside a speaker. Without layer_id it adds a picture layer; with layer_id it replaces that layer in place under the same identity. The layer travels with its occurrence: a split divides it, a trim clips it, a duplicate copies it, a removal takes it away and Undo restores it. The receipt names the complete layer as stored."
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "The footage occurrence or placed photo the layer goes over, from episode_read."
+                },
+                "layer_id": {
+                  "type": "string",
+                  "pattern": "^plyr_[a-z0-9]{20}$",
+                  "description": "A layer on this occurrence to replace, from episode_read. Omit to add a layer."
+                },
+                "effect": {
+                  "type": "string",
+                  "enum": [
+                    "picture"
+                  ],
+                  "description": "picture: a photo or a Recording's picture over the occurrence."
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "object",
+                      "properties": {
+                        "recording_id": {
+                          "type": "string",
+                          "description": "A ready Photo, or a Recording with video, from recordings_list. The layer shows its picture only; it never adds sound."
+                        },
+                        "range": {
+                          "type": "array",
+                          "items": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "description": "For a Recording, the source seconds to show, inside the Recording and as long as window; defaults to [0, window length]. For a photo, its own animation seconds inside photo.seconds; defaults to start at 0."
+                        },
+                        "photo": {
+                          "type": "object",
+                          "properties": {
+                            "seconds": {
+                              "type": "number",
+                              "minimum": 0.5,
+                              "maximum": 60,
+                              "description": "The photo's own length, rounded to whole canvas frames; range lies inside it."
+                            },
+                            "motion": {
+                              "type": "string",
+                              "enum": [
+                                "ken_burns",
+                                "still"
+                              ],
+                              "description": "ken_burns moves slowly toward the photo's focus, keeping the subject in frame; still holds the frame."
+                            },
+                            "fill": {
+                              "type": "string",
+                              "enum": [
+                                "blur",
+                                "crop",
+                                "pad"
+                              ],
+                              "description": "How a photo whose shape differs from the canvas fills it: blur shows it whole over a soft blurred copy of itself, crop fills the canvas around its focus, pad shows it whole with plain bars."
+                            },
+                            "live": {
+                              "type": "boolean",
+                              "description": "Live Photos only: true (the default) plays the Live motion, silently since a layer never adds sound, and settles on the still; false shows the still alone."
+                            },
+                            "live_speed": {
+                              "type": "number",
+                              "enum": [
+                                1,
+                                0.5
+                              ],
+                              "description": "Live motion speed: 1 is real time, 0.5 is half speed."
+                            }
+                          },
+                          "required": [],
+                          "additionalProperties": false,
+                          "description": "How the photo plays, as the photo effect sets it; seconds defaults to the window's length. A photo's fill also decides its fit: crop covers the placement, blur and pad show the whole photo."
+                        }
+                      },
+                      "required": [
+                        "recording_id"
+                      ],
+                      "additionalProperties": false,
+                      "description": "What the layer shows."
+                    },
+                    "window": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "description": "When the layer shows, in the occurrence's own seconds: source seconds for footage (inside its source_range in episode_read), animation seconds for a placed photo. Layers on one occurrence never overlap, and an occurrence holds at most 16."
+                    },
+                    "placement": {
+                      "type": "string",
+                      "enum": [
+                        "full",
+                        "box"
+                      ],
+                      "description": "full covers the whole frame; box shows the layer inside box, over the picture beneath."
+                    },
+                    "box": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "minItems": 4,
+                      "maxItems": 4,
+                      "description": "For placement box: x, y, width and height as fractions of the frame, inside it, each side at least 0.05."
+                    },
+                    "fit": {
+                      "type": "string",
+                      "enum": [
+                        "cover",
+                        "contain"
+                      ],
+                      "description": "cover fills the placement, cropping the picture; contain shows all of it inside the placement. A Recording defaults to cover. A photo's fit follows its fill: cover with no fill asks for crop."
+                    }
+                  },
+                  "required": [
+                    "media",
+                    "window",
+                    "placement"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The layer: what it shows, when and where."
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id",
+                "effect",
+                "settings"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
+                    "layer.clear"
+                  ],
+                  "description": "Removes picture layers from one occurrence: those named in layer_ids, or every one with all: true. Undo restores them."
+                },
+                "occurrence_id": {
+                  "type": "string",
+                  "description": "The occurrence whose layers to remove, from episode_read."
+                },
+                "layer_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^plyr_[a-z0-9]{20}$"
+                  },
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "uniqueItems": true,
+                  "description": "The layers to remove, from episode_read."
+                },
+                "all": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ],
+                  "description": "true removes every layer on the occurrence, instead of layer_ids."
+                }
+              },
+              "required": [
+                "op",
+                "occurrence_id"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "type": "string",
+                  "enum": [
                     "operation.revert"
                   ]
                 },
@@ -2410,7 +2600,9 @@
               "identity_part.replace",
               "identity_part.customize",
               "occurrence.insert",
-              "occurrence.effect"
+              "occurrence.effect",
+              "layer.set",
+              "layer.clear"
             ]
           },
           "selection_kind": {
