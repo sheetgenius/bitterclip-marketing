@@ -615,6 +615,7 @@
     "camera_program_revert_conflict",
     "camera_program_recovery_unavailable",
     "camera_program_recovery_failed",
+    "picture_layer_conflict",
     "picture_layout_capacity_exceeded",
     "picture_program_authoring_disabled",
     "picture_program_conflict",
