@@ -390,7 +390,7 @@
           {
             "template": "show_open/studio_dissolve",
             "params": {
-              "title": "Philippines 2024"
+              "title": "Summer trip"
             }
           },
           {
@@ -423,7 +423,7 @@
             }
           }
         ],
-        "title": "Philippines 2024",
+        "title": "Summer trip",
         "aspect_ratio": "16:9",
         "idempotency_key": "photo-film-1"
       }
