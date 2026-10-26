@@ -5,7 +5,8 @@
 - `make-a-clip` gains photo-film craft: reading a Project's photos in capture
   order, choosing among near-duplicates, when Live Photo motion helps, drafting
   with one `episode_create` and refining with `episode_edit`, and timing photos,
-  transitions, the ending and music ducking to a music bed's beat grid.
+  transitions, the ending and music ducking to a music bed's beat grid; with
+  no music bed listed, it says so and points to the Music library.
 - Same four skills, package shape, and hosted OAuth service.
 
 ## 0.2.2 — standing guidance from tool descriptions
