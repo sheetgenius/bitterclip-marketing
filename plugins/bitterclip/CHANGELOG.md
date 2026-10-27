@@ -6,7 +6,8 @@
   order, choosing among near-duplicates, when Live Photo motion helps, drafting
   with one `episode_create` and refining with `episode_edit`, and timing photos,
   transitions, the ending and music ducking to a music bed's beat grid; with
-  no music bed listed, it says so and points to the Music library.
+  no music bed listed, it says so and points to the Music library; a trip
+  longer than one Export holds becomes one Episode per day or part.
 - Same four skills, package shape, and hosted OAuth service.
 
 ## 0.2.2 — standing guidance from tool descriptions
