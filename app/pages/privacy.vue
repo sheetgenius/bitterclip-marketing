@@ -56,7 +56,7 @@ const sections = [
     title: 'AI, Media, And Provider Processing',
     body: [
       'We may send recordings, extracted audio, transcripts, prompts, metadata, rendered clips, or related operational data to infrastructure and AI/media providers when needed to deliver transcription, speaker analysis, rendering, storage, billing, support, or publishing features.',
-      'We and these providers may use automated checks to detect child sexual abuse material, which we remove and report to the authorities as the law requires.',
+      'Our providers may apply their own safety checks to content we send them, and child sexual abuse material is reported to the authorities as the law requires.',
       'Connected publishing services, such as YouTube, LinkedIn, or X, receive only the content and account authorization needed for actions you approve or trigger.',
       'We do not sell your recordings, transcripts, clips, or account data.',
     ],
