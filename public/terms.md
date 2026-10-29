@@ -4,7 +4,7 @@ Canonical HTML page: https://bitterclip.com/terms
 
 Markdown version: https://bitterclip.com/terms.md
 
-Effective date: June 9, 2026 · Last updated: August 25, 2026
+Effective date: June 9, 2026 · Last updated: October 29, 2026
 
 BitterClip is a product of SheetGenius, Inc.
 (https://company.sheetgenius.com), and these terms are an agreement between you
@@ -105,11 +105,18 @@ Do not use BitterClip to infringe rights, violate privacy, harass people,
 distribute malware, bypass platform rules, spam, scrape, overload systems, or
 publish unlawful or harmful material.
 
+Never upload or share material that sexually exploits or endangers children. We
+remove it, close the accounts involved, and report it to the National Center for
+Missing & Exploited Children (NCMEC) as the law requires.
+
 Do not attempt to reverse engineer, probe, attack, resell, sublicense, or misuse
 BitterClip, its infrastructure, provider access, or connected third-party APIs.
 
 Do not upload secrets, private credentials, payment card data, or regulated data
 unless we have expressly agreed in writing to handle that category of data.
+
+To report content in BitterClip that breaks these terms, email
+hello@bitterclip.com.
 
 ## Service Changes And Availability
 

@@ -87,6 +87,10 @@ under a dated entry.
 
 ### Website
 
+- The Terms of Service and Privacy Policy (updated October 29, 2026) state that
+  material sexually exploiting children is never allowed, is removed and is
+  reported to NCMEC, give an email address for reporting content, and note that
+  automated checks may detect such material.
 - Tightened every `/compare` page and the hub:
   - The at-a-glance price row says "Creator $24/month, includes live Studio" and "Producer $99/month, adds async recording for up to 25 people", and the $1 trial is described under the button. The trial no longer reads as "Studio for $1".
   - Live Studio's specification is stated once, from one shared line (you and one guest, a separate 720p video of each, up to 75 minutes, paid plans). It appears in every Studio recording row and in the plan list.

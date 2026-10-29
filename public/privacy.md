@@ -4,7 +4,7 @@ Canonical HTML page: https://bitterclip.com/privacy
 
 Markdown version: https://bitterclip.com/privacy.md
 
-Effective date: June 9, 2026 · Last updated: August 25, 2026
+Effective date: June 9, 2026 · Last updated: October 29, 2026
 
 BitterClip is a product of SheetGenius, Inc.
 (https://company.sheetgenius.com), the company responsible for the information
@@ -63,6 +63,9 @@ We may send recordings, extracted audio, transcripts, prompts,
 metadata, rendered clips, or related operational data to infrastructure and
 AI/media providers when needed to deliver transcription, speaker analysis,
 rendering, storage, billing, support, or publishing features.
+
+We and these providers may use automated checks to detect child sexual abuse
+material, which we remove and report to the authorities as the law requires.
 
 Connected publishing services, such as YouTube, LinkedIn, or X, receive only
 the content and account authorization needed for actions you approve or trigger.

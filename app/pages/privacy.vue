@@ -56,6 +56,7 @@ const sections = [
     title: 'AI, Media, And Provider Processing',
     body: [
       'We may send recordings, extracted audio, transcripts, prompts, metadata, rendered clips, or related operational data to infrastructure and AI/media providers when needed to deliver transcription, speaker analysis, rendering, storage, billing, support, or publishing features.',
+      'We and these providers may use automated checks to detect child sexual abuse material, which we remove and report to the authorities as the law requires.',
       'Connected publishing services, such as YouTube, LinkedIn, or X, receive only the content and account authorization needed for actions you approve or trigger.',
       'We do not sell your recordings, transcripts, clips, or account data.',
     ],
@@ -105,7 +106,7 @@ const sections = [
       <div class="max-w-3xl space-y-4 text-zinc-400 text-sm sm:text-base leading-relaxed font-sans">
         <p>
           Effective date: <strong class="text-zinc-200">June 9, 2026</strong>
-          &middot; Last updated: <strong class="text-zinc-200">August 25, 2026</strong>
+          &middot; Last updated: <strong class="text-zinc-200">October 29, 2026</strong>
         </p>
         <p>
           BitterClip is a product of
